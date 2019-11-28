@@ -1,0 +1,27 @@
+header{
+    height: 70px;
+    line-height: 70px;
+
+    border-bottom: solid #ccc 1px;
+    
+    padding-left: 20px;
+
+    font-size: 20px;
+}
+
+footer{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: 20px 0;
+
+    background: #333;
+    color: #fff;
+    font-size: 14px;  
+}
+
+.form-body{
+    padding: 20px 0;
+}
