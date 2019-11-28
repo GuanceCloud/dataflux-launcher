@@ -1,4 +1,4 @@
--- Create syntax for TABLE 'biz_chart'
+
 CREATE TABLE `biz_chart` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 chrt- 前缀',
@@ -19,7 +19,7 @@ CREATE TABLE `biz_chart` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_chart_group'
+
 CREATE TABLE `biz_chart_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID chtg-',
@@ -38,7 +38,7 @@ CREATE TABLE `biz_chart_group` (
   KEY `k_dashboardUUID` (`dashboardUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_dashboard'
+
 CREATE TABLE `biz_dashboard` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dsbd-前缀',
@@ -58,7 +58,7 @@ CREATE TABLE `biz_dashboard` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_node'
+
 CREATE TABLE `biz_node` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 node- 前缀',
@@ -89,7 +89,7 @@ CREATE TABLE `biz_node` (
   KEY `node_dashboard_fk` (`dashboardUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_query'
+
 CREATE TABLE `biz_query` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID qry- 前缀',
@@ -115,7 +115,7 @@ CREATE TABLE `biz_query` (
   KEY `k_chart_uuid` (`chartUUID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_rule'
+
 CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
@@ -138,7 +138,7 @@ CREATE TABLE `biz_rule` (
   KEY `rulg_ibfk_2` (`ruleGroupUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_rule_group'
+
 CREATE TABLE `biz_rule_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rulg-',
@@ -156,7 +156,7 @@ CREATE TABLE `biz_rule_group` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_scene'
+
 CREATE TABLE `biz_scene` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 scene-',
@@ -174,7 +174,7 @@ CREATE TABLE `biz_scene` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_template'
+
 CREATE TABLE `biz_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID tpl-',
@@ -193,7 +193,7 @@ CREATE TABLE `biz_template` (
   KEY `template_owner_fk` (`owner`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'biz_variable'
+
 CREATE TABLE `biz_variable` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID,varl-',
@@ -216,7 +216,7 @@ CREATE TABLE `biz_variable` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_accesskey'
+
 CREATE TABLE `main_accesskey` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识',
@@ -231,9 +231,9 @@ CREATE TABLE `main_accesskey` (
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_ak` (`ak`) COMMENT 'AK 做成全局唯一',
   KEY `idx_ak` (`ak`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_account'
+
 CREATE TABLE `main_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'account 唯一标识 acnt-前缀',
@@ -252,9 +252,9 @@ CREATE TABLE `main_account` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_account_privilege'
+
 CREATE TABLE `main_account_privilege` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 acpv- 前缀',
@@ -274,7 +274,7 @@ CREATE TABLE `main_account_privilege` (
   KEY `accountUUID_fk` (`accountUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_account_workspace'
+
 CREATE TABLE `main_account_workspace` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rlaw-前缀',
@@ -294,7 +294,7 @@ CREATE TABLE `main_account_workspace` (
   KEY `accountUUID_fk` (`accountUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_agent'
+
 CREATE TABLE `main_agent` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT 'ftagent的uuid,唯一id 待 agnt-前缀',
@@ -315,9 +315,9 @@ CREATE TABLE `main_agent` (
   UNIQUE KEY `uk` (`uuid`),
   KEY `idx_ws_uuid` (`workspaceUUID`),
   KEY `idx_uuid` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_agent_license'
+
 CREATE TABLE `main_agent_license` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识 wsak-',
@@ -333,9 +333,9 @@ CREATE TABLE `main_agent_license` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_influx_db'
+
 CREATE TABLE `main_influx_db` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifdb-',
@@ -356,7 +356,7 @@ CREATE TABLE `main_influx_db` (
   KEY `db_rpuuid` (`influxRpUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_influx_instance'
+
 CREATE TABLE `main_influx_instance` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 iflx-',
@@ -375,7 +375,7 @@ CREATE TABLE `main_influx_instance` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_influx_rp'
+
 CREATE TABLE `main_influx_rp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀ifrp-',
@@ -393,7 +393,7 @@ CREATE TABLE `main_influx_rp` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_inner_app'
+
 CREATE TABLE `main_inner_app` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，关联用，带 inap- 前缀',
@@ -414,7 +414,7 @@ CREATE TABLE `main_inner_app` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_kapa'
+
 CREATE TABLE `main_kapa` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 kapa-',
@@ -432,7 +432,7 @@ CREATE TABLE `main_kapa` (
   CONSTRAINT `kapa_is_uuid` FOREIGN KEY (`influxInstanceUUID`) REFERENCES `main_influx_instance` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_manage_account'
+
 CREATE TABLE `main_manage_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'account 唯一标识 mact-',
@@ -449,9 +449,9 @@ CREATE TABLE `main_manage_account` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_manage_role'
+
 CREATE TABLE `main_manage_role` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 role-',
@@ -468,7 +468,7 @@ CREATE TABLE `main_manage_role` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_subscription'
+
 CREATE TABLE `main_subscription` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 sbsp-',
@@ -487,7 +487,7 @@ CREATE TABLE `main_subscription` (
   KEY `kapa_uuid` (`kapaUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_workspace'
+
 CREATE TABLE `main_workspace` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 wksp-',
@@ -508,7 +508,7 @@ CREATE TABLE `main_workspace` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Create syntax for TABLE 'main_workspace_accesskey'
+
 CREATE TABLE `main_workspace_accesskey` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识 wsak-',
@@ -524,4 +524,4 @@ CREATE TABLE `main_workspace_accesskey` (
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_ak` (`ak`) COMMENT 'AK 做成全局唯一',
   KEY `idx_ak` (`ak`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

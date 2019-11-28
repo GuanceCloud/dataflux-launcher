@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import os
+import shortuuid
 import pymysql
 
 
@@ -19,7 +21,7 @@ def database_ping(params):
 
         connect.close()
 
-        SETTINGS['mysql_info'] = params
+        SETTINGS['mysqlInfo'] = params
 
         return True
     except:
@@ -27,13 +29,25 @@ def database_ping(params):
 
     return False
 
+
 def database_setup():
-    mysqlInfo = SETTINGS['mysql_info']
+    mysqlInfo = SETTINGS['mysqlInfo']
+
+    SETTINGS['forethoughtDbInfo'] = dbInfo = {
+        "dbName": "Forethought",
+        "dbUser": "Forethought",
+        "dbUserPassword": shortuuid.ShortUUID().random(length=12)
+    }
 
     with database(mysqlInfo) as db:
-        db.create_db("Forethought", "Forethought", "123321")
+        db.create_db(**dbInfo)
 
-        db.
+        with open(os.path.abspath("resource/ddl/core.sql"), 'r') as f:
+            ddl = f.read()
+            db.import_ddl("Forethought", ddl)
+
+    return True # SETTINGS['forethoughtDbInfo']
+
 
 def database_create():
     return True

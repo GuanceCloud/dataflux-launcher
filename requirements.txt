@@ -4,3 +4,4 @@ requests==2.21.0
 redis==3.0.1
 Flask-Redis==0.3.0
 PyMySQL==0.9.3
+shortuuid==0.5.0

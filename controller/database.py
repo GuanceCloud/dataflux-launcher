@@ -26,3 +26,17 @@ class database(object):
             cursor.execute(userSQL)
 
             self.connection.commit()
+
+    def import_ddl(self, dbName, ddl):
+        self.connection.select_db(dbName)
+
+        with self.connection.cursor() as cursor:
+
+            for statement in ddl.split(';'):
+                if len(statement) > 0:
+                     cursor.execute(statement + ';')
+
+            self.connection.commit()
+
+            return True
+

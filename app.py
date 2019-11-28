@@ -30,7 +30,6 @@ def register_blueprint(app):
 
 
 def create_app():
-
     app = Flask(__name__, static_url_path='')
 
     register_route(app)
