@@ -6,7 +6,7 @@
 
 ### forethought-core
     manage-backend
-    front-backent
+    front-backend
 
 ### forethought-webclient
     front-webclient

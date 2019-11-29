@@ -1,3 +1,9 @@
 # encoding=utf-8
 
-SETTINGS = {}
+SETTINGS = {
+    "mysql": {},
+    "redis": {},
+    "influxdb": [{}],
+    "messageDesk": {},
+    "core": {}
+}

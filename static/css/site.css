@@ -25,3 +25,8 @@ footer{
 .form-body{
     padding: 20px 0;
 }
+
+
+.error{
+    border-color: red;
+}

@@ -1,0 +1,49 @@
+# 项目名称
+appName: Forethought
+
+# 报错告警所使用的环境名
+envName: FT2.0测试环境
+
+# 显示API Doc
+isShowDoc: true
+
+protocol: "http"
+hostname: "console.cloudcare.cn"
+
+database:
+    # 测试环境容器外使用地址
+    connection: "mysql+pymysql://{mysql.user}:{mysql.password}@{mysql.host}:{mysql.port}/{mysql.dbName}?charset=utf8"
+    pool_size: 30
+    max_overflow: 10
+    echo: false
+
+kodo:
+  host: 172.16.0.12
+  port: 10557
+  timeout: 10
+  installCmd: 'sudo bash -c "$(curl http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/install.sh)" - --token {} --uuid {}  --license {} --ak {} --sk {}'
+  upgradeCmd: 'sudo bash -c "$(curl http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/install.sh)" -  --upgrade 1'
+  versionUrl: "http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/version"
+
+# 报警机器人
+robot:
+  url: https://oapi.dingtalk.com/robot/send?access_token=f9fdbaa21a4a0d680effdd105a4cb908e385f06614fbe3a385ae9d357fc2e786
+
+# Cache
+redis:
+  # 内网
+  host: {redis.host}
+  port: {redis.port}
+  db: 1
+  password: {redis.password}
+  max_connections: 1000
+
+# inner app 回调临时地址
+inner_app_webhook_url: http://172.16.0.12:10558/api/v1/trigger/webhook
+
+# 告警日志回调地址
+alert_callback_url: http://172.16.0.12:10551/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
+
+secret:
+  frontAuth: {secret.frontAuth}
+  manageAuth: {secret.manageAuth}
