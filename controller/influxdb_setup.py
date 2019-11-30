@@ -42,13 +42,16 @@ def influxdb_ping_all(dbs):
     for idx, db in enumerate(dbs):
         n.append(dict(influxdb[idx] if idx < len(influxdb) else {}, **db))
 
-    print(SETTINGS['influxdb'])
+    # print(SETTINGS['influxdb'])
 
     return True
 
 
 def influxdb_remove(d):
     idx = d['index']
+
+    if len(SETTINGS['influxdb']) == 1:
+        return True
 
     if len(SETTINGS['influxdb']) > idx:
         del SETTINGS['influxdb'][idx]

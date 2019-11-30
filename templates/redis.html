@@ -4,29 +4,47 @@
 
 <div class="row form-body">
     <form class="form-horizontal">
-      <div class="form-group">
-        <label for="iptHost" class="col-sm-2 control-label">Redis 地址:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="iptRedisHost" value="172.16.0.20" placeholder="Redis 地址">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="iptRedisPort" class="col-sm-2 control-label">端口:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="iptRedisPort" value="10391" placeholder="端口">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="iptRedisPassword" class="col-sm-2 control-label">密码:</label>
-        <div class="col-sm-10">
-          <input type="password" class="form-control" id="iptRedisPassword" value="Fd6cQ4cvd8" placeholder="密码">
-        </div>
-      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Redis 配置</div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="iptHost" class="col-sm-2 control-label">Redis 地址:</label>
+            <div class="col-sm-10">
+              <!-- 172.16.0.20 -->
+              <input type="text" class="form-control" id="iptRedisHost" value="{{ data.host }}" placeholder="Redis 地址">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="iptRedisPort" class="col-sm-2 control-label">端口:</label>
+            <div class="col-sm-10">
+              <!-- 10391 -->
+              <input type="text" class="form-control" id="iptRedisPort" value="{{ data.port }}" placeholder="端口">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="iptRedisPassword" class="col-sm-2 control-label">密码:</label>
+            <div class="col-sm-10">
+              <!-- Fd6cQ4cvd8 -->
+              <input type="password" class="form-control" id="iptRedisPassword" value="{{ data.password }}" placeholder="密码">
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label class="col-sm-2 control-label">&nbsp;</label>
-        <div class="col-sm-10">
-            <botton class="btn btn-default" onclick="setup.redis_ping()">配置 Redis</botton>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">&nbsp;</label>
+            <div class="col-sm-5">
+                <a class="btn btn-default" href="/database/manager">
+                  <i class="glyphicon glyphicon-arrow-left"></i> 上一步
+                </a>
+                <botton class="btn btn-primary" onclick="setup.redis_ping(true)">
+                  下一步 <i class="glyphicon glyphicon-arrow-right"></i>
+                </botton>
+            </div>
+            <div class="col-sm-5 text-right">
+                <botton class="btn btn-warning" onclick="setup.redis_ping(false)">
+                  <i class="glyphicon glyphicon-question-sign"></i> 测试连接
+                </botton>
+            </div>
+          </div>
         </div>
       </div>
     </form>

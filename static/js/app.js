@@ -34,7 +34,7 @@ var setup = (function () {
     };
 
     // mysql 数据库连接测试
-    app.prototype.database_ping = function(){
+    app.prototype.database_ping = function(next){
         var params = {
             "host": $("#iptDBHost").val(),
             "port": $("#iptDBPort").val(),
@@ -46,20 +46,17 @@ var setup = (function () {
 
         this.get("database/ping", params).done(function(d){
             if (d.content){
-                that.database_setup();
+                if (next){
+                    window.location.href = "/database/manager"
+                }
+                // that.database_setup();
             }else{
                 alert("MySQL 连接失败");
             }
         });
     };
 
-    app.prototype.database_setup = function(){
-        this.post("database/setup").done(function(d){
-            window.location.href = "/database/manager"
-        });
-    };
-
-    app.prototype.database_create_manager = function(){
+    app.prototype.database_manager_add = function(){
         var data = {
             "username": $("#iptUserName").val(),
             "email": $("#iptUserEmail").val()
@@ -73,7 +70,7 @@ var setup = (function () {
     };
 
     // redis 连接测试
-    app.prototype.redis_ping = function(){
+    app.prototype.redis_ping = function(next){
         var params = {
             "host": $("#iptRedisHost").val(),
             "port": $("#iptRedisPort").val(),
@@ -81,9 +78,10 @@ var setup = (function () {
         }
 
         this.get("redis/ping", params).done(function(d){
-            console.log(d)
             if(d.content){
-                window.location.href = "/influxdb"
+                if (next){
+                    window.location.href = "/influxdb"
+                }
             }else{
                 alert("Redis 连接失败")
             }
@@ -120,13 +118,14 @@ var setup = (function () {
     };
 
     // influxdb 连接测试
-    app.prototype.influxdb_ping = function(){
+    app.prototype.influxdb_ping = function(next){
         dbs = this._get_influxdb_list()
 
         this.post("influxdb/ping", dbs).done(function(d){
-            console.log(d)
             if(d.content){
-                window.location.href = "/influxdb"
+                if (next){
+                    window.location.href = "/setup/info"
+                }
             }else{
                 alert("InfluxDB 连接失败")
             }
@@ -137,20 +136,43 @@ var setup = (function () {
         dbs = this._get_influxdb_list()
 
         this.post("influxdb/add", dbs).done(function(d){
-            console.log(d)
             if(d.content){
                 window.location.href = "/influxdb"
             }
         });
     };
 
-    app.prototype.influxdb_setup = function(){
-        // dbs = this._get_influxdb_list()
+    app.prototype.database_setup = function(){
+        return this.post("database/setup");
+    };
 
-        this.post("influxdb/setup").done(function(d){
-            console.log(d)
+    app.prototype.database_manager_create = function(){
+        return this.post("database/manager/create");
+    };
+
+    app.prototype.influxdb_setup = function(){
+        return this.post("influxdb/setup");
+    };
+
+
+    app.prototype.do_setup = function(){
+        that = this
+        this.database_setup().done(function(d){
             if(d.content){
-                window.location.href = "/influxdb"
+                $('.well-mysql').addClass('success');
+
+                return that.database_manager_create();
+            }
+        }).done(function(d){
+            if (d.content){
+                $('.well-manager').addClass('success');
+                $('.well-redis').addClass('success');
+
+                return that.influxdb_setup()
+            }
+        }).done(function(d){
+            if (d.content){
+                $('.well-influxdb').addClass('success');
             }
         });
     };

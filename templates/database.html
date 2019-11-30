@@ -4,35 +4,47 @@
 
 <div class="row form-body">
     <form class="form-horizontal">
-      <div class="form-group">
-        <label for="iptDBHost" class="col-sm-2 control-label">数据库地址:</label>
-        <div class="col-sm-10">
-          <input type="email" class="form-control" id="iptDBHost" name="host" value="127.0.0.1" placeholder="数据库实例地址">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="iptDBPort" class="col-sm-2 control-label">端口:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="iptDBPort" name="port" value="3306" placeholder="数据库实例端口">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="iptDBUserName" class="col-sm-2 control-label">管理员账号:</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="iptDBUserName" name="username" value="root" placeholder="数据库实例管理员账号">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="iptDBUserPwd" class="col-sm-2 control-label">管理员密码:</label>
-        <div class="col-sm-10">
-          <input type="password" class="form-control" id="iptDBUserPwd" name="password" value="qwe123123" placeholder="数据库实例管理员密码">
-        </div>
-      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">MySQL 配置</div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="iptDBHost" class="col-sm-2 control-label">Host:</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="iptDBHost" name="host" value="{{ data.host }}" placeholder="数据库实例地址">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="iptDBPort" class="col-sm-2 control-label">端口:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="iptDBPort" name="port" value="{{ data.port }}" placeholder="数据库实例端口">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="iptDBUserName" class="col-sm-2 control-label">管理员账号:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="iptDBUserName" name="username" value="{{ data.user }}" placeholder="数据库实例管理员账号">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="iptDBUserPwd" class="col-sm-2 control-label">管理员密码:</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="iptDBUserPwd" name="password" value="{{ data.password }}" placeholder="数据库实例管理员密码">
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label class="col-sm-2 control-label">&nbsp;</label>
-        <div class="col-sm-10">
-            <botton class="btn btn-default" onclick="setup.database_ping()">安装数据库</botton>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">&nbsp;</label>
+            <div class="col-sm-5">
+                <botton class="btn btn-primary" onclick="setup.database_ping(true)">
+                  下一步 <i class="glyphicon glyphicon-arrow-right"></i>
+                </botton>
+            </div>
+            <div class="col-sm-5 text-right">
+                <botton class="btn btn-warning" onclick="setup.database_ping(false)">
+                  <i class="glyphicon glyphicon-question-sign"></i> 测试连接
+                </botton>
+            </div>
+          </div>
         </div>
       </div>
     </form>

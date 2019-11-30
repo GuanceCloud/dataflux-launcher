@@ -55,7 +55,6 @@ def database_init_data():
 
 
 def database_setup():
-    # print(SETTINGS['secret'])
     database_ddl()
     database_init_data()
 

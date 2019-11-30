@@ -11,7 +11,7 @@ from controller import SETTINGS
 def register_route(app):
     @app.route("/")
     def index():
-        return render("index.html", {"title": "使用协议"})
+        return render("index.html", {"title": "安装说明"})
 
 
     @app.route("/check")
@@ -23,23 +23,28 @@ def register_route(app):
 
     @app.route("/database")
     def database():
-        return render("database.html", {"title": "安装数据库"})
+        return render("database.html", {"title": "MySQL 配置", "data": SETTINGS['mysql']})
 
 
     @app.route("/database/manager")
     def database_manager():
-        return render("database-manager.html", {"title": "创建管理员"})
+        return render("database-manager.html", {"title": "后台管理员账号", "data": SETTINGS['core'].get('manager', {})})
 
 
     @app.route("/redis")
     def redis():
-        return render("redis.html", {"title": "Redis 配置"})
+        return render("redis.html", {"title": "Redis 配置", "data": SETTINGS['redis']})
 
 
     @app.route("/influxdb")
     def influxdb():
-        print(SETTINGS['influxdb'])
-        return render("influxdb.html", {"title": "InfluxDB 配置", "influxdb": SETTINGS['influxdb']})
+        return render("influxdb.html", {"title": "InfluxDB 配置", "data": SETTINGS['influxdb']})
+
+
+    @app.route("/setup/info")
+    def setup_info():
+        return render("setup-info.html", {"title": "安装信息", "data": SETTINGS})
+
 
 def register_blueprint(app):
     from route import setup_bp

@@ -1,12 +1,16 @@
+body{
+    padding-bottom: 70px;
+}
+
 header{
     height: 70px;
     line-height: 70px;
-
-    border-bottom: solid #ccc 1px;
     
-    padding-left: 20px;
+    background-color: #6f5499;
+    background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
 
     font-size: 20px;
+    color: #fff;
 }
 
 footer{
@@ -27,6 +31,14 @@ footer{
 }
 
 
-.error{
+.well.error{
     border-color: red;
+}
+
+.well.success{
+    border-color: green;
+}
+
+.setup-info .form-group{
+    margin-bottom: 0
 }

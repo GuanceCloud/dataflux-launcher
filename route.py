@@ -35,6 +35,11 @@ def database_manage_account():
     data = request.json
 
     return response_jsonify(db_setup_core.database_manage_account(data))
+
+
+@setup_bp.route("/database/manager/create", methods=["POST"])
+def database_manage_account_create():
+    return response_jsonify(db_setup_core.database_manage_account_create())
     
 
 @setup_bp.route("/redis/ping", methods=["GET"])
@@ -48,7 +53,7 @@ def redis_ping():
 def influxdb_ping():
     data = request.json
 
-    return  response_jsonify(influxdb_setup.influxdb_ping_all(data))
+    return response_jsonify(influxdb_setup.influxdb_ping_all(data))
     
 
 @setup_bp.route("/influxdb/add", methods=["POST"])
@@ -63,8 +68,6 @@ def influxdb_remove():
     data = request.json
 
     return  response_jsonify(influxdb_setup.influxdb_remove(data))
-
-    return  response_jsonify(influxdb_setup.influxdb_add(data))
 
 
 @setup_bp.route("/influxdb/setup", methods=["POST"])

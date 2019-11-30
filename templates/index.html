@@ -2,8 +2,15 @@
 
 {% block content %}
 
-<div>
-    <botton class="btn btn-default" onclick="setup.setting_init()">同意，开始安装</botton>
+<div class="row form-body">
+    <form class="form-horizontal">
+      <div class="panel panel-default">
+        <div class="panel-heading">安装说明</div>
+        <div class="panel-body">
+            <botton class="btn btn-primary" onclick="setup.setting_init()">开始配置</botton>
+        </div>
+      </div>
+    </form>
 </div>
 
 {% endblock %}

@@ -66,6 +66,12 @@ def database_init_data():
 
 
 def database_manage_account(params):
+    SETTINGS['core']['manager'] = params
+
+    return True
+
+
+def database_manage_account_create():
     sql = '''
             INSERT INTO `main_manage_account` (`uuid`, `name`, `username`, `password`, `email`, `mobile`)
             VALUES (%s, '管理员', %s, %s, %s, '');
@@ -73,9 +79,10 @@ def database_manage_account(params):
 
     mysqlInfo = SETTINGS['mysql']
     dbInfo = SETTINGS['core']['dbInfo']
+    accountInfo = SETTINGS['core']['manager']
 
-    username = params['username']
-    email = params['email']
+    username = accountInfo['username']
+    email = accountInfo['email']
 
     with dbHelper(mysqlInfo) as db:
         password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
@@ -88,7 +95,6 @@ def database_manage_account(params):
 
 
 def database_setup():
-    # print(SETTINGS['secret'])
     database_ddl()
     database_init_data()
 
