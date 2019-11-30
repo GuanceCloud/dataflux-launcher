@@ -173,6 +173,8 @@ var setup = (function () {
         }).done(function(d){
             if (d.content){
                 $('.well-influxdb').addClass('success');
+
+                window.location.href = "/config/review"
             }
         });
     };

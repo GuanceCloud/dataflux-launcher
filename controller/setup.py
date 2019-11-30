@@ -18,7 +18,7 @@ def config_template():
         "core": temp
     }
 
-def init_setting(params):
+def init_setting():
     SETTINGS["core"] = {
         "secret": {
             "frontAuth": shortuuid.ShortUUID().random(length=48),
