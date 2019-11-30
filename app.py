@@ -3,7 +3,7 @@
 from flask import Flask, g
 
 from utils.template import render
-from controller.setup import do_check
+from controller import setup
 
 from controller import SETTINGS
 
@@ -16,9 +16,10 @@ def register_route(app):
 
     @app.route("/check")
     def check():
-        d = do_check()
-
-        return render("check.html", d)
+        # d = do_check()
+        setup.init_setting()
+        
+        return render("check.html", None)
 
 
     @app.route("/database")
@@ -44,6 +45,14 @@ def register_route(app):
     @app.route("/setup/info")
     def setup_info():
         return render("setup-info.html", {"title": "安装信息", "data": SETTINGS})
+
+    @app.route("/config/review")
+    def config_review():
+        config = setup.config_template()
+
+        print(config)
+
+        return render("config-review.html", {"title": "配置预览", "data": config})
 
 
 def register_blueprint(app):

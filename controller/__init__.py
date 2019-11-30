@@ -5,7 +5,10 @@ SETTINGS = {
     "redis": {},
     "influxdb": [{}],
     "messageDesk": {},
-    "core": {}
+    "core": {
+        "dbInfo": {},
+        "secret": {}
+    }
 }
 
 

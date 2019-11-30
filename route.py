@@ -72,6 +72,4 @@ def influxdb_remove():
 
 @setup_bp.route("/influxdb/setup", methods=["POST"])
 def init_influxdb_all():
-    # data = request.json
-
     return  response_jsonify(influxdb_setup.init_influxdb_all())
