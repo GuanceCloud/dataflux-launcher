@@ -57,10 +57,18 @@ def influxdb_add():
 
     return  response_jsonify(influxdb_setup.influxdb_add(data))
 
-    
 
 @setup_bp.route("/influxdb/remove", methods=["POST"])
 def influxdb_remove():
     data = request.json
 
     return  response_jsonify(influxdb_setup.influxdb_remove(data))
+
+    return  response_jsonify(influxdb_setup.influxdb_add(data))
+
+
+@setup_bp.route("/influxdb/setup", methods=["POST"])
+def init_influxdb_all():
+    # data = request.json
+
+    return  response_jsonify(influxdb_setup.init_influxdb_all())

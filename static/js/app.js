@@ -100,7 +100,9 @@ var setup = (function () {
                 "port": $("#iptInfluxDBPort" + i).val(),
                 "username": $("#iptInfluxDBUserName" + i).val(),
                 "password": $("#iptInfluxDBPassword" + i).val(),
-                "dbName": $("#iptInfluxDBName" + i).val()
+                "dbName": $("#iptInfluxDBName" + i).val(),
+                "ssl": $("#ckbInfluxDBSSL" + i).is(":checked"),
+                "kapacitorHost": $("#iptKapacitorHost" + i).val()
             }
 
             dbs.push(db);
@@ -135,6 +137,17 @@ var setup = (function () {
         dbs = this._get_influxdb_list()
 
         this.post("influxdb/add", dbs).done(function(d){
+            console.log(d)
+            if(d.content){
+                window.location.href = "/influxdb"
+            }
+        });
+    };
+
+    app.prototype.influxdb_setup = function(){
+        // dbs = this._get_influxdb_list()
+
+        this.post("influxdb/setup").done(function(d){
             console.log(d)
             if(d.content){
                 window.location.href = "/influxdb"

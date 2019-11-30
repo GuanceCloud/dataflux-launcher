@@ -15,9 +15,16 @@
           <div class="well influxdb-list">
           {% endif %}
             <div class="form-group">
-              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB 地址:</label>
+              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="host" value="{{idb.host}}" placeholder="InfluxDB 地址">
+                <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="host" value="{{idb.host}}" placeholder="InfluxDB Host">
+                <label class="checkbox-inline">
+                  {% if idb.ssl %}
+                  <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> SSL
+                  {% else %}
+                  <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}"> SSL
+                  {% endif %}
+                </label>
               </div>
             </div>
             <div class="form-group">
@@ -45,6 +52,12 @@
               </div>
             </div>
             <div class="form-group">
+              <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">Kapacitor 地址:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="iptKapacitorHost{{ loop.index }}" value="{{idb.kapacitorHost}}" placeholder="Kapacitor 地址，如：http://127.0.0.1:10551">
+              </div>
+            </div>
+            <div class="form-group">
               <label class="col-sm-2 control-label">&nbsp;</label>
               <div class="col-sm-10">
                   <botton class="btn btn-danger btn-sm" onclick="setup.influxdb_remove({{loop.index - 1}})">删除</botton>
@@ -54,7 +67,10 @@
           {% endfor %}
           <div class="form-group">
             <label class="col-sm-2 control-label">&nbsp;</label>
-            <div class="col-sm-10">
+            <div class="col-sm-5">
+                <botton class="btn btn-primary" onclick="setup.influxdb_setup()">配置 InfluxDB</botton>
+            </div>
+            <div class="col-sm-5 text-right">
                 <botton class="btn btn-default" onclick="setup.influxdb_ping()">测试 InfluxDB 连接</botton>
                 <botton class="btn btn-primary" onclick="setup.influxdb_add()">添加实例</botton>
             </div>
