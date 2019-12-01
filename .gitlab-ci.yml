@@ -1,0 +1,29 @@
+variables:
+  REPOSITORY: "cloudcare-forethought/cloudcare-forethought-setup"
+
+stages:
+  - build
+
+buildProd:
+  stage: build
+  only:
+    - /^release(\/|-)?.*$/
+  script:
+    - docker build -t $REPOSITORY:$CI_COMMIT_REF_SLUG .
+    - docker tag $REPOSITORY:$CI_COMMIT_REF_SLUG registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_SLUG
+    - docker tag $REPOSITORY:$CI_COMMIT_REF_SLUG registry.jiagouyun.com/$REPOSITORY:prod
+    - docker push registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_SLUG
+    - docker push registry.jiagouyun.com/$REPOSITORY:prod
+  tags:
+    - cloudcare
+
+buildTesting:
+  stage: build
+  only:
+    - dev
+  script:
+    - docker build -t $REPOSITORY:testing .
+    - docker tag $REPOSITORY:testing registry.jiagouyun.com/$REPOSITORY:testing
+    - docker push registry.jiagouyun.com/$REPOSITORY:testing
+  tags:
+    - cloudcare
