@@ -16,13 +16,13 @@ RUN echo "deb http://mirrors.aliyun.com/debian stretch main contrib non-free" > 
 # 安装 kubectl 工具
 RUN apt-get update && apt-get install -y apt-transport-https
 RUN curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
-RUN echo -e "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
+RUN echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
 RUN apt-get update && apt-get install -y kubectl
 
 
 WORKDIR /config/cloudcare-forethought-setup
 ADD ./requirements.txt /config/cloudcare-forethought-setup/
-RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /config/cloudcare-forethought-setup/requirements.txt
+RUN pip install --upgrade pip && pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /config/cloudcare-forethought-setup/requirements.txt
 
 ADD . /config/cloudcare-forethought-setup/
 
