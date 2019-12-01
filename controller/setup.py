@@ -12,10 +12,14 @@ def do_check():
     return {"status": "check OK"}
 
 def config_template():
-    temp = jinjia2_render('template/forethought-backend.yaml', SETTINGS)
+    coreTemp = jinjia2_render('template/forethought-backend.yaml', SETTINGS)
+    messagedeskTemp = jinjia2_render('template/message-desk.yaml', SETTINGS)
+    kodoTemp = jinjia2_render('template/kodo.yaml', SETTINGS)
 
     return {
-        "core": temp
+        "core": coreTemp,
+        "messagedesk": messagedeskTemp,
+        "kodo": kodoTemp
     }
 
 def init_setting():

@@ -50,8 +50,6 @@ def register_route(app):
     def config_review():
         config = setup.config_template()
 
-        print(config)
-
         return render("config-review.html", {"title": "配置预览", "data": config})
 
 

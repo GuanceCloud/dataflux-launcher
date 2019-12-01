@@ -5,6 +5,7 @@ from utils.handler import response_jsonify
 
 from controller import setup
 from controller import db_setup_core
+from controller import db_setup_message_desk
 from controller import redis_setup
 from controller import influxdb_setup
 
@@ -13,9 +14,7 @@ setup_bp = Blueprint('setup', __name__)
 
 @setup_bp.route("/setting/init", methods=["POST"])
 def init_setting():
-    d = request.json
-
-    return response_jsonify(setup.init_setting(d))
+    return response_jsonify(setup.init_setting())
 
 
 @setup_bp.route("/database/ping", methods=["GET"])
@@ -27,7 +26,10 @@ def database_ping():
 
 @setup_bp.route("/database/setup", methods=["POST"])
 def database_setup():
-    return response_jsonify(db_setup_core.database_setup())
+    db_setup_core.database_setup()
+    db_setup_message_desk.database_setup()
+
+    return response_jsonify(True)
 
 
 @setup_bp.route("/database/manager/add", methods=["POST"])

@@ -45,5 +45,5 @@ inner_app_webhook_url: http://172.16.0.12:10558/api/v1/trigger/webhook
 alert_callback_url: http://172.16.0.12:10551/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
-  frontAuth: {{core.secret.frontAuth}}
-  manageAuth: {{core.secret.manageAuth}}
+  frontAuth: {{(core.secret or {}).frontAuth}}
+  manageAuth: {{(core.secret or {}).manageAuth}}
