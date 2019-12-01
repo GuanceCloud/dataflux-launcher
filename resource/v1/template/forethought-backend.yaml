@@ -1,11 +1,5 @@
-# 项目名称
-appName: Forethought
-
 # 报错告警所使用的环境名
 envName: FT2.0测试环境
-
-# 显示API Doc
-isShowDoc: true
 
 protocol: "http"
 hostname: "console.cloudcare.cn"

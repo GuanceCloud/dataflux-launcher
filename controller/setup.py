@@ -4,12 +4,23 @@ import os
 import shortuuid
 import pymysql
 
+import markdown
+
 from utils.template import jinjia2_render
 from . import SETTINGS
 
 
 def do_check():
     return {"status": "check OK"}
+
+
+def readme():
+    with open(os.path.abspath("templates/readme.md"), 'r') as f:
+        readme = f.read()      
+        return markdown.markdown(readme)
+
+    return ""
+
 
 def config_template():
     coreTemp = jinjia2_render('template/forethought-backend.yaml', SETTINGS)

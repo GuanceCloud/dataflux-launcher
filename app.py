@@ -11,7 +11,9 @@ from controller import SETTINGS
 def register_route(app):
     @app.route("/")
     def index():
-        return render("index.html", {"title": "安装说明"})
+        readme = setup.readme()
+
+        return render("index.html", {"title": "安装说明", "data": readme})
 
 
     @app.route("/check")
