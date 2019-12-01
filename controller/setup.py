@@ -15,7 +15,7 @@ def do_check():
 
 
 def readme():
-    with open(os.path.abspath("templates/readme.md"), 'r') as f:
+    with open(os.path.abspath("templates/README.md"), 'r') as f:
         readme = f.read()      
         return markdown.markdown(readme)
 
