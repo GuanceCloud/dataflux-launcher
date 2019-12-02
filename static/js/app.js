@@ -42,14 +42,13 @@ var setup = (function () {
             "password": $("#iptDBUserPwd").val()
         }
 
-        that = this
+        var that = this
 
         this.get("database/ping", params).done(function(d){
             if (d.content){
                 if (next){
                     window.location.href = "/database/manager"
                 }
-                // that.database_setup();
             }else{
                 alert("MySQL 连接失败");
             }
@@ -89,9 +88,9 @@ var setup = (function () {
     };
 
     app.prototype._get_influxdb_list = function(){        
-        influxdbCount = $('.influxdb-list').length
+        var influxdbCount = $('.influxdb-list').length
 
-        dbs = []
+        var dbs = []
         for(var i = 1; i < influxdbCount + 1; i++){
             var db = {
                 "host": $("#iptInfluxDBHost" + i).val(),
@@ -119,7 +118,7 @@ var setup = (function () {
 
     // influxdb 连接测试
     app.prototype.influxdb_ping = function(next){
-        dbs = this._get_influxdb_list()
+        var dbs = this._get_influxdb_list()
 
         this.post("influxdb/ping", dbs).done(function(d){
             if(d.content){
@@ -133,7 +132,7 @@ var setup = (function () {
     };
 
     app.prototype.influxdb_add = function(){
-        dbs = this._get_influxdb_list()
+        var dbs = this._get_influxdb_list()
 
         this.post("influxdb/add", dbs).done(function(d){
             if(d.content){
@@ -143,39 +142,40 @@ var setup = (function () {
     };
 
     app.prototype.database_setup = function(){
-        return this.post("database/setup");
+        return this.post("database/setup").done(function(d){
+            if(d.content){
+                $('.well-mysql').addClass('success');
+            }
+        });
     };
 
     app.prototype.database_manager_create = function(){
-        return this.post("database/manager/create");
+        return this.post("database/manager/create").done(function(d){
+            if (d.content){
+                $('.well-manager').addClass('success');
+                $('.well-redis').addClass('success');
+            }
+        });
     };
 
     app.prototype.influxdb_setup = function(){
-        return this.post("influxdb/setup");
+        return this.post("influxdb/setup").done(function(d){
+            if (d.content){
+                $('.well-influxdb').addClass('success');
+            }
+        });
     };
 
 
     app.prototype.do_setup = function(){
-        that = this
-        this.database_setup().done(function(d){
-            if(d.content){
-                $('.well-mysql').addClass('success');
+        var that = this
 
-                return that.database_manager_create();
-            }
-        }).done(function(d){
-            if (d.content){
-                $('.well-manager').addClass('success');
-                $('.well-redis').addClass('success');
-
-                return that.influxdb_setup()
-            }
-        }).done(function(d){
-            if (d.content){
-                $('.well-influxdb').addClass('success');
-
-                window.location.href = "/config/review"
-            }
+        this.database_setup().then(function(){
+            return that.database_manager_create();
+        }).then(function(){
+            return that.influxdb_setup();
+        }).then(function(){
+            window.location.href = "/config/review";
         });
     };
 
