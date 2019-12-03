@@ -37,7 +37,7 @@ class dbHelper(object):
 
             for statement in ddl.split(';'):
                 statement = statement.strip()
-                
+
                 if len(statement) > 0:
                     if not params:
                         cursor.execute(statement + ';')

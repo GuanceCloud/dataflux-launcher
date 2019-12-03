@@ -20,7 +20,7 @@ def register_route(app):
     def check():
         # d = do_check()
         setup.init_setting()
-        
+
         return render("check.html", None)
 
 
@@ -57,7 +57,7 @@ def register_route(app):
 
 def register_blueprint(app):
     from route import setup_bp
-    
+
     app.register_blueprint(setup_bp, url_prefix="/api/v1")
 
 

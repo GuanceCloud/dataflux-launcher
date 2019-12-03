@@ -1,11 +1,7 @@
 # encoding=utf-8
 
-import os
-import re
-import shortuuid
-import pymysql
-
-import markdown
+import os, re, subprocess
+import markdown, shortuuid, pymysql
 
 from utils.template import jinjia2_render
 from . import SETTINGS
@@ -38,10 +34,17 @@ def config_template():
 
 
 def configmap_create(maps):
+    tmpPath = "/tmp/configmap.yaml"
     configmap = jinjia2_render('template/k8s-service/configmap.yaml', {"config": maps})
 
-    with open(os.path.abspath("/tmp/configmap.yaml"), 'w') as f:
-        f.write(configmap)
+    try:
+        with open(os.path.abspath(tmpPath), 'w') as f:
+            f.write(configmap)
+
+        cmd = "kubectl create -f {}".format(tmpPath)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    except:
+        return False
 
     return True
 

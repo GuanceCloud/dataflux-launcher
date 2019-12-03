@@ -35,4 +35,4 @@ metadata:
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: messageDesk
+  name: message-desk

@@ -1,6 +1,26 @@
+database:
+    db_dialect: "mysql"
+    connection: {{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@tcp({{mysql.host}}:{{mysql.port}})/{{core.dbInfo.dbName}}"
+
 redis:
-  host: {{redis.host}}
-  port: {{redis.port}}
-  db: 1
-  password: {{redis.password}}
-  max_connections: 1000
+    host: {{redis.host}}:{{redis.port}}
+    password: {{redis.password}}
+    db:  0
+
+log:
+    log_file: "/logdata/log"
+    level: "debug"
+    disable_json: true
+    disable_long_file_name: false
+    gin_log_file: "/logdata/gin.log"
+
+global:
+    enable_inner_api: true
+    stats_on: 256
+    listen: ":9527"
+    workers: 8
+
+influxdb:
+    read_timeout: 500
+    write_timeout: 30000
+    alert_rp: "rp_365"
