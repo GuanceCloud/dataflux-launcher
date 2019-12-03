@@ -179,5 +179,21 @@ var setup = (function () {
         });
     };
 
+
+    app.prototype.configmap_create = function(){
+        var maps = {
+            "core": $("#txtCore").val(),
+            "messageDesk": {
+                "api": $("#txtMessageDeskApi").val(),
+                "worker": $("#txtMessageDeskWorker").val()
+            },
+            "kodo": $("#txtKodo").val(),
+        }
+
+        this.post("configmap/create", maps).then(function(d){
+            // return that.database_manager_create();
+        });
+    };
+
     return new app();
 })();

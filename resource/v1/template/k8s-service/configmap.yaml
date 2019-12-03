@@ -1,0 +1,38 @@
+﻿apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.core | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: core
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.kodo | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: kodo
+
+---
+
+apiVersion: v1
+data:
+  config-api.yaml: |-
+{{ (config.messageDesk or {}).api | indent(4) }}
+  config-worker.yaml: |-
+{{ (config.messageDesk or {}).worker | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: messageDesk

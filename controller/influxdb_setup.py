@@ -92,7 +92,7 @@ def _init_influxdb(instance):
             "db": db,
             "rp": "rp_365",
             "ro_user": dbInfo['username'], 
-            "rw_user": dbInfo['password']
+            "rw_user": dbInfo['username']
         }
 
         querySQL = '''

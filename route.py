@@ -75,3 +75,10 @@ def influxdb_remove():
 @setup_bp.route("/influxdb/setup", methods=["POST"])
 def init_influxdb_all():
     return  response_jsonify(influxdb_setup.init_influxdb_all())
+
+
+@setup_bp.route("/configmap/create", methods=["POST"])
+def configmap_create():
+    data = request.json
+    
+    return  response_jsonify(setup.configmap_create(data))

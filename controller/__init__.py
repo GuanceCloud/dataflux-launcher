@@ -47,8 +47,8 @@ SETTINGS = {
     {
       "host": "127.0.0.1",
       "port": "8086",
-      "username": "root",
-      "password": "root",
+      "username": "admin",
+      "password": "123123",
       "ssl": False,
       "dbName": "test_db",
       "kapacitorHost": "http://127.0.0.1:1234"

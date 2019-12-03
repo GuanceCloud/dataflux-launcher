@@ -1,6 +1,7 @@
 # encoding=utf-8
 
 import os
+import re
 import shortuuid
 import pymysql
 
@@ -16,22 +17,34 @@ def do_check():
 
 def readme():
     with open(os.path.abspath("templates/README.md"), 'r') as f:
-        readme = f.read()      
+        readme = f.read()
         return markdown.markdown(readme)
 
     return ""
 
 
 def config_template():
-    coreTemp = jinjia2_render('template/forethought-backend.yaml', SETTINGS)
-    messagedeskTemp = jinjia2_render('template/message-desk.yaml', SETTINGS)
-    kodoTemp = jinjia2_render('template/kodo.yaml', SETTINGS)
+    coreTemp = jinjia2_render('template/config/forethought-backend.yaml', SETTINGS)
+    kodoTemp = jinjia2_render('template/config/kodo.yaml', SETTINGS)
+    messageDeskTempApi = jinjia2_render('template/config/message-desk-api.yaml', SETTINGS)
+    messageDeskTempWorker = jinjia2_render('template/config/message-desk-worker.yaml', SETTINGS)
 
     return {
         "core": coreTemp,
-        "messagedesk": messagedeskTemp,
-        "kodo": kodoTemp
+        "kodo": kodoTemp,
+        "messageDeskApi": messageDeskTempApi,
+        "messageDeskWorker": messageDeskTempWorker
     }
+
+
+def configmap_create(maps):
+    configmap = jinjia2_render('template/k8s-service/configmap.yaml', {"config": maps})
+
+    with open(os.path.abspath("/tmp/configmap.yaml"), 'w') as f:
+        f.write(configmap)
+
+    return True
+
 
 def init_setting():
     SETTINGS["core"] = {
