@@ -2,7 +2,7 @@
 envName: FT2.0测试环境
 
 protocol: "http"
-hostname: "console.cloudcare.cn"
+hostname: "console.{{ other.domain }}"
 
 database:
     # 测试环境容器外使用地址

@@ -19,6 +19,12 @@ def readme():
     return ""
 
 
+def other_config(params):
+    SETTINGS['other'] = params
+
+    return True
+
+
 def config_template():
     coreTemp = jinjia2_render('template/config/forethought-backend.yaml', SETTINGS)
     kodoTemp = jinjia2_render('template/config/kodo.yaml', SETTINGS)

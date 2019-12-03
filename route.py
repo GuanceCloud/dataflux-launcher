@@ -32,11 +32,11 @@ def database_setup():
     return response_jsonify(True)
 
 
-@setup_bp.route("/database/manager/add", methods=["POST"])
-def database_manage_account():
+@setup_bp.route("/other/config", methods=["POST"])
+def other_config():
     data = request.json
 
-    return response_jsonify(db_setup_core.database_manage_account(data))
+    return response_jsonify(setup.other_config(data))
 
 
 @setup_bp.route("/database/manager/create", methods=["POST"])

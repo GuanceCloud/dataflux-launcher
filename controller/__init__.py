@@ -1,15 +1,22 @@
 # encoding=utf-8
 
-# SETTINGS = {
-#     "mysql": {},
-#     "redis": {},
-#     "influxdb": [{}],
-#     "messageDesk": {},
-#     "core": {
-#         "dbInfo": {},
-#         "secret": {}
-#     }
-# }
+SETTINGS = {
+    "mysql": {},
+    "redis": {},
+    "influxdb": [{}],
+    "messageDesk": {},
+    "core": {
+        "dbInfo": {},
+        "secret": {}
+    },
+    "other": {
+      "manager": {
+        "username": "",
+        "email": ""
+      },
+      "domain": ""
+    }
+}
 
 
 # test data
@@ -26,10 +33,7 @@ SETTINGS = {
       "dbUser": "Forethought",
       "dbUserPassword": "123321"
     },
-    "manager": {
-      "username": "admin",
-      "email": "lhm@jiagouyun.com"
-    }
+    "secret": {}
   },
   "messageDesk": {
     "dbInfo": {
@@ -53,7 +57,14 @@ SETTINGS = {
       "dbName": "test_db",
       "kapacitorHost": "http://127.0.0.1:1234"
     }
-  ]
+  ],
+  "other": {
+    "manager": {
+      "username": "admin",
+      "email": "lhm@jiagouyun.com"
+    },
+    "domain": ""
+  }
 }
 
 

@@ -29,9 +29,9 @@ def register_route(app):
         return render("database.html", {"title": "MySQL 配置", "data": SETTINGS['mysql']})
 
 
-    @app.route("/database/manager")
-    def database_manager():
-        return render("database-manager.html", {"title": "后台管理员账号", "data": SETTINGS['core'].get('manager', {})})
+    @app.route("/other")
+    def other():
+        return render("other.html", {"title": "其他配置", "data": SETTINGS['other']})
 
 
     @app.route("/redis")

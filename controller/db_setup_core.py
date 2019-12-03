@@ -65,12 +65,6 @@ def database_init_data():
     return True
 
 
-def database_manage_account(params):
-    SETTINGS['core']['manager'] = params
-
-    return True
-
-
 def database_manage_account_create():
     sql = '''
             INSERT INTO `main_manage_account` (`uuid`, `name`, `username`, `password`, `email`, `mobile`)
@@ -79,17 +73,18 @@ def database_manage_account_create():
 
     mysqlInfo = SETTINGS['mysql']
     dbInfo = SETTINGS['core']['dbInfo']
-    accountInfo = SETTINGS['core']['manager']
+    accountInfo = SETTINGS['other'].get('manager', {})
 
-    username = accountInfo['username']
-    email = accountInfo['email']
+    username = accountInfo.get('username')
+    email = accountInfo.get('email')
 
-    with dbHelper(mysqlInfo) as db:
-        password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
+    if not username:
+        with dbHelper(mysqlInfo) as db:
+            password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
 
-        params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email)
+            params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email)
 
-        db.execute(sql, dbName = dbInfo['dbName'], params = params)
+            db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
     return True
 

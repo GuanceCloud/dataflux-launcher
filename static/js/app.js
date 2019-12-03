@@ -47,23 +47,10 @@ var setup = (function () {
         this.get("database/ping", params).done(function(d){
             if (d.content){
                 if (next){
-                    window.location.href = "/database/manager"
+                    window.location.href = "/redis"
                 }
             }else{
                 alert("MySQL 连接失败");
-            }
-        });
-    };
-
-    app.prototype.database_manager_add = function(){
-        var data = {
-            "username": $("#iptUserName").val(),
-            "email": $("#iptUserEmail").val()
-        }
-
-        this.post("database/manager/add", data).done(function(d){
-            if (d.content){
-                window.location.href = "/redis"
             }
         });
     };
@@ -123,7 +110,7 @@ var setup = (function () {
         this.post("influxdb/ping", dbs).done(function(d){
             if(d.content){
                 if (next){
-                    window.location.href = "/setup/info"
+                    window.location.href = "/other"
                 }
             }else{
                 alert("InfluxDB 连接失败")
@@ -137,6 +124,22 @@ var setup = (function () {
         this.post("influxdb/add", dbs).done(function(d){
             if(d.content){
                 window.location.href = "/influxdb"
+            }
+        });
+    };
+
+    app.prototype.other_config = function(){
+        var data = {
+            "manager":{
+                "username": $("#iptUserName").val(),
+                "email": $("#iptUserEmail").val()
+            },
+            "domain": $("#iptDomain").val()
+        }
+
+        this.post("other/config", data).done(function(d){
+            if (d.content){
+                window.location.href = "/setup/info"
             }
         });
     };
