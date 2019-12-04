@@ -1,22 +1,23 @@
 # encoding=utf-8
 
-SETTINGS = {
-    "mysql": {},
-    "redis": {},
-    "influxdb": [{}],
-    "messageDesk": {},
-    "core": {
-        "dbInfo": {},
-        "secret": {}
-    },
-    "other": {
-      "manager": {
-        "username": "",
-        "email": ""
-      },
-      "domain": ""
-    }
-}
+# SETTINGS = {
+#     "mysql": {},
+#     "redis": {},
+#     "influxdb": [{}],
+#     "messageDesk": {},
+#     "core": {
+#         "dbInfo": {},
+#         "secret": {}
+#     },
+#     "other": {
+#       "manager": {
+#         "username": "",
+#         "email": ""
+#       },
+#       "domain": ""
+#     },
+#     "serviceImages": {}
+# }
 
 
 # test data
@@ -64,7 +65,8 @@ SETTINGS = {
       "email": "lhm@jiagouyun.com"
     },
     "domain": ""
-  }
+  },
+  "serviceImages":{}
 }
 
 
@@ -105,4 +107,8 @@ SETTINGS = {
         ssl:
         dbName:
         kapacitorHost:
+    other:
+        manager:
+        domain
+    serviceImages:
 '''

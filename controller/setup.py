@@ -55,6 +55,10 @@ def configmap_create(maps):
     return True
 
 
+def service_image(images):
+    pass
+
+
 def init_setting():
     SETTINGS["core"] = {
         "secret": {

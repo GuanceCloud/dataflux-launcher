@@ -48,11 +48,17 @@ def register_route(app):
     def setup_info():
         return render("setup-info.html", {"title": "安装信息", "data": SETTINGS})
 
+
     @app.route("/config/review")
     def config_review():
         config = setup.config_template()
 
         return render("config-review.html", {"title": "配置预览", "data": config})
+
+
+    @app.route("/service/image")
+    def serviceImageSetting():
+        return render("service-image.html", {"title": "服务镜像配置", "data": SETTINGS['serviceImages']})
 
 
 def register_blueprint(app):

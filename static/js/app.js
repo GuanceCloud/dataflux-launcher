@@ -173,12 +173,17 @@ var setup = (function () {
     app.prototype.do_setup = function(){
         var that = this
 
+        $('#btnDoSetup').attr("disabled","disabled");
         this.database_setup().then(function(){
             return that.database_manager_create();
         }).then(function(){
             return that.influxdb_setup();
-        }).then(function(){
-            window.location.href = "/config/review";
+        }).then(function(d){
+            if (d.content){
+              window.location.href = "/config/review";
+            }
+        }).done(function(){
+          $('#btnDoSetup').removeAttr("disabled");
         });
     };
 
