@@ -3,9 +3,9 @@
 {% block content %}
 
 <div class="row form-body">
-    <form class="form-horizontal">
+    <div class="form-horizontal">
       <div class="panel panel-default">
-        <div class="panel-heading">服务镜像配置</div>
+        <div class="panel-heading">应用服务配置</div>
         <div class="panel-body">
           <div class="form-group">
             <label for="iptManageBacken" class="col-sm-2 control-label">manage-backend:</label>
@@ -35,14 +35,14 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">&nbsp;</label>
             <div class="col-sm-5">
-                <button class="btn btn-primary" onclick="setup.redis_ping(true)">
-                  下一步 <i class="glyphicon glyphicon-arrow-right"></i>
+                <button class="btn btn-danger" onclick="setup.service_create(true)">
+                  创建应用服务
                 </button>
             </div>
           </div>
         </div>
       </div>
-    </form>
+    </div>
 </div>
 
 {% endblock %}

@@ -200,7 +200,30 @@ var setup = (function () {
 
         this.post("configmap/create", maps).then(function(d){
             // return that.database_manager_create();
+            window.location.href = "/service/config";
         });
+    };
+
+
+    app.prototype.service_create = function(){
+      configs = {
+          "front-backend": {
+            "imagePath": $('#iptFrontBackend').val()
+          },
+          "integration-scanner": {
+            "imagePath": $('#iptIntegrationScanner').val()
+          },
+          "manage-backend": {
+            "imagePath": $('#iptManageBackend').val()
+          },
+          "websocket": {
+            "imagePath": $('#iptWebsocket').val()
+          }
+      }
+
+      this.post("service/create", configs).then(function(d){
+        console.log(d);
+      });
     };
 
     return new app();

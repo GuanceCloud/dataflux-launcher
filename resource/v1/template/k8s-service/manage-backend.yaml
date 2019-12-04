@@ -4,7 +4,7 @@ metadata:
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: front-backend
+  name: manage-backend
   namespace: forethought-core
 spec:
   ports:
@@ -29,7 +29,7 @@ metadata:
   labels:
     cattle.io/creator: norman
     workload.user.cattle.io/workloadselector: deployment-cloudcare-forethought-forethought-backend
-  name: front-backend
+  name: manage-backend
   namespace: forethought-core
 spec:
   progressDeadlineSeconds: 30

@@ -16,7 +16,7 @@
 #       },
 #       "domain": ""
 #     },
-#     "serviceImages": {}
+#     "serviceConfig": {}
 # }
 
 
@@ -66,7 +66,7 @@ SETTINGS = {
     },
     "domain": ""
   },
-  "serviceImages":{}
+  "serviceConfig":{}
 }
 
 
@@ -110,5 +110,5 @@ SETTINGS = {
     other:
         manager:
         domain
-    serviceImages:
+    serviceConfig:
 '''

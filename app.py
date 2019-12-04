@@ -56,9 +56,14 @@ def register_route(app):
         return render("config-review.html", {"title": "配置预览", "data": config})
 
 
-    @app.route("/service/image")
-    def serviceImageSetting():
-        return render("service-image.html", {"title": "服务镜像配置", "data": SETTINGS['serviceImages']})
+    @app.route("/service/config")
+    def serviceConfig():
+        return render("service-config.html", {"title": "应用服务配置", "data": SETTINGS['serviceConfig']})
+
+
+    @app.route("/complete")
+    def complete():
+        return render("complete.html", {"title": "安装完毕"})
 
 
 def register_blueprint(app):

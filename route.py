@@ -82,3 +82,10 @@ def configmap_create():
     data = request.json
     
     return  response_jsonify(setup.configmap_create(data))
+
+
+@setup_bp.route("/service/create", methods=["POST"])
+def service_create():
+    data = request.json
+    
+    return  response_jsonify(setup.service_create(data))
