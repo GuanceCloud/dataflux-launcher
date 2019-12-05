@@ -16,6 +16,10 @@ var setup = (function () {
             })
         };
 
+        this.go = function(path){
+          window.location.href = path + "?" + (new Date().valueOf());
+        }
+
         this.get = function(url, data, headers){
             return _send(url, "GET", data, null, headers)
         };
@@ -26,15 +30,16 @@ var setup = (function () {
     }
 
     app.prototype.setting_init = function(){
-        this.post("setting/init").done(function(d){
-            console.log('setting init')
+        var that = this;
 
-            window.location.href = "/check"
+        this.post("setting/init").done(function(d){
+            that.go("/check");
         });
     };
 
     // mysql 数据库连接测试
     app.prototype.database_ping = function(next){
+        var that = this;
         var params = {
             "host": $("#iptDBHost").val(),
             "port": $("#iptDBPort").val(),
@@ -42,12 +47,11 @@ var setup = (function () {
             "password": $("#iptDBUserPwd").val()
         }
 
-        var that = this
 
         this.get("database/ping", params).done(function(d){
             if (d.content){
                 if (next){
-                    window.location.href = "/redis"
+                    that.go("/redis");
                 }
             }else{
                 alert("MySQL 连接失败");
@@ -57,6 +61,7 @@ var setup = (function () {
 
     // redis 连接测试
     app.prototype.redis_ping = function(next){
+        var that = this;
         var params = {
             "host": $("#iptRedisHost").val(),
             "port": $("#iptRedisPort").val(),
@@ -66,7 +71,7 @@ var setup = (function () {
         this.get("redis/ping", params).done(function(d){
             if(d.content){
                 if (next){
-                    window.location.href = "/influxdb"
+                    that.go("/influxdb");
                 }
             }else{
                 alert("Redis 连接失败")
@@ -96,9 +101,10 @@ var setup = (function () {
     };
 
     app.prototype.influxdb_remove = function(idx){
+        var that = this;
         this.post("influxdb/remove", {"index": idx}).done(function(d){
             if(d.content){
-                window.location.href = "/influxdb"
+                that.go("/influxdb");
             }
         });
     };
@@ -106,11 +112,12 @@ var setup = (function () {
     // influxdb 连接测试
     app.prototype.influxdb_ping = function(next){
         var dbs = this._get_influxdb_list()
+        var that = this;
 
         this.post("influxdb/ping", dbs).done(function(d){
             if(d.content){
                 if (next){
-                    window.location.href = "/other"
+                    that.go("/other");
                 }
             }else{
                 alert("InfluxDB 连接失败")
@@ -120,15 +127,17 @@ var setup = (function () {
 
     app.prototype.influxdb_add = function(){
         var dbs = this._get_influxdb_list()
+        var that = this;
 
         this.post("influxdb/add", dbs).done(function(d){
             if(d.content){
-                window.location.href = "/influxdb"
+                that.go("/influxdb");
             }
         });
     };
 
     app.prototype.other_config = function(){
+        var that = this;
         var data = {
             "manager":{
                 "username": $("#iptUserName").val(),
@@ -139,7 +148,7 @@ var setup = (function () {
 
         this.post("other/config", data).done(function(d){
             if (d.content){
-                window.location.href = "/setup/info"
+                that.go("/setup/info");
             }
         });
     };
@@ -180,7 +189,7 @@ var setup = (function () {
             return that.influxdb_setup();
         }).then(function(d){
             if (d.content){
-              window.location.href = "/config/review";
+              that.go("/config/review");
             }
         }).done(function(){
           $('#btnDoSetup').removeAttr("disabled");
@@ -189,6 +198,7 @@ var setup = (function () {
 
 
     app.prototype.configmap_create = function(){
+        var that = this;
         var maps = {
             "core": $("#txtCore").val(),
             "messageDesk": {
@@ -200,12 +210,14 @@ var setup = (function () {
 
         this.post("configmap/create", maps).then(function(d){
             // return that.database_manager_create();
-            window.location.href = "/service/config";
+            that.go("/service/config");
         });
     };
 
 
     app.prototype.service_create = function(){
+      that = this
+
       configs = {
           "front-backend": {
             "imagePath": $('#iptFrontBackend').val()
@@ -222,7 +234,9 @@ var setup = (function () {
       }
 
       this.post("service/create", configs).then(function(d){
-        console.log(d);
+        if (d.content){
+          that.go("/complete");
+        }
       });
     };
 
