@@ -18,19 +18,22 @@ def influxdb_ping(db):
         "ssl": db.get('ssl')
     }
 
-    client = InfluxDBClient(**dbInfo)
-
     pingError = True
+    client = InfluxDBClient(**dbInfo)
 
     try:
         pingError = not client.ping()
+
+        if pingError:
+            return False
+
+        client.query("SHOW DATABASES")
     except:
         pingError = True
-        pass
 
     db["pingError"] = pingError
 
-    return True
+    return not pingError
 
 def influxdb_ping_all(dbs):
     for db in dbs:
@@ -42,9 +45,7 @@ def influxdb_ping_all(dbs):
     for idx, db in enumerate(dbs):
         n.append(dict(influxdb[idx] if idx < len(influxdb) else {}, **db))
 
-    # print(SETTINGS['influxdb'])
-
-    return True
+    return [{"pingError": item['pingError']} for item in n]
 
 
 def influxdb_remove(d):

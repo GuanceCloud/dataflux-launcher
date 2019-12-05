@@ -116,7 +116,19 @@ var setup = (function () {
 
         this.post("influxdb/ping", dbs).done(function(d){
             if(d.content){
-                if (next){
+                var hasError = false;
+                for(var i = 0; i < d.content.length; i++){
+                  var db = d.content[i]
+
+                  if (db.pingError){
+                    $(".influxdb-list:eq(" + i + ")").addClass('error')
+                    hasError = true
+                  }else{
+                    $(".influxdb-list:eq(" + i + ")").removeClass('error')
+                  }
+                }
+
+                if (next && !hasError){
                     that.go("/other");
                 }
             }else{
