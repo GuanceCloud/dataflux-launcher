@@ -21,7 +21,7 @@ spec:
         - run.sh
         - -e
         - RUN_APP_CODE=admin
-        image: {{ config.iamgePath }}
+        image: {{ config.imagePath }}
         imagePullPolicy: IfNotPresent
         name: manage-backend
         ports:

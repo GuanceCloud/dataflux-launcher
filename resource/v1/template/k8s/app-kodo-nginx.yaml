@@ -16,7 +16,7 @@ spec:
         app: deployment-forethought-kodo-kodo-nginx
     spec:
       containers:
-      - image: {{ config.iamgePath }}
+      - image: {{ config.imagePath }}
         imagePullPolicy: IfNotPresent
         name: kodo-nginx
         ports:

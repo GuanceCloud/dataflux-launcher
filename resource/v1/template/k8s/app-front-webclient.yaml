@@ -15,7 +15,7 @@ spec:
         app: deployment-forethought-webclient-front-webclient
     spec:
       containers:
-      - image: {{ config.iamgePath }}
+      - image: {{ config.imagePath }}
         imagePullPolicy: IfNotPresent
         name: front-webclient
         ports:

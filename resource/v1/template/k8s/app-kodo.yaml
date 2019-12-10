@@ -24,7 +24,7 @@ spec:
           value: "500"
         - name: KODO_WORKERS
           value: "8"
-        image: {{ config.iamgePath }}
+        image: {{ config.imagePath }}
         imagePullPolicy: IfNotPresent
         name: kodo
         ports:
