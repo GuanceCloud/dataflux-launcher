@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-nginx
+  name: kodo-nginx
+  namespace: forethought-kodo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-nginx
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-nginx
+    spec:
+      containers:
+      - image: {{ config.iamgePath }}
+        imagePullPolicy: IfNotPresent
+        name: kodo-nginx
+        ports:
+        - containerPort: 80
+          name: 80tcp4432
+          protocol: TCP
+        - containerPort: 80
+          name: 80tcp802
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: kodo-web-config
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: kodo-nginx
+          optional: false
+        name: kodo-web-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kodo-nginx
+  namespace: forethought-kodo
+spec:
+  externalTrafficPolicy: Local
+  healthCheckNodePort: 32343
+  ports:
+  - name: 80tcp4432
+    nodePort: 32561
+    port: 443
+    protocol: TCP
+    targetPort: 80
+  - name: 80tcp802
+    nodePort: 31465
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deployment-forethought-kodo-kodo-nginx
+  type: LoadBalancer

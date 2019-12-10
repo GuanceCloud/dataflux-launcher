@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-webclient-manage-webclient
+  name: manage-webclient
+  namespace: forethought-webclient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-webclient-manage-webclient
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-webclient-manage-webclient
+    spec:
+      containers:
+      - image: {{ config.iamgePath }}
+        imagePullPolicy: IfNotPresent
+        name: manage-webclient
+        ports:
+        - containerPort: 80
+          name: 80tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: ft-mgr-config
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: ft-mgr-config
+          optional: false
+        name: ft-mgr-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: manage-webclient
+  namespace: forethought-webclient
+spec:
+  ports:
+  - name: 80tcp02
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deployment-forethought-webclient-manage-webclient
+  type: ClusterIP

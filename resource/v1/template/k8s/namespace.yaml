@@ -5,6 +5,12 @@ metadata:
 
 --- 
 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: forethought-inner-app
+
+--- 
 
 apiVersion: v1
 kind: Namespace
@@ -23,5 +29,5 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: forethought-kapacitor
+  name: middleware
 

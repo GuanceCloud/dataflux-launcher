@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-inner
+  name: kodo-inner
+  namespace: forethought-kodo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-inner
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-inner
+    spec:
+      containers:
+      - args:
+        - sh
+        - /kodo/prod.run.inner.sh
+        env:
+        - name: KODO_INFLUX_WRITE_TIMEOUT_MS
+          value: "500"
+        - name: KODO_WORKERS
+          value: "8"
+        image: {{ config.iamgePath }}
+ 
+        imagePullPolicy: IfNotPresent
+        name: kodo-inner
+        ports:
+        - containerPort: 9527
+          name: 9527tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /kodo/config/config.yml
+          name: kodo-inner
+          subPath: config.yaml
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: kodo-inner
+          optional: false
+        name: kodo-inner
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kodo-inner
+  namespace: forethought-kodo
+spec:
+  ports:
+  - name: 9527tcp02
+    port: 9527
+    protocol: TCP
+    targetPort: 9527
+  selector:
+    app: deployment-forethought-kodo-kodo-inner
+  type: ClusterIP

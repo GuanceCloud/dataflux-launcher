@@ -1,0 +1,96 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: front-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: console-api.{{ other.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: front-backend
+          servicePort: 5000
+        path: /
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: manage-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: management-api.{{ other.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: manage-backend
+          servicePort: 5000
+        path: /
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: websocket
+  namespace: forethought-core
+spec:
+  rules:
+  - host: ws.{{ other.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: websocket
+          servicePort: 8080
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: front-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: console.{{ other.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: front-webclient
+          servicePort: 80
+        path: /
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: manage-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: management.{{ other.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: manage-webclient
+          servicePort: 80
+        path: /
+status:
+  loadBalancer: {}

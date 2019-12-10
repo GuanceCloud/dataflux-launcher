@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-core-websocket
+  name: websocket
+  namespace: forethought-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-websocket
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-websocket
+    spec:
+      containers:
+      - args:
+        - python
+        - ft_websocket.py
+        image: {{ config.iamgePath }}
+        imagePullPolicy: IfNotPresent
+        name: websocket
+        ports:
+        - containerPort: 8080
+          name: 8080tcp105611
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: ft-backend-config
+          subPath: config.yaml
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: ft-backend-config
+          optional: false
+        name: ft-backend-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket
+  namespace: forethought-core
+spec:
+  ports:
+  - name: 8080tcp105611-websocket
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: deployment-forethought-core-websocket
+  type: ClusterIP

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-webclient
+  namespace: forethought-webclient
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-webclient-front-webclient
+  strategy:
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-webclient-front-webclient
+    spec:
+      containers:
+      - image: {{ config.iamgePath }}
+        imagePullPolicy: IfNotPresent
+        name: front-webclient
+        ports:
+        - containerPort: 80
+          name: 80tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: ft-web-config
+      imagePullSecrets:
+      - name: registry-key
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: ft-web-config
+          optional: false
+        name: ft-web-config
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-webclient
+  namespace: forethought-webclient
+spec:
+  ports:
+  - name: 80tcp02
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deployment-forethought-webclient-front-webclient
+  type: ClusterIP

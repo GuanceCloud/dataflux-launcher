@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-core-integration-scanner
+  name: integration-scanner
+  namespace: forethought-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-integration-scanner
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-integration-scanner
+    spec:
+      containers:
+      - args:
+        - bash
+        - run_celery.sh
+        name: integration-scanner
+        image: {{ config.iamgePath }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: ft-backend-config
+          subPath: config.yaml
+        - mountPath: /config/cloudcare-forethought-backend/sysconfig
+          name: ft-sysconfig
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: ft-backend-config
+          optional: false
+        name: ft-backend-config
+      - name: ft-sysconfig
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: integration-scanner
+  namespace: forethought-core
+spec:
+  clusterIP: None
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-forethought-core-integration-scanner
+  type: ClusterIP

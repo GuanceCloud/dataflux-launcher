@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-core-inner
+  name: inner
+  namespace: forethought-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-inner
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-inner
+    spec:
+      containers:
+      - args:
+        - bash
+        - run.sh
+        - -e
+        - RUN_APP_CODE=inner
+        image: {{ config.iamgePath }}
+        imagePullPolicy: IfNotPresent
+        name: inner
+        ports:
+        - containerPort: 5000
+          name: 5000tcp01
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: ft-backend-config
+          subPath: config.yaml
+        - mountPath: /config/cloudcare-forethought-backend/sysconfig
+          name: ft-sysconfig
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: ft-backend-config
+          optional: false
+        name: ft-backend-config
+      - name: ft-sysconfig
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: inner
+  namespace: forethought-core
+spec:
+  ports:
+  - name: 5000tcp02
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: deployment-forethought-core-inner
+  type: ClusterIP
+  
