@@ -209,19 +209,22 @@ var setup = (function () {
     };
 
 
+    app.prototype.config_item_checked_all = function(){
+        $('#btnConfigmapCreate').attr("disabled", $('.config-review :checkbox:not(:checked)').length != 0);
+    };
+
     app.prototype.configmap_create = function(){
         var that = this;
-        var maps = {
-            "core": $("#txtCore").val(),
-            "messageDesk": {
-                "api": $("#txtMessageDeskApi").val(),
-                "worker": $("#txtMessageDeskWorker").val()
-            },
-            "kodo": $("#txtKodo").val(),
-        }
+        var maps = {};
+
+        $('.config-review textarea').each(function(idx, item){
+            var me = $(item);
+            var key = me.data('key');
+
+            maps[key] = me.val();
+        });
 
         this.post("configmap/create", maps).then(function(d){
-            // return that.database_manager_create();
             that.go("/service/config");
         });
     };

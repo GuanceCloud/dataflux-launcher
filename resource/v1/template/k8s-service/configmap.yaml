@@ -8,6 +8,7 @@ metadata:
   labels:
     cattle.io/creator: norman
   name: core
+  namespace: forethought-core
 
 ---
 
@@ -21,18 +22,78 @@ metadata:
   labels:
     cattle.io/creator: norman
   name: kodo
+  namespace: forethought-kodo
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.kodoInner | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: kodo-inner
+  namespace: forethought-kodo
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.kodoNginx | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: kodo-nginx
+  namespace: forethought-kodo
 
 ---
 
 apiVersion: v1
 data:
   config-api.yaml: |-
-{{ (config.messageDesk or {}).api | indent(4) }}
+{{ config.messageDeskApi | indent(4) }}
   config-worker.yaml: |-
-{{ (config.messageDesk or {}).worker | indent(4) }}
+{{ config.messageDeskWorker | indent(4) }}
 kind: ConfigMap
 metadata:
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
   name: message-desk
+  namespace: middleware
+
+---
+
+apiVersion: v1
+data:
+  config.json: |-
+{{ config.front | indent(4) }}
+  nginx.conf: |-
+{{ config.frontNginx | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: front-config
+  namespace: forethought-webclient
+
+---
+
+apiVersion: v1
+data:
+  config.json: |-
+{{ config.management | indent(4) }}
+  nginx.conf: |-
+{{ config.managementNginx | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: management-config
+  namespace: forethought-webclient

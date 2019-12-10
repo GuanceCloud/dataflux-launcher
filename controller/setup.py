@@ -28,15 +28,69 @@ def other_config(params):
 def config_template():
     coreTemp = jinjia2_render('template/config/forethought-backend.yaml', SETTINGS)
     kodoTemp = jinjia2_render('template/config/kodo.yaml', SETTINGS)
-    messageDeskTempApi = jinjia2_render('template/config/message-desk-api.yaml', SETTINGS)
-    messageDeskTempWorker = jinjia2_render('template/config/message-desk-worker.yaml', SETTINGS)
+    kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', SETTINGS)
+    kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', SETTINGS)
+    messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', SETTINGS)
+    messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', SETTINGS)
 
-    return {
-        "core": coreTemp,
-        "kodo": kodoTemp,
-        "messageDeskApi": messageDeskTempApi,
-        "messageDeskWorker": messageDeskTempWorker
-    }
+    frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', SETTINGS)
+    frontWebTemp = jinjia2_render('template/config/front-web.json', SETTINGS)
+
+    managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', SETTINGS)
+    managementWebTemp = jinjia2_render('template/config/management-web.json', SETTINGS)
+
+    return [
+        {
+            "key": "core",
+            "name": "DataFlux Core",
+            "content": coreTemp
+        },
+        {
+            "key": "kodo",
+            "name": "Kodo",
+            "content": kodoTemp,
+        },
+        {
+            "key": "kodoInner",
+            "name": "Kodo Inner",
+            "content": kodoInnerTemp,
+        },
+        {
+            "key": "kodoNginx",
+            "name": "Kodo Nginx",
+            "content": kodoNginxTemp,
+        },
+        {
+            "key": "messageDeskApi",
+            "name": "Message Desk API",
+            "content": messageDeskApiTemp,
+        },
+        {
+            "key": "messageDeskWorker",
+            "name": "Message Desk Worker",
+            "content": messageDeskWorkerTemp,
+        },
+        {
+            "key": "frontNginx",
+            "name": "Front Nginx",
+            "content": frontNginxTemp,
+        },
+        {
+            "key": "frontWeb",
+            "name": "Front WebClient",
+            "content": frontWebTemp,
+        },
+        {
+            "key": "managementNginx",
+            "name": "Management Nginx",
+            "content": managementNginxTemp,
+        },
+        {
+            "key": "managementWeb",
+            "name": "Management WebClient",
+            "content": managementWebTemp,
+        },
+    ]
 
 
 def configmap_create(maps):
@@ -49,6 +103,9 @@ def configmap_create(maps):
     try:
         with open(os.path.abspath(tmpPath), 'w') as f:
             f.write(configmap)
+
+        cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s-service/namespace.yaml"))
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
         cmd = "kubectl apply  -f {}".format(tmpPath)
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -68,9 +125,6 @@ def service_create(data):
             f.write(serviceYaml)
 
             yamls.append(path)
-
-    cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s-service/namespace.yaml"))
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
     cmd = "kubectl apply -f {}".format(' -f '.join(yamls))
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)

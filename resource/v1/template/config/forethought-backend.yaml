@@ -1,5 +1,5 @@
 # 报错告警所使用的环境名
-envName: FT2.0测试环境
+envName: DataFlux
 
 protocol: "http"
 hostname: "console.{{ other.domain }}"
@@ -12,12 +12,12 @@ database:
     echo: false
 
 kodo:
-  host: 172.16.0.12
-  port: 10557
-  timeout: 10
-  installCmd: 'sudo bash -c "$(curl http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/install.sh)" - --token {} --uuid {}  --license {} --ak {} --sk {}'
-  upgradeCmd: 'sudo bash -c "$(curl http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/install.sh)" -  --upgrade 1'
-  versionUrl: "http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/ftdataway/test/version"
+  host: kodo-inner.forethought-kodo.svc.cluster.local
+  port: 9527
+  timeout: 60
+  installCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid}  DW_LICENSE="{license}" DW_AK={ak}  DW_SK={sk} bash -c "$(curl http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/install.sh)"'
+  upgradeCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid}  DW_LICENSE="{license}" DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/install.sh)"'
+  versionUrl: "http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/version"
 
 # 报警机器人
 robot:
@@ -33,11 +33,48 @@ redis:
   max_connections: 1000
 
 # inner app 回调临时地址
-inner_app_webhook_url: http://172.16.0.12:10558/api/v1/trigger/webhook
+inner_app_webhook_url: http://trigger.forethought-inner-app.svc.cluster.local:9000/api/v1/trigger/webhook
 
 # 告警日志回调地址
-alert_callback_url: http://172.16.0.12:10551/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
+alert_callback_url: http://front-backend.forethought-core.svc.cluster.local:5000/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
   frontAuth: {{(core.secret or {}).frontAuth}}
   manageAuth: {{(core.secret or {}).manageAuth}}
+
+
+# 默认邀请配置
+invitation_set:
+  enable: false
+  invite_url: 
+  title: "工作空间邀请"
+  method:
+    - email
+
+# 消息服务
+message_desk_set:
+  enable: true
+  use_https: true
+  host: "message-desk.cloudcare.cn"
+  port: 443
+  timeout: 10
+  ak_enable: false
+  ak_id: 
+  ak_secret: 
+
+celery:
+  name: "Celery"
+  celery_broker_db: 2
+  celery_result_db: 3
+  cron_task:
+    cron_notification:
+      minute: '*/30'  
+
+integration:
+  domain: "https://integration.{{ other.domain }}"
+  aliyunOSS:
+    bucket: "prod-ft-integration"
+    accessKeyId: ""
+    secretAccessKey: ""
+    endpoint: 'http://oss-cn-hangzhou.aliyuncs.com'
+    rootFolder: "/"

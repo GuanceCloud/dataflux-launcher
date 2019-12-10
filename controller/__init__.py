@@ -23,10 +23,10 @@
 # test data
 SETTINGS = {
   "mysql": {
-    "host": "127.0.0.1",
-    "port": "3306",
+    "host": "172.16.0.43",
+    "port": "32306",
     "user": "root",
-    "password": "qwe123123"
+    "password": "rootPassw0rd"
   },
   "core": {
     "dbInfo": {
@@ -44,16 +44,16 @@ SETTINGS = {
     }
   },
   "redis": {
-    "host": "172.16.0.20",
-    "port": "10391",
-    "password": "Fd6cQ4cvd8"
+    "host": "172.16.0.43",
+    "port": "viFRKZiZkoPmXnyF",
+    "password": "30299"
   },
   "influxdb": [
     {
-      "host": "127.0.0.1",
-      "port": "8086",
+      "host": "172.16.0.43",
+      "port": "32086",
       "username": "admin",
-      "password": "123123",
+      "password": "admin",
       "ssl": False,
       "dbName": "test_db",
       "kapacitorHost": "http://127.0.0.1:1234"

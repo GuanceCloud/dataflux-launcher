@@ -4,69 +4,34 @@
 <div class="row form-body">
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default config-review">
+      {% for conf in data %}
       <div class="panel-heading" role="tab">
+        <label class="pull-right" onclick="setup.config_item_checked()">
+          <input type="checkbox" />
+          已检查
+        </label>
         <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseCore" aria-expanded="true" aria-controls="collapseCore">
-            Forethought Core
+          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
+            {{conf.name}}
           </a>
         </h4>
       </div>
-      <div id="collapseCore" class="panel-collapse collapse in" role="tabpanel">
+      {% if loop.index == 1 %}
+      <div id="collapse{{ conf.key }}" class="panel-collapse collapse in" role="tabpanel">
+      {% else %}
+      <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
+      {% endif %}
         <div class="panel-body">
-          <textarea id="txtCore" class="text-left">{{ data.core }}</textarea>
+          <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left">{{ conf.content }}</textarea>
         </div>
       </div>
-    </div>
-
-    <div class="panel panel-default config-review">
-      <div class="panel-heading" role="tab">
-        <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseMessageDeskAPI" aria-expanded="false" aria-controls="collapseMessageDeskAPI">
-            MessageDesk API
-          </a>
-        </h4>
-      </div>
-      <div id="collapseMessageDeskAPI" class="panel-collapse collapse" role="tabpanel">
-        <div class="panel-body">
-          <textarea id="txtMessageDeskApi" class="text-left">{{ data.messageDeskApi }}</textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default config-review">
-      <div class="panel-heading" role="tab">
-        <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseMessageDeskWorker" aria-expanded="false" aria-controls="collapseMessageDeskWorker">
-            MessageDesk Worker
-          </a>
-        </h4>
-      </div>
-      <div id="collapseMessageDeskWorker" class="panel-collapse collapse" role="tabpanel">
-        <div class="panel-body">
-          <textarea id="txtMessageDeskWorker" class="text-left">{{ data.messageDeskWorker }}</textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default config-review">
-      <div class="panel-heading" role="tab">
-        <h4 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseKodo" aria-expanded="false" aria-controls="collapseKodo">
-            Kodo
-          </a>
-        </h4>
-      </div>
-      <div id="collapseKodo" class="panel-collapse collapse" role="tabpanel">
-        <div class="panel-body">
-          <textarea id="txtKodo" class="text-left">{{ data.kodo }}</textarea>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </div>
 <div class="row form-body">
   <div class="text-right">
-    <button class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    <button id="btnConfigmapCreate" class="btn btn-danger" disabled="disabled" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
   </div>
 </div>
 {% endblock %}
