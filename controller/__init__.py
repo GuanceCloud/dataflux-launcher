@@ -45,7 +45,7 @@ SETTINGS = {
   },
   "redis": {
     "host": "172.16.0.43",
-    "port": "30299",
+    "port": "30397",
     "password": "viFRKZiZkoPmXnyF"
   },
   "influxdb": [
