@@ -158,6 +158,13 @@ def service_image_config():
 
 def service_create(data):
   yamls = []
+
+  imageRegistry = data.get('imageRegistry') or ''
+  images = data.get('images', [])
+
+  if imageRegistry and not imageRegistry.endswith('/'):
+      imageRegistry = imageRegistry + '/'
+
   for key, val in data.items():
     serviceYaml = jinjia2_render("template/k8s-service/{}.yaml".format(key), {"config": val})
     path = os.path.abspath("/tmp/k8s-service/{}.yaml".format(key))

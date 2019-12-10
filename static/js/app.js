@@ -233,22 +233,24 @@ var setup = (function () {
   app.prototype.service_create = function(){
     var that = this;
 
-    var configs = { };
+    var configs = {};
+    var images = {};
 
     $('div.app-image :text').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
 
-      configs[key] = me.val();
+      images[key] = {"imagePath": me.val()};
     });
 
-    console.log(configs);
+    configs['imageRegistry'] = $('#iptImageRegistry').val();
+    configs['images'] = images;
 
-    // this.post("service/create", configs).then(function(d){
-    //   if (d.content){
-    //     that.go("/complete");
-    //   }
-    // });
+    this.post("service/create", configs).then(function(d){
+      if (d.content){
+        that.go("/complete");
+      }
+    });
   };
 
   return new app();
