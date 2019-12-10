@@ -8,29 +8,22 @@
         <div class="panel-heading">应用服务配置</div>
         <div class="panel-body">
           <div class="form-group">
-            <label for="iptManageBacken" class="col-sm-2 control-label">manage-backend:</label>
+            <label for="iptImageRegistry" class="col-sm-2 control-label">镜像仓库地址:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="iptManageBackend" value="{{ data.manageBackend }}" placeholder="manage-backend">
+              <input type="text" class="form-control" id="iptImageRegistry" value="{{ pageData.imageRegistry }}" placeholder="镜像仓库地址">
             </div>
           </div>
-          <div class="form-group">
-            <label for="iptFrontBackend" class="col-sm-2 control-label">front-backend:</label>
+
+          {% for item in pageData.images %}
+
+          <div class="form-group app-image">
+            <label for="ipt{{ item.key }}" class="col-sm-2 control-label">{{ item.key }}:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="iptFrontBackend" value="{{ data.frontBackend }}" placeholder="front-backend">
+              <input id="ipt{{ item.key }}" type="text" class="form-control" data-key="{{ item.key }}" value="{{ config[item.key] }}" placeholder="{{ item.key }}">
             </div>
           </div>
-          <div class="form-group">
-            <label for="iptIntegrationScanner" class="col-sm-2 control-label">integration-scanner:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="iptIntegrationScanner" value="{{ data.integrationScanner }}" placeholder="integration-scanner">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="iptWebsocket" class="col-sm-2 control-label">websocket:</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" id="iptWebsocket" value="{{ data.websocket }}" placeholder="websocket">
-            </div>
-          </div>
+
+          {%endfor%}
 
           <div class="form-group">
             <label class="col-sm-2 control-label">&nbsp;</label>

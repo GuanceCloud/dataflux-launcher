@@ -58,7 +58,9 @@ def register_route(app):
 
     @app.route("/service/config")
     def serviceConfig():
-        return render("service-config.html", {"title": "应用服务配置", "data": SETTINGS['serviceConfig']})
+        d = setup.service_image_config()
+
+        return render("service-config.html", {"title": "应用服务配置", "pageData": d, "config": SETTINGS['serviceConfig']})
 
 
     @app.route("/complete")

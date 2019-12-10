@@ -231,28 +231,24 @@ var setup = (function () {
 
 
     app.prototype.service_create = function(){
-      that = this
+        var that = this;
 
-      configs = {
-          "front-backend": {
-            "imagePath": $('#iptFrontBackend').val()
-          },
-          "integration-scanner": {
-            "imagePath": $('#iptIntegrationScanner').val()
-          },
-          "manage-backend": {
-            "imagePath": $('#iptManageBackend').val()
-          },
-          "websocket": {
-            "imagePath": $('#iptWebsocket').val()
-          }
-      }
+        var configs = { };
 
-      this.post("service/create", configs).then(function(d){
-        if (d.content){
-          that.go("/complete");
-        }
-      });
+        $('div.app-image :text').each(function(idx, item){
+            var me = $(item);
+            var key = me.data('key');
+
+            configs[key] = me.val();
+        });
+
+        console.log(configs);
+
+        // this.post("service/create", configs).then(function(d){
+        //   if (d.content){
+        //     that.go("/complete");
+        //   }
+        // });
     };
 
     return new app();

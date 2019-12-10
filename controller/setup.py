@@ -115,6 +115,47 @@ def configmap_create(maps):
     return True
 
 
+# 服务镜像配置
+def service_image_config():
+    d = {
+            "imageRegistry": "",
+            "images": [ {
+                    "key": "front-backend",
+                    "image": ""
+                },{
+                    "key": "manage-backend",
+                    "image": ""
+                },{
+                    "key": "inner",
+                    "image": ""
+                },{
+                    "key": "integration-scanner",
+                    "image": ""
+                },{
+                    "key": "websocket",
+                    "image": ""
+                },{
+                    "key": "kodo",
+                    "image": ""
+                },{
+                    "key": "kodo-inner",
+                    "image": ""
+                },{
+                    "key": "kodo-nginx",
+                    "image": ""
+                },{
+                    "key": "front-webclient",
+                    "image": ""
+                },{
+                    "key": "manage-webclient",
+                    "image": ""
+                }
+            ]
+        }
+
+    return d
+
+
 def service_create(data):
     yamls = []
     for key, val in data.items():
