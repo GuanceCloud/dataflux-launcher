@@ -6,21 +6,21 @@ from . import SETTINGS
 
 
 def redis_ping(params):
-    params['port'] = int(params['port'])
+  params['port'] = int(params['port'])
 
-    strictRedis = redis.StrictRedis(**params)
+  strictRedis = redis.StrictRedis(**params)
 
-    pingStatus = False
+  pingStatus = False
 
-    try:
-        pingStatus =strictRedis.ping()
-    except:
-        pass
+  try:
+    pingStatus =strictRedis.ping()
+  except:
+    pass
 
-    if pingStatus:
-        SETTINGS["redis"] = params
+  if pingStatus:
+    SETTINGS["redis"] = params
 
-        return True
+    return True
 
-    return False
+  return False
 
