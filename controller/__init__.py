@@ -24,7 +24,7 @@
 SETTINGS = {
   "mysql": {
     "host": "172.16.0.43",
-    "port": "32306",
+    "port": "30397",
     "user": "root",
     "password": "rootPassw0rd"
   },
@@ -45,15 +45,15 @@ SETTINGS = {
   },
   "redis": {
     "host": "172.16.0.43",
-    "port": "viFRKZiZkoPmXnyF",
-    "password": "30299"
+    "port": "30299",
+    "password": "viFRKZiZkoPmXnyF"
   },
   "influxdb": [
     {
       "host": "172.16.0.43",
       "port": "32086",
       "username": "admin",
-      "password": "admin",
+      "password": "admin@influxdb",
       "ssl": False,
       "dbName": "test_db",
       "kapacitorHost": "http://127.0.0.1:1234"

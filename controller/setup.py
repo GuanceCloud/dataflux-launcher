@@ -89,7 +89,7 @@ def config_template():
             "key": "managementWeb",
             "name": "Management WebClient",
             "content": managementWebTemp,
-        },
+        }
     ]
 
 

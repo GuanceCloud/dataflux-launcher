@@ -1,6 +1,6 @@
 database:
-    db_dialect: "mysql"
-    connection: {{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@tcp({{mysql.host}}:{{mysql.port}})/{{core.dbInfo.dbName}}"
+    db_dialect: mysql
+    connection: {{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@tcp({{mysql.host}}:{{mysql.port}})/{{core.dbInfo.dbName}}
 
 redis:
     host: {{redis.host}}:{{redis.port}}
@@ -8,11 +8,11 @@ redis:
     db:  0
 
 log:
-    log_file: "/logdata/log"
-    level: "debug"
+    log_file: /logdata/log
+    level: debug
     disable_json: false
     disable_long_file_name: false
-    gin_log_file: "/logdata/gin.log"
+    gin_log_file: /logdata/gin.log
 
 global:
     enable_inner: false

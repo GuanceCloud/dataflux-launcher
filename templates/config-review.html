@@ -6,7 +6,7 @@
     <div class="panel panel-default config-review">
       {% for conf in data %}
       <div class="panel-heading" role="tab">
-        <label class="pull-right" onclick="setup.config_item_checked()">
+        <label class="pull-right" onclick="setup.config_item_checked_all()">
           <input type="checkbox" />
           已检查
         </label>
@@ -31,7 +31,7 @@
 </div>
 <div class="row form-body">
   <div class="text-right">
-    <button id="btnConfigmapCreate" class="btn btn-danger" disabled="disabled" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    <button id="btnConfigmapCreate" class="btn btn-danger"  onclick="setup.configmap_create()">检查完毕，生成配置！</button>
   </div>
 </div>
 {% endblock %}
