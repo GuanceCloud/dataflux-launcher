@@ -118,37 +118,37 @@ def configmap_create(maps):
 # 服务镜像配置
 def service_image_config():
   d = {
-      "imageRegistry": "",
+      "imageRegistry": "registry.jiagouyun.com/",
       "images": [ {
           "key": "front-backend",
-          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "management-backend",
-          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "inner",
-          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "integration-scanner",
-          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "websocket",
-          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "kodo",
-          "imagePath": "registry.jiagouyun.com/kodo/kodo:release-20191209"
+          "imagePath": "kodo/kodo:release-20191209"
         },{
           "key": "kodo-inner",
-          "imagePath": "registry.jiagouyun.com/kodo/kodo:release-20191209"
+          "imagePath": "kodo/kodo:release-20191209"
         },{
           "key": "kodo-nginx",
-          "imagePath": "registry.jiagouyun.com/basis/nginx:devops"
+          "imagePath": "basis/nginx:devops"
         },{
           "key": "front-webclient",
-          "imagePath": "registry.jiagouyun.com/cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
+          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
         },{
           "key": "management-webclient",
-          "imagePath": "registry.jiagouyun.com/cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
+          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
         }
       ]
     }
@@ -180,6 +180,10 @@ def service_create(data):
   #     imageRegistry = imageRegistry + '/'
 
   for key, val in images.items():
+    imagePath = '{}/{}'.format(imageRegistry, val.get('imagePath') or '')
+    val['imagePath'] = re.sub('/+', '/', imagePath)
+
+    print(val)
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
     path = os.path.abspath("/tmp/k8s/app-{}.yaml".format(key))
 
