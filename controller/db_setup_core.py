@@ -28,6 +28,8 @@ def database_create_db():
   dbSQL = "CREATE DATABASE IF NOT EXISTS {dbName} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;".format(**dbInfo)
   userSQL = "GRANT ALL PRIVILEGES ON {dbName}.* TO '{dbUser}'@'%' IDENTIFIED BY '{dbUserPassword}';".format(**dbInfo)
 
+
+  print(mysqlInfo)
   with dbHelper(mysqlInfo) as db:
     db.execute("{}{}".format(dbSQL, userSQL))
 

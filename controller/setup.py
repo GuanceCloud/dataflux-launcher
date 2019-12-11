@@ -94,17 +94,17 @@ def config_template():
 
 
 def configmap_create(maps):
-  tmpPath = "/tmp/k8s-service/configmap.yaml"
-  configmap = jinjia2_render('template/k8s-service/configmap.yaml', {"config": maps})
+  tmpPath = "/tmp/k8s/configmap.yaml"
+  configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": maps})
 
-  if not os.path.exists('/tmp/k8s-service'):
-    os.mkdir('/tmp/k8s-service')
+  if not os.path.exists('/tmp/k8s'):
+    os.mkdir('/tmp/k8s')
 
   try:
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s-service/namespace.yaml"))
+    cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s/namespace.yaml"))
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
     cmd = "kubectl apply  -f {}".format(tmpPath)
@@ -121,34 +121,34 @@ def service_image_config():
       "imageRegistry": "",
       "images": [ {
           "key": "front-backend",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
-          "key": "manage-backend",
-          "image": ""
+          "key": "management-backend",
+          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "inner",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "integration-scanner",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "websocket",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
         },{
           "key": "kodo",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/kodo/kodo:release-20191209"
         },{
           "key": "kodo-inner",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/kodo/kodo:release-20191209"
         },{
           "key": "kodo-nginx",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/basis/nginx:devops"
         },{
           "key": "front-webclient",
-          "image": ""
+          "imagePath": "registry.jiagouyun.com/cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
         },{
-          "key": "manage-webclient",
-          "image": ""
+          "key": "management-webclient",
+          "imagePath": "registry.jiagouyun.com/cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
         }
       ]
     }
@@ -156,26 +156,42 @@ def service_image_config():
   return d
 
 
+def ingress_create():
+  ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": SETTINGS})
+  ingressYaml = os.path.abspath("/tmp/k8s/ingress.yaml")
+
+  with open(ingressYaml, 'w') as f:
+    f.write(ingressTemplate)
+
+  # 创建所有 deployment & service
+  cmd = "kubectl apply -f {}".format(ingressYaml)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
+
 def service_create(data):
-  yamls = []
+  appYamls = []
 
   imageRegistry = data.get('imageRegistry') or ''
-  images = data.get('images', [])
+  images = data.get('images', {})
 
-  if imageRegistry and not imageRegistry.endswith('/'):
-      imageRegistry = imageRegistry + '/'
+  # if imageRegistry and not imageRegistry.endswith('/'):
+  #     imageRegistry = imageRegistry + '/'
 
-  for key, val in data.items():
-    serviceYaml = jinjia2_render("template/k8s-service/{}.yaml".format(key), {"config": val})
-    path = os.path.abspath("/tmp/k8s-service/{}.yaml".format(key))
+  for key, val in images.items():
+    serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
+    path = os.path.abspath("/tmp/k8s/app-{}.yaml".format(key))
 
     with open(path, 'w') as f:
       f.write(serviceYaml)
+      appYamls.append(path)
 
-      yamls.append(path)
-
-  cmd = "kubectl apply -f {}".format(' -f '.join(yamls))
+  # 创建所有 deployment & service
+  cmd = "kubectl apply -f {}".format(' -f '.join(appYamls))
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  ingress_create()
 
   return True
 

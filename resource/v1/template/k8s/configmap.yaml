@@ -38,6 +38,8 @@ metadata:
   name: kodo-inner
   namespace: forethought-kodo
 
+---
+
 apiVersion: v1
 data:
   config.yaml: |-

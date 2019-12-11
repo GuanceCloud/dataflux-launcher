@@ -6,7 +6,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: console-api.{{ other.domain }}
+  - host: console-api.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -22,15 +22,15 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   generation: 1
-  name: manage-backend
+  name: management-backend
   namespace: forethought-core
 spec:
   rules:
-  - host: management-api.{{ other.domain }}
+  - host: management-api.{{ config.other.domain }}
     http:
       paths:
       - backend:
-          serviceName: manage-backend
+          serviceName: management-backend
           servicePort: 5000
         path: /
 status:
@@ -46,7 +46,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: ws.{{ other.domain }}
+  - host: ws.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -65,7 +65,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: console.{{ other.domain }}
+  - host: console.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -85,7 +85,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: management.{{ other.domain }}
+  - host: management.{{ config.other.domain }}
     http:
       paths:
       - backend:

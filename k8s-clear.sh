@@ -2,7 +2,7 @@
 kubectl delete configmaps core -n forethought-core
 kubectl delete configmaps kodo kodo-inner kodo-nginx -n forethought-kodo
 kubectl delete configmaps front-config management-config -n forethought-webclient
-kubectl delete configmaps message-desk message-desk-worker -n middleware
+kubectl delete configmaps message-desk -n middleware
 
 
 # 清理 deployment
