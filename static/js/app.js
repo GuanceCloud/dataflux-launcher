@@ -16,9 +16,27 @@ var setup = (function () {
       })
     };
 
+    this.switch_ping_button = function(jqObj, status){
+      var jqI = jqObj.children('i');
+
+      if(status == 'success'){
+        jqObj.removeClass('btn-warning btn-danger');
+        jqObj.addClass('btn-success');
+
+        jqI.removeClass('glyphicon-question-sign glyphicon-remove-sign');
+        jqI.addClass('glyphicon-ok-sign');
+      }else if(status == 'error'){
+        jqObj.removeClass('btn-warning btn-success');
+        jqObj.addClass('btn-danger');
+
+        jqI.removeClass('glyphicon-question-sign glyphicon-ok-sign');
+        jqI.addClass('glyphicon-remove-sign');
+      }
+    };
+
     this.go = function(path){
       window.location.href = path + "?" + (new Date().valueOf());
-    }
+    };
 
     this.get = function(url, data, headers){
       return _send(url, "GET", data, null, headers)
@@ -50,11 +68,12 @@ var setup = (function () {
 
     this.get("database/ping", params).done(function(d){
       if (d.content){
+        that.switch_ping_button($('#btnConnectTtest'), 'success');
         if (next){
           that.go("/redis");
         }
       }else{
-        alert("MySQL 连接失败");
+        that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });
   };
@@ -70,11 +89,12 @@ var setup = (function () {
 
     this.get("redis/ping", params).done(function(d){
       if(d.content){
+        that.switch_ping_button($('#btnConnectTtest'), 'success');
         if (next){
           that.go("/influxdb");
         }
       }else{
-        alert("Redis 连接失败")
+        that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });
   };
@@ -123,8 +143,10 @@ var setup = (function () {
           if (db.pingError){
             $(".influxdb-list:eq(" + i + ")").addClass('error')
             hasError = true
+            that.switch_ping_button($('#btnConnectTtest'), 'error');
           }else{
-            $(".influxdb-list:eq(" + i + ")").removeClass('error')
+            $(".influxdb-list:eq(" + i + ")").removeClass('error');
+            that.switch_ping_button($('#btnConnectTtest'), 'success');
           }
         }
 
@@ -132,7 +154,7 @@ var setup = (function () {
           that.go("/other");
         }
       }else{
-        alert("InfluxDB 连接失败")
+        alert("InfluxDB 连接失败");
       }
     });
   };
