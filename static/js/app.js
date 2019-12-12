@@ -288,7 +288,7 @@ var setup = (function () {
         var jqImgDiv = $('#img_' + item.key);
         var jqI = jqImgDiv.children('i');
 
-        jqI.removeClass('glyphicon-cog glyphicon-ok-circle glyphicon-remove-circle');
+        jqI.removeClass('glyphicon-repeat glyphicon-ok-circle glyphicon-remove-circle');
         if(item.Progressing == 'True'){
           jqI.addClass('glyphicon-cog');
 
