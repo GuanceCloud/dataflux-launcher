@@ -19,7 +19,7 @@ spec:
         - run.sh
         - -e
         - RUN_APP_CODE=front
-        image: {{ config.imagePath }}
+        image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
         name: front-backend
         ports:

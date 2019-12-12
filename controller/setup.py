@@ -2,9 +2,11 @@
 
 import os, re, subprocess
 import markdown, shortuuid, pymysql
+import json
 
 from utils.template import jinjia2_render
-from . import SETTINGS
+
+from . import SETTINGS, SERVICECONFIG
 
 
 def do_check():
@@ -117,41 +119,55 @@ def configmap_create(maps):
 
 # 服务镜像配置
 def service_image_config():
-  d = {
-      "imageRegistry": "registry.jiagouyun.com/",
-      "images": [ {
-          "key": "front-backend",
-          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
-        },{
-          "key": "management-backend",
-          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
-        },{
-          "key": "inner",
-          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
-        },{
-          "key": "integration-scanner",
-          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
-        },{
-          "key": "websocket",
-          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
-        },{
-          "key": "kodo",
-          "imagePath": "kodo/kodo:release-20191209"
-        },{
-          "key": "kodo-inner",
-          "imagePath": "kodo/kodo:release-20191209"
-        },{
-          "key": "kodo-nginx",
-          "imagePath": "basis/nginx:devops"
-        },{
-          "key": "front-webclient",
-          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
-        },{
-          "key": "management-webclient",
-          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
-        }
-      ]
+  d = None
+
+  if SERVICECONFIG.get('debug'):
+    # 调试模式
+    d = {
+        "imageRegistry": "registry.jiagouyun.com/",
+        # "images": []
+        "images": [ {
+            "key": "front-backend",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            },{
+            "key": "management-backend",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            },{
+            "key": "inner",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            },{
+            "key": "integration-scanner",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            },{
+            "key": "websocket",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            },{
+            "key": "kodo",
+            "imagePath": "kodo/kodo:release-20191209"
+            },{
+            "key": "kodo-inner",
+            "imagePath": "kodo/kodo:release-20191209"
+            },{
+            "key": "kodo-nginx",
+            "imagePath": "basis/nginx:devops"
+            },{
+            "key": "front-webclient",
+            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
+            },{
+            "key": "management-webclient",
+            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
+            }
+        ]
     }
+  else:
+    d = {
+      "imageRegistry": "",
+      "images": []
+    }
+
+    services = SERVICECONFIG['services']
+    for item in services:
+        d['images'].append(item)
 
   return d
 
@@ -176,14 +192,15 @@ def service_create(data):
   imageRegistry = data.get('imageRegistry') or ''
   images = data.get('images', {})
 
-  # if imageRegistry and not imageRegistry.endswith('/'):
-  #     imageRegistry = imageRegistry + '/'
+  imageSettings = {
+    "imageRegistry": imageRegistry,
+    "images": {}
+  }
 
   for key, val in images.items():
     imagePath = '{}/{}'.format(imageRegistry, val.get('imagePath') or '')
-    val['imagePath'] = re.sub('/+', '/', imagePath)
+    val['fullImagePath'] = re.sub('/+', '/', imagePath)
 
-    print(val)
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
     path = os.path.abspath("/tmp/k8s/app-{}.yaml".format(key))
 
@@ -191,13 +208,61 @@ def service_create(data):
       f.write(serviceYaml)
       appYamls.append(path)
 
+    imageSettings['images'][key] = val
+
   # 创建所有 deployment & service
   cmd = "kubectl apply -f {}".format(' -f '.join(appYamls))
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   ingress_create()
 
+  SETTINGS['ServiceImages'] = imageSettings
+
   return True
+
+
+def service_status():
+  namespaces = SERVICECONFIG['namespaces']
+
+  tempStatus = {}
+  for ns in namespaces:
+    cmd = 'kubectl get deployments -n {} -o json'.format(ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+    # print(p.returncode)
+    # if p.returncode != 0:
+    #     continue
+
+    output, err = p.communicate()
+    deploys = json.loads(output)
+
+    for item in deploys['items']:
+      key = item['metadata']['name']
+      image = item['spec']['template']['spec']['containers'][0]['image']
+
+      status = {c['type']: c['status'] for c in item['status']['conditions']}
+      status['fullImagePath'] = image
+      status['key'] = key
+
+      tempStatus[key] = status
+
+  deployStatus = []
+  for service in SERVICECONFIG['services']:
+    key = service['key']
+    name = service['name']
+
+    if key in tempStatus:
+        tempStatus[key]['name'] = name
+        deployStatus.append(tempStatus[key])
+    else:
+        deployStatus.append({
+                'key': key,
+                'name': name,
+                'Progressing': 'True'
+            })
+
+  return deployStatus
+
 
 def init_setting():
   SETTINGS["core"] = {

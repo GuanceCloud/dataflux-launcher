@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-forethought-core-manage-backend
-  name: manage-backend
+    app: deployment-forethought-core-management-backend
+  name: management-backend
   namespace: forethought-core
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deployment-forethought-core-manage-backend
+      app: deployment-forethought-core-management-backend
   template:
     metadata:
       labels:
-        app: deployment-forethought-core-manage-backend
+        app: deployment-forethought-core-management-backend
     spec:
       containers:
       - args:
@@ -21,9 +21,9 @@ spec:
         - run.sh
         - -e
         - RUN_APP_CODE=admin
-        image: {{ config.imagePath }}
+        image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: manage-backend
+        name: management-backend
         ports:
         - containerPort: 5000
           name: 5000tcp02
@@ -53,7 +53,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: manage-backend
+  name: management-backend
   namespace: forethought-core
 spec:
   ports:
@@ -62,5 +62,5 @@ spec:
     protocol: TCP
     targetPort: 5000
   selector:
-    app: deployment-forethought-core-manage-backend
+    app: deployment-forethought-core-management-backend
   type: ClusterIP

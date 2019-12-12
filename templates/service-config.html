@@ -21,7 +21,7 @@
             {% for item in pageData.images %}
 
             <div class="form-group app-image">
-              <label for="ipt{{ item.key }}" class="col-sm-2 control-label">{{ item.key }}:</label>
+              <label for="ipt{{ item.key }}" class="col-sm-2 control-label">{{ item.name or item.key }}:</label>
               <div class="col-sm-10">
                 <input id="ipt{{ item.key }}" type="text" class="form-control" data-key="{{ item.key }}" value="{{ item.imagePath }}" placeholder="{{ item.key }}">
               </div>

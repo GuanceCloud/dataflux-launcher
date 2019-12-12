@@ -20,7 +20,7 @@ spec:
         - bash
         - run_celery.sh
         name: integration-scanner
-        image: {{ config.imagePath }}
+        image: {{ config.fullImagePath }}
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /config/cloudcare-forethought-backend/config/config.yaml

@@ -76,6 +76,8 @@ var setup = (function () {
         that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });
+
+    return false;
   };
 
   // redis 连接测试
@@ -270,7 +272,38 @@ var setup = (function () {
 
     this.post("service/create", configs).then(function(d){
       if (d.content){
-        that.go("/complete");
+        that.go("/service/status");
+      }
+    });
+  };
+
+  app.prototype.refresh_service_status = function(){
+    var that = this;
+
+    this.get('service/status').then(function(d){
+      var services = d.content || [];
+      var hasPendding = false;
+
+      $.each(services, function(idx, item){
+        var jqImgDiv = $('#img_' + item.key);
+        var jqI = jqImgDiv.children('i');
+
+        jqI.removeClass('glyphicon-cog glyphicon-ok-circle glyphicon-remove-circle');
+        if(item.Progressing == 'True'){
+          jqI.addClass('glyphicon-cog');
+
+          hasPendding = true;
+        }else if(item.Available == 'True'){
+          jqI.addClass('glyphicon-ok-circle');
+        }else{
+          jqI.addClass('glyphicon-remove-circle');
+        }
+
+        $('#img_path_' + item.key).text(item.fullImagePath);
+      });
+
+      if (hasPendding){
+        window.setTimeout(function(){that.refresh_service_status();}, 5000);
       }
     });
   };

@@ -89,3 +89,8 @@ def service_create():
   data = request.json
   
   return  response_jsonify(setup.service_create(data))
+
+
+@setup_bp.route("/service/status", methods=["GET"])
+def service_status():
+  return  response_jsonify(setup.service_status())

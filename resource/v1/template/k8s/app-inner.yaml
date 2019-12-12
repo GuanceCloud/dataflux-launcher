@@ -21,7 +21,7 @@ spec:
         - run.sh
         - -e
         - RUN_APP_CODE=inner
-        image: {{ config.imagePath }}
+        image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
         name: inner
         ports:

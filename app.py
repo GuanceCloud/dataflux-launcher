@@ -63,6 +63,11 @@ def register_route(app):
     return render("service-config.html", {"title": "应用服务配置", "pageData": d, "config": SETTINGS['serviceConfig']})
 
 
+  @app.route("/service/status")
+  def service_status():
+    return render("service-status.html", {"title": "服务状态", "data": setup.service_status()})
+
+
   @app.route("/complete")
   def complete():
     return render("complete.html", {"title": "安装完毕"})

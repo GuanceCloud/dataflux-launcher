@@ -12,9 +12,9 @@
         <link rel="stylesheet" href="/css/site.css" crossorigin="anonymous" />
 
         <script src="/vendor/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-        <script src="/vendor/jquery.validate.min.js" crossorigin="anonymous"></script>
+        <script src="/vendor/jquery.validate/jquery.validate.min.js" crossorigin="anonymous"></script>
+        <script src="/vendor/jquery.validate/messages_zh.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
-        <script src="/js/app.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <header>
@@ -28,5 +28,17 @@
         <footer class="text-center">
             ©2013-{{ __common__.year }} 上海驻云信息科技有限公司
         </footer>
+
+        <script src="/js/app.js" crossorigin="anonymous"></script>
+        <script src="/js/validation.js" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            // $().ready(function(){
+            //     $.validator.setDefaults({
+            //       submitHandler: function(form) { }
+            //     });
+
+            //     $('form').validate();
+            // });
+        </script>
     </body>
 </html>

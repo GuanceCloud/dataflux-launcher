@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import os, yaml, json
+
 # SETTINGS = {
 #   "mysql": {},
 #   "redis": {},
@@ -19,6 +21,18 @@
 #   "serviceConfig": {}
 # }
 
+SERVICECONFIG = {}
+
+def init_config():
+    global SERVICECONFIG
+
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    with open(base_path + "/../config/config.yaml") as f:
+        SERVICECONFIG  = yaml.safe_load(f)
+
+    # print(json.dumps(ServiceConfig, indent=4))
+
+init_config()
 
 # test data
 SETTINGS = {

@@ -16,7 +16,7 @@ spec:
         app: deployment-forethought-webclient-manage-webclient
     spec:
       containers:
-      - image: {{ config.imagePath }}
+      - image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
         name: manage-webclient
         ports:
