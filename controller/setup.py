@@ -128,33 +128,43 @@ def service_image_config():
         # "images": []
         "images": [ {
             "key": "front-backend",
+            "name": "用户前台 API",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
             },{
             "key": "management-backend",
+            "name": "后台管理平台 API",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
             },{
             "key": "inner",
+            "name": "Inner API",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
             },{
             "key": "integration-scanner",
+            "name": "集成扫描 Worker",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
             },{
             "key": "websocket",
+            "name": "Websocket",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
             },{
             "key": "kodo",
+            "name": "Kodo",
             "imagePath": "kodo/kodo:release-20191209"
             },{
             "key": "kodo-inner",
+            "name": "Kodo Inner",
             "imagePath": "kodo/kodo:release-20191209"
             },{
             "key": "kodo-nginx",
+            "name": "Kodo Nginx",
             "imagePath": "basis/nginx:devops"
             },{
             "key": "front-webclient",
+            "name": "用户前台前端",
             "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
             },{
             "key": "management-webclient",
+            "name": "管理后台前端",
             "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
             }
         ]
@@ -240,7 +250,10 @@ def service_status():
       key = item['metadata']['name']
       image = item['spec']['template']['spec']['containers'][0]['image']
 
-      status = {c['type']: c['status'] for c in item['status']['conditions']}
+      status = {}
+      if 'conditions' in item['status']:
+        status = {c['type']: c['status'] for c in item['status']['conditions']}
+
       status['fullImagePath'] = image
       status['key'] = key
 

@@ -1,0 +1,44 @@
+debug: True
+
+namespaces:
+  - forethought-core
+  - forethought-webclient
+  - forethought-kodo
+  - middleware
+
+services:
+  - key: management-backend
+    name: 后台管理平台 API
+
+  - key: inner
+    name: Inner API
+
+  - key: front-backend
+    name: 用户前台 API
+
+  - key: integration-scanner
+    name: 集成扫描 Worker
+
+  - key: websocket
+    name: Websocket
+
+  - key: manage-webclient
+    name: 管理后台前端
+
+  - key: front-webclient
+    name: 用户前台前端
+
+  - key: kodo
+    name: Kodo
+
+  - key: kodo-inner
+    name: Kodo Inner
+
+  - key: kodo-nginx
+    name: Kodo Nginx
+
+  # - key: message-desk-api
+  #   name: 消息中心 API
+  #
+  # - key: message-desk-worker
+  #   name: 消息中心 Worker
