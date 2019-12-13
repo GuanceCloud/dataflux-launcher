@@ -37,8 +37,8 @@ services:
   - key: kodo-nginx
     name: Kodo Nginx
 
-  # - key: message-desk-api
-  #   name: 消息中心 API
-  #
-  # - key: message-desk-worker
-  #   name: 消息中心 Worker
+  - key: message-desk-api
+    name: 消息中心 API
+
+  - key: message-desk-worker
+    name: 消息中心 Worker

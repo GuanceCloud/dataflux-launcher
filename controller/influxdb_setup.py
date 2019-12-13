@@ -71,6 +71,7 @@ def influxdb_add(dbs):
 
   return True
 
+
 def _init_influxdb(instance):
   dbInfo = {
     "host": instance.get('host'),
@@ -108,6 +109,34 @@ def _init_influxdb(instance):
   return True
 
 
+def _init_system_workspace(influxInstanceUUID):
+  mysqlInfo = SETTINGS['mysql']
+  dbInfo = SETTINGS['core']['dbInfo']
+
+  with dbHelper(mysqlInfo) as db:
+    db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
+    params = [
+        db_uuid,
+        'ifdb_ftinternal',
+        influxInstanceUUID
+    ]
+
+    sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
+    db.execute(sql, dbName = dbInfo['dbName'], params = params)
+
+    ws_uuid = "wksp_" + shortuuid.ShortUUID().random(length = 24)
+    token = "tokn_" + shortuuid.ShortUUID().random(length = 24)
+    params = [
+        ws_uuid,
+        token,
+        db_uuid
+    ]
+    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dbUUID`, `dataRestoration`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`) VALUES (%s, '系统工作空间', %s, %s, '[]', NULL, '', NULL, '{}');"
+    db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
+
+    return True
+
+
 def _init_db_instance(instance):
   user = {
     "username": instance.get('username'),
@@ -125,7 +154,7 @@ def _init_db_instance(instance):
 
   with dbHelper(mysqlInfo) as db:
     # influx instance 
-    influxdb_uuid = "iflx-" + shortuuid.ShortUUID().random(length = 24)
+    influxdb_uuid = "iflx_" + shortuuid.ShortUUID().random(length = 24)
     host = "{protocol}://{host}:{port}".format(**{
         "protocol": 'https' if instance.get('ssl') else 'http',
         "host": instance.get('host'),
@@ -152,15 +181,19 @@ def _init_db_instance(instance):
       sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
       db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
-  return True
+  return influxdb_uuid
 
 
 def init_influxdb_all():
   instances = SETTINGS['influxdb']
 
-  for instance in instances:
+  for idx, instance in enumerate(instances):
     _init_influxdb(instance)
-    _init_db_instance(instance)
+    instanceUUID = _init_db_instance(instance)
+
+    # 创建系统工作空间
+    if idx == 0:
+        _init_system_workspace(instanceUUID)
 
   return True
 
