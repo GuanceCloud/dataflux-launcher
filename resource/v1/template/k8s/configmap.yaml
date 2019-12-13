@@ -72,7 +72,7 @@ metadata:
 
 apiVersion: v1
 data:
-  config.json: |-
+  config.js: |-
 {{ config.front | indent(4) }}
   nginx.conf: |-
 {{ config.frontNginx | indent(4) }}
@@ -81,7 +81,7 @@ metadata:
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: front-config
+  name: front-web-config
   namespace: forethought-webclient
 
 ---
@@ -97,5 +97,5 @@ metadata:
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: management-config
+  name: management-web-config
   namespace: forethought-webclient

@@ -2,7 +2,7 @@
 
 import os, re, subprocess
 import markdown, shortuuid, pymysql
-import json
+import json, time
 
 from utils.template import jinjia2_render
 
@@ -36,7 +36,7 @@ def config_template():
   messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', SETTINGS)
 
   frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', SETTINGS)
-  frontWebTemp = jinjia2_render('template/config/front-web.json', SETTINGS)
+  frontWebTemp = jinjia2_render('template/config/front-web.js', SETTINGS)
 
   managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', SETTINGS)
   managementWebTemp = jinjia2_render('template/config/management-web.json', SETTINGS)
@@ -109,9 +109,24 @@ def configmap_create(maps):
     cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s/namespace.yaml"))
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
+
+    # # 等待 namespace 创建完成
+    # for i in range(5):
+    #   cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespace']))
+    #   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    #
+    #   output, err = p.communicate()
+    #   namespace = json.loads(output)
+    #
+    #   if len(namespace['items']) == 4:
+    #     break
+    #
+    #   time.sleep(0.5)
+
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-  except:
+  except Exception as e:
+    print(e)
     return False
 
   return True
@@ -179,6 +194,9 @@ def service_image_config():
     for item in services:
         d['images'].append(item)
 
+  d['storageNames'] = _get_storageclass()
+  print(d)
+
   return d
 
 
@@ -196,16 +214,61 @@ def ingress_create():
   return True
 
 
+def _get_storageclass():
+  cmd = "kubectl get storageclass -o json"
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  storage = json.loads(output)
+
+  storageNames = []
+  for item in storage['items']:
+    storageNames.append(item['metadata']['name'])
+
+  return storageNames
+
+
+def _regisgry_secret_create(registry, user, pwd):
+  patch = { "imagePullSecrets": [{"name": "registry-key"}] }
+  for ns in SERVICECONFIG['namespaces']:
+    cmd = 'kubectl create secret docker-registry registry-key --docker-server={} --docker-username={} --docker-password={} -n {}'.format(registry, user, pwd, ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+    cmd = "kubectl patch sa default -p '{}' -n {}".format(json.dumps(patch), ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
+
+def _PVC_create(storageClassName):
+  pvcYaml = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": storageClassName})
+  path = os.path.abspath("/tmp/k8s/pvc.yaml")
+
+  with open(os.path.abspath(path), 'w') as f:
+    f.write(pvcYaml)
+
+  cmd = "kubectl apply  -f {}".format(path)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
+
 def service_create(data):
   appYamls = []
 
   imageRegistry = data.get('imageRegistry') or ''
+  imageRegistryUser = data.get('imageRegistryUser') or ''
+  imageRegistryPwd = data.get('imageRegistryPwd') or ''
+  storageClassName = data.get('storageClassName') or ''
   images = data.get('images', {})
 
   imageSettings = {
     "imageRegistry": imageRegistry,
     "images": {}
   }
+
+  _regisgry_secret_create(imageRegistry, imageRegistryUser, imageRegistryPwd)
+  _PVC_create(storageClassName)
 
   for key, val in images.items():
     imagePath = '{}/{}'.format(imageRegistry, val.get('imagePath') or '')

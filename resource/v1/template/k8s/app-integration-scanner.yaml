@@ -24,7 +24,7 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
-          name: ft-backend-config
+          name: core
           subPath: config.yaml
         - mountPath: /config/cloudcare-forethought-backend/sysconfig
           name: ft-sysconfig
@@ -35,9 +35,9 @@ spec:
       volumes:
       - configMap:
           defaultMode: 256
-          name: ft-backend-config
+          name: core
           optional: false
-        name: ft-backend-config
+        name: core
       - name: ft-sysconfig
         persistentVolumeClaim:
           claimName: ft-sysconfig

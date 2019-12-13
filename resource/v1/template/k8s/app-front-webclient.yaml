@@ -24,15 +24,18 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
-          name: ft-web-config
+          name: front-web-config
+        - mountPath: /config/cloudcare-forethought-webclient/deployConfig.js
+          name: front-web-config
+          subPath: config.js
       imagePullSecrets:
       - name: registry-key
       volumes:
       - configMap:
-          defaultMode: 256
-          name: ft-web-config
+          defaultMode: 292
+          name: front-web-config
           optional: false
-        name: ft-web-config
+        name: front-web-config
 
 
 ---

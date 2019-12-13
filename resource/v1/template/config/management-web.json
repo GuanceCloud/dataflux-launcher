@@ -1,1 +1,3 @@
-{}
+{
+  "API_URL": "https://management-api.{{ other.domain }}/api/v1"
+}

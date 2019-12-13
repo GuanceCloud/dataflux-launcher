@@ -36,14 +36,14 @@ spec:
           name: kodo
           subPath: config.yaml
         - mountPath: /logdata
-          name: preprod-kodo-logs
+          name: kodo-logs
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
       volumes:
-      - name: preprod-kodo-logs
+      - name: kodo-logs
         persistentVolumeClaim:
-          claimName: preprod-kodo-logs
+          claimName: kodo-logs
       - configMap:
         name: kodo
 

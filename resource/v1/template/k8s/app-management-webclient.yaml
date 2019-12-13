@@ -25,16 +25,19 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
-          name: ft-mgr-config
+          name: management-web-config
+        - mountPath: /config/cloudcare-forethought-webmanage/config/config.json
+          name: management-web-config
+          subPath: config.json
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
       volumes:
       - configMap:
-          defaultMode: 256
-          name: ft-mgr-config
+          defaultMode: 292
+          name: management-web-config
           optional: false
-        name: ft-mgr-config
+        name: management-web-config
 
 ---
 

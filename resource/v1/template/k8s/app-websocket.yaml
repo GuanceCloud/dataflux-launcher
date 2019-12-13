@@ -28,7 +28,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
-          name: ft-backend-config
+          name: core
           subPath: config.yaml
         workingDir: /config/cloudcare-forethought-backend
       imagePullSecrets:
@@ -37,9 +37,9 @@ spec:
       volumes:
       - configMap:
           defaultMode: 256
-          name: ft-backend-config
+          name: core
           optional: false
-        name: ft-backend-config
+        name: core
 
 ---
 
