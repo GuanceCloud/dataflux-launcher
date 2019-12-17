@@ -83,7 +83,7 @@ def _init_influxdb(instance):
 
   client = InfluxDBClient(**dbInfo)
 
-  dbNames = ['ifdb_forethought_alert', 'ifdb_forethought_baseline', 'ifdb_ftinternal']
+  dbNames = ['internal_alert', 'internal_baseline', 'internal_system']
 
   userDB = instance.get('dbName', '').strip()
   if userDB:
@@ -117,7 +117,7 @@ def _init_system_workspace(influxInstanceUUID):
     db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
     params = [
         db_uuid,
-        'ifdb_ftinternal',
+        'internal_system',
         influxInstanceUUID
     ]
 
