@@ -1,6 +1,14 @@
 #!/bin/bash
 
+version=$1
 tmpRTMDir=/tmp/rtm
+
+[[ ${#version} == 0 ]] && {
+  echo 请提供版本号
+  exit
+}
+
+version=${version//[v\.]/_}
 
 function rtm_tag(){
   gitUrl=$1
@@ -29,28 +37,12 @@ function rtm_tag(){
 
   [[ ${lastReleaseTag:0-3:1} != _ ]] && lastReleaseTag=${lastReleaseTag}_01
 
-  # 最后的 rtm tag
-  lastRTMTag=$(git tag --list | grep -E '^rtm_' | sort -V | tail -1)
+  rtmTag=${lastReleaseTag//release_/rtm_}${version}
 
-  # 根据 release tag 转换过来的 rtm tag 前缀
-  newRTMTagPrefix=${lastReleaseTag//release_/rtm_}
-
-  [[ ${lastRTMTag:0:${#newRTMTagPrefix}} == $newRTMTagPrefix  ]] && {
-    # rtm tag 已经存在，后续版本数字递增1
-    lastReleaseRTMCount=$[10#${lastRTMTag:${#newRTMTagPrefix} + 1:2} + 101]
-    lastReleaseRTMCount=${lastReleaseRTMCount:1:2}
-
-    newRTMTag=${newRTMTagPrefix}_${lastReleaseRTMCount}
-  } || {
-    # rtm tag 不存在，生成新的 rtm tag
-    newRTMTag=${newRTMTagPrefix}_01
-  }
-
-  rtmTag=${newRTMTag}_$shortCommitId
   git tag $rtmTag
-  # git push --tag
+  git push --tag
 
-  echo $rtmTag
+  echo "${rtmTag}\t\t${project}"
 }
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "cloudcare-forethought-setup"
@@ -58,7 +50,4 @@ rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethou
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webclient.git" "cloudcare-forethought-webclient"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webmanage.git" "cloudcare-forethought-webmanage"
-
-# 清除临时项目目录
-# rm -rf /tmp/rtm
 
