@@ -31,7 +31,11 @@
 </div>
 <div class="row form-body">
   <div class="text-right">
+    {% if dubug %}
+    <button id="btnConfigmapCreate" class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    {% else %}
     <button id="btnConfigmapCreate" class="btn btn-danger" disabled="disabled" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

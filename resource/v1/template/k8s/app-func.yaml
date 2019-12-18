@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-func-func
+  name: func
+  namespace: func
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-func-func
+  template:
+    metadata:
+      labels:
+        app: deployment-func-func
+    spec:
+      containers:
+      - env:
+        - name: FT_DATA_PROCESSOR_CONFIG
+          value: /func-config.yaml
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: func
+        ports:
+        - containerPort: 8088
+          name: 8088tcp80882
+          protocol: TCP
+        resources: {}
+        tty: true
+        volumeMounts:
+        - mountPath: /func-config.yaml
+          name: func-config
+          subPath: config.yaml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: func-config
+          optional: false
+        name: func-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: func
+  namespace: func
+spec:
+  ports:
+  - name: 8088tcp80882
+    port: 8088
+    protocol: TCP
+    targetPort: 8088
+  selector:
+    app: deployment-func-func
+  type: ClusterIP

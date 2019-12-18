@@ -1,0 +1,49 @@
+ftDataProcessor:
+  # 函数调用是否需要登录
+  funcCallRequireSignIn: false
+
+  # FT集群内部专用访问域名
+  innerAPIBaseURL: http://func-inner.func.svc.cluster.local:8088
+  # FT集群外部使用域名
+  publicAPIBaseURL: https://func.{{ other.domain }}
+
+mode: prod
+deployName: 生产环境（内部）
+deployNotice:
+  type               : dingTalkRobotWebhook
+  onLaunch           : 
+  onUncaughtException: 
+
+logger:
+  level: WARNING
+
+webServer:
+  baseURL : https://func.{{ other.domain }}
+  bind    : 0.0.0.0
+  port    : 8088
+
+mysql:
+  host    : {{mysql.host}}
+  port    : {{mysql.port}}
+  user    : {{func.dbInfo.dbUser}}
+  password: {{func.dbInfo.dbUserPassword}}
+  database: {{func.dbInfo.dbName}}
+  timezone: '+0:00'
+
+redis:
+  host    : {{redis.host}}
+  port    : {{redis.port}}
+  db      : 4
+  password: {{redis.password}}
+
+celery:
+  broker:
+    host    : {{redis.host}}
+    port    : {{redis.port}}
+    db      : 4
+    password: {{redis.password}}
+  resultBackend:
+    host    : {{redis.host}}
+    port    : {{redis.port}}
+    db      : 4
+    password: {{redis.password}}

@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-forethought-webclient-manage-webclient
-  name: manage-webclient
+    app: deployment-forethought-webclient-management-webclient
+  name: management-webclient
   namespace: forethought-webclient
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deployment-forethought-webclient-manage-webclient
+      app: deployment-forethought-webclient-management-webclient
   template:
     metadata:
       labels:
-        app: deployment-forethought-webclient-manage-webclient
+        app: deployment-forethought-webclient-management-webclient
     spec:
       containers:
       - image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: manage-webclient
+        name: management-webclient
         ports:
         - containerPort: 80
           name: 80tcp02
@@ -44,7 +44,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: manage-webclient
+  name: management-webclient
   namespace: forethought-webclient
 spec:
   ports:
@@ -53,5 +53,5 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    app: deployment-forethought-webclient-manage-webclient
+    app: deployment-forethought-webclient-management-webclient
   type: ClusterIP

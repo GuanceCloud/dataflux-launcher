@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-func-func-worker-utils
+  name: func-worker-utils
+  namespace: func
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-func-func-worker-utils
+  template:
+    metadata:
+      labels:
+        app: deployment-func-func-worker-utils
+    spec:
+      containers:
+      - args:
+        - ./run-by-queue.sh
+        - default
+        - internal
+        - result
+        - webhook
+        - starter
+        env:
+        - name: FT_DATA_PROCESSOR_WORKER_CONFIG
+          value: /func-worker-config.yaml
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: func-worker-utils
+        resources: {}
+        volumeMounts:
+        - mountPath: /func-worker-config.yaml
+          name: func-worker-config
+          subPath: config.yaml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: func-worker-config
+          optional: false
+        name: func-worker-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: func-worker-utils
+  namespace: func
+spec:
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-func-func-worker-utils
+  type: ClusterIP

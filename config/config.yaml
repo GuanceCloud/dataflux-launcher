@@ -4,6 +4,7 @@ namespaces:
   - forethought-core
   - forethought-webclient
   - forethought-kodo
+  - func
   - middleware
 
 services:
@@ -22,7 +23,7 @@ services:
   - key: websocket
     name: Websocket
 
-  - key: manage-webclient
+  - key: management-webclient
     name: 管理后台前端
 
   - key: front-webclient
@@ -46,5 +47,18 @@ services:
   - key: func
     name: 函数计算
 
-  - key: func-worker
-    name: 函数计算 Worker
+  - key: func-inner
+    name: 函数计算 Inner
+
+  - key: func-worker-beat
+    name: 函数计算 Worker Beat
+
+  - key: func-worker-debugger
+    name: 函数计算 Worker Debugger
+
+  - key: func-worker-rpc-crontab
+    name: 函数计算 Worker RPC
+
+  - key: func-worker-utils
+    name: 函数计算 Worker Utils
+

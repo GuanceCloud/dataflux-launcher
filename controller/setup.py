@@ -41,6 +41,10 @@ def config_template():
   managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', SETTINGS)
   managementWebTemp = jinjia2_render('template/config/management-web.json', SETTINGS)
 
+  funcTemp = jinjia2_render('template/config/func-config.yaml', SETTINGS)
+  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', SETTINGS)
+  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', SETTINGS)
+
   return [
     {
       "key": "core",
@@ -91,6 +95,21 @@ def config_template():
       "key": "managementWeb",
       "name": "Management WebClient",
       "content": managementWebTemp,
+    },
+    {
+      "key": "func",
+      "name": "Function",
+      "content": funcTemp,
+    },
+    {
+      "key": "funcInner",
+      "name": "Function Inner",
+      "content": funcInnerTemp,
+    },
+    {
+      "key": "funcWorker",
+      "name": "Function Worker",
+      "content": funcWorkerTemp,
     }
   ]
 
@@ -181,6 +200,32 @@ def service_image_config():
             "key": "management-webclient",
             "name": "管理后台前端",
             "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
+            },
+
+            {
+            "key": "func",
+            "name": "函数计算",
+            "imagePath": "middlewares/ft-data-processor:master"
+            },{
+            "key": "func-inner",
+            "name": "函数计算 Inner",
+            "imagePath": "middlewares/ft-data-processor:master"
+            },{
+            "key": "func-worker-beat",
+            "name": "函数计算 Worker Beat",
+            "imagePath": "middlewares/ft-data-processor-worker:master"
+            },{
+            "key": "func-worker-debugger",
+            "name": "函数计算 Worker Debugger",
+            "imagePath": "middlewares/ft-data-processor-worker:master"
+            },{
+            "key": "func-worker-rpc-crontab",
+            "name": "函数计算 Worker RPC",
+            "imagePath": "middlewares/ft-data-processor-worker:master"
+            },{
+            "key": "func-worker-utils",
+            "name": "函数计算 Worker Utils",
+            "imagePath": "middlewares/ft-data-processor-worker:master"
             }
         ]
     }
@@ -346,6 +391,10 @@ def init_setting():
       "frontAuth": shortuuid.ShortUUID().random(length=48),
       "manageAuth": shortuuid.ShortUUID().random(length=48)
     }
+  }
+
+  SETTINGS['func'] = {
+    "secret": shortuuid.ShortUUID().random(length=48)
   }
 
   return True

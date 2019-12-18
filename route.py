@@ -6,6 +6,7 @@ from utils.handler import response_jsonify
 from controller import setup
 from controller import db_setup_core
 from controller import db_setup_message_desk
+from controller import db_setup_func
 from controller import redis_setup
 from controller import influxdb_setup
 
@@ -28,6 +29,7 @@ def database_ping():
 def database_setup():
   db_setup_core.database_setup()
   db_setup_message_desk.database_setup()
+  db_setup_func.database_setup()
 
   return response_jsonify(True)
 

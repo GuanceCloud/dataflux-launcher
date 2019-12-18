@@ -89,7 +89,7 @@ metadata:
 apiVersion: v1
 data:
   config.json: |-
-{{ config.management | indent(4) }}
+{{ config.managementWeb | indent(4) }}
   nginx.conf: |-
 {{ config.managementNginx | indent(4) }}
 kind: ConfigMap
@@ -99,3 +99,45 @@ metadata:
     cattle.io/creator: norman
   name: management-web-config
   namespace: forethought-webclient
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.func | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: func-config
+  namespace: func
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.funcInner | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: func-inner-config
+  namespace: func
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.funcWorker | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: func-worker-config
+  namespace: func

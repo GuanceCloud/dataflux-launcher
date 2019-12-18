@@ -1,0 +1,26 @@
+mode: prod
+
+celery:
+  brokerURL       : redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/4
+  resultBackendURL: redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/4
+
+logger:
+  level: WARNING
+
+worker:
+  webhook:
+    enableHTTP : false
+    enableKafka: false
+
+redis:
+  host    : {{redis.host}}
+  port    : {{redis.port}}
+  db      : 4
+  password: {{redis.password}}
+
+mysql:
+  host    : {{mysql.host}}
+  port    : {{mysql.port}}
+  user    : {{func.dbInfo.dbUser}}
+  password: {{func.dbInfo.dbUserPassword}}
+  database: {{func.dbInfo.dbName}}

@@ -10,7 +10,7 @@
 
 ### forethought-webclient
     front-webclient
-    manage-webclient
+    management-webclient
 
 ### forethought-kodo
     kodo
