@@ -42,3 +42,9 @@ services:
 
   - key: message-desk-worker
     name: 消息中心 Worker
+
+  - key: func
+    name: 函数计算
+
+  - key: func-worker
+    name: 函数计算 Worker
