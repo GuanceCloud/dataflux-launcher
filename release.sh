@@ -6,7 +6,7 @@ function auto_tag(){
 
   [[ ${#lastTag} > 0 ]] && {
     # 当前版本的 tag 已经存在，后续版本数字递增1
-    releaseCount=$[${lastTag:${#1} + 1:2} + 101]
+    releaseCount=$[10#${lastTag:${#1} + 1:2} + 101]
     releaseCount=${releaseCount:1:2}
 
     newTag=${1}_${releaseCount}

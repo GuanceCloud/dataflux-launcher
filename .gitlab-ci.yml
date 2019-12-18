@@ -1,5 +1,6 @@
 variables:
   REPOSITORY: "cloudcare-forethought/cloudcare-forethought-setup"
+  PROJECT: setup
 
 stages:
   - build
@@ -25,5 +26,20 @@ buildTesting:
     - docker build -t $REPOSITORY:testing .
     - docker tag $REPOSITORY:testing registry.jiagouyun.com/$REPOSITORY:testing
     - docker push registry.jiagouyun.com/$REPOSITORY:testing
+  tags:
+    - cloudcare
+
+buildRTM:
+  stage: build
+  only:
+    - /^rtm(_\d+)+$/
+  script:
+    - V=(${CI_COMMIT_REF_SLUG//-/ })
+    - VDIR=v${V[3]}.${V[4]}.${V[5]}
+    - REPO=dataflux/$VDIR
+    - TAG=${PROJECT}-${CI_COMMIT_REF_SLUG}
+    - docker build -t $REPO:$TAG .
+    - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
+    - docker push pubrepo.jiagouyun.com/$REPO:$TAG
   tags:
     - cloudcare
