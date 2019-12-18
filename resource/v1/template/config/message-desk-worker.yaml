@@ -11,4 +11,4 @@ redis:
   port: {{redis.port}}
   db: 1
   password: {{redis.password}}
-  max_connections: 1000
+  max_connections: 100

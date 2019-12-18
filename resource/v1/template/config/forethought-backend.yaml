@@ -30,7 +30,7 @@ redis:
   port: {{redis.port}}
   db: 1
   password: {{redis.password}}
-  max_connections: 1000
+  max_connections: 100
 
 # inner app 回调临时地址
 inner_app_webhook_url: http://trigger.forethought-inner-app.svc.cluster.local:9000/api/v1/trigger/webhook
