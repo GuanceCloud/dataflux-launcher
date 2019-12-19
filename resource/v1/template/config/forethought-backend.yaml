@@ -2,7 +2,7 @@
 envName: DataFlux
 
 protocol: "http"
-hostname: "console.{{ other.domain }}"
+hostname: "{{'deploy-' if debug}}console.{{ other.domain }}"
 
 database:
     # 测试环境容器外使用地址

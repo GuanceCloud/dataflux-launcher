@@ -13,7 +13,7 @@ def register_route(app):
   def index():
     readme = setup.readme()
 
-    return render("index.html", {"title": "安装说明", "data": readme})
+    return render("index.html", {"title": "安装说明", "pageData": readme})
 
 
   @app.route("/check")
@@ -26,34 +26,34 @@ def register_route(app):
 
   @app.route("/database")
   def database():
-    return render("database.html", {"title": "MySQL 配置", "data": SETTINGS['mysql']})
+    return render("database.html", {"title": "MySQL 配置", "pageData": SETTINGS['mysql']})
 
 
   @app.route("/other")
   def other():
-    return render("other.html", {"title": "其他配置", "data": SETTINGS['other']})
+    return render("other.html", {"title": "其他配置", "pageData": SETTINGS['other']})
 
 
   @app.route("/redis")
   def redis():
-    return render("redis.html", {"title": "Redis 配置", "data": SETTINGS['redis']})
+    return render("redis.html", {"title": "Redis 配置", "pageData": SETTINGS['redis']})
 
 
   @app.route("/influxdb")
   def influxdb():
-    return render("influxdb.html", {"title": "InfluxDB 配置", "data": SETTINGS['influxdb']})
+    return render("influxdb.html", {"title": "InfluxDB 配置", "pageData": SETTINGS['influxdb']})
 
 
   @app.route("/setup/info")
   def setup_info():
-    return render("setup-info.html", {"title": "安装信息", "data": SETTINGS})
+    return render("setup-info.html", {"title": "安装信息", "pageData": SETTINGS})
 
 
   @app.route("/config/review")
   def config_review():
     config = setup.config_template()
 
-    return render("config-review.html", {"title": "配置预览", "data": config, "dubug": SERVICECONFIG['debug']})
+    return render("config-review.html", {"title": "配置预览", "pageData": config, "dubug": SERVICECONFIG['debug']})
 
 
   @app.route("/service/config")
@@ -65,7 +65,7 @@ def register_route(app):
 
   @app.route("/service/status")
   def service_status():
-    return render("service-status.html", {"title": "服务状态", "data": setup.service_status()})
+    return render("service-status.html", {"title": "服务状态", "pageData": setup.service_status()})
 
 
   @app.route("/complete")

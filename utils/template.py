@@ -14,6 +14,7 @@ def render(fileName, params = None):
 
   params["__common__"] = {}
   params["__common__"]["year"] = datetime.now().year
+  params["__common__"]["debug"] = datetime.now().year
 
   return render_template(fileName, **params)
 

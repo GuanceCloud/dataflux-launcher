@@ -4,7 +4,7 @@
 <div class="row form-body">
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     <div class="panel panel-default config-review">
-      {% for conf in data %}
+      {% for conf in pageData %}
       <div class="panel-heading" role="tab">
         <label class="pull-right" onclick="setup.config_item_checked_all()">
           <input type="checkbox" />
@@ -16,11 +16,7 @@
           </a>
         </h4>
       </div>
-      {% if loop.index == 1 %}
-      <div id="collapse{{ conf.key }}" class="panel-collapse collapse in" role="tabpanel">
-      {% else %}
-      <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
-      {% endif %}
+      <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'in' if loop.index == 1 }}" role="tabpanel">
         <div class="panel-body">
           <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left">{{ conf.content }}</textarea>
         </div>
@@ -31,11 +27,12 @@
 </div>
 <div class="row form-body">
   <div class="text-right">
-    {% if dubug %}
+    <button id="btnConfigmapCreate" {{ "disabled" if debug }} class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    <!-- {% if dubug %}
     <button id="btnConfigmapCreate" class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
     {% else %}
-    <button id="btnConfigmapCreate" class="btn btn-danger" disabled="disabled" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
-    {% endif %}
+    <button id="btnConfigmapCreate" class="btn btn-danger" disabled onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    {% endif %} -->
   </div>
 </div>
 {% endblock %}
