@@ -50,7 +50,7 @@ def database_ddl():
   database_create_db()
 
   with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("resource/v1/ddl/core.sql"), 'r') as f:
+    with open(os.path.abspath("launcher/resource/v1/ddl/core.sql"), 'r') as f:
       ddl = f.read()
       db.execute(ddl, dbName = dbInfo['dbName'])
 
@@ -62,7 +62,7 @@ def database_init_data():
   dbInfo = SETTINGS['core']['dbInfo']
 
   with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("resource/v1/data/core.sql"), 'r') as f:
+    with open(os.path.abspath("launcher/resource/v1/data/core.sql"), 'r') as f:
       sql = f.read()
       db.execute(sql, dbName = dbInfo['dbName'])
 

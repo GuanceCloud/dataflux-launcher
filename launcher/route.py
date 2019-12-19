@@ -1,14 +1,14 @@
 # encoding=utf-8
 
 from flask import Blueprint, request
-from utils.handler import response_jsonify
+from launcher.utils.handler import response_jsonify
 
-from controller import setup
-from controller import db_setup_core
-from controller import db_setup_message_desk
-from controller import db_setup_func
-from controller import redis_setup
-from controller import influxdb_setup
+from launcher.controller import setup
+from launcher.controller import db_setup_core
+from launcher.controller import db_setup_message_desk
+from launcher.controller import db_setup_func
+from launcher.controller import redis_setup
+from launcher.controller import influxdb_setup
 
 setup_bp = Blueprint('setup', __name__)
 

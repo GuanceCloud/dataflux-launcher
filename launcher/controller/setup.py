@@ -4,7 +4,7 @@ import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time
 
-from utils.template import jinjia2_render
+from launcher.utils.template import jinjia2_render
 
 from . import SETTINGS, SERVICECONFIG
 
@@ -14,7 +14,7 @@ def do_check():
 
 
 def readme():
-  with open(os.path.abspath("templates/README.md"), 'r') as f:
+  with open(os.path.abspath("launcher/templates/README.md"), 'r') as f:
     readme = f.read()
     return markdown.markdown(readme)
 
@@ -125,7 +125,7 @@ def configmap_create(maps):
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    cmd = "kubectl apply -f {}".format(os.path.abspath("resource/v1/template/k8s/namespace.yaml"))
+    cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
 

@@ -2,10 +2,10 @@
 
 from flask import Flask, g
 
-from utils.template import render
-from controller import setup
+from launcher.utils.template import render
+from launcher.controller import setup
 
-from controller import SETTINGS, SERVICECONFIG
+from launcher.controller import SETTINGS, SERVICECONFIG
 
 
 def register_route(app):
@@ -74,7 +74,7 @@ def register_route(app):
 
 
 def register_blueprint(app):
-  from route import setup_bp
+  from launcher.route import setup_bp
 
   app.register_blueprint(setup_bp, url_prefix="/api/v1")
 

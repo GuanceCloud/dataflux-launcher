@@ -20,7 +20,7 @@ def render(fileName, params = None):
 
 
 def jinjia2_render(template_name, params):
-  env = Environment(loader=FileSystemLoader(searchpath = os.path.abspath("./resource/v1")))
+  env = Environment(loader=FileSystemLoader(searchpath = os.path.abspath("./launcher/resource/v1")))
 
   env.filters['indent'] = lambda v, size: (' ' * size) + re.sub('(\n)|(\r\n)', '\n' + (' ' * size), (v or '')) 
 
