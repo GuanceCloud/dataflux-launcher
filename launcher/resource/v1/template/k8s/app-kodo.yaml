@@ -24,7 +24,7 @@ spec:
           value: "500"
         - name: KODO_WORKERS
           value: "8"
-        image: {{ config.fullImagePath }}
+        image: registry.jiagouyun.com/kodo/kodo:release-20191209
         imagePullPolicy: IfNotPresent
         name: kodo
         ports:
@@ -45,6 +45,9 @@ spec:
         persistentVolumeClaim:
           claimName: kodo-logs
       - configMap:
+          defaultMode: 420
+          name: kodo
+          optional: false
         name: kodo
 
 ---

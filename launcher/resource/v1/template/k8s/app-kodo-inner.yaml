@@ -33,7 +33,7 @@ spec:
           name: 9527tcp02
           protocol: TCP
         volumeMounts:
-        - mountPath: /kodo/config/config.yml
+        - mountPath: /kodo/config/config.yaml
           name: kodo-inner
           subPath: config.yaml
       imagePullSecrets:
