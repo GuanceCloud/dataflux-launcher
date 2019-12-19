@@ -163,23 +163,23 @@ def service_image_config():
         "images": [ {
             "key": "front-backend",
             "name": "用户前台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
             },{
             "key": "management-backend",
             "name": "后台管理平台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
             },{
             "key": "inner",
             "name": "Inner API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
             },{
             "key": "integration-scanner",
             "name": "集成扫描 Worker",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
             },{
             "key": "websocket",
             "name": "Websocket",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
             },{
             "key": "kodo",
             "name": "Kodo",
@@ -195,11 +195,11 @@ def service_image_config():
             },{
             "key": "front-webclient",
             "name": "用户前台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191206-03"
+            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191212-01"
             },{
             "key": "management-webclient",
             "name": "管理后台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191206"
+            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191212"
             },
 
             {
