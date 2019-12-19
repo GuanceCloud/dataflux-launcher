@@ -21,7 +21,7 @@ global:
     workers: 8
 
 influxdb:
-    read_timeout: 500
-    write_timeout: 30000
+    read_timeout: 30000
+    write_timeout: 500
     alert_rp: "rp_8760h"
 

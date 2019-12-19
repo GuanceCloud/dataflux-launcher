@@ -72,8 +72,11 @@ def influxdb_add(dbs):
   return True
 
 
-def _init_influxdb(instance):
-  dbInfo = {
+def _init_influxdb(instanceUUID, instance):
+  mysqlInfo = SETTINGS['mysql']
+  mysqlDBInfo = SETTINGS['core']['dbInfo']
+
+  influxDBInfo = {
     "host": instance.get('host'),
     "port": int(instance.get('port')),
     "username": instance.get('username'),
@@ -81,20 +84,23 @@ def _init_influxdb(instance):
     "ssl": instance.get('ssl')
   }
 
-  client = InfluxDBClient(**dbInfo)
+  client = InfluxDBClient(**influxDBInfo)
 
-  dbNames = ['internal_alert', 'internal_baseline', 'internal_system']
+  dbNames = ['internal_alert', 'internal_baseline', 'internal_system', 'internal_keyevent']
 
   userDB = instance.get('dbName', '').strip()
   if userDB:
     dbNames.append(userDB)
 
-  for db in dbNames:
+  dbUUIDs = {}
+
+  for dbName in dbNames:
+    rpName = "rp_365"
     params = {
-      "db": db,
-      "rp": "rp_365",
-      "ro_user": dbInfo['username'], 
-      "rw_user": dbInfo['username']
+      "db": dbName,
+      "rp": rpName,
+      "ro_user": influxDBInfo['username'], 
+      "rw_user": influxDBInfo['username']
     }
 
     querySQL = '''
@@ -106,30 +112,44 @@ def _init_influxdb(instance):
 
     client.query(querySQL)
 
-  return True
+    with dbHelper(mysqlInfo) as dbClient:
+      db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
+      params = (
+          db_uuid,
+          dbName,
+          instanceUUID,
+          rpName
+      )
+
+      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`) VALUES (%s, %s, %s, %s, 0);"
+      dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
+
+      dbUUIDs[dbName] = db_uuid
+
+  return dbUUIDs
 
 
-def _init_system_workspace(influxInstanceUUID):
+def _init_system_workspace(sysDBUUID):
   mysqlInfo = SETTINGS['mysql']
   dbInfo = SETTINGS['core']['dbInfo']
 
   with dbHelper(mysqlInfo) as db:
-    db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
-    params = [
-        db_uuid,
-        'internal_system',
-        influxInstanceUUID
-    ]
+    # db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
+    # params = [
+    #     db_uuid,
+    #     'internal_system',
+    #     influxInstanceUUID
+    # ]
 
-    sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
-    db.execute(sql, dbName = dbInfo['dbName'], params = params)
+    # sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
+    # db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
     ws_uuid = "wksp_" + shortuuid.ShortUUID().random(length = 24)
     token = "tokn_" + shortuuid.ShortUUID().random(length = 24)
     params = [
         ws_uuid,
         token,
-        db_uuid
+        sysDBUUID
     ]
     wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dbUUID`, `dataRestoration`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`) VALUES (%s, '系统工作空间', %s, %s, '[]', NULL, '', NULL, '{}');"
     db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
@@ -188,12 +208,12 @@ def init_influxdb_all():
   instances = SETTINGS['influxdb']
 
   for idx, instance in enumerate(instances):
-    _init_influxdb(instance)
     instanceUUID = _init_db_instance(instance)
 
     # 创建系统工作空间
     if idx == 0:
-        _init_system_workspace(instanceUUID)
+      dbUUIDs = _init_influxdb(instanceUUID, instance)
+      _init_system_workspace(dbUUIDs['internal_system'])
 
   return True
 

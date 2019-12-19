@@ -82,7 +82,7 @@ def database_manage_account_create():
   username = accountInfo.get('username')
   email = accountInfo.get('email')
 
-  if not username:
+  if username:
     with dbHelper(mysqlInfo) as db:
       password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
 

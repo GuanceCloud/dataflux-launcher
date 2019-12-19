@@ -1,7 +1,7 @@
 # 报错告警所使用的环境名
 envName: DataFlux
 
-protocol: "http"
+protocol: "https"
 hostname: "{{'deploy-' if __common__.debug}}console.{{ other.domain }}"
 
 database:
@@ -21,7 +21,7 @@ kodo:
 
 # 报警机器人
 robot:
-  url: https://oapi.dingtalk.com/robot/send?access_token=f9fdbaa21a4a0d680effdd105a4cb908e385f06614fbe3a385ae9d357fc2e786
+  url: 
 
 # Cache
 redis:
