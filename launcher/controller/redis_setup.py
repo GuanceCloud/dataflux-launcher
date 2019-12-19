@@ -2,7 +2,7 @@
 
 import redis
 
-from . import SETTINGS
+from launcher import SETTINGS
 
 
 def redis_ping(params):

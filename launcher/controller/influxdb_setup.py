@@ -3,8 +3,8 @@
 import shortuuid
 import json
 
-from . import SETTINGS
 from .db_helper import dbHelper
+from launcher import SETTINGS
 
 from influxdb import InfluxDBClient
 

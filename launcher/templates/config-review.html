@@ -27,7 +27,7 @@
 </div>
 <div class="row form-body">
   <div class="text-right">
-    <button id="btnConfigmapCreate" {{ "disabled" if debug }} class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    <button id="btnConfigmapCreate" {{ "disabled" if not __common__.debug }} class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
     <!-- {% if dubug %}
     <button id="btnConfigmapCreate" class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
     {% else %}

@@ -6,7 +6,7 @@ import pymysql
 
 
 from .db_helper import dbHelper
-from . import SETTINGS
+from launcher import SETTINGS
 
 def database_create_db():
   mysqlInfo = SETTINGS['mysql']

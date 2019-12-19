@@ -6,7 +6,7 @@ import json, time
 
 from launcher.utils.template import jinjia2_render
 
-from . import SETTINGS, SERVICECONFIG
+from launcher import SETTINGS, SERVICECONFIG
 
 
 def do_check():
@@ -240,7 +240,7 @@ def service_image_config():
         d['images'].append(item)
 
   d['storageNames'] = _get_storageclass()
-  print(d)
+  # print(d)
 
   return d
 

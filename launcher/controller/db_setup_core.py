@@ -8,7 +8,7 @@ import pymysql
 
 
 from .db_helper import dbHelper
-from . import SETTINGS
+from launcher import SETTINGS
 
 def database_ping(params):
   params['port'] = int(params['port'])

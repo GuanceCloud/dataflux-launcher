@@ -5,7 +5,7 @@ from flask import Flask, g
 from launcher.utils.template import render
 from launcher.controller import setup
 
-from launcher.controller import SETTINGS, SERVICECONFIG
+from . import SETTINGS
 
 
 def register_route(app):
@@ -53,7 +53,7 @@ def register_route(app):
   def config_review():
     config = setup.config_template()
 
-    return render("config-review.html", {"title": "配置预览", "pageData": config, "dubug": SERVICECONFIG['debug']})
+    return render("config-review.html", {"title": "配置预览", "pageData": config})
 
 
   @app.route("/service/config")
