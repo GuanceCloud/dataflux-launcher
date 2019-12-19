@@ -32,7 +32,7 @@ spec:
           name: test 
           protocol: TCP
         volumeMounts:
-        - mountPath: /kodo/config/config.yml
+        - mountPath: /kodo/config/config.yaml
           name: kodo
           subPath: config.yaml
         - mountPath: /logdata
