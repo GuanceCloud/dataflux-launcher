@@ -2,15 +2,23 @@ body{
     padding-bottom: 70px;
 }
 
-header{
-    height: 70px;
-    line-height: 70px;
-    
-    background-color: #6f5499;
-    background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+.clear:after {
+  content: "";
+  clear: left;
+  display: block;
+}
 
-    font-size: 20px;
-    color: #fff;
+header{
+    height: 50px;
+    line-height: 50px;
+
+    margin-bottom: 70px;
+
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.05);
+
+    font-size: 18px;
+    color: #333;
 }
 
 footer{
@@ -21,15 +29,78 @@ footer{
 
     padding: 20px 0;
 
-    background: #333;
-    color: #fff;
-    font-size: 14px;  
+    background: #DEE0E5;
+    color: #222;
+    font-size: 14px;
 }
 
 .form-body{
-    padding: 20px 0;
+    /* padding: 20px 0; */
 }
 
+.page-nav{
+  width: 270px;
+
+  border-right: 1px #eee solid;
+}
+
+.page-main{
+  position: absolute;
+  left: 300px;
+  right: 0;
+
+  padding: 0 40px;
+  margin-bottom: 80px;
+}
+
+.page-main .page-heading{
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.step-list{
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+
+  color: #888;
+}
+
+.step-list li{
+  line-height: 50px;
+  padding-left: 90px;
+
+  font-size: 14px;
+}
+
+.step-list li i.step-idx{
+  display: inline-block;
+
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  border: 1px solid #888;
+
+  font-size: 12px;
+  line-height: 16px;
+  font-style: normal;
+  text-align: center;
+}
+
+.step-list li.step-prev i.step-idx{
+  color: #f60;
+  border: 1px solid #f60;
+}
+
+.step-list li.step-current {
+  color: #f60;
+}
+
+.step-list li.step-current i.step-idx{
+  color: #fff;
+  border: 1px solid #f60;
+  background-color: #f60;
+}
 
 .well.error{
     border-color: red;

@@ -4,94 +4,90 @@
 
 <div class="row form-body">
     <div class="form-horizontal">
-      <div class="panel panel-default">
-        <div class="panel-heading">InfluxDB 配置</div>
-        <div class="panel-body">
-          {% for idb in pageData %}
+      <div>
+        <button class="btn btn-sm btn-success pull-right" onclick="setup.influxdb_add()">
+          <i class="glyphicon glyphicon-plus"></i> 添加
+        </button>
+        <h2 class="page-heading">InfluxDB 配置</h2>
+      </div>
 
-          {% if idb.pingError %}
-          <div class="well influxdb-list error">
-          {% else %}
-          <div class="well influxdb-list">
-          {% endif %}
-            <div class="form-group">
-              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="host" value="{{idb.host}}" placeholder="InfluxDB Host">
-                <label class="checkbox-inline">
-                  {% if idb.ssl %}
-                  <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> SSL
-                  {% else %}
-                  <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}"> SSL
-                  {% endif %}
-                </label>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptInfluxDBPort{{ loop.index }}" class="col-sm-2 control-label">端口:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptInfluxDBPort{{ loop.index }}" value="{{idb.port}}" placeholder="端口">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptInfluxDBUserName{{ loop.index }}" class="col-sm-2 control-label">管理员账号:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptInfluxDBUserName{{ loop.index }}" value="{{idb.username}}" placeholder="管理员账号">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptInfluxDBPassword{{ loop.index }}" class="col-sm-2 control-label">管理员密码:</label>
-              <div class="col-sm-10">
-                <input type="password" class="form-control" id="iptInfluxDBPassword{{ loop.index }}" value="{{idb.password}}" placeholder="管理员密码">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">数据库名:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptInfluxDBName{{ loop.index }}" value="{{idb.dbName}}" placeholder="数据库名">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">Kapacitor 地址:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="iptKapacitorHost{{ loop.index }}" value="{{idb.kapacitorHost}}" placeholder="Kapacitor 地址，如：http://127.0.0.1:10551">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-2 control-label">&nbsp;</label>
-              <div class="col-sm-10">
-                  {% if loop.length > 1 %}
-                  <button class="btn btn-sm btn-danger" onclick="setup.influxdb_remove({{loop.index - 1}})">
-                    <i class="glyphicon glyphicon-remove"></i> 删除
-                  </button>
-                  {% endif %}
+      {% for idb in pageData %}
 
-                  {% if loop.last %}
-                  <button class="btn btn-sm btn-success" onclick="setup.influxdb_add()">
-                    <i class="glyphicon glyphicon-plus"></i> 添加
-                  </button>
-                  {% endif %}
-              </div>
-            </div>
+      {% if idb.pingError %}
+      <div class="well influxdb-list error">
+      {% else %}
+      <div class="well influxdb-list">
+      {% endif %}
+        <div class="form-group">
+          <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="host" value="{{idb.host}}" placeholder="InfluxDB Host">
+            <label class="checkbox-inline">
+              {% if idb.ssl %}
+              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> SSL
+              {% else %}
+              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}"> SSL
+              {% endif %}
+            </label>
           </div>
-          {% endfor %}
-          <div class="form-group">
-            <label class="col-sm-2 control-label">&nbsp;</label>
-            <div class="col-sm-5">
-                <!-- <button class="btn btn-primary" onclick="setup.influxdb_setup()">配置 InfluxDB</button> -->
-                <a class="btn btn-default" href="/redis">
-                  <i class="glyphicon glyphicon-arrow-left"></i> 上一步
-                </a>
-                <button class="btn btn-primary" onclick="setup.influxdb_ping(true)">
-                  下一步 <i class="glyphicon glyphicon-arrow-right"></i>
-                </button>
-            </div>
-            <div class="col-sm-5 text-right">
-                <button id="btnConnectTtest" class="btn btn-warning" onclick="setup.influxdb_ping(false)">
-                  <i class="glyphicon glyphicon-question-sign"></i> 测试连接
-                </button>
-            </div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxDBPort{{ loop.index }}" class="col-sm-2 control-label">端口:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptInfluxDBPort{{ loop.index }}" value="{{idb.port}}" placeholder="端口">
           </div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxDBUserName{{ loop.index }}" class="col-sm-2 control-label">管理员账号:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptInfluxDBUserName{{ loop.index }}" value="{{idb.username}}" placeholder="管理员账号">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxDBPassword{{ loop.index }}" class="col-sm-2 control-label">管理员密码:</label>
+          <div class="col-sm-5">
+            <input type="password" class="form-control" id="iptInfluxDBPassword{{ loop.index }}" value="{{idb.password}}" placeholder="管理员密码">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">数据库名:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptInfluxDBName{{ loop.index }}" value="{{idb.dbName}}" placeholder="数据库名">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">Kapacitor 地址:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptKapacitorHost{{ loop.index }}" value="{{idb.kapacitorHost}}" placeholder="Kapacitor 地址，如：http://127.0.0.1:10551">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">&nbsp;</label>
+          <div class="col-sm-5">
+              {% if loop.length > 1 %}
+              <button class="btn btn-sm btn-danger" onclick="setup.influxdb_remove({{loop.index - 1}})">
+                <i class="glyphicon glyphicon-remove"></i> 删除
+              </button>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="form-group">
+        <label class="col-sm-2 control-label">&nbsp;</label>
+        <div class="col-sm-3">
+            <!-- <button class="btn btn-primary" onclick="setup.influxdb_setup()">配置 InfluxDB</button> -->
+            <a class="btn btn-default" href="/redis">
+              <i class="glyphicon glyphicon-arrow-left"></i> 上一步
+            </a>
+            <button class="btn btn-primary" onclick="setup.influxdb_ping(true)">
+              下一步 <i class="glyphicon glyphicon-arrow-right"></i>
+            </button>
+        </div>
+        <div class="col-sm-2 text-right">
+            <button id="btnConnectTtest" class="btn btn-warning" onclick="setup.influxdb_ping(false)">
+              <i class="glyphicon glyphicon-question-sign"></i> 测试连接
+            </button>
         </div>
       </div>
     </div>

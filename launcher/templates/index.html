@@ -3,28 +3,23 @@
 {% block content %}
 
 <div class="row form-body">
+  <div class="col-12">
     <div class="form-horizontal">
-      <div class="panel panel-default">
-        <div class="panel-heading">安装说明</div>
-        <div class="panel-body">
+      <h2 class="page-heading">安装说明</h2>
+      <div class="form-group">
+        <div class="col-sm-8">
+            {{ pageData | safe }}
+        </div>
+      </div>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label">&nbsp;</label>
-                <div class="col-sm-8">
-                    {{ pageData | safe }}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">&nbsp;</label>
-                <div class="col-sm-10">
-                    <button class="btn btn-primary" onclick="setup.setting_init()">
-                        <i class="glyphicon glyphicon-expand"></i> 开始配置</button>
-                </div>
-            </div>
+      <div class="form-group">
+        <div class="col-sm-12">
+            <button class="btn btn-primary" onclick="setup.setting_init()">
+                <i class="glyphicon glyphicon-expand"></i> 开始配置</button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}

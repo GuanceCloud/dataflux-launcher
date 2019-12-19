@@ -21,6 +21,51 @@ import os, yaml, json
 #   "serviceConfig": {}
 # }
 
+STEPS = [
+    {
+        "key": "/",
+        "name": "安装说明",
+        "status": ""
+    },
+    {
+        "key": "/check",
+        "name": "环境检查",
+        "status": ""
+    },
+    {
+        "key": "/database",
+        "name": "MySQL 配置"
+    },
+    {
+        "key": "/redis",
+        "name": "Redis 配置"
+    },
+    {
+        "key": "/influxdb",
+        "name": "InfluxDB 配置"
+    },
+    {
+        "key": "/other",
+        "name": "其他配置"
+    },
+    {
+        "key": "/setup/info",
+        "name": "安装信息"
+    },
+    {
+        "key": "/config/review",
+        "name": "应用配置信息"
+    },
+    {
+        "key": "/service/config",
+        "name": "应用配置镜像"
+    },
+    {
+        "key": "/service/status",
+        "name": "应用服务状态"
+    }
+]
+
 SERVICECONFIG = {}
 
 def init_config():

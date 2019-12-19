@@ -1,29 +1,51 @@
 <html>
     <head>
         {% if title %}
-        <title>{{title}} - DataFlux</title>
+        <title>{{title}} - DataFlux Launcher</title>
         {% else %}
-        <title>DataFlux</title>
+        <title>DataFlux Launcher</title>
         {% endif %}
 
         <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css" crossorigin="anonymous" />
         <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap-theme.min.css" crossorigin="anonymous" />
 
         <link rel="stylesheet" href="/css/site.css" crossorigin="anonymous" />
+        <link rel="stylesheet" href="/vendor/iconfont/style.css" crossorigin="anonymous" />
 
         <script src="/vendor/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/jquery.validate/jquery.validate.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/jquery.validate/messages_zh.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
     </head>
     <body>
         <header>
-            <div class="container">
-                DataFlux 安装向导
-            </div>
+          <div class="container-fluid">
+            DataFlux Launcher
+          </div>
         </header>
-        <div class="container">
-        {% block content %}{% endblock %}
+        <div class="container-fluid">
+          <div class="page-main pull-left">
+          {% block content %}{% endblock %}
+          </div>
+          <div class="page-nav">
+            <ul class="step-list">
+              {% for step in steps %}
+                {% if step.status == 'prev' %}
+                <li class="step-prev">
+                  <i class="step-idx icon-select"></i>
+                {% elif step.status == 'current' %}
+                <li class="step-current">
+                  <i class="step-idx">{{ loop.index }}</i>
+                {% else%}
+                <li class="step-next">
+                  <i class="step-idx">{{ loop.index }}</i>
+                {% endif%}
+                  {{ step.name }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
         <footer class="text-center">
             ©2013-{{ __common__.year }} 上海驻云信息科技有限公司
