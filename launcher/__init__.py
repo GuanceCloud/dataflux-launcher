@@ -34,19 +34,19 @@ STEPS = [
     },
     {
         "key": "/database",
-        "name": "MySQL 配置"
+        "name": "MySQL 设置"
     },
     {
         "key": "/redis",
-        "name": "Redis 配置"
+        "name": "Redis 设置"
     },
     {
         "key": "/influxdb",
-        "name": "InfluxDB 配置"
+        "name": "InfluxDB 设置"
     },
     {
         "key": "/other",
-        "name": "其他配置"
+        "name": "其他设置"
     },
     {
         "key": "/setup/info",
@@ -54,11 +54,11 @@ STEPS = [
     },
     {
         "key": "/config/review",
-        "name": "应用配置信息"
+        "name": "应用配置文件"
     },
     {
         "key": "/service/config",
-        "name": "应用配置镜像"
+        "name": "应用镜像"
     },
     {
         "key": "/service/status",

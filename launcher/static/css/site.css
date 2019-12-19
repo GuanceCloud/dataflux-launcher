@@ -58,6 +58,20 @@ footer{
   margin-bottom: 20px;
 }
 
+.page-main .high-block{
+  margin: 20px 0;
+  padding: 20px 40px;
+
+  background-color: #f7f7fc;
+  border: 1px solid #f7f7fc;
+}
+
+.page-main .control-label{
+  color: #666;
+  font-size: 14px;
+  font-weight: normal;
+}
+
 .step-list{
   list-style: none;
   padding-left: 0;
@@ -102,11 +116,11 @@ footer{
   background-color: #f60;
 }
 
-.well.error{
-    border-color: red;
+.high-block.error{
+    border-color: #f60;
 }
 
-.well.success{
+.high-block.success{
     border-color: green;
 }
 

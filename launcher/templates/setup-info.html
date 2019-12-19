@@ -6,7 +6,7 @@
     <div class="form-horizontal">
       <h2 class="page-heading">安装信息</h2>
 
-          <div class="well well-mysql">
+          <div class="high-block well-mysql">
             <h4>MySQL 信息</h4>
             <div class="form-group">
               <label for="iptDBHost" class="col-sm-2 control-label">MySQL Host:</label>
@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <div class="well well-redis">
+          <div class="high-block well-redis">
             <h4>Redis 信息</h4>
             <div class="form-group">
               <label for="iptHost" class="col-sm-2 control-label">Redis Host:</label>
@@ -57,7 +57,7 @@
           </div>
 
           {% for idb in pageData.influxdb %}
-          <div class="well well-influxdb">
+          <div class="high-block well-influxdb">
             <h4>InfluxDB 信息</h4>
             <div class="form-group">
               <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
@@ -102,7 +102,7 @@
           </div>
           {% endfor %}
 
-          <div class="well well-manager">
+          <div class="high-block well-manager">
             <h4>系统主域名</h4>
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">域名:</label>
@@ -112,7 +112,7 @@
             </div>
           </div>
 
-          <div class="well well-manager">
+          <div class="high-block well-manager">
             <h4>后台管理员</h4>
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">管理员账号:</label>

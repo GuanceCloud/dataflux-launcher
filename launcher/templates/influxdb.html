@@ -14,9 +14,9 @@
       {% for idb in pageData %}
 
       {% if idb.pingError %}
-      <div class="well influxdb-list error">
+      <div class="high-block influxdb-list error">
       {% else %}
-      <div class="well influxdb-list">
+      <div class="high-block influxdb-list">
       {% endif %}
         <div class="form-group">
           <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
