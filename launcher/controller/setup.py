@@ -115,7 +115,7 @@ def config_template():
     },
     {
       "key": "innerAppTrigger",
-      "name": "通知触发器 ",
+      "name": "Trigger",
       "content": triggerTemp,
     }
   ]
@@ -233,10 +233,26 @@ def service_image_config():
             "key": "func-worker-utils",
             "name": "函数计算 Worker Utils",
             "imagePath": "middlewares/ft-data-processor-worker:master"
-            },{
-            "key": "inner-app-trigger",
+            },
+
+            {
+            "key": "trigger",
             "name": "通知触发器",
             "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191210-01"
+            },
+
+            {
+            "key": "message-desk",
+            "name": "Message Desk",
+            "imagePath": "middlewares/message-desk:v20191203-rtm"
+            },{
+            "key": "message-desk-worker-beat",
+            "name": "Message Desk Beat",
+            "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
+            },{
+            "key": "message-desk-worker",
+            "name": "Message Desk Worker",
+            "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
             }
         ]
     }

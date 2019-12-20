@@ -1,5 +1,4 @@
 database:
-    # 测试环境容器外使用地址
     connection: "mysql+pymysql://{{messageDesk.dbInfo.dbUser}}:{{messageDesk.dbInfo.dbUserPassword}}@{{mysql.host}}:{{mysql.port}}/{{messageDesk.dbInfo.dbName}}?charset=utf8"
     pool_size: 30
     max_overflow: 10

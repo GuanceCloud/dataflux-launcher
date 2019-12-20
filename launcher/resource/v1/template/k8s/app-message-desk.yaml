@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-middleware-message-desk
+  name: message-desk
+  namespace: middleware
+spec:
+  selector:
+    matchLabels:
+      app: deployment-middleware-message-desk
+  template:
+    metadata:
+      labels:
+        app: deployment-middleware-message-desk
+    spec:
+      containers:
+      - env:
+        - name: MESSAGE_DESK_CONFIG
+          value: /message-desk-config.yaml
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: message-desk
+        ports:
+        - containerPort: 8088
+          name: 8088tcp80882
+          protocol: TCP
+        resources: {}
+        tty: true
+        volumeMounts:
+        - mountPath: /logdata
+          name: message-desk-logs
+        - mountPath: /message-desk-config.yaml
+          name: message-desk
+          subPath: config-api.yaml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: message-desk-logs
+        persistentVolumeClaim:
+          claimName: message-desk-logs
+      - configMap:
+          defaultMode: 292
+          name: message-desk
+          optional: false
+        name: message-desk
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-desk
+  namespace: middleware
+spec:
+  ports:
+  - name: 8088tcp80882
+    port: 8088
+    protocol: TCP
+    targetPort: 8088
+  selector:
+    app: deployment-middleware-message-desk
+  type: ClusterIP
