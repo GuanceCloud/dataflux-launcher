@@ -33,5 +33,10 @@ kubectl delete PersistentVolumeClaim kodo-logs kodo-inner-logs -n forethought-ko
 # kubectl delete namespaces forethought-core forethought-kodo forethought-webclient func
 
 
-
+# 清理 configmap
+kubectl delete secret registry-key -n forethought-core
+kubectl delete secret registry-key -n forethought-kodo
+kubectl delete secret registry-key -n forethought-webclient
+kubectl delete secret registry-key -n middleware
+kubectl delete secret registry-key -n func
 
