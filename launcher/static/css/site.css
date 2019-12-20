@@ -72,6 +72,28 @@ footer{
   font-weight: normal;
 }
 
+.service-status i{
+  font-size: 16px;
+}
+
+.service-status .icon-success{
+  color: #4ABD59;
+}
+
+.service-status .service-pendding {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #2F61CC;
+  border-right: 2px solid #2F61CC;
+  border-bottom: 2px solid #2F61CC;
+
+  animation:r0 1.5s linear infinite;
+}
+
 .step-list{
   list-style: none;
   padding-left: 0;
@@ -142,12 +164,6 @@ footer{
   100% {
     transform:rotate(360deg);
   }
-}
-
-.service-pendding {
-  animation:r0 1.5s linear infinite;
-
-  color: #28a95e;
 }
 
 /*vlidation start*/

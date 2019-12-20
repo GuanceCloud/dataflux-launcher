@@ -316,19 +316,20 @@ var setup = (function () {
       var services = d.content || [];
       var hasPendding = false;
 
+      // return
       $.each(services, function(idx, item){
         var jqImgDiv = $('#img_' + item.key);
-        var jqI = jqImgDiv.children('i');
+        var jqI = jqImgDiv.find('i');
 
-        jqI.removeClass('glyphicon-repeat glyphicon-ok-circle glyphicon-remove-circle');
-        if(item.Progressing == 'True'){
-          jqI.addClass('glyphicon-cog');
+        jqI.removeClass('icon-success service-pendding');
+        if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+          jqI.addClass('service-pendding');
 
           hasPendding = true;
-        }else if(item.Available == 'True'){
-          jqI.addClass('glyphicon-ok-circle');
-        }else{
-          jqI.addClass('glyphicon-remove-circle');
+        }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+          jqI.addClass('icon-success');
+        // }else{
+        //   jqI.addClass('glyphicon-remove-circle');
         }
 
         $('#img_path_' + item.key).text(item.fullImagePath);

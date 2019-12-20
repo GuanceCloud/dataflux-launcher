@@ -391,6 +391,8 @@ def service_status():
 
       status['fullImagePath'] = image
       status['key'] = key
+      status['replicas'] = item['status']['replicas']
+      status['availableReplicas'] = item['status'].get('availableReplicas', 0)
 
       tempStatus[key] = status
 
@@ -406,7 +408,8 @@ def service_status():
         deployStatus.append({
                 'key': key,
                 'name': name,
-                'Progressing': 'True'
+                'replicas': 0,
+                'availableReplicas': 0
             })
 
   return deployStatus

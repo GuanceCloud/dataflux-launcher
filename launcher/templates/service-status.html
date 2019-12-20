@@ -11,18 +11,16 @@
 
         <div class="form-group app-image" id="img_{{ item.key }}">
           <label class="col-sm-2 control-label">{{ item.name }}:</label>
-          <div class="col-sm-10 text-right">
+          <div class="col-sm-10 text-right service-status">
             <p class="form-control-static">
               <span id="img_path_{{ item.key }}">
                 {{ item.fullImagePath }}
               </span>
-            {% if item.Progressing == "True" %}
-              <i class="text-success glyphicon glyphicon-repeat service-pendding"></i>
-            {% elif item.Available == "True" %}
-              <i class="text-primary glyphicon glyphicon-ok-circle"></i>
-            {% else %}
-              <i class="text-danger glyphicon glyphicon-remove-circle"></i>
-            {% endif %}
+              {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+              <i class="service-pendding"></i>
+              {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+              <i class="icon-success"></i>
+              {% endif %}
             </p>
           </div>
         </div>
