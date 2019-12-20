@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-inner-app-trigger
+  name: trigger
+  namespace: forethought-inner-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-forethought-inner-app-trigger
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-inner-app-trigger
+    spec:
+      containers:
+      - args:
+        - /dev-work/server
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: trigger
+        ports:
+        - containerPort: 9000
+          name: 9000tcp00
+          protocol: TCP
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /dev-work/conf
+          name: trigger-conf
+        workingDir: /dev-work
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: trigger-conf
+          optional: false
+        name: trigger-conf
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trigger
+  namespace: forethought-inner-app
+spec:
+  ports:
+  - name: 9000tcp02
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: deployment-forethought-inner-app-trigger
+  type: ClusterIP

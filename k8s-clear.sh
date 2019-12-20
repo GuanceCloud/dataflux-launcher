@@ -30,7 +30,7 @@ kubectl delete PersistentVolumeClaim ft-sysconfig -n forethought-core
 kubectl delete PersistentVolumeClaim kodo-logs kodo-inner-logs -n forethought-kodo
 
 # 清理 namespace
-# kubectl delete namespaces forethought-core forethought-kodo forethought-webclient func
+kubectl delete namespaces forethought-core forethought-kodo forethought-webclient func
 
 
 # 清理 configmap

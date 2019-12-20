@@ -2,6 +2,7 @@ debug: True
 
 namespaces:
   - forethought-core
+  - forethought-inner-app
   - forethought-webclient
   - forethought-kodo
   - func
@@ -61,4 +62,7 @@ services:
 
   - key: func-worker-utils
     name: 函数计算 Worker Utils
+
+  - key: inner-app-trigger
+    name: 通知触发器
 

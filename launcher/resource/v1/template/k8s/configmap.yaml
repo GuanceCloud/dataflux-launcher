@@ -141,3 +141,18 @@ metadata:
     cattle.io/creator: norman
   name: func-worker-config
   namespace: func
+
+
+---
+
+apiVersion: v1
+data:
+  app.ini: |-
+{{ config.innerAppTrigger | indent(4) }}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: trigger-conf
+  namespace: forethought-inner-app

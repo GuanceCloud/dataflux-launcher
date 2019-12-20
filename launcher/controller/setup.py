@@ -45,6 +45,8 @@ def config_template():
   funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', SETTINGS)
   funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', SETTINGS)
 
+  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', SETTINGS)
+
   return [
     {
       "key": "core",
@@ -110,6 +112,11 @@ def config_template():
       "key": "funcWorker",
       "name": "Function Worker",
       "content": funcWorkerTemp,
+    },
+    {
+      "key": "innerAppTrigger",
+      "name": "通知触发器 ",
+      "content": triggerTemp,
     }
   ]
 
@@ -226,6 +233,10 @@ def service_image_config():
             "key": "func-worker-utils",
             "name": "函数计算 Worker Utils",
             "imagePath": "middlewares/ft-data-processor-worker:master"
+            },{
+            "key": "inner-app-trigger",
+            "name": "通知触发器",
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191210-01"
             }
         ]
     }
