@@ -132,22 +132,25 @@ def configmap_create(maps):
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    # 一定要等命名空间创建完，才能继续后续操作
+    for i in range(5):
+      cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
+      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
+      # 等待 namespace 创建完成
+      for j in range(5):
+        cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespaces']))
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
-    # # 等待 namespace 创建完成
-    # for i in range(5):
-    #   cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespace']))
-    #   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    #
-    #   output, err = p.communicate()
-    #   namespace = json.loads(output)
-    #
-    #   if len(namespace['items']) == 4:
-    #     break
-    #
-    #   time.sleep(0.5)
+        output, err = p.communicate()
+        namespace = json.loads(output)
+
+        if len(namespace['items']) == len(SERVICECONFIG['namespaces']):
+          break
+
+        time.sleep(0.5)
+      else:
+        break
 
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -391,7 +394,7 @@ def service_status():
 
       status['fullImagePath'] = image
       status['key'] = key
-      status['replicas'] = item['status']['replicas']
+      status['replicas'] = item['status'].get('replicas', 0)
       status['availableReplicas'] = item['status'].get('availableReplicas', 0)
 
       tempStatus[key] = status
