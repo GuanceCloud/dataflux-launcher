@@ -54,13 +54,15 @@
         <script src="/js/app.js" crossorigin="anonymous"></script>
         <script src="/js/validation.js" crossorigin="anonymous"></script>
         <script type="text/javascript">
-            // $().ready(function(){
-            //     $.validator.setDefaults({
-            //       submitHandler: function(form) { }
-            //     });
-
-            //     $('form').validate();
-            // });
+            $().ready(function(){
+                $.validator.setDefaults({
+                  debug: false,
+                  success: "valid",
+                  errorPlacement: function(error, element) {
+                    error.appendTo(element.parent().next('div.error'));
+                  }
+                });
+            });
         </script>
     </body>
 </html>

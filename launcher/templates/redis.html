@@ -3,29 +3,32 @@
 {% block content %}
 
 <div class="row form-body">
-    <div class="form-horizontal">
+    <form id="validateForm" class="form-horizontal" onsubmit="return false;">
       <h2 class="page-heading">Redis 配置</h2>
       <div class="high-block influxdb-list">
         <div class="form-group">
           <label for="iptHost" class="col-sm-2 control-label">Redis 地址:</label>
           <div class="col-sm-5">
             <!-- 172.16.0.20 -->
-            <input type="text" class="form-control" id="iptRedisHost" value="{{ pageData.host }}" placeholder="Redis 地址">
+            <input type="text" class="form-control" id="iptRedisHost" name="iptRedisHost" required value="{{ pageData.host }}" placeholder="Redis 地址">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptRedisPort" class="col-sm-2 control-label">端口:</label>
           <div class="col-sm-5">
             <!-- 10391 -->
-            <input type="text" class="form-control" id="iptRedisPort" value="{{ pageData.port }}" placeholder="端口">
+            <input type="text" class="form-control" id="iptRedisPort" name="iptRedisPort" required value="{{ pageData.port }}" placeholder="端口">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptRedisPassword" class="col-sm-2 control-label">密码:</label>
           <div class="col-sm-5">
             <!-- Fd6cQ4cvd8 -->
-            <input type="password" class="form-control" id="iptRedisPassword" value="{{ pageData.password }}" placeholder="密码">
+            <input type="password" class="form-control" id="iptRedisPassword" name="iptRedisPassword" required value="{{ pageData.password }}" placeholder="密码">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
 
         <div class="form-group">
@@ -45,7 +48,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
 </div>
 
 {% endblock %}

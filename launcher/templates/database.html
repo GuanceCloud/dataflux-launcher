@@ -3,32 +3,36 @@
 {% block content %}
 
 <div class="row form-body">
-    <div id="validateForm" class="form-horizontal" novalidate="novalidate" onsubmit="return false;">
+    <form id="validateForm" class="form-horizontal" onsubmit="return false;">
       <h2 class="page-heading">MySQL 配置</h2>
       <div class="high-block influxdb-list">
         <div class="form-group">
           <label for="iptDBHost" class="col-sm-2 control-label">MySQL Host:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptDBHost" required value="{{ pageData.host }}" placeholder="数据库实例地址">
+            <input type="text" class="form-control" id="iptDBHost" name="iptDBHost" required value="{{ pageData.host }}" placeholder="数据库实例地址">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptDBPort" class="col-sm-2 control-label">端口:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptDBPort" required value="{{ pageData.port }}" placeholder="数据库实例端口">
+            <input type="text" class="form-control" id="iptDBPort" name="iptDBPort" required value="{{ pageData.port }}" placeholder="数据库实例端口">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptDBUserName" class="col-sm-2 control-label">管理员账号:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptDBUserName" required value="{{ pageData.user }}" placeholder="数据库实例管理员账号">
+            <input type="text" class="form-control" id="iptDBUserName" name="iptDBUserName" required value="{{ pageData.user }}" placeholder="数据库实例管理员账号">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptDBUserPwd" class="col-sm-2 control-label">管理员密码:</label>
           <div class="col-sm-5">
-            <input type="password" class="form-control" id="iptDBUserPwd" required value="{{ pageData.password }}" placeholder="数据库实例管理员密码">
+            <input type="password" class="form-control" id="iptDBUserPwd" name="iptDBUserPwd" required value="{{ pageData.password }}" placeholder="数据库实例管理员密码">
           </div>
+          <div class="col-sm-5 error"></div>
         </div>
 
         <div class="form-group">
@@ -45,7 +49,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
 </div>
 
 {% endblock %}

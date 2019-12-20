@@ -51,7 +51,8 @@ var setup = (function () {
     var that = this;
 
     this.post("setting/init").done(function(d){
-      that.go("/check");
+      // that.go("/check");
+      that.go("/database");
     });
   };
 
@@ -65,6 +66,11 @@ var setup = (function () {
       "password": $("#iptDBUserPwd").val()
     }
 
+    $("#validateForm").validate();
+    isValid = $('#validateForm').valid();
+
+    if (!isValid)
+      return false;
 
     this.get("database/ping", params).done(function(d){
       if (d.content){
@@ -76,8 +82,6 @@ var setup = (function () {
         that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });
-
-    return false;
   };
 
   // redis 连接测试
@@ -88,6 +92,12 @@ var setup = (function () {
       "port": $("#iptRedisPort").val(),
       "password": $("#iptRedisPassword").val()
     }
+
+    $("#validateForm").validate();
+    isValid = $('#validateForm').valid();
+
+    if (!isValid)
+      return false;
 
     this.get("redis/ping", params).done(function(d){
       if(d.content){
@@ -115,6 +125,12 @@ var setup = (function () {
         "ssl": $("#ckbInfluxDBSSL" + i).is(":checked"),
         "kapacitorHost": $("#iptKapacitorHost" + i).val()
       }
+
+      $("#validateForm").validate();
+      isValid = $('#validateForm').valid();
+
+      if (!isValid)
+        return [];
 
       dbs.push(db);
     }
@@ -182,6 +198,12 @@ var setup = (function () {
       "domain": $("#iptDomain").val()
     }
 
+    $("#validateForm").validate();
+    isValid = $('#validateForm').valid();
+
+    if (!isValid)
+      return false;
+
     this.post("other/config", data).done(function(d){
       if (d.content){
         that.go("/setup/info");
@@ -228,7 +250,7 @@ var setup = (function () {
         that.go("/config/review");
       }
     }).done(function(){
-      $('#btnDoSetup').removeAttr("disabled");
+      $('#btnDoSetup').attr("disabled", false);
     });
   };
 
@@ -241,6 +263,8 @@ var setup = (function () {
     var that = this;
     var maps = {};
 
+    $('#btnConfigmapCreate').attr("disabled","disabled");
+
     $('.config-review textarea').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
@@ -250,6 +274,8 @@ var setup = (function () {
 
     this.post("configmap/create", maps).then(function(d){
       that.go("/service/config");
+    }).done(function(){
+      that.config_item_checked_all();
     });
   };
 
@@ -260,6 +286,7 @@ var setup = (function () {
     var configs = {};
     var images = {};
 
+    $('#btnServiceCreate').attr("disabled","disabled");
     $('div.app-image :text').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
@@ -277,6 +304,8 @@ var setup = (function () {
       if (d.content){
         that.go("/service/status");
       }
+    }).done(function (){
+      $('#btnServiceCreate').attr("disabled", false);
     });
   };
 
