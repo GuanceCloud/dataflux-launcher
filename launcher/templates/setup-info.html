@@ -6,6 +6,36 @@
     <div class="form-horizontal">
       <h2 class="page-heading">安装信息</h2>
 
+          <div class="high-block well-manager">
+            <h4>系统主域名</h4>
+            <div class="form-group">
+              <label for="iptUserName" class="col-sm-2 control-label">主域名:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.other.domain }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptUserName" class="col-sm-2 control-label">各子域名:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}console</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}console-api</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}ws</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}management</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}management-api</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}func</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}kodo</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}integration</strong>.{{ pageData.other.domain }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptUserName" class="col-sm-2 control-label">&nbsp;</label>
+              <div class="col-sm-5">
+                <p class="form-control-static text-danger"><strong>以上为默认生成的子域名，可在后续配置文件中修改替换！</strong></p>
+              </div>
+            </div>
+
+          </div>
+
           <div class="high-block well-mysql">
             <h4>MySQL 信息</h4>
             <div class="form-group">
@@ -101,16 +131,6 @@
             </div>
           </div>
           {% endfor %}
-
-          <div class="high-block well-manager">
-            <h4>系统主域名</h4>
-            <div class="form-group">
-              <label for="iptUserName" class="col-sm-2 control-label">域名:</label>
-              <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.other.domain }}</p>
-              </div>
-            </div>
-          </div>
 
           <div class="high-block well-manager">
             <h4>后台管理员</h4>
