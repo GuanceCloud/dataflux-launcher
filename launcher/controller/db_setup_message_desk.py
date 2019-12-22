@@ -6,7 +6,7 @@ import pymysql
 
 
 from .db_helper import dbHelper
-from launcher import SETTINGS
+from launcher import SETTINGS, SERVICECONFIG
 
 def database_create_db():
   mysqlInfo = SETTINGS['mysql']
@@ -30,8 +30,8 @@ def database_ddl():
   mysqlInfo = SETTINGS['mysql']
 
   SETTINGS['messageDesk']['dbInfo'] = dbInfo = {
-    "dbName": "message_desk",
-    "dbUser": "message_desk",
+    "dbName": SERVICECONFIG['databases']['message_desk'],
+    "dbUser": SERVICECONFIG['databases']['message_desk'],
     "dbUserPassword": shortuuid.ShortUUID().random(length=12)
   }
 

@@ -69,3 +69,7 @@ services:
   - key: trigger
     name: 通知触发器
 
+databases:
+  core: df_core
+  message_desk: df_message_desk
+  func: df_func

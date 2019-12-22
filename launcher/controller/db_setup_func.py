@@ -3,7 +3,7 @@
 import os, shortuuid, pymysql, hashlib
 
 from .db_helper import dbHelper
-from launcher import SETTINGS
+from launcher import SETTINGS, SERVICECONFIG
 
 
 def database_create_db():
@@ -26,8 +26,8 @@ def database_ddl():
   mysqlInfo = SETTINGS['mysql']
 
   SETTINGS['func']['dbInfo'] = dbInfo = {
-    "dbName": "df_func",
-    "dbUser": "df_func",
+    "dbName": SERVICECONFIG['databases']['func'],
+    "dbUser": SERVICECONFIG['databases']['func'],
     "dbUserPassword": shortuuid.ShortUUID().random(length=12)
   }
 

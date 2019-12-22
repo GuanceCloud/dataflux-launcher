@@ -51,8 +51,8 @@ var setup = (function () {
     var that = this;
 
     this.post("setting/init").done(function(d){
-      // that.go("/check");
-      that.go("/database");
+      that.go("/check");
+      // that.go("/database");
     });
   };
 
@@ -73,12 +73,23 @@ var setup = (function () {
       return false;
 
     this.get("database/ping", params).done(function(d){
-      if (d.content){
+      if (d.content && d.content.connected){
         that.switch_ping_button($('#btnConnectTtest'), 'success');
-        if (next){
+        var dbNames = d.content.dbNames || [];
+        var jqSpan = $('#spanExistsDB')
+
+        if (dbNames.length > 0) {
+          jqSpan.text(dbNames.join('、 '));
+          jqSpan.parent().removeClass('hide');
+        }else{
+          $('#spanExistsDB').parent().addClass('hide');
+        }
+
+        if (next && dbNames.length == 0){
           that.go("/redis");
         }
       }else{
+        $('#spanExistsDB').parent().addClass('hide');
         that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });

@@ -10,6 +10,12 @@ from launcher import SETTINGS, SERVICECONFIG
 
 
 def do_check():
+  cmd = "kubectl cluster-info"
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  namespace = json.loads(output)
+
   return {"status": "check OK"}
 
 
@@ -132,7 +138,7 @@ def configmap_create(maps):
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    # 一定要等命名空间创建完，才能继续后续操作
+    # 必须要等命名空间创建完，才能继续后续操作
     for i in range(5):
       cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
       p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)

@@ -4,6 +4,7 @@ from flask import Flask, request, g
 
 from launcher.utils.template import render
 from launcher.controller import setup
+from launcher.controller import env_check
 
 from . import SETTINGS, STEPS
 
@@ -37,10 +38,10 @@ def register_route(app):
 
   @app.route("/check")
   def check():
-    # d = do_check()
+    result = env_check.do_check()
     setup.init_setting()
 
-    return render("check.html", {"steps": STEPS})
+    return render("check.html", {"pageData": result, "steps": STEPS})
 
 
   @app.route("/database")

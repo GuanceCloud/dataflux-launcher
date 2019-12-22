@@ -33,6 +33,7 @@ class dbHelper(object):
     if dbName is not None:
       self._connection.select_db(dbName)
 
+    result = []
     with self._connection.cursor() as cursor:
 
       for statement in ddl.split(';'):
@@ -44,7 +45,10 @@ class dbHelper(object):
           else:
             cursor.execute(statement + ';', params)
 
+          result.append(cursor.fetchall())
+
       self._connection.commit()
 
-      return True
+      print('>>>> ', result)
+      return result
 

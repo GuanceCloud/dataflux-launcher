@@ -8,18 +8,29 @@ import pymysql
 
 
 from .db_helper import dbHelper
-from launcher import SETTINGS
+from launcher import SETTINGS, SERVICECONFIG
 
 def database_ping(params):
   params['port'] = int(params['port'])
 
   with dbHelper(params) as db:
     if not db.connection:
-      return False
+      return {"connected": False}
+
+    sql = "SHOW DATABASES;"
+    result = db.execute(sql)
 
     SETTINGS["mysql"] = params
+    if len(result) == 0:
+      return {"connected": True}
 
-  return True
+    dbNames = []
+    for line in result[0]:
+      dbName = line[0]
+      if dbName in SERVICECONFIG['databases'].values():
+        dbNames.append(dbName)
+
+  return {"connected": True, "dbNames": dbNames}
 
 def database_create_db():
   mysqlInfo = SETTINGS['mysql']
@@ -42,8 +53,8 @@ def database_ddl():
   mysqlInfo = SETTINGS['mysql']
 
   SETTINGS['core']['dbInfo'] = dbInfo = {
-    "dbName": "Forethought",
-    "dbUser": "Forethought",
+    "dbName": SERVICECONFIG['databases']['core'],
+    "dbUser": SERVICECONFIG['databases']['core'],
     "dbUserPassword": shortuuid.ShortUUID().random(length=12)
   }
 

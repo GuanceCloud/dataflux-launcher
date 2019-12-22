@@ -27,11 +27,11 @@ STEPS = [
         "name": "安装说明",
         "status": ""
     },
-    # {
-    #     "key": "/check",
-    #     "name": "环境检查",
-    #     "status": ""
-    # },
+    {
+        "key": "/check",
+        "name": "环境检查",
+        "status": ""
+    },
     {
         "key": "/database",
         "name": "MySQL 设置"

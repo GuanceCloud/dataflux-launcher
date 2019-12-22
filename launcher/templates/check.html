@@ -6,19 +6,59 @@
     <form class="form-horizontal">
       <h2 class="page-heading">环境检查</h2>
       <div class="form-group">
-          <div class="col-sm-12">
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
+          <label class="col-sm-2 control-label">Kubernetes 集群:</label>
+          <div class="col-sm-10">
+            {% if not pageData.clusterInfo %}
+            <p class="form-control-static text-danger">Kubectl 客户端未安装或未配置，或者 Kubernetes 集群配置不正确!</p>
+            {% endif %}
+
+            {% for line in pageData.clusterInfo %}
+            <p class="form-control-static text-success">{{ line }}</p>
+            {% endfor %}
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">Namespace:</label>
+          <div class="col-sm-10">
+            {% if not pageData.deploy_info %}
+            <p class="form-control-static text-success">Kubernetes 集群中未安装过 DataFlux 。</p>
+            {% else %}
+            <p class="form-control-static text-danger">Kubernetes 集群中已有以下命名空间，请确认环境：</p>
+            <p class="form-control-static text-danger"><strong>{{ pageData.deploy_info }}</strong></p>
+            {% endif %}
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="col-sm-2 control-label">共享存储:</label>
+          <div class="col-sm-10">
+            {% if not pageData.storage %}
+            <p class="form-control-static text-danger">Kubernetes 集群中未配置共享存储，请先配置存储。</p>
+            {% else %}
+            <p class="form-control-static text-success"><strong>{{ pageData.storage }}</strong></p>
+            {% endif %}
           </div>
       </div>
 
       <div class="form-group">
-          <div class="col-sm-12">
+          <label class="col-sm-2">&nbsp;</label>
+          <div class="col-sm-10">
+            <p class="form-control-static text-warning">
+              <strong>
+              请检查以上 <span class="text-danger">红色</span> 字体部分，确认后继续！
+              </strong>
+            </p>
+          </div>
+      </div>
+
+
+      <div class="form-group">
+          <label class="col-sm-2">&nbsp;</label>
+          <div class="col-sm-10">
+            {% if not pageData.clusterInfo or not pageData.storage %}
+              <a class="btn btn-primary" disabled="">下一步 <i class="glyphicon glyphicon-arrow-right"></i></a>
+            {% else %}
               <a class="btn btn-primary" href="/database">下一步 <i class="glyphicon glyphicon-arrow-right"></i></a>
+            {% endif %}
           </div>
       </div>
     </form>
