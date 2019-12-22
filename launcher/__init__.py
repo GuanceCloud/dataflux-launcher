@@ -2,138 +2,147 @@
 
 import os, yaml, json
 
-# SETTINGS = {
-#   "mysql": {},
-#   "redis": {},
-#   "influxdb": [{}],
-#   "messageDesk": {},
-#   "core": {
-#     "dbInfo": {},
-#     "secret": {}
-#   },
-#   "other": {
-#     "manager": {
-#     "username": "",
-#     "email": ""
-#     },
-#     "domain": ""
-#   },
-#   "serviceConfig": {}
-# }
-
 STEPS = [
-    {
-        "key": "/",
-        "name": "安装说明",
-        "status": ""
-    },
-    {
-        "key": "/check",
-        "name": "环境检查",
-        "status": ""
-    },
-    {
-        "key": "/database",
-        "name": "MySQL 设置"
-    },
-    {
-        "key": "/redis",
-        "name": "Redis 设置"
-    },
-    {
-        "key": "/influxdb",
-        "name": "InfluxDB 设置"
-    },
-    {
-        "key": "/other",
-        "name": "其他设置"
-    },
-    {
-        "key": "/setup/info",
-        "name": "安装信息"
-    },
-    {
-        "key": "/config/review",
-        "name": "应用配置文件"
-    },
-    {
-        "key": "/service/config",
-        "name": "应用镜像"
-    },
-    {
-        "key": "/service/status",
-        "name": "应用服务状态"
-    }
+  {
+      "key": "/",
+      "name": "安装说明",
+      "status": ""
+  },
+  {
+      "key": "/check",
+      "name": "环境检查",
+      "status": ""
+  },
+  {
+      "key": "/database",
+      "name": "MySQL 设置"
+  },
+  {
+      "key": "/redis",
+      "name": "Redis 设置"
+  },
+  {
+      "key": "/influxdb",
+      "name": "InfluxDB 设置"
+  },
+  {
+      "key": "/other",
+      "name": "其他设置"
+  },
+  {
+      "key": "/setup/info",
+      "name": "安装信息"
+  },
+  {
+      "key": "/config/review",
+      "name": "应用配置文件"
+  },
+  {
+      "key": "/service/config",
+      "name": "应用镜像"
+  },
+  {
+      "key": "/service/status",
+      "name": "应用状态"
+  }
 ]
 
 SERVICECONFIG = {}
+SETTINGS = {}
 
-def init_config():
-    global SERVICECONFIG
+def __init_config():
+  global SERVICECONFIG
 
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    with open(base_path + "/../config/config.yaml") as f:
-        SERVICECONFIG  = yaml.safe_load(f)
+  base_path = os.path.dirname(os.path.abspath(__file__))
+  with open(base_path + "/../config/config.yaml") as f:
+    SERVICECONFIG  = yaml.safe_load(f)
 
-    # print(json.dumps(ServiceConfig, indent=4))
+def __init_settings():
+  global SETTINGS
 
-init_config()
-
-# test data
-SETTINGS = {
-  "mysql": {
-    "host": "172.16.0.43",
-    "port": 32306,
-    "user": "root",
-    "password": "rootPassw0rd"
-  },
-  "core": {
-    "dbInfo": {
-      "dbName": "Forethought",
-      "dbUser": "Forethought",
-      "dbUserPassword": "123321"
-    },
-    "secret": {}
-  },
-  "messageDesk": {
-    "dbInfo": {
-      "dbName": "",
-      "dbUser": "",
-      "dbUserPassword": ""
+  if not SERVICECONFIG['debug']:
+    SETTINGS = {
+      "mysql": {},
+      "redis": {},
+      "influxdb": [{}],
+      "messageDesk": {},
+      "core": {
+        "dbInfo": {},
+        "secret": {}
+      },
+      "func": {
+        "dbInfo": {}
+      },
+      "other": {
+        "manager": {
+        "username": "",
+        "email": ""
+        },
+        "domain": ""
+      },
+      "serviceConfig": {}
     }
-  },
-  "func": {
-    "dbInfo": {
-      "dbName": "ft_dp",
-      "dbUser": "ft_dp",
-      "dbUserPassword": "123321"
+
+
+  else:
+    SETTINGS = {
+      "mysql": {
+        "host": "172.16.0.43",
+        "port": 32306,
+        "user": "root",
+        "password": "rootPassw0rd"
+      },
+      "core": {
+        "dbInfo": {
+          "dbName": "Forethought",
+          "dbUser": "Forethought",
+          "dbUserPassword": "123321"
+        },
+        "secret": {}
+      },
+      "messageDesk": {
+        "dbInfo": {
+          "dbName": "",
+          "dbUser": "",
+          "dbUserPassword": ""
+        }
+      },
+      "func": {
+        "dbInfo": {
+          "dbName": "ft_dp",
+          "dbUser": "ft_dp",
+          "dbUserPassword": "123321"
+        }
+      },
+      "redis": {
+        "host": "172.16.0.43",
+        "port": 30397,
+        "password": "viFRKZiZkoPmXnyF"
+      },
+      "influxdb": [
+        {
+          "host": "172.16.0.43",
+          "port": 32086,
+          "username": "admin",
+          "password": "admin@influxdb",
+          "ssl": False,
+          "dbName": "test_db",
+          "kapacitorHost": "http://127.0.0.1:1234"
+        }
+      ],
+      "other": {
+        "manager": {
+          "username": "admin",
+          "email": "lhm@jiagouyun.com"
+        },
+        "domain": ""
+      },
+      "serviceConfig":{}
     }
-  },
-  "redis": {
-    "host": "172.16.0.43",
-    "port": 30397,
-    "password": "viFRKZiZkoPmXnyF"
-  },
-  "influxdb": [
-    {
-      "host": "172.16.0.43",
-      "port": 32086,
-      "username": "admin",
-      "password": "admin@influxdb",
-      "ssl": False,
-      "dbName": "test_db",
-      "kapacitorHost": "http://127.0.0.1:1234"
-    }
-  ],
-  "other": {
-    "manager": {
-      "username": "admin",
-      "email": "lhm@jiagouyun.com"
-    },
-    "domain": ""
-  },
-  "serviceConfig":{}
-}
+
+
+__init_config()
+__init_settings()
 
 
 ''' 结构

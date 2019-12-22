@@ -41,27 +41,27 @@ def register_route(app):
     result = env_check.do_check()
     setup.init_setting()
 
-    return render("check.html", {"pageData": result, "steps": STEPS})
+    return render("check.html", {"title": "环境检查", "pageData": result, "steps": STEPS})
 
 
   @app.route("/database")
   def database():
-    return render("database.html", {"title": "MySQL 配置", "pageData": SETTINGS['mysql'], "steps": STEPS})
+    return render("database.html", {"title": "MySQL 设置", "pageData": SETTINGS['mysql'], "steps": STEPS})
 
 
   @app.route("/other")
   def other():
-    return render("other.html", {"title": "其他配置", "pageData": SETTINGS['other'], "steps": STEPS})
+    return render("other.html", {"title": "其他设置", "pageData": SETTINGS['other'], "steps": STEPS})
 
 
   @app.route("/redis")
   def redis():
-    return render("redis.html", {"title": "Redis 配置", "pageData": SETTINGS['redis'], "steps": STEPS})
+    return render("redis.html", {"title": "Redis 设置", "pageData": SETTINGS['redis'], "steps": STEPS})
 
 
   @app.route("/influxdb")
   def influxdb():
-    return render("influxdb.html", {"title": "InfluxDB 配置", "pageData": SETTINGS['influxdb'], "steps": STEPS})
+    return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": SETTINGS['influxdb'], "steps": STEPS})
 
 
   @app.route("/setup/info")
@@ -73,19 +73,19 @@ def register_route(app):
   def config_review():
     config = setup.config_template()
 
-    return render("config-review.html", {"title": "配置预览", "pageData": config, "steps": STEPS})
+    return render("config-review.html", {"title": "应用配置文件", "pageData": config, "steps": STEPS})
 
 
   @app.route("/service/config")
   def serviceConfig():
     d = setup.service_image_config()
 
-    return render("service-config.html", {"title": "应用服务配置", "pageData": d, "config": SETTINGS['serviceConfig'], "steps": STEPS})
+    return render("service-config.html", {"title": "应用镜像", "pageData": d, "config": SETTINGS['serviceConfig'], "steps": STEPS})
 
 
   @app.route("/service/status")
   def service_status():
-    return render("service-status.html", {"title": "服务状态", "pageData": setup.service_status(), "steps": STEPS})
+    return render("service-status.html", {"title": "应用状态", "pageData": setup.service_status(), "steps": STEPS})
 
 
   @app.route("/complete")

@@ -49,6 +49,5 @@ class dbHelper(object):
 
       self._connection.commit()
 
-      print('>>>> ', result)
       return result
 
