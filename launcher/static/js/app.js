@@ -163,6 +163,10 @@ var setup = (function () {
     var dbs = this._get_influxdb_list()
     var that = this;
 
+    if (dbs.length == 0) {
+      return false;
+    }
+
     this.post("influxdb/ping", dbs).done(function(d){
       if(d.content){
         var hasError = false;
@@ -191,6 +195,10 @@ var setup = (function () {
   app.prototype.influxdb_add = function(){
     var dbs = this._get_influxdb_list()
     var that = this;
+
+    if (dbs.length == 0) {
+      return false;
+    }
 
     this.post("influxdb/add", dbs).done(function(d){
       if(d.content){
