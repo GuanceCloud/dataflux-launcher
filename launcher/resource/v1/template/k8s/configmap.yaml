@@ -73,7 +73,7 @@ metadata:
 apiVersion: v1
 data:
   config.js: |-
-{{ config.front | indent(4) }}
+{{ config.frontWeb | indent(4) }}
   nginx.conf: |-
 {{ config.frontNginx | indent(4) }}
 kind: ConfigMap

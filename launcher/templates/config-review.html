@@ -2,16 +2,21 @@
 
 {% block content %}
 <div class="row form-body">
-  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel-group" id="configAccordion" role="tablist" aria-multiselectable="true">
     <h2 class="page-heading">{{ title }}</h2>
     <div class="panel panel-default config-review">
       {% for conf in pageData %}
-      <div class="panel-heading" role="tab">
+      <div class="panel-heading {{ 'in' if loop.index == 1 }}" role="tab">
         <label class="pull-right" onclick="setup.config_item_checked_all()">
           <input type="checkbox" />
           已检查
         </label>
         <h4 class="panel-title">
+          {% if loop.index == 1 %}
+          <i class="icon-Retract"></i>
+          {% else %}
+          <i class="icon-right"></i>
+          {% endif %}
           <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
             {{conf.name}}
           </a>
@@ -36,4 +41,29 @@
     {% endif %} -->
   </div>
 </div>
+
+<script text="text/javascript">
+
+  $().ready(function(){
+    $('#configAccordion').on('hidden.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-Retract').addClass('icon-right');
+
+      return true;
+    }).on('shown.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-right').addClass('icon-Retract');
+
+      return true;
+    });
+  });
+
+</script>
+
 {% endblock %}
