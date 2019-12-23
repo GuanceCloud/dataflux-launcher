@@ -75,6 +75,8 @@ rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.gi
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor.git" "func"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor-worker.git" "func-worker"
 
+rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
+
 cd $workDir
 git add ${imageYaml}
 git commit -m 'auto commit: RTM release'

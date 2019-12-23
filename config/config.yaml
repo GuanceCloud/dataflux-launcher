@@ -1,4 +1,4 @@
-debug: False
+debug: True
 
 namespaces:
   - forethought-core
@@ -36,6 +36,10 @@ services:
   - key: front-webclient
     name: 用户前台前端
     image: front-webclient
+
+  - key: trigger
+    name: 通知触发器
+    image: trigger
 
   - key: kodo
     name: Kodo
@@ -83,9 +87,6 @@ services:
   - key: func-worker-utils
     name: 函数计算 Worker Utils
     image: func-worker
-
-  - key: trigger
-    name: 通知触发器
 
 databases:
   core: df_core
