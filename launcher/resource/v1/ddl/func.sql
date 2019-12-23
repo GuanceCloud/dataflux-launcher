@@ -37,7 +37,7 @@ CREATE TABLE `biz_main_crontab_config` (
   `funcKwargsJSON` json NOT NULL COMMENT '函数参数JSON (kwargs)',
   `crontab` varchar(64) NOT NULL COMMENT '执行频率（Crontab语法）',
   `saveResult` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否需要保存结果',
-  `isEnabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已启用',
+  `isEnabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否已启用',
   `disableReason` varchar(65) DEFAULT NULL COMMENT '禁用原因',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
