@@ -1,0 +1,8 @@
+apps:
+  registry: pubrepo.jiagouyun.com
+  image_dir: dataflux/v1.001.20191223
+  images:
+    core:"core:rtm_20191212_01_1_001_20191223"
+    kodo:"kodo:rtm_20191209_01_1_001_20191223"
+    front-webclient:"front-webclient:rtm_20191212_01_1_001_20191223"
+    management-webclient:"management-webclient:rtm_20191212_01_1_001_20191223"
