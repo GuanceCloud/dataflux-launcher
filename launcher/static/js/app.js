@@ -314,6 +314,7 @@ var setup = (function () {
     });
 
     configs['imageRegistry'] = $('#iptImageRegistry').val();
+    configs['imageDir'] = $('#iptImageDir').val();
     configs['imageRegistryUser'] = $('#iptImageRegistryUser').val();
     configs['imageRegistryPwd'] = $('#iptImageRegistryPwd').val();
     configs['storageClassName'] = $('#sltStorageClassName').val();

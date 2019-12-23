@@ -47,8 +47,9 @@ STEPS = [
   }
 ]
 
-SERVICECONFIG = {}
 SETTINGS = {}
+SERVICECONFIG = {}
+DOCKERIMAGES = {}
 
 def __init_config():
   global SERVICECONFIG
@@ -56,6 +57,19 @@ def __init_config():
   base_path = os.path.dirname(os.path.abspath(__file__))
   with open(base_path + "/../config/config.yaml") as f:
     SERVICECONFIG  = yaml.safe_load(f)
+
+def __init_docker_image():
+  global DOCKERIMAGES
+
+  base_path = os.path.dirname(os.path.abspath(__file__))
+  if not os.path.exists(base_path + "/../config/docker-image.yaml"):
+    print('not')
+    return
+
+  print('yes')
+  with open(base_path + "/../config/docker-image.yaml") as f:
+    DOCKERIMAGES = yaml.safe_load(f)
+
 
 def __init_settings():
   global SETTINGS
@@ -142,6 +156,7 @@ def __init_settings():
 
 
 __init_config()
+__init_docker_image()
 __init_settings()
 
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 
 tmpRTMDir=/tmp/rtm
+workDir=$(pwd)
+imageYaml=config/docker-image.yaml
 
 lastRTM=$(git tag --list | grep -E "^rtm_" | sort -V | tail -1)
 
@@ -15,6 +17,7 @@ lastRTM=$(git tag --list | grep -E "^rtm_" | sort -V | tail -1)
   version=1_001_$(date +%Y%m%d)
 }
 
+VDIR=v${version//_/.}
 
 function rtm_tag(){
   gitUrl=$1
@@ -49,17 +52,34 @@ function rtm_tag(){
   git push --tag
 
   echo "${rtmTag}\t\t${project}"
+
+  [[ $project != "setup" ]] && {
+    echo "    ${project}: ${project}:${rtmTag//_/-}" >> ${workDir}/${imageYaml}
+  }
 }
 
-rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "setup"
+: > ${imageYaml}
+echo "apps:" > ${workDir}/${imageYaml}
+echo "  registry: pubrepo.jiagouyun.com" >> ${workDir}/${imageYaml}
+echo "  image_dir: dataflux/${VDIR}" >> ${workDir}/${imageYaml}
+echo "  images:" >> ${workDir}/${imageYaml}
+
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webclient.git" "front-webclient"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webmanage.git" "management-webclient"
 
-rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk-api"
+rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.git" "message-desk-worker"
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor.git" "func"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor-worker.git" "func-worker"
 
+cd $workDir
+git add ${imageYaml}
+git commit -m 'auto commit: RTM release'
+git push
+
+sh release.sh -r
+
+rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "setup"

@@ -6,7 +6,7 @@ from launcher.utils.template import render
 from launcher.controller import setup
 from launcher.controller import env_check
 
-from . import SETTINGS, STEPS
+from . import SETTINGS, STEPS, DOCKERIMAGES
 
 
 def register_route(app):

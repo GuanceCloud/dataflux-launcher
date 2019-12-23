@@ -11,60 +11,78 @@ namespaces:
 services:
   - key: management-backend
     name: 后台管理平台 API
+    image: core
 
   - key: inner
     name: Inner API
+    image: core
 
   - key: front-backend
     name: 用户前台 API
+    image: core
 
   - key: integration-scanner
     name: 集成扫描 Worker
+    image: core
 
   - key: websocket
     name: Websocket
+    image: core
 
   - key: management-webclient
     name: 管理后台前端
+    image: management-webclient
 
   - key: front-webclient
     name: 用户前台前端
+    image: front-webclient
 
   - key: kodo
     name: Kodo
+    image: kodo
 
   - key: kodo-inner
     name: Kodo Inner
+    image: kodo
 
   - key: kodo-nginx
     name: Kodo Nginx
 
   - key: message-desk
     name: 消息中心 API
+    image: message-desk
 
   - key: message-desk-worker-beat
     name: 消息中心 Beat
+    image: message-desk-worker
 
   - key: message-desk-worker
     name: 消息中心 Worker
+    image: message-desk-worker
 
   - key: func
     name: 函数计算
+    image: func
 
   - key: func-inner
     name: 函数计算 Inner
+    image: func
 
   - key: func-worker-beat
     name: 函数计算 Worker Beat
+    image: func-worker
 
   - key: func-worker-debugger
     name: 函数计算 Worker Debugger
+    image: func-worker
 
   - key: func-worker-rpc-crontab
     name: 函数计算 Worker RPC
+    image: func-worker
 
   - key: func-worker-utils
     name: 函数计算 Worker Utils
+    image: func-worker
 
   - key: trigger
     name: 通知触发器

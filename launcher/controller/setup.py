@@ -6,7 +6,7 @@ import json, time
 
 from launcher.utils.template import jinjia2_render
 
-from launcher import SETTINGS, SERVICECONFIG
+from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
 
 
 def do_check():
@@ -266,14 +266,22 @@ def service_image_config():
         ]
     }
   else:
+    apps = DOCKERIMAGES.get('apps', {})
+    imageDir = apps.get('image_dir', '')
+    defaultImage  = apps.get('images', {})
+
     d = {
-      "imageRegistry": "",
+      "imageRegistry": apps.get('registry', ''),
+      "imageDir": imageDir,
       "images": []
     }
 
     services = SERVICECONFIG['services']
     for item in services:
-        d['images'].append(item)
+      if 'image' in item:
+        item['imagePath'] = defaultImage.get(item['image'], '')
+
+      d['images'].append(item)
 
   d['storageNames'] = _get_storageclass()
   # print(d)
@@ -338,6 +346,7 @@ def service_create(data):
   appYamls = []
 
   imageRegistry = data.get('imageRegistry') or ''
+  imageDir = data.get('imageDir') or ''
   imageRegistryUser = data.get('imageRegistryUser') or ''
   imageRegistryPwd = data.get('imageRegistryPwd') or ''
   storageClassName = data.get('storageClassName') or ''
@@ -345,6 +354,7 @@ def service_create(data):
 
   imageSettings = {
     "imageRegistry": imageRegistry,
+    "imageDir": imageDir,
     "images": {}
   }
 
@@ -352,7 +362,7 @@ def service_create(data):
   _PVC_create(storageClassName)
 
   for key, val in images.items():
-    imagePath = '{}/{}'.format(imageRegistry, val.get('imagePath') or '')
+    imagePath = '{}/{}/{}'.format(imageRegistry, imageDir, val.get('imagePath') or '')
     val['fullImagePath'] = re.sub('/+', '/', imagePath)
 
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
