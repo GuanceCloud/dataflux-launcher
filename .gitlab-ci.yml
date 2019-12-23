@@ -8,7 +8,7 @@ stages:
 buildProd:
   stage: build
   only:
-    - /^release(\/|-)?.*$/
+    - /^release[\/-_]?.*$/
   script:
     - docker build -t $REPOSITORY:$CI_COMMIT_REF_SLUG .
     - docker tag $REPOSITORY:$CI_COMMIT_REF_SLUG registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_SLUG
