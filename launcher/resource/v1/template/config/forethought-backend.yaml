@@ -7,7 +7,7 @@ hostname: "{{'deploy-' if __common__.debug}}console.{{ other.domain }}"
 database:
     # 测试环境容器外使用地址
     connection: "mysql+pymysql://{{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@{{mysql.host}}:{{mysql.port}}/{{core.dbInfo.dbName}}?charset=utf8"
-    pool_size: 30
+    pool_size: 50
     max_overflow: 10
     echo: false
 
@@ -15,9 +15,9 @@ kodo:
   host: kodo-inner.forethought-kodo.svc.cluster.local
   port: 9527
   timeout: 60
-  installCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid}  DW_LICENSE="{license}" DW_AK={ak}  DW_SK={sk} bash -c "$(curl http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/install.sh)"'
-  upgradeCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid}  DW_LICENSE="{license}" DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/install.sh)"'
-  versionUrl: "http://cloudcare-files.oss-cn-hangzhou.aliyuncs.com/dataway/release/version"
+  installCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
+  upgradeCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
+  versionUrl: "https://static.dataflux.cn/dataway/version"
 
 # 报警机器人
 robot:
