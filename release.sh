@@ -5,11 +5,14 @@ function auto_tag(){
   lastTag=$(git tag --list | grep -E "^${1}" | sort -V | tail -1)
 
   [[ ${#lastTag} > 0 ]] && {
+    v=(${lastTag//_/ })
+    v_main=${v[0]}_${v[1]}
+
     # 当前版本的 tag 已经存在，后续版本数字递增1
-    releaseCount=$[10#${lastTag:${#1} + 1:2} + 101]
+    releaseCount=$[10#${lastTag:${#v_main} + 1:2} + 101]
     releaseCount=${releaseCount:1:2}
 
-    newTag=${1}_${releaseCount}
+    newTag=${v_main}_${releaseCount}
   } || {
     newTag=${1}_01
   }
@@ -25,7 +28,7 @@ function auto_tag(){
 while getopts ":fpr" opt; do
   case ${opt} in
     f )
-      lastReleaseTag=$(git tag --list | grep -E "^release[-/]" | sort -V | tail -1)
+      lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
       auto_tag $lastReleaseTag
       ;;
     p )
@@ -42,4 +45,3 @@ while getopts ":fpr" opt; do
       ;;
   esac
 done
-
