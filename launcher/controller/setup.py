@@ -179,31 +179,31 @@ def service_image_config():
         "images": [ {
             "key": "front-backend",
             "name": "用户前台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
             },{
             "key": "management-backend",
             "name": "后台管理平台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
             },{
             "key": "inner",
             "name": "Inner API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
             },{
             "key": "integration-scanner",
             "name": "集成扫描 Worker",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
             },{
             "key": "websocket",
             "name": "Websocket",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191212"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
             },{
             "key": "kodo",
             "name": "Kodo",
-            "imagePath": "kodo/kodo:release-20191209"
+            "imagePath": "kodo/kodo:release-20191223-01"
             },{
             "key": "kodo-inner",
             "name": "Kodo Inner",
-            "imagePath": "kodo/kodo:release-20191209"
+            "imagePath": "kodo/kodo:release-20191223-01"
             },{
             "key": "kodo-nginx",
             "name": "Kodo Nginx",
@@ -211,43 +211,43 @@ def service_image_config():
             },{
             "key": "front-webclient",
             "name": "用户前台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191212-01"
+            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191223-01"
             },{
             "key": "management-webclient",
             "name": "管理后台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191212"
+            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191223-01"
             },
 
             {
             "key": "func",
             "name": "函数计算",
-            "imagePath": "middlewares/ft-data-processor:master"
+            "imagePath": "middlewares/ft-data-processor:release_20191223_01"
             },{
             "key": "func-inner",
             "name": "函数计算 Inner",
-            "imagePath": "middlewares/ft-data-processor:master"
+            "imagePath": "middlewares/ft-data-processor:release_20191223_01"
             },{
             "key": "func-worker-beat",
             "name": "函数计算 Worker Beat",
-            "imagePath": "middlewares/ft-data-processor-worker:master"
+            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
             },{
             "key": "func-worker-debugger",
             "name": "函数计算 Worker Debugger",
-            "imagePath": "middlewares/ft-data-processor-worker:master"
+            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
             },{
             "key": "func-worker-rpc-crontab",
             "name": "函数计算 Worker RPC",
-            "imagePath": "middlewares/ft-data-processor-worker:master"
+            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
             },{
             "key": "func-worker-utils",
             "name": "函数计算 Worker Utils",
-            "imagePath": "middlewares/ft-data-processor-worker:master"
+            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
             },
 
             {
             "key": "trigger",
             "name": "通知触发器",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191210-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191223-03"
             },
 
             {

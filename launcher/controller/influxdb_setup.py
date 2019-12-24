@@ -151,7 +151,7 @@ def _init_system_workspace(sysDBUUID):
         token,
         sysDBUUID
     ]
-    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dbUUID`, `dataRestoration`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`) VALUES (%s, '系统工作空间', %s, %s, '[]', NULL, '', NULL, '{}');"
+    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`) VALUES (%s, '系统工作空间', %s, %s, NULL, '', NULL, '{}');"
     db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
 
     return True
