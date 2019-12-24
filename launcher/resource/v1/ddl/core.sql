@@ -475,3 +475,21 @@ CREATE TABLE `main_workspace_accesskey` (
   UNIQUE KEY `uk_ak` (`ak`) COMMENT 'AK 做成全局唯一',
   KEY `idx_ak` (`ak`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `biz_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID tpl-',
+  `owner` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID/SYS',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
+  `content` json NOT NULL COMMENT '模版内容',
+  `extend` json DEFAULT NULL COMMENT '额外扩展字段',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `template_owner_fk` (`owner`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
