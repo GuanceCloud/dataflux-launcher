@@ -179,23 +179,23 @@ def service_image_config():
         "images": [ {
             "key": "front-backend",
             "name": "用户前台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
             },{
             "key": "management-backend",
             "name": "后台管理平台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
             },{
             "key": "inner",
             "name": "Inner API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
             },{
             "key": "integration-scanner",
             "name": "集成扫描 Worker",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
             },{
             "key": "websocket",
             "name": "Websocket",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191223-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
             },{
             "key": "kodo",
             "name": "Kodo",

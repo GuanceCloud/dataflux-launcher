@@ -3,7 +3,7 @@ ftDataProcessor:
   funcCallRequireSignIn: true
 
   # FT集群内部专用访问域名
-  innerAPIBaseURL: http://func-inner.func.svc.cluster.local:8088
+  innerAPIBaseURL: http://func-inner.func:8088
   # FT集群外部使用域名
   publicAPIBaseURL: https://{{'deploy-' if __common__.debug}}func.{{ other.domain }}
 

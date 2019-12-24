@@ -12,7 +12,7 @@ database:
     echo: false
 
 kodo:
-  host: kodo-inner.forethought-kodo.svc.cluster.local
+  host: kodo-inner.forethought-kodo
   port: 9527
   timeout: 60
   installCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
@@ -33,10 +33,10 @@ redis:
   max_connections: 100
 
 # inner app 回调临时地址
-inner_app_webhook_url: http://trigger.forethought-inner-app.svc.cluster.local:9000/api/v1/trigger/webhook
+inner_app_webhook_url: http://trigger.forethought-inner-app:9000/api/v1/trigger/webhook
 
 # 告警日志回调地址
-alert_callback_url: http://front-backend.forethought-core.svc.cluster.local:5000/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
+alert_callback_url: http://front-backend.forethought-core:5000/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
   frontAuth: {{(core.secret or {}).frontAuth}}

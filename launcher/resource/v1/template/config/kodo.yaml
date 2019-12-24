@@ -26,4 +26,4 @@ influxdb:
     alert_rp: "rp_8760h"
 
 nsq:
-    lookupd: "http://nsqlookupd.middleware.svc.cluster.local:4161"
+    lookupd: "http://nsqlookupd.middleware:4161"
