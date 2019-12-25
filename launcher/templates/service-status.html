@@ -8,7 +8,7 @@
 
       {% for ns in pageData %}  
       <div class="high-block">
-        <h4>{{ ns.namespace }}</h4>
+        <h5>命名空间：{{ ns.namespace }}</h5>
         {% for item in ns.services %}  
         <div class="form-group app-image" id="img_{{ item.key }}">
           <label class="col-sm-2 control-label">{{ item.name }}:</label>
