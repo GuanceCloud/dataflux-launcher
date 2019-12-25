@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-middleware-nsqadmin
+  name: nsqadmin
+  namespace: middleware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-middleware-nsqadmin
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: deployment-middleware-nsqadmin
+    spec:
+      containers:
+      - args:
+        - /nsqadmin
+        - --lookupd-http-address=nsqlookupd:4161
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: nsqadmin
+        ports:
+        - containerPort: 4171
+          name: 4171tcp1
+          protocol: TCP
+        resources: {}
+        stdin: true
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nsqadmin
+  namespace: middleware
+spec:
+  ports:
+  - name: 4171tcp309941-nsqadmin
+    port: 4171
+    protocol: TCP
+    targetPort: 4171
+  selector:
+    app: deployment-middleware-nsqadmin
+  sessionAffinity: None
+  type: ClusterIP

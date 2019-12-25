@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    cattle.io/creator: norman
+    workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+  name: nsqd
+  namespace: middleware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+    spec:
+      containers:
+      - args:
+        - /nsqd
+        - --broadcast-address=nsqd.middleware.svc.cluster.local
+        - --lookupd-tcp-address=nsqlookupd:4160
+        - --data-path=/data/nsqd
+        - --msg-timeout
+        - 30h
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: nsqd
+        ports:
+        - containerPort: 4150
+          name: 4150tcp02
+          protocol: TCP
+        - containerPort: 4151
+          name: 4151tcp02
+          protocol: TCP
+        resources: {}
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+        volumeMounts:
+        - mountPath: /data/nsqd
+          name: nsqd-data-1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: nsqd-data-1
+        persistentVolumeClaim:
+          claimName: nsqd-data-1
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nsqd
+  namespace: middleware
+spec:
+  ports:
+  - name: 4150tcp02
+    port: 4150
+    protocol: TCP
+    targetPort: 4150
+  - name: 4151tcp02
+    port: 4151
+    protocol: TCP
+    targetPort: 4151
+  selector:
+    app: deployment-middleware-nsqd
+  sessionAffinity: None
+  type: ClusterIP

@@ -344,22 +344,24 @@ var setup = (function () {
       var hasPendding = false;
 
       // return
-      $.each(services, function(idx, item){
-        var jqImgDiv = $('#img_' + item.key);
-        var jqI = jqImgDiv.find('i');
+      $.each(services, function(idx, ns){
+        $.each(ns.services, function(idx, item) {
+          var jqImgDiv = $('#img_' + item.key);
+          var jqI = jqImgDiv.find('i');
 
-        jqI.removeClass('icon-success service-pendding');
-        if(item.replicas == 0 || item.replicas > item.availableReplicas ){
-          jqI.addClass('service-pendding');
+          jqI.removeClass('icon-success service-pendding');
+          if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+            jqI.addClass('service-pendding');
 
-          hasPendding = true;
-        }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
-          jqI.addClass('icon-success');
-        // }else{
-        //   jqI.addClass('glyphicon-remove-circle');
-        }
+            hasPendding = true;
+          }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+            jqI.addClass('icon-success');
+          // }else{
+          //   jqI.addClass('glyphicon-remove-circle');
+          }
 
-        $('#img_path_' + item.key).text(item.fullImagePath);
+          $('#img_path_' + item.key).text(item.fullImagePath);
+        });
       });
 
       if (hasPendding){

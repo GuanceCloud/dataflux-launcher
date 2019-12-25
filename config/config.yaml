@@ -101,6 +101,18 @@ services:
       name: 消息中心 Worker
       image: message-desk-worker
 
+    - key: nsqadmin
+      name: NSQ Admin
+      image: nsqadmin
+
+    - key: nsqlookupd
+      name: NSQ Lookupd
+      image: nsqlookupd
+
+    - key: nsqd
+      name: NSQ Node
+      image: nsqd
+
 databases:
   core: df_core
   message_desk: df_message_desk

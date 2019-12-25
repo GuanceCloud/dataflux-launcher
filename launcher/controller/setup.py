@@ -305,6 +305,21 @@ def service_image_config():
                           "key": "message-desk-worker",
                           "name": "Message Desk Worker",
                           "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
+                        },
+                        {
+                          "key": "nsqadmin",
+                          "name": "NSQ Admin",
+                          "imagePath": "basis/nsq:v1.2.0"
+                        },
+                        {
+                          "key": "nsqlookupd",
+                          "name": "NSQ Lookupd",
+                          "imagePath": "basis/nsq:v1.2.0"
+                        },
+                        {
+                          "key": "nsqd",
+                          "name": "NSQ Node",
+                          "imagePath": "basis/nsq:v1.2.0"
                         }
                       ]
                     }

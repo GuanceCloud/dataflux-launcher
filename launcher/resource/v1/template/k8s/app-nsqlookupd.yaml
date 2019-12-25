@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-middleware-nsqlookupd
+  name: nsqlookupd
+  namespace: middleware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-middleware-nsqlookupd
+  template:
+    metadata:
+      labels:
+        app: deployment-middleware-nsqlookupd
+    spec:
+      containers:
+      - args:
+        - /nsqlookupd
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: nsqlookupd
+        ports:
+        - containerPort: 4161
+          name: 4161tcp2
+          protocol: TCP
+        - containerPort: 4160
+          name: 4160tcp2
+          protocol: TCP
+        - containerPort: 4161
+          name: 4161tcp309931
+          protocol: TCP
+        resources: {}
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nsqlookupd
+  namespace: middleware
+spec:
+  ports:
+  - name: 4161tcp2
+    port: 4161
+    protocol: TCP
+    targetPort: 4161
+  - name: 4160tcp2
+    port: 4160
+    protocol: TCP
+    targetPort: 4160
+  selector:
+    app: deployment-middleware-nsqlookupd
+  sessionAffinity: None
+  type: ClusterIP

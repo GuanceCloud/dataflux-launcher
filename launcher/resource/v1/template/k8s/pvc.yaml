@@ -41,6 +41,25 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     cattle.io/creator: norman
+  name: kodo-inner-logs
+  namespace: forethought-kodo
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: {{ storageClassName }}
+  volumeMode: Filesystem
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    cattle.io/creator: norman
   name: message-desk-logs
   namespace: middleware
 spec:
@@ -71,16 +90,13 @@ spec:
   storageClassName: {{ storageClassName }}
   volumeMode: Filesystem
 
-
 ---
 
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  labels:
-    cattle.io/creator: norman
-  name: kodo-inner-logs
-  namespace: forethought-kodo
+  name: nsqd-data-1
+  namespace: middleware
 spec:
   accessModes:
   - ReadWriteOnce
