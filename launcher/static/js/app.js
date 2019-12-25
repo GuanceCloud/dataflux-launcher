@@ -305,7 +305,7 @@ var setup = (function () {
     var configs = {};
     var images = {};
 
-    $('#btnServiceCreate').attr("disabled","disabled");
+    $('#btnServiceCreate').attr("disabled", true);
     $('div.app-image :text').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');

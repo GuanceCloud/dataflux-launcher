@@ -84,12 +84,10 @@
         <label class="col-sm-2 control-label">&nbsp;</label>
         <div class="col-sm-3">
             <!-- <button class="btn btn-primary" onclick="setup.influxdb_setup()">配置 InfluxDB</button> -->
-            <a class="btn btn-default" href="/redis">
-              <i class="glyphicon glyphicon-arrow-left"></i> 上一步
-            </a>
             <button class="btn btn-primary" onclick="setup.influxdb_ping(true)">
-              下一步 <i class="glyphicon glyphicon-arrow-right"></i>
+              下一步
             </button>
+            <a class="btn btn-default" href="/redis">上一步</a>
         </div>
         <div class="col-sm-2 text-right">
             <button id="btnConnectTtest" class="btn btn-warning" onclick="setup.influxdb_ping(false)">
