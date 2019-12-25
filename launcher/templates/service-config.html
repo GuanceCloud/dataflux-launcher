@@ -44,19 +44,20 @@
         </div>
       </div>
 
+      {% for item in pageData.images %}
       <div class="high-block">
-        {% for item in pageData.images %}
-
+        <h4>{{ item.namespace }}</h4>
+        {% for svc in item.services %}
         <div class="form-group app-image">
-          <label for="ipt{{ item.key }}" class="col-sm-2 control-label">{{ item.name or item.key }}:</label>
+          <label for="ipt{{ svc.key }}" class="col-sm-2 control-label">{{ svc.name or svc.key }}:</label>
           <div class="col-sm-5">
-            <input id="ipt{{ item.key }}" type="text" class="form-control" data-key="{{ item.key }}" value="{{ item.imagePath }}" placeholder="{{ item.key }}">
-            <input id="hid{{ item.key }}" type="hidden" data-key="{{ item.key }}" value="{{ item.replicas }}">
+            <input id="ipt{{ svc.key }}" type="text" class="form-control" data-key="{{ svc.key }}" value="{{ svc.imagePath }}" placeholder="{{ svc.key }}">
+            <input id="hid{{ svc.key }}" type="hidden" data-key="{{ svc.key }}" value="{{ svc.replicas }}">
           </div>
         </div>
-
         {%endfor%}
       </div>
+      {%endfor%}  
 
       <div class="form-group">
         <label class="col-sm-2 control-label">&nbsp;</label>

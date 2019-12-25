@@ -176,95 +176,139 @@ def service_image_config():
     d = {
         "imageRegistry": "registry.jiagouyun.com/",
         # "images": []
-        "images": [ {
-            "key": "front-backend",
-            "name": "用户前台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01",
-            "replicas": 2
-            },{
-            "key": "management-backend",
-            "name": "后台管理平台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
-            },{
-            "key": "inner",
-            "name": "Inner API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
-            },{
-            "key": "integration-scanner",
-            "name": "集成扫描 Worker",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
-            },{
-            "key": "websocket",
-            "name": "Websocket",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
-            },{
-            "key": "kodo",
-            "name": "Kodo",
-            "imagePath": "kodo/kodo:release-20191223-01"
-            },{
-            "key": "kodo-inner",
-            "name": "Kodo Inner",
-            "imagePath": "kodo/kodo:release-20191223-01"
-            },{
-            "key": "kodo-nginx",
-            "name": "Kodo Nginx",
-            "imagePath": "basis/nginx:devops"
-            },{
-            "key": "front-webclient",
-            "name": "用户前台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191223-01"
-            },{
-            "key": "management-webclient",
-            "name": "管理后台前端",
-            "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191223-01"
-            },
-
-            {
-            "key": "func",
-            "name": "函数计算",
-            "imagePath": "middlewares/ft-data-processor:release_20191223_01"
-            },{
-            "key": "func-inner",
-            "name": "函数计算 Inner",
-            "imagePath": "middlewares/ft-data-processor:release_20191223_01"
-            },{
-            "key": "func-worker-beat",
-            "name": "函数计算 Worker Beat",
-            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-            },{
-            "key": "func-worker-debugger",
-            "name": "函数计算 Worker Debugger",
-            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-            },{
-            "key": "func-worker-rpc-crontab",
-            "name": "函数计算 Worker RPC",
-            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-            },{
-            "key": "func-worker-utils",
-            "name": "函数计算 Worker Utils",
-            "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-            },
-
-            {
-            "key": "trigger",
-            "name": "通知触发器",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191223-03"
-            },
-
-            {
-            "key": "message-desk",
-            "name": "Message Desk",
-            "imagePath": "middlewares/message-desk:v20191203-rtm"
-            },{
-            "key": "message-desk-worker-beat",
-            "name": "Message Desk Beat",
-            "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
-            },{
-            "key": "message-desk-worker",
-            "name": "Message Desk Worker",
-            "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
-            }
-        ]
+        "images": [
+                    {
+                      "namespace": "forethought-core",
+                      "services": [
+                        {
+                          "key": "front-backend",
+                          "name": "用户前台 API",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01",
+                          "replicas": 2
+                        },
+                        {
+                          "key": "management-backend",
+                          "name": "后台管理平台 API",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                        },
+                        {
+                          "key": "inner",
+                          "name": "Inner API",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                        },
+                        {
+                          "key": "integration-scanner",
+                          "name": "集成扫描 Worker",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                        },
+                        {
+                          "key": "websocket",
+                          "name": "Websocket",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                        }
+                      ]
+                    },
+                    {
+                      "namespace": "forethought-kodo",
+                      "services": [
+                        {
+                          "key": "kodo",
+                          "name": "Kodo",
+                          "imagePath": "kodo/kodo:release-20191223-01"
+                        },
+                        {
+                          "key": "kodo-inner",
+                          "name": "Kodo Inner",
+                          "imagePath": "kodo/kodo:release-20191223-01"
+                        },
+                        {
+                          "key": "kodo-nginx",
+                          "name": "Kodo Nginx",
+                          "imagePath": "basis/nginx:devops"
+                        }
+                      ]
+                    },
+                    {
+                      "namespace": "forethought-webclient",
+                      "services": [
+                        {
+                          "key": "front-webclient",
+                          "name": "用户前台前端",
+                          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191223-01"
+                        },
+                        {
+                          "key": "management-webclient",
+                          "name": "管理后台前端",
+                          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191223-01"
+                        }
+                      ]
+                    },
+                    {
+                      "namespace": "func",
+                      "services": [
+                        {
+                          "key": "func",
+                          "name": "函数计算",
+                          "imagePath": "middlewares/ft-data-processor:release_20191223_01"
+                        },
+                        {
+                          "key": "func-inner",
+                          "name": "函数计算 Inner",
+                          "imagePath": "middlewares/ft-data-processor:release_20191223_01"
+                        },
+                        {
+                          "key": "func-worker-beat",
+                          "name": "函数计算 Worker Beat",
+                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
+                        },
+                        {
+                          "key": "func-worker-debugger",
+                          "name": "函数计算 Worker Debugger",
+                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
+                        },
+                        {
+                          "key": "func-worker-rpc-crontab",
+                          "name": "函数计算 Worker RPC",
+                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
+                        },
+                        {
+                          "key": "func-worker-utils",
+                          "name": "函数计算 Worker Utils",
+                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
+                        }
+                      ]
+                    },
+                    {
+                      "namespace": "forethought-inner-app",
+                      "services": [
+                        {
+                          "key": "trigger",
+                          "name": "通知触发器",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191223-03"
+                        }
+                      ]
+                    },
+                    {
+                      "namespace": "middleware",
+                      "services": [
+                        {
+                          "key": "message-desk",
+                          "name": "Message Desk",
+                          "imagePath": "middlewares/message-desk:v20191203-rtm"
+                        },
+                        {
+                          "key": "message-desk-worker-beat",
+                          "name": "Message Desk Beat",
+                          "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
+                        },
+                        {
+                          "key": "message-desk-worker",
+                          "name": "Message Desk Worker",
+                          "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
+                        }
+                      ]
+                    }
+                  ]
     }
   else:
     apps = DOCKERIMAGES.get('apps', {})
@@ -278,12 +322,15 @@ def service_image_config():
     }
 
     services = SERVICECONFIG['services']
-    for item in services:
-      if 'image' in item:
-        item['imagePath'] = defaultImage.get(item['image'], '')
+    for ns in services:
+      for item in ns['services']:
+        if 'image' in item:
+          item['imagePath'] = defaultImage.get(item['image'], '')
 
-      item['replicas'] = item.get('replicas', 1)
-      d['images'].append(item)
+        item['replicas'] = item.get('replicas', 1)
+        # d['images'].append(item)
+
+    d['images'] = services
 
   d['storageNames'] = _get_storageclass()
   # print(d)
@@ -418,20 +465,27 @@ def service_status():
       tempStatus[key] = status
 
   deployStatus = []
-  for service in SERVICECONFIG['services']:
-    key = service['key']
-    name = service['name']
+  for ns in SERVICECONFIG['services']:
+    ds = {
+      "namespace": ns["namespace"],
+      "services": []
+    }
+    for service in ns['services']:
+      key = service['key']
+      name = service['name']
 
-    if key in tempStatus:
-        tempStatus[key]['name'] = name
-        deployStatus.append(tempStatus[key])
-    else:
-        deployStatus.append({
-                'key': key,
-                'name': name,
-                'replicas': 0,
-                'availableReplicas': 0
-            })
+      if key in tempStatus:
+          tempStatus[key]['name'] = name
+          ds["services"].append(tempStatus[key])
+      else:
+          ds["services"].append({
+                  'key': key,
+                  'name': name,
+                  'replicas': 0,
+                  'availableReplicas': 0
+              })
+
+    deployStatus.append(ds)
 
   return deployStatus
 

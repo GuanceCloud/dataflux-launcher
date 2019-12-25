@@ -63,10 +63,8 @@ def __init_docker_image():
 
   base_path = os.path.dirname(os.path.abspath(__file__))
   if not os.path.exists(base_path + "/../config/docker-image.yaml"):
-    print('not')
     return
 
-  print('yes')
   with open(base_path + "/../config/docker-image.yaml") as f:
     DOCKERIMAGES = yaml.safe_load(f)
 
