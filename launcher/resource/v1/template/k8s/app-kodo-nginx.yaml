@@ -6,7 +6,7 @@ metadata:
   name: kodo-nginx
   namespace: forethought-kodo
 spec:
-  replicas: 1
+  replicas: {{ config.replicas or 1 }}
   selector:
     matchLabels:
       app: deployment-forethought-kodo-kodo-nginx

@@ -20,6 +20,7 @@ services:
   - key: front-backend
     name: 用户前台 API
     image: core
+    replicas: 2
 
   - key: integration-scanner
     name: 集成扫描 Worker

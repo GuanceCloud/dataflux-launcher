@@ -6,7 +6,7 @@ metadata:
   name: func-worker-rpc-crontab
   namespace: func
 spec:
-  replicas: 1
+  replicas: {{ config.replicas or 1 }}
   selector:
     matchLabels:
       app: deployment-func-func-worker-rpc-crontab

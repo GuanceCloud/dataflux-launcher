@@ -179,7 +179,8 @@ def service_image_config():
         "images": [ {
             "key": "front-backend",
             "name": "用户前台 API",
-            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+            "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01",
+            "replicas": 2
             },{
             "key": "management-backend",
             "name": "后台管理平台 API",
@@ -281,6 +282,7 @@ def service_image_config():
       if 'image' in item:
         item['imagePath'] = defaultImage.get(item['image'], '')
 
+      item['replicas'] = item.get('replicas', 1)
       d['images'].append(item)
 
   d['storageNames'] = _get_storageclass()

@@ -313,6 +313,13 @@ var setup = (function () {
       images[key] = {"imagePath": me.val()};
     });
 
+    $('div.app-image :hidden').each(function(idx, item){
+      var me = $(item);
+      var key = me.data('key');
+
+      images[key]['replicas'] = me.val();
+    });
+
     configs['imageRegistry'] = $('#iptImageRegistry').val();
     configs['imageDir'] = $('#iptImageDir').val();
     configs['imageRegistryUser'] = $('#iptImageRegistryUser').val();

@@ -51,6 +51,7 @@
           <label for="ipt{{ item.key }}" class="col-sm-2 control-label">{{ item.name or item.key }}:</label>
           <div class="col-sm-5">
             <input id="ipt{{ item.key }}" type="text" class="form-control" data-key="{{ item.key }}" value="{{ item.imagePath }}" placeholder="{{ item.key }}">
+            <input id="hid{{ item.key }}" type="hidden" data-key="{{ item.key }}" value="{{ item.replicas }}">
           </div>
         </div>
 

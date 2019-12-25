@@ -6,7 +6,7 @@ metadata:
   name: integration-scanner
   namespace: forethought-core
 spec:
-  replicas: 1
+  replicas: {{ config.replicas or 1 }}
   selector:
     matchLabels:
       app: deployment-forethought-core-integration-scanner
