@@ -66,6 +66,10 @@ footer{
   border: 1px solid #f7f7fc;
 }
 
+.page-main .app-image:hover{
+  background-color: #fff;
+}
+
 .page-main .control-label{
   color: #666;
   font-size: 14px;

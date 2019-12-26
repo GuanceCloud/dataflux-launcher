@@ -320,6 +320,11 @@ def service_image_config():
                           "key": "nsqd",
                           "name": "NSQ Node",
                           "imagePath": "basis/nsq:v1.2.0"
+                        },
+                        {
+                          "key": "kapacitor",
+                          "name": "Kapacitor",
+                          "imagePath": "basis/kapacitor:1.5.3"
                         }
                       ]
                     }

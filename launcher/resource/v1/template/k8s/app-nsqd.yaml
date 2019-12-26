@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    cattle.io/creator: norman
     workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
   name: nsqd
   namespace: middleware

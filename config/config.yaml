@@ -114,6 +114,10 @@ services:
       name: NSQ Node
       image: nsq
 
+    - key: kapacitor
+      name: Kapacitor
+      image: kapacitor
+
 databases:
   core: df_core
   message_desk: df_message_desk
