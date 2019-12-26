@@ -10,10 +10,10 @@ buildProd:
   only:
     - /^release[\/-_]?.*$/
   script:
-    - docker build -t $REPOSITORY:$CI_COMMIT_REF_SLUG .
-    - docker tag $REPOSITORY:$CI_COMMIT_REF_SLUG registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_SLUG
-    - docker tag $REPOSITORY:$CI_COMMIT_REF_SLUG registry.jiagouyun.com/$REPOSITORY:prod
-    - docker push registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_SLUG
+    - docker build -t $REPOSITORY:$CI_COMMIT_REF_NAME .
+    - docker tag $REPOSITORY:$CI_COMMIT_REF_NAME registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME
+    - docker tag $REPOSITORY:$CI_COMMIT_REF_NAME registry.jiagouyun.com/$REPOSITORY:prod
+    - docker push registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME
     - docker push registry.jiagouyun.com/$REPOSITORY:prod
   tags:
     - cloudcare
@@ -34,10 +34,10 @@ buildRTM:
   only:
     - /^rtm(_\d+)+$/
   script:
-    - V=(${CI_COMMIT_REF_SLUG//-/ })
+    - V=(${CI_COMMIT_REF_NAME//_/ })
     - VDIR=v${V[3]}.${V[4]}.${V[5]}
     - REPO=dataflux/$VDIR
-    - TAG=${PROJECT}-${CI_COMMIT_REF_SLUG}
+    - TAG=${PROJECT}_${CI_COMMIT_REF_NAME}
     - docker build -t $REPO:$TAG .
     - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
     - docker push pubrepo.jiagouyun.com/$REPO:$TAG
