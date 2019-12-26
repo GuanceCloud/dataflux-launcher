@@ -60,6 +60,7 @@ services:
 
     - key: kodo-nginx
       name: Kodo Nginx
+      image: nginx
 
   - namespace: func
     services:
@@ -103,15 +104,15 @@ services:
 
     - key: nsqadmin
       name: NSQ Admin
-      image: nsqadmin
+      image: nsq
 
     - key: nsqlookupd
       name: NSQ Lookupd
-      image: nsqlookupd
+      image: nsq
 
     - key: nsqd
       name: NSQ Node
-      image: nsqd
+      image: nsq
 
 databases:
   core: df_core

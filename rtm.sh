@@ -54,15 +54,18 @@ function rtm_tag(){
   echo "${rtmTag}\t\t${project}"
 
   [[ $project != "setup" ]] && {
-    echo "    ${project}: ${project}:${rtmTag//_/-}" >> ${workDir}/${imageYaml}
+    echo "    ${VDIR}/${project}: ${project}:${rtmTag//_/-}" >> ${workDir}/${imageYaml}
   }
 }
 
 : > ${imageYaml}
 echo "apps:" > ${workDir}/${imageYaml}
 echo "  registry: pubrepo.jiagouyun.com" >> ${workDir}/${imageYaml}
-echo "  image_dir: dataflux/${VDIR}" >> ${workDir}/${imageYaml}
+echo "  image_dir: dataflux/" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
+echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
+echo "    nginx: basis:nginx_1.13.3" >> ${workDir}/${imageYaml}
+echo "    kapacitor: basis:kapacitor_1.5.3" >> ${workDir}/${imageYaml}
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
