@@ -18,6 +18,7 @@ services:
     - key: inner
       name: Inner API
       image: core
+      replicas: 2
 
     - key: front-backend
       name: 用户前台 API
@@ -31,6 +32,7 @@ services:
     - key: websocket
       name: Websocket
       image: core
+      replicas: 2
 
   - namespace: forethought-inner-app
     services:
@@ -67,10 +69,12 @@ services:
     - key: func
       name: 函数计算
       image: func
+      replicas: 2
 
     - key: func-inner
       name: 函数计算 Inner
       image: func
+      replicas: 2
 
     - key: func-worker-beat
       name: 函数计算 Worker Beat
@@ -83,10 +87,12 @@ services:
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
       image: func-worker
+      replicas: 4
 
     - key: func-worker-utils
       name: 函数计算 Worker Utils
       image: func-worker
+      replicas: 2
 
   - namespace: middleware
     services:

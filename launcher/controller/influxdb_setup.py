@@ -189,17 +189,17 @@ def _init_db_instance(instance):
     sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`) VALUES (%s, %s, %s, 4, '', '', 0);"
     db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
-    kapacitorHost = instance.get('kapacitorHost')
+    # kapacitorHost = instance.get('kapacitorHost')
 
-    if kapacitorHost:
-      # kapa instance
-      params = [
-        "kapa-" + shortuuid.ShortUUID().random(length = 24),
-        instance.get('kapacitorHost'),
-        influxdb_uuid
-      ]
-      sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
-      db.execute(sql, dbName = dbInfo['dbName'], params = params)
+    # if kapacitorHost:
+    #   # kapa instance
+    #   params = [
+    #     "kapa-" + shortuuid.ShortUUID().random(length = 24),
+    #     instance.get('kapacitorHost'),
+    #     influxdb_uuid
+    #   ]
+    #   sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
+    #   db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
   return influxdb_uuid
 
