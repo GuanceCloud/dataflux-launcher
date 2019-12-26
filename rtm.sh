@@ -4,6 +4,7 @@ tmpRTMDir=/tmp/rtm
 workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 
+git fetch --tag
 lastRTM=$(git tag --list | grep -E "^rtm_" | sort -V | tail -1)
 
 [[ ${#lastRTM} > 0 ]] && {
