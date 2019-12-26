@@ -55,7 +55,7 @@ function rtm_tag(){
   echo "${rtmTag}\t\t${project}"
 
   [[ $project != "setup" ]] && {
-    echo "    ${project}: ${VDIR}/${project}:${rtmTag//_/-}" >> ${workDir}/${imageYaml}
+    echo "    ${project}: ${VDIR}:${project}_${rtmTag//_/-}" >> ${workDir}/${imageYaml}
   }
 }
 
