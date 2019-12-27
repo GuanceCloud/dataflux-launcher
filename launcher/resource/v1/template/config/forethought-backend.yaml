@@ -2,7 +2,7 @@
 envName: DataFlux
 
 protocol: "https"
-hostname: "{{'deploy-' if __common__.debug}}console.{{ other.domain }}"
+hostname: "{{'deploy-' if __common__.debug}}{{ other.subDomain.console }}.{{ other.domain }}"
 
 database:
     # 测试环境容器外使用地址
@@ -42,7 +42,6 @@ secret:
   frontAuth: {{(core.secret or {}).frontAuth}}
   manageAuth: {{(core.secret or {}).manageAuth}}
 
-
 # 默认邀请配置
 invitation_set:
   enable: false
@@ -55,8 +54,8 @@ invitation_set:
 message_desk_set:
   enable: true
   use_https: true
-  host: "message-desk.cloudcare.cn"
-  port: 443
+  host: "message-desk.middleware"
+  port: 9000
   timeout: 10
   ak_enable: false
   ak_id: 
@@ -71,7 +70,7 @@ celery:
       minute: '*/30'  
 
 integration:
-  domain: "https://integration.{{ other.domain }}"
+  domain: "https://{{ other.subDomain.integration }}.{{ other.domain }}"
   aliyunOSS:
     bucket: "prod-ft-integration"
     accessKeyId: ""

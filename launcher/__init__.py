@@ -87,10 +87,20 @@ def __init_settings():
       },
       "other": {
         "manager": {
-        "username": "",
-        "email": ""
+          "username": "",
+          "email": ""
         },
-        "domain": ""
+        "domain": "",
+        "subDomain": {
+          "console": "console",
+          "consoleApi": "console-api",
+          "management": "management",
+          "managementApi": "management-api",
+          "websocket": "ws",
+          "function": "func",
+          "kodo": "kodo",
+          "integration": "integration"
+        }
       },
       "serviceConfig": {}
     }
@@ -147,7 +157,17 @@ def __init_settings():
           "username": "admin",
           "email": "lhm@jiagouyun.com"
         },
-        "domain": ""
+        "domain": "",
+        "subDomain": {
+          "console": "console",
+          "consoleApi": "console-api",
+          "management": "management",
+          "managementApi": "management-api",
+          "websocket": "ws",
+          "function": "func",
+          "kodo": "kodo",
+          "integration": "integration"
+        }
       },
       "serviceConfig":{}
     }

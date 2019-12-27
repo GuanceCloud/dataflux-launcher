@@ -214,8 +214,16 @@ var setup = (function () {
         "username": $("#iptUserName").val(),
         "email": $("#iptUserEmail").val()
       },
-      "domain": $("#iptDomain").val()
+      "domain": $("#iptDomain").val(),
+      "subDomain": {}
     }
+
+    $('.sub-domain-group input').each(function(idx, item) {
+      var jqMe = $(item);
+      var name = jqMe.attr('name');
+
+      data.subDomain[name] = jqMe.val();
+    });
 
     $("#validateForm").validate();
     isValid = $('#validateForm').valid();

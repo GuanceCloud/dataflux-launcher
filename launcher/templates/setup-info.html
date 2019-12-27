@@ -17,14 +17,14 @@
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">各子域名:</label>
               <div class="col-sm-5">
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}console</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}console-api</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}ws</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}management</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}management-api</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}func</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}kodo</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}integration</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.console }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.consoleApi }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.management }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.managementApi }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.websocket }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.function }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.kodo }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.integration }}</strong>.{{ pageData.other.domain }}</p>
               </div>
             </div>
             <div class="form-group">

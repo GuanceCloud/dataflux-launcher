@@ -6,7 +6,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}console-api.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.consoleApi }}.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -26,7 +26,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}management-api.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.managementApi }}.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -46,7 +46,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}ws.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.websocket }}.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -65,7 +65,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}console.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.console }}.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -85,7 +85,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}management.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.management }}.{{ config.other.domain }}
     http:
       paths:
       - backend:
@@ -105,7 +105,7 @@ metadata:
   namespace: func
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}func.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.function }}.{{ config.other.domain }}
     http:
       paths:
       - backend:

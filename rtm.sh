@@ -54,7 +54,7 @@ function rtm_tag(){
 
   echo "${rtmTag}\t\t${project}"
 
-  [[ $project != "setup" ]] && {
+  [[ $project != "launcher" ]] && {
     echo "    ${project}: ${VDIR}:${project}_${rtmTag}" >> ${workDir}/${imageYaml}
   }
 }
@@ -88,4 +88,4 @@ git push
 
 sh release.sh -r
 
-rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "setup"
+rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
