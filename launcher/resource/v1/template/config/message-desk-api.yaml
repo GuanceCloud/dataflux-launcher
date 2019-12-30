@@ -1,12 +1,32 @@
-database:
-    connection: "mysql+pymysql://{{messageDesk.dbInfo.dbUser}}:{{messageDesk.dbInfo.dbUserPassword}}@{{mysql.host}}:{{mysql.port}}/{{messageDesk.dbInfo.dbName}}?charset=utf8"
-    pool_size: 30
-    max_overflow: 10
-    echo: false
+mode: prod
+deployName: 【生产环境】
+
+logger:
+  level: WARNING
+
+mysql:
+  host    : {{mysql.host}}
+  port    : {{mysql.port}}
+  user    : {{messageDesk.dbInfo.dbUser}}
+  password: {{messageDesk.dbInfo.dbUserPassword}}
+  database: {{messageDesk.dbInfo.dbName}}
+  timezone: '+0:00'
 
 redis:
-  host: {{redis.host}}
-  port: {{redis.port}}
-  db: 1
+  host    : {{redis.host}}
+  port    : {{redis.port}}
+  db      : 5
   password: {{redis.password}}
-  max_connections: 100
+
+celery:
+  broker:
+    host    : {{redis.host}}
+    port    : {{redis.port}}
+    db      : 5
+    password: {{redis.password}}
+
+  resultBackend:
+    host    : {{redis.host}}
+    port    : {{redis.port}}
+    db      : 5
+    password: {{redis.password}}

@@ -1,12 +1,41 @@
-database:
-    connection: "mysql+pymysql://{{messageDesk.dbInfo.dbUser}}:{{messageDesk.dbInfo.dbUserPassword}}@{{mysql.host}}:{{mysql.port}}/{{messageDesk.dbInfo.dbName}}?charset=utf8"
-    pool_size: 30
-    max_overflow: 10
-    echo: false
+# 生产环境
+celery:
+  brokerURL       : redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/5
+  resultBackendURL: redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/5
+
+logger:
+  level: WARNING
 
 redis:
-  host: {{redis.host}}
-  port: {{redis.port}}
-  db: 1
+  host    : '{{redis.host}}'
+  port    : {{redis.port}}
+  db      : 5
   password: {{redis.password}}
-  max_connections: 100
+
+mysql:
+  host    : {{mysql.host}}
+  port    : {{mysql.port}}
+  user    : {{messageDesk.dbInfo.dbUser}}
+  password: {{messageDesk.dbInfo.dbUserPassword}}
+  database: {{messageDesk.dbInfo.dbName}}
+
+# 短信服务的配置
+aliyun:
+  akId      : 
+  akSecret  : 
+  regionId  : cn-hangzhou
+  showNumber: 
+
+  userAgentTemplate: '{defaultUserAgent} vendor/zhuyun-dataflux@1.1'
+
+# 邮件服务
+mail:
+  host        : smtpdm.aliyun.com
+  port        : 465
+  useSSL      : True
+  usePlainAuth: True
+  sender:
+    DataFlux:
+      from        : 'DataFlux <noreply@message.{{ other.domain }}>'
+      user        : noreply@message.{{ other.domain }}
+      password    : 

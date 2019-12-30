@@ -36,7 +36,7 @@ redis:
 inner_app_webhook_url: http://trigger.forethought-inner-app:9000/api/v1/trigger/webhook
 
 # 告警日志回调地址
-alert_callback_url: http://front-backend.forethought-core:5000/api/v1/front/webhooks/workspace/{}/rule/{}/type/{}/forward_to
+alert_callback_url: http://front-backend.forethought-core:5000/api/v1/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
   frontAuth: {{(core.secret or {}).frontAuth}}
@@ -46,6 +46,7 @@ secret:
 invitation_set:
   enable: false
   invite_url: 
+  sender: DataFlux
   title: "工作空间邀请"
   method:
     - email
