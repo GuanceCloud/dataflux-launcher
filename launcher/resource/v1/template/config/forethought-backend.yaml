@@ -56,7 +56,7 @@ message_desk_set:
   enable: true
   use_https: true
   host: "message-desk.middleware"
-  port: 9000
+  port: 8088
   timeout: 10
   ak_enable: false
   ak_id: 
