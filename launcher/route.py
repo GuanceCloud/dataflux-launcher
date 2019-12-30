@@ -79,10 +79,15 @@ def init_influxdb_all():
   return  response_jsonify(influxdb_setup.init_influxdb_all())
 
 
+@setup_bp.route("/certificate/create", methods=["POST"])
+def certificate_create():
+  return  response_jsonify(setup.certificate_create())
+
+
 @setup_bp.route("/configmap/create", methods=["POST"])
 def configmap_create():
   data = request.json
-  
+
   return  response_jsonify(setup.configmap_create(data))
 
 

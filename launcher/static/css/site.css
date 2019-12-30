@@ -76,6 +76,13 @@ footer{
   font-weight: normal;
 }
 
+.page-main .certificate-text textarea{
+  width: 100%;
+  height: 300px;
+
+  resize: none;
+}
+
 .service-status i{
   font-size: 16px;
 }
@@ -198,7 +205,11 @@ footer{
 }
 
 /*vlidation start*/
-input.error { border: 1px dotted red; }
+input.error,
+textarea.error { 
+  border: 1px dotted red; 
+}
+
 label.error {
   /*background:url("./demo/images/unchecked.gif") no-repeat 0px 0px;*/
 

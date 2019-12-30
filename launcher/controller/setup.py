@@ -126,6 +126,60 @@ def config_template():
     }
   ]
 
+def __create_namespace():
+  # 必须要等命名空间创建完，才能继续后续操作
+  for i in range(5):
+    cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+    # 等待 namespace 创建完成
+    for j in range(5):
+      cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespaces']))
+      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+      output, err = p.communicate()
+      namespace = json.loads(output)
+
+      if len(namespace['items']) == len(SERVICECONFIG['namespaces']):
+        break
+
+      time.sleep(0.5)
+    else:
+      break
+
+  return True
+
+
+def certificate_create():
+  otherConfig = SETTINGS['other']
+  certificate = dict(
+              privateKey = otherConfig['certificatePrivateKey'],
+              content = otherConfig['certificateContent']
+          )
+  domain = otherConfig['domain']
+
+  tmpPath = '/tmp/k8s'
+  certFile = '{}/tls.cert'.format(tmpPath)
+  certKeyFile = '{}/tls.key'.format(tmpPath)
+
+  if not os.path.exists(tmpPath):
+    os.mkdir(tmpPath)
+
+  with open(os.path.abspath(certFile), 'w') as f:
+    f.write(certificate['content'])
+
+  with open(os.path.abspath(certKeyFile), 'w') as f:
+    f.write(certificate['privateKey'])
+
+  __create_namespace()
+
+  namespaces = SERVICECONFIG['namespaces']
+  for ns in namespaces:
+    cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
 
 def configmap_create(maps):
   tmpPath = "/tmp/k8s/configmap.yaml"
@@ -138,25 +192,7 @@ def configmap_create(maps):
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    # 必须要等命名空间创建完，才能继续后续操作
-    for i in range(5):
-      cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
-      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-      # 等待 namespace 创建完成
-      for j in range(5):
-        cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespaces']))
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-        output, err = p.communicate()
-        namespace = json.loads(output)
-
-        if len(namespace['items']) == len(SERVICECONFIG['namespaces']):
-          break
-
-        time.sleep(0.5)
-      else:
-        break
+    __create_namespace()
 
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -183,28 +219,28 @@ def service_image_config():
                         {
                           "key": "front-backend",
                           "name": "用户前台 API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01",
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02",
                           "replicas": 2
                         },
                         {
                           "key": "management-backend",
                           "name": "后台管理平台 API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
                         },
                         {
                           "key": "inner",
                           "name": "Inner API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
                         },
                         {
                           "key": "integration-scanner",
                           "name": "集成扫描 Worker",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
                         },
                         {
                           "key": "websocket",
                           "name": "Websocket",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release-20191224-01"
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
                         }
                       ]
                     },
@@ -214,12 +250,12 @@ def service_image_config():
                         {
                           "key": "kodo",
                           "name": "Kodo",
-                          "imagePath": "kodo/kodo:release-20191223-01"
+                          "imagePath": "kodo/kodo:release_20191229_01"
                         },
                         {
                           "key": "kodo-inner",
                           "name": "Kodo Inner",
-                          "imagePath": "kodo/kodo:release-20191223-01"
+                          "imagePath": "kodo/kodo:release_20191229_01"
                         },
                         {
                           "key": "kodo-nginx",
@@ -234,12 +270,12 @@ def service_image_config():
                         {
                           "key": "front-webclient",
                           "name": "用户前台前端",
-                          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release-20191223-01"
+                          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release_20191230_01"
                         },
                         {
                           "key": "management-webclient",
                           "name": "管理后台前端",
-                          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release-20191223-01"
+                          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release_20191229_01"
                         }
                       ]
                     },
@@ -284,7 +320,7 @@ def service_image_config():
                         {
                           "key": "trigger",
                           "name": "通知触发器",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release-20191223-03"
+                          "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release_20191229_01"
                         }
                       ]
                     },

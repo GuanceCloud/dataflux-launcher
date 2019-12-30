@@ -5,6 +5,25 @@
 <div class="row form-body">
     <form id="validateForm" class="form-horizontal" onsubmit="return false;">
       <h2 class="page-heading">{{ title }}</h2>
+
+      <div class="high-block">
+        <h4>后台管理员</h4>
+        <div class="form-group">
+          <label for="iptUserName" class="col-sm-2 control-label">管理员账号:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptUserName" name="userName" required value="{{ pageData.manager.username }}" placeholder="后台管理员账号">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptUserEmail" class="col-sm-2 control-label">管理员邮箱:</label>
+          <div class="col-sm-5">
+            <input type="email" class="form-control" id="iptUserEmail" name="userEmail" required value="{{ pageData.manager.email }}" placeholder="管理员邮箱">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+      </div>
+      
       <div class="high-block">
         <h4>系统域名</h4>
         <div class="form-group">
@@ -61,20 +80,18 @@
       </div>
 
       <div class="high-block">
-        <h4>后台管理员</h4>
+        <h4>TLS 证书（只支持 PEM 格式的证书）</h4>
         <div class="form-group">
-          <label for="iptUserName" class="col-sm-2 control-label">管理员账号:</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptUserName" name="userName" required value="{{ pageData.manager.username }}" placeholder="后台管理员账号">
-          </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-6">私钥:</div>
+          <div class="col-sm-6">证书:</div>
         </div>
-        <div class="form-group">
-          <label for="iptUserEmail" class="col-sm-2 control-label">管理员邮箱:</label>
-          <div class="col-sm-5">
-            <input type="email" class="form-control" id="iptUserEmail" name="userEmail" required value="{{ pageData.manager.email }}" placeholder="管理员邮箱">
+        <div class="form-group certificate-text">
+          <div class="col-sm-6">
+            <textarea id="certificatePrivateKey" required name="certificatePrivateKey" placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头"></textarea>
           </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-6">
+            <textarea id="certificateContent" required name="certificateContent" placeholder="输入证书，以-----BEGIN CERTIFICATE-----开头"></textarea>
+          </div>
         </div>
       </div>
 

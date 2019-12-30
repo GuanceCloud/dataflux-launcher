@@ -216,7 +216,7 @@ var setup = (function () {
       },
       "domain": $("#iptDomain").val(),
       "subDomain": {}
-    }
+    };
 
     $('.sub-domain-group input').each(function(idx, item) {
       var jqMe = $(item);
@@ -224,6 +224,9 @@ var setup = (function () {
 
       data.subDomain[name] = jqMe.val();
     });
+
+    data.certificatePrivateKey = $('#certificatePrivateKey').val();
+    data.certificateContent = $('#certificateContent').val();
 
     $("#validateForm").validate();
     isValid = $('#validateForm').valid();
@@ -263,6 +266,14 @@ var setup = (function () {
     });
   };
 
+  app.prototype.certificate_create = function(){
+    return this.post("certificate/create").done(function(d){
+      if (d.content){
+        $('.well-certificate').addClass('success');
+      }
+    });
+  };
+
 
   app.prototype.do_setup = function(){
     var that = this
@@ -272,6 +283,8 @@ var setup = (function () {
       return that.database_manager_create();
     }).then(function(){
       return that.influxdb_setup();
+    }).then(function(){
+      return that.certificate_create();
     }).then(function(d){
       if (d.content){
         that.go("/config/review");

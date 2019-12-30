@@ -13,6 +13,10 @@ spec:
           serviceName: front-backend
           servicePort: 5000
         path: /
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.consoleApi }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
 
@@ -33,6 +37,10 @@ spec:
           serviceName: management-backend
           servicePort: 5000
         path: /
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.managementApi }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
 
@@ -52,6 +60,10 @@ spec:
       - backend:
           serviceName: websocket
           servicePort: 8080
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.websocket }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
 
@@ -72,6 +84,10 @@ spec:
           serviceName: front-webclient
           servicePort: 80
         path: /
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.console }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
 
@@ -92,6 +108,10 @@ spec:
           serviceName: management-webclient
           servicePort: 80
         path: /
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.management }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
 
@@ -112,5 +132,9 @@ spec:
           serviceName: func
           servicePort: 8088
         path: /
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.function }}.{{ config.other.domain }}
+    secretName: {{ config.other.domain }}
 status:
   loadBalancer: {}
