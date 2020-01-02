@@ -84,7 +84,7 @@ def database_init_data():
 def database_manage_account_create():
   sql = '''
       INSERT INTO `main_manage_account` (`uuid`, `name`, `username`, `password`, `email`, `mobile`, `createAt`)
-      VALUES (%s, '管理员', %s, %s, %s, '', %s);
+      VALUES (%s, '管理员', %s, %s, %s, '', UNIX_TIMESTAMP());
     '''
 
   mysqlInfo = SETTINGS['mysql']
@@ -98,7 +98,7 @@ def database_manage_account_create():
     with dbHelper(mysqlInfo) as db:
       password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
 
-      params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email, int(time.time()))
+      params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email)
 
       db.execute(sql, dbName = dbInfo['dbName'], params = params)
 

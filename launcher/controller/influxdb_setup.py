@@ -141,11 +141,10 @@ def _init_influxdb(instanceUUID, instance):
           db_uuid,
           dbName,
           instanceUUID,
-          defaultRPName,
-          int(time.time())
+          defaultRPName
       )
 
-      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, %s);"
+      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, UNIX_TIMESTAMP());"
       dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
 
       dbUUIDs[dbName] = db_uuid
@@ -158,26 +157,30 @@ def _init_system_workspace(sysDBUUID):
   dbInfo = SETTINGS['core']['dbInfo']
 
   with dbHelper(mysqlInfo) as db:
-    # db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
-    # params = [
-    #     db_uuid,
-    #     'internal_system',
-    #     influxInstanceUUID
-    # ]
-
-    # sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
-    # db.execute(sql, dbName = dbInfo['dbName'], params = params)
-
-    ws_uuid = "wksp_" + shortuuid.ShortUUID().random(length = 24)
+    ws_uuid = "wksp_system"
     token = "tokn_" + shortuuid.ShortUUID().random(length = 24)
     params = [
         ws_uuid,
         token,
-        sysDBUUID,
-        int(time.time())
+        sysDBUUID
     ]
-    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}', %s);"
+    wsSQL = '''
+              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) 
+              VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}', UNIX_TIMESTAMP());
+            '''
     db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
+
+    # 工作空间 AK
+    akSQL = '''
+              INSERT INTO `main_workspace_accesskey` (`uuid`, `ak`, `sk`, `workspaceUUID`, `creator`, `updator`, `status`, `createAt`) 
+              VALUES (%s, %s, %s, 'wksp_system', '', '', 0, UNIX_TIMESTAMP());
+            '''
+    params = [
+              "wsak_" + shortuuid.ShortUUID().random(length = 24),
+              shortuuid.ShortUUID().random(length = 16),
+              shortuuid.ShortUUID().random(length = 32)
+            ]
+    db.execute(akSQL, dbName = dbInfo['dbName'], params = params)
 
     return True
 
@@ -209,10 +212,9 @@ def _init_db_instance(instance):
     params = [
       influxdb_uuid,
       host,
-      json.dumps(authorization),
-      int(time.time())
+      json.dumps(authorization)
     ]
-    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 4, '', '', 0, %s);"
+    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 4, '', '', 0, UNIX_TIMESTAMP());"
     db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
     # kapacitorHost = instance.get('kapacitorHost')
