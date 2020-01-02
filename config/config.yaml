@@ -1,4 +1,4 @@
-debug: False
+debug: True
 
 namespaces:
   - forethought-core
@@ -128,3 +128,27 @@ databases:
   core: df_core
   message_desk: df_message_desk
   func: df_func
+
+influxDB:
+  databases:
+    - internal_alert
+    - internal_baseline
+    - internal_system
+    - internal_keyevent
+
+  replication: 
+  - rpName: rp1
+    duration: 1d
+
+  - rpName: rp2
+    duration: 7d
+
+  - rpName: rp3
+    duration: 30d
+
+  - rpName: rp4
+    duration: 180d
+
+  - rpName: rp5
+    duration: 365d
+    default: True

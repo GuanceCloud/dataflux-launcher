@@ -2,9 +2,10 @@
 
 import shortuuid
 import json
+import time
 
 from .db_helper import dbHelper
-from launcher import SETTINGS
+from launcher import SETTINGS, SERVICECONFIG
 
 from influxdb import InfluxDBClient
 
@@ -72,6 +73,45 @@ def influxdb_add(dbs):
   return True
 
 
+def _init_influxdb_create_db(influxDBInfo, dbName):
+  client = InfluxDBClient(**influxDBInfo)
+  rps = SERVICECONFIG['influxDB']['replication']
+
+  params = {
+    "db": dbName,
+    "ro_user": influxDBInfo['username'], 
+    "rw_user": influxDBInfo['username']
+  }
+
+  querySQL = '''
+    CREATE DATABASE {db};
+    GRANT READ ON {db} TO {ro_user};
+    GRANT WRITE ON {db} TO {rw_user};
+  '''.format(**params)
+
+  defaultRPName = ''
+  rpSQLs = []
+  for rp in rps:
+    isDefault = rp.get('default', False)
+    p = {
+      "rp": rp['rpName'],
+      "duration": rp['duration'],
+      "db": dbName,
+      "default": 'DEFAULT' if isDefault else ''
+    }
+
+    if isDefault:
+      defaultRPName = rp['rpName']
+
+    rpSQLs.append('CREATE RETENTION POLICY "{rp}" ON "{db}" DURATION {duration} REPLICATION 1 {default};'.format(**p))
+
+  querySQL = querySQL + ''.join(rpSQLs)
+
+  client.query(querySQL)
+
+  return defaultRPName
+
+
 def _init_influxdb(instanceUUID, instance):
   mysqlInfo = SETTINGS['mysql']
   mysqlDBInfo = SETTINGS['core']['dbInfo']
@@ -84,9 +124,7 @@ def _init_influxdb(instanceUUID, instance):
     "ssl": instance.get('ssl')
   }
 
-  client = InfluxDBClient(**influxDBInfo)
-
-  dbNames = ['internal_alert', 'internal_baseline', 'internal_system', 'internal_keyevent']
+  dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]  # ['internal_alert', 'internal_baseline', 'internal_system', 'internal_keyevent']
 
   userDB = instance.get('dbName', '').strip()
   if userDB:
@@ -95,22 +133,7 @@ def _init_influxdb(instanceUUID, instance):
   dbUUIDs = {}
 
   for dbName in dbNames:
-    rpName = "rp_365"
-    params = {
-      "db": dbName,
-      "rp": rpName,
-      "ro_user": influxDBInfo['username'], 
-      "rw_user": influxDBInfo['username']
-    }
-
-    querySQL = '''
-      CREATE DATABASE {db};
-      CREATE RETENTION POLICY "{rp}" ON "{db}" DURATION 365d REPLICATION 1 DEFAULT;
-      GRANT READ ON {db} TO {ro_user};
-      GRANT WRITE ON {db} TO {rw_user};
-    '''.format(**params)
-
-    client.query(querySQL)
+    defaultRPName = _init_influxdb_create_db(influxDBInfo, dbName)
 
     with dbHelper(mysqlInfo) as dbClient:
       db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
@@ -118,10 +141,11 @@ def _init_influxdb(instanceUUID, instance):
           db_uuid,
           dbName,
           instanceUUID,
-          rpName
+          defaultRPName,
+          int(time.time())
       )
 
-      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`) VALUES (%s, %s, %s, %s, 0);"
+      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, %s);"
       dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
 
       dbUUIDs[dbName] = db_uuid
@@ -149,9 +173,10 @@ def _init_system_workspace(sysDBUUID):
     params = [
         ws_uuid,
         token,
-        sysDBUUID
+        sysDBUUID,
+        int(time.time())
     ]
-    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`) VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}');"
+    wsSQL = "INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}', %s);"
     db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
 
     return True
@@ -184,9 +209,10 @@ def _init_db_instance(instance):
     params = [
       influxdb_uuid,
       host,
-      json.dumps(authorization)
+      json.dumps(authorization),
+      int(time.time())
     ]
-    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`) VALUES (%s, %s, %s, 4, '', '', 0);"
+    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 4, '', '', 0, %s);"
     db.execute(sql, dbName = dbInfo['dbName'], params = params)
 
     # kapacitorHost = instance.get('kapacitorHost')
