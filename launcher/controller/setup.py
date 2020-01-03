@@ -207,7 +207,8 @@ def configmap_create(maps):
 def service_image_config():
   d = None
 
-  if SERVICECONFIG.get('debug'):
+  # 只用 docker-image.yaml 中的镜像列表
+  if False: # SERVICECONFIG.get('debug'):
     # 调试模式
     d = {
         "imageRegistry": "registry.jiagouyun.com/",
