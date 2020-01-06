@@ -1,5 +1,6 @@
 # 报错告警所使用的环境名
 envName: DataFlux
+isInternalAuth: true
 
 protocol: "https"
 hostname: "{{'deploy-' if __common__.debug}}{{ other.subDomain.console }}.{{ other.domain }}"
