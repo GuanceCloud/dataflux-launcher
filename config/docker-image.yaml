@@ -5,12 +5,12 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    core: v1.008.20200106:core_rtm_20200106_01_1_008_20200106
-    kodo: v1.008.20200106:kodo_rtm_20191229_03_1_008_20200106
-    front-webclient: v1.008.20200106:front-webclient_rtm_20200106_01_1_008_20200106
-    management-webclient: v1.008.20200106:management-webclient_rtm_20200106_01_1_008_20200106
-    message-desk: v1.008.20200106:message-desk_rtm_20191229_01_1_008_20200106
-    message-desk-worker: v1.008.20200106:message-desk-worker_rtm_20191229_01_1_008_20200106
-    func: v1.008.20200106:func_rtm_20191226_01_1_008_20200106
-    func-worker: v1.008.20200106:func-worker_rtm_20191226_01_1_008_20200106
-    trigger: v1.008.20200106:trigger_rtm_20191229_01_1_008_20200106
+    core: v1.009.20200106:core_rtm_20200106_01_1_009_20200106
+    kodo: v1.009.20200106:kodo_rtm_20191229_03_1_009_20200106
+    front-webclient: v1.009.20200106:front-webclient_rtm_20200106_01_1_009_20200106
+    management-webclient: v1.009.20200106:management-webclient_rtm_20200106_01_1_009_20200106
+    message-desk: v1.009.20200106:message-desk_rtm_20191229_01_1_009_20200106
+    message-desk-worker: v1.009.20200106:message-desk-worker_rtm_20191229_01_1_009_20200106
+    func: v1.009.20200106:func_rtm_20191226_01_1_009_20200106
+    func-worker: v1.009.20200106:func-worker_rtm_20191226_01_1_009_20200106
+    trigger: v1.009.20200106:trigger_rtm_20191229_01_1_009_20200106
