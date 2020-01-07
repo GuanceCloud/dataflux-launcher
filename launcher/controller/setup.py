@@ -205,189 +205,27 @@ def configmap_create(maps):
 
 # 服务镜像配置
 def service_image_config():
-  d = None
-
   # 只用 docker-image.yaml 中的镜像列表
-  if False: # SERVICECONFIG.get('debug'):
-    # 调试模式
-    d = {
-        "imageRegistry": "registry.jiagouyun.com/",
-        # "images": []
-        "images": [
-                    {
-                      "namespace": "forethought-core",
-                      "services": [
-                        {
-                          "key": "front-backend",
-                          "name": "用户前台 API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02",
-                          "replicas": 2
-                        },
-                        {
-                          "key": "management-backend",
-                          "name": "后台管理平台 API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
-                        },
-                        {
-                          "key": "inner",
-                          "name": "Inner API",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
-                        },
-                        {
-                          "key": "integration-scanner",
-                          "name": "集成扫描 Worker",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
-                        },
-                        {
-                          "key": "websocket",
-                          "name": "Websocket",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-backend:release_20191229_02"
-                        }
-                      ]
-                    },
-                    {
-                      "namespace": "forethought-kodo",
-                      "services": [
-                        {
-                          "key": "kodo",
-                          "name": "Kodo",
-                          "imagePath": "kodo/kodo:release_20191229_01"
-                        },
-                        {
-                          "key": "kodo-inner",
-                          "name": "Kodo Inner",
-                          "imagePath": "kodo/kodo:release_20191229_01"
-                        },
-                        {
-                          "key": "kodo-nginx",
-                          "name": "Kodo Nginx",
-                          "imagePath": "basis/nginx:devops"
-                        }
-                      ]
-                    },
-                    {
-                      "namespace": "forethought-webclient",
-                      "services": [
-                        {
-                          "key": "front-webclient",
-                          "name": "用户前台前端",
-                          "imagePath": "cloudcare-front/cloudcare-forethought-webclient:release_20191230_01"
-                        },
-                        {
-                          "key": "management-webclient",
-                          "name": "管理后台前端",
-                          "imagePath": "cloudcare-front/cloudcare-forethought-webmanage:release_20191229_01"
-                        }
-                      ]
-                    },
-                    {
-                      "namespace": "func",
-                      "services": [
-                        {
-                          "key": "func",
-                          "name": "函数计算",
-                          "imagePath": "middlewares/ft-data-processor:release_20191223_01"
-                        },
-                        {
-                          "key": "func-inner",
-                          "name": "函数计算 Inner",
-                          "imagePath": "middlewares/ft-data-processor:release_20191223_01"
-                        },
-                        {
-                          "key": "func-worker-beat",
-                          "name": "函数计算 Worker Beat",
-                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-                        },
-                        {
-                          "key": "func-worker-debugger",
-                          "name": "函数计算 Worker Debugger",
-                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-                        },
-                        {
-                          "key": "func-worker-rpc-crontab",
-                          "name": "函数计算 Worker RPC",
-                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-                        },
-                        {
-                          "key": "func-worker-utils",
-                          "name": "函数计算 Worker Utils",
-                          "imagePath": "middlewares/ft-data-processor-worker:release_20191223_01"
-                        }
-                      ]
-                    },
-                    {
-                      "namespace": "forethought-inner-app",
-                      "services": [
-                        {
-                          "key": "trigger",
-                          "name": "通知触发器",
-                          "imagePath": "cloudcare-forethought/cloudcare-forethought-trigger:release_20191229_01"
-                        }
-                      ]
-                    },
-                    {
-                      "namespace": "middleware",
-                      "services": [
-                        {
-                          "key": "message-desk",
-                          "name": "Message Desk",
-                          "imagePath": "middlewares/message-desk:v20191203-rtm"
-                        },
-                        {
-                          "key": "message-desk-worker-beat",
-                          "name": "Message Desk Beat",
-                          "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
-                        },
-                        {
-                          "key": "message-desk-worker",
-                          "name": "Message Desk Worker",
-                          "imagePath": "middlewares/message-desk-worker:v20191203-rtm"
-                        },
-                        {
-                          "key": "nsqadmin",
-                          "name": "NSQ Admin",
-                          "imagePath": "basis/nsq:v1.2.0"
-                        },
-                        {
-                          "key": "nsqlookupd",
-                          "name": "NSQ Lookupd",
-                          "imagePath": "basis/nsq:v1.2.0"
-                        },
-                        {
-                          "key": "nsqd",
-                          "name": "NSQ Node",
-                          "imagePath": "basis/nsq:v1.2.0"
-                        },
-                        {
-                          "key": "kapacitor",
-                          "name": "Kapacitor",
-                          "imagePath": "basis/kapacitor:1.5.3"
-                        }
-                      ]
-                    }
-                  ]
-    }
-  else:
-    apps = DOCKERIMAGES.get('apps', {})
-    imageDir = apps.get('image_dir', '')
-    defaultImage  = apps.get('images', {})
+  apps = DOCKERIMAGES.get('apps', {})
+  imageDir = apps.get('image_dir', '')
+  defaultImage  = apps.get('images', {})
 
-    d = {
-      "imageRegistry": apps.get('registry', ''),
-      "imageDir": imageDir,
-      "images": []
-    }
+  d = {
+    "imageRegistry": apps.get('registry', ''),
+    "imageDir": imageDir,
+    "images": []
+  }
 
-    services = SERVICECONFIG['services']
-    for ns in services:
-      for item in ns['services']:
-        if 'image' in item:
-          item['imagePath'] = defaultImage.get(item['image'], '')
+  services = SERVICECONFIG['services']
+  for ns in services:
+    for item in ns['services']:
+      if 'image' in item:
+        item['imagePath'] = defaultImage.get(item['image'], '')
 
-        item['replicas'] = item.get('replicas', 1)
-        # d['images'].append(item)
+      item['replicas'] = item.get('replicas', 1)
+      # d['images'].append(item)
 
-    d['images'] = services
+  d['images'] = services
 
   d['storageNames'] = _get_storageclass()
   # print(d)
@@ -423,7 +261,7 @@ def _get_storageclass():
   return storageNames
 
 
-def _regisgry_secret_create(registry, user, pwd):
+def _registry_secret_create(registry, user, pwd):
   patch = { "imagePullSecrets": [{"name": "registry-key"}] }
   for ns in SERVICECONFIG['namespaces']:
     cmd = 'kubectl create secret docker-registry registry-key --docker-server={} --docker-username={} --docker-password={} -n {}'.format(registry, user, pwd, ns)
@@ -464,7 +302,7 @@ def service_create(data):
     "images": {}
   }
 
-  _regisgry_secret_create(imageRegistry, imageRegistryUser, imageRegistryPwd)
+  _registry_secret_create(imageRegistry, imageRegistryUser, imageRegistryPwd)
   _PVC_create(storageClassName)
 
   for key, val in images.items():
