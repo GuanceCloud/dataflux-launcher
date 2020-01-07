@@ -43,4 +43,4 @@ kubectl delete secret registry-key -n middleware --force --grace-period=0
 kubectl delete secret registry-key -n func --force --grace-period=0
 
 # 清理 namespace
-kubectl delete namespaces forethought-core forethought-kodo forethought-inner-app forethought-webclient func --force --grace-period=0
+# kubectl delete namespaces forethought-core forethought-kodo forethought-inner-app forethought-webclient func --force --grace-period=0
