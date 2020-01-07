@@ -42,7 +42,7 @@ metadata:
 
 apiVersion: v1
 data:
-  config.yaml: |-
+  kodo.conf: |-
 {{ config.kodoNginx | indent(4) }}
 kind: ConfigMap
 metadata:

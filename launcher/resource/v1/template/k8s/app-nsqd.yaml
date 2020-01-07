@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+    app: deployment-middleware-nsqd
   name: nsqd
   namespace: middleware
 spec:
   replicas: 1
   selector:
     matchLabels:
-      workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+      app: deployment-middleware-nsqd
   template:
     metadata:
       labels:
-        workload.user.cattle.io/workloadselector: deployment-middleware-nsqd
+        app: deployment-middleware-nsqd
     spec:
       containers:
       - args:

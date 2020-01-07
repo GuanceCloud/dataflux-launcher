@@ -30,3 +30,6 @@ celery:
     port    : {{redis.port}}
     db      : 5
     password: {{redis.password}}
+
+messageDesk:
+  putTaskRequireSignIn: false
