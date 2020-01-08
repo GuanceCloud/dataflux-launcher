@@ -1,16 +1,11 @@
 apps:
-  registry: registry.jiagouyun.com
-  image_dir: ''
+  registry: pubrepo.jiagouyun.com
+  image_dir: dataflux/
   images:
-    nsq: basis/nsq:v1.2.0
-    nginx: basis/nginx:devops
-    kapacitor: basis/kapacitor:1.5.3
-    core: cloudcare-forethought/cloudcare-forethought-backend:release_20200106_01
-    kodo: kodo/kodo:release_20191229_04
-    front-webclient: cloudcare-front/cloudcare-forethought-webclient:release_20200106_01
-    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:release_20200106_01
-    message-desk: middlewares/message-desk:release_20191229_01
-    message-desk-worker: middlewares/message-desk-worker:release_20191229_01
-    func: middlewares/ft-data-processor:release_20191226_01
-    func-worker: middlewares/ft-data-processor-worker:release_20191226_01
-    trigger: cloudcare-forethought/cloudcare-forethought-trigger:release_20191229_01
+    nsq: basis:nsq_1.2.0
+    nginx: basis:nginx_1.13.3
+    kapacitor: basis:kapacitor_1.5.3
+    core: v1.010.20200108:core_rtm_20200106_01_1_010_20200108
+    kodo: v1.010.20200108:kodo_rtm_20191229_04_1_010_20200108
+    front-webclient: v1.010.20200108:front-webclient_rtm_20200106_01_1_010_20200108
+    management-webclient: v1.010.20200108:management-webclient_rtm_20200106_01_1_010_20200108
