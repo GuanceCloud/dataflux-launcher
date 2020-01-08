@@ -5,17 +5,17 @@ workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 
 git fetch --tag
-lastRTM=$(git tag --list | grep -E "^rtm_" | sort -V | tail -1)
+lastRTM=$(git tag --list | grep -E "^rtm_\d{1,2}_" | sort -V | tail -1)
 
 [[ ${#lastRTM} > 0 ]] && {
   v=(${lastRTM//_/ })
 
-  releaseCount=$[10#${v[4]} + 1001]
-  releaseCount=${releaseCount:1:3}
+  releaseCount=$[10#${v[3]} + 10001]
+  releaseCount=${releaseCount:1:4}
 
-  version=${v[3]}_${releaseCount}_$(date +%Y%m%d)
+  version=${v[1]}_${v[2]}_${releaseCount}_$(date +%Y%m%d)
 } || {
-  version=1_001_$(date +%Y%m%d)
+  version=1_0_0001_$(date +%Y%m%d)
 }
 
 VDIR=v${version//_/.}
@@ -47,7 +47,7 @@ function rtm_tag(){
 
   [[ ${lastReleaseTag:0-3:1} != _ ]] && lastReleaseTag=${lastReleaseTag}_01
 
-  rtmTag=${lastReleaseTag//release_/rtm_}_${version}
+  rtmTag=rtm_${version}_${lastReleaseTag//release_/}
 
   git tag $rtmTag
   git push --tag

@@ -35,9 +35,9 @@ buildRTM:
     - /^rtm(_\d+)+$/
   script:
     - V=(${CI_COMMIT_REF_NAME//_/ })
-    - VDIR=v${V[3]}.${V[4]}.${V[5]}
+    - VDIR=v${V[1]}.${V[2]}.${V[3]}.${V[4]}
     - REPO=dataflux/$VDIR
-    - TAG=${PROJECT}_${CI_COMMIT_REF_NAME}
+    - TAG=${PROJECT}_rc_${V[5]}_${V[6]}
     - docker build -t $REPO:$TAG .
     - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
     - docker push pubrepo.jiagouyun.com/$REPO:$TAG
