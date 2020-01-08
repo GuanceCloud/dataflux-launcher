@@ -14,6 +14,7 @@ services:
     - key: management-backend
       name: 后台管理平台 API
       image: core
+      replicas: 2
 
     - key: inner
       name: Inner API
@@ -99,10 +100,6 @@ services:
     - key: message-desk
       name: 消息中心 API
       image: message-desk
-
-    - key: message-desk-worker-beat
-      name: 消息中心 Beat
-      image: message-desk-worker
 
     - key: message-desk-worker
       name: 消息中心 Worker
