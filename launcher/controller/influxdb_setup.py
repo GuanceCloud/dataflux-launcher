@@ -72,6 +72,32 @@ def influxdb_add(dbs):
 
   return True
 
+def __insert_rp_to_mysql():
+  mysqlInfo = SETTINGS['mysql']
+  mysqlDBInfo = SETTINGS['core']['dbInfo']
+  rps = SERVICECONFIG['influxDB']['replication']
+
+  sql = '''
+          INSERT INTO `main_influx_rp` (`uuid`, `name`, `duration`, `shardGroupDuration`, `replication`, `status`, `creator`, `updator`, `createAt`)
+          VALUES (%s, %s, %s, '', 1, 0, '', '', UNIX_TIMESTAMP());
+        '''
+
+  with dbHelper(mysqlInfo) as dbClient:
+    for rp in rps:
+      rpName = rp['rpName']
+      duration = rp['duration']
+      rpUUID = "ifrp_" + shortuuid.ShortUUID().random(length = 24)
+
+      params = (
+          rpUUID,
+          rpName,
+          duration
+      )
+
+      dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
+
+  return True
+
 
 def _init_influxdb_create_db(influxDBInfo, dbName):
   client = InfluxDBClient(**influxDBInfo)
@@ -103,7 +129,7 @@ def _init_influxdb_create_db(influxDBInfo, dbName):
     if isDefault:
       defaultRPName = rp['rpName']
 
-    rpSQLs.append('CREATE RETENTION POLICY "{rp}" ON "{db}" DURATION {duration} REPLICATION 1 {default};'.format(**p))
+    rpSQLs.append('CREATE RETENTION POLICY "{rp}" ON "{db}" DURATION {duration}h REPLICATION 1 {default};'.format(**p))
 
   querySQL = querySQL + ''.join(rpSQLs)
 
@@ -234,6 +260,7 @@ def _init_db_instance(instance):
 
 def init_influxdb_all():
   instances = SETTINGS['influxdb']
+  __insert_rp_to_mysql()
 
   for idx, instance in enumerate(instances):
     instanceUUID = _init_db_instance(instance)

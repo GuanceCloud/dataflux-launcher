@@ -23,7 +23,7 @@ global:
 influxdb:
     read_timeout: 30000
     write_timeout: 500
-    alert_rp: "rp_8760h"
+    alert_rp: "rp5"
 
 nsq:
     lookupd: "http://nsqlookupd.middleware:4161"

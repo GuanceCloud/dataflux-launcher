@@ -46,7 +46,7 @@ secret:
 # 默认邀请配置
 invitation_set:
   enable: false
-  invite_url: 
+  invite_url: "https://{{'deploy-' if __common__.debug}}auth.{{ other.domain }}/join/workspace?uuid={}"
   sender: DataFlux
   title: "工作空间邀请"
   method:
@@ -55,7 +55,7 @@ invitation_set:
 # 消息服务
 message_desk_set:
   enable: true
-  use_https: true
+  use_https: false
   host: "message-desk.middleware"
   port: 8088
   timeout: 10

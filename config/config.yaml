@@ -138,17 +138,17 @@ influxDB:
 
   replication: 
   - rpName: rp1
-    duration: 1d
+    duration: 24    # 1d
 
   - rpName: rp2
-    duration: 7d
+    duration: 168   # 7d
 
   - rpName: rp3
-    duration: 30d
+    duration: 720   # 30d
 
   - rpName: rp4
-    duration: 180d
+    duration: 4320  # 180d
 
   - rpName: rp5
-    duration: 365d
+    duration: 8760  # 365d
     default: True
