@@ -7,5 +7,10 @@ apps:
     kapacitor: basis:kapacitor_1.5.3
     core: v1.010.20200108:core_rtm_20200106_01_1_010_20200108
     kodo: v1.010.20200108:kodo_rtm_20191229_04_1_010_20200108
-    front-webclient: v1.010.20200108:front-webclient_rtm_20200106_01_1_010_20200108
+    front-webclient: v1.010.20200108:front-webclient_rtm_20200107_01_1_010_20200108
     management-webclient: v1.010.20200108:management-webclient_rtm_20200106_01_1_010_20200108
+    message-desk: v1.010.20200108:message-desk_rtm_20191229_01_1_010_20200108
+    message-desk-worker: v1.010.20200108:message-desk-worker_rtm_20191229_01_1_010_20200108
+    func: v1.010.20200108:func_rtm_20200108_01_1_010_20200108
+    func-worker: v1.010.20200108:func-worker_rtm_20200108_01_1_010_20200108
+    trigger: v1.010.20200108:trigger_rtm_20191229_01_1_010_20200108
