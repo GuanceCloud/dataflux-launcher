@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function auto_tag(){
   lastTag=$(git tag --list | grep -E "^${1}" | sort -V | tail -1)
 
@@ -24,7 +23,7 @@ function auto_tag(){
   echo $newTag
 }
 
-
+git fetch --tag
 while getopts ":fpr" opt; do
   case ${opt} in
     f )
