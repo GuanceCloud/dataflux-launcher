@@ -5,12 +5,12 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    core: v1.0.0012.20200109:core_rc_20200106_02
-    kodo: v1.0.0012.20200109:kodo_rc_20191229_05
-    front-webclient: v1.0.0012.20200109:front-webclient_rc_20200108_02
-    management-webclient: v1.0.0012.20200109:management-webclient_rc_20200106_02
-    message-desk: v1.0.0012.20200109:message-desk_rc_20191229_02
-    message-desk-worker: v1.0.0012.20200109:message-desk-worker_rc_20191229_02
-    func: v1.0.0012.20200109:func_rc_20200108_03
-    func-worker: v1.0.0012.20200109:func-worker_rc_20200108_02
-    trigger: v1.0.0012.20200109:trigger_rc_20191229_02
+    core: v1.1.0012.20200109:core_rc_20200106_02
+    kodo: v1.1.0012.20200109:kodo_rc_20191229_05
+    front-webclient: v1.1.0012.20200109:front-webclient_rc_20200108_02
+    management-webclient: v1.1.0012.20200109:management-webclient_rc_20200106_02
+    message-desk: v1.1.0012.20200109:message-desk_rc_20191229_02
+    message-desk-worker: v1.1.0012.20200109:message-desk-worker_rc_20191229_02
+    func: v1.1.0012.20200109:func_rc_20200108_03
+    func-worker: v1.1.0012.20200109:func-worker_rc_20200108_02
+    trigger: v1.1.0012.20200109:trigger_rc_20191229_02
