@@ -133,15 +133,18 @@ influxDB:
     - internal_system
     - internal_keyevent
 
-  replication: 
-  - rpName: rp1
+  replication:
+  - rpName: rp0
     duration: 24    # 1d
 
-  - rpName: rp2
+  - rpName: rp1
     duration: 168   # 7d
 
-  - rpName: rp3
+  - rpName: rp2
     duration: 720   # 30d
+
+  - rpName: rp3
+    duration: 2160  # 90d
 
   - rpName: rp4
     duration: 4320  # 180d
