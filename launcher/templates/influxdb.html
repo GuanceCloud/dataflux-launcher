@@ -11,7 +11,7 @@
         <h2 class="page-heading">{{ title }}</h2>
       </div>
 
-      {% for idb in pageData %}
+      {% for idb in pageData.influxs %}
 
       {% if idb.pingError %}
       <div class="high-block influxdb-list error">
@@ -57,6 +57,17 @@
           <label for="iptInfluxDBName{{ loop.index }}" class="col-sm-2 control-label">数据库名:</label>
           <div class="col-sm-5">
             <input type="text" class="form-control" id="iptInfluxDBName{{ loop.index }}" value="{{idb.dbName}}" required placeholder="数据库名">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptInfluxRP{{ loop.index }}" class="col-sm-2 control-label">数据保留策略:</label>
+          <div class="col-sm-5">
+            <select id="sltInfluxRP{{ loop.index }}" class="form-control">
+              {% for item in pageData.rps %}
+              <option value="{{ item.rpName }}" {{ "selected" if item['default'] else "" }}>{{ item.duration // 24 }}&nbsp;天（{{ item.rpName }}）</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="col-sm-5 error"></div>
         </div>

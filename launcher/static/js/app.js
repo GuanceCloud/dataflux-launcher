@@ -133,8 +133,8 @@ var setup = (function () {
         "username": $("#iptInfluxDBUserName" + i).val(),
         "password": $("#iptInfluxDBPassword" + i).val(),
         "dbName": $("#iptInfluxDBName" + i).val(),
-        "ssl": $("#ckbInfluxDBSSL" + i).is(":checked")
-        // "kapacitorHost": $("#iptKapacitorHost" + i).val()
+        "ssl": $("#ckbInfluxDBSSL" + i).is(":checked"),
+        "defaultRP": $("#sltInfluxRP" + i).val()
       }
 
       $("#validateForm").validate();

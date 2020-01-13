@@ -99,7 +99,7 @@ def __insert_rp_to_mysql():
   return True
 
 
-def _init_influxdb_create_db(influxDBInfo, dbName):
+def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName):
   client = InfluxDBClient(**influxDBInfo)
   rps = SERVICECONFIG['influxDB']['replication']
 
@@ -115,10 +115,10 @@ def _init_influxdb_create_db(influxDBInfo, dbName):
     GRANT WRITE ON {db} TO {rw_user};
   '''.format(**params)
 
-  defaultRPName = ''
+  # defaultRPName = ''
   rpSQLs = []
   for rp in rps:
-    isDefault = rp.get('default', False)
+    isDefault = rp['rpName'] == defaultRP
     p = {
       "rp": rp['rpName'],
       "duration": rp['duration'],
@@ -126,16 +126,13 @@ def _init_influxdb_create_db(influxDBInfo, dbName):
       "default": 'DEFAULT' if isDefault else ''
     }
 
-    if isDefault:
-      defaultRPName = rp['rpName']
-
     rpSQLs.append('CREATE RETENTION POLICY "{rp}" ON "{db}" DURATION {duration}h REPLICATION 1 {default};'.format(**p))
 
   querySQL = querySQL + ''.join(rpSQLs)
 
   client.query(querySQL)
 
-  return defaultRPName
+  return True
 
 
 def _init_influxdb(instanceUUID, instance):
@@ -150,6 +147,7 @@ def _init_influxdb(instanceUUID, instance):
     "ssl": instance.get('ssl')
   }
 
+  defaultRP = instance.get('defaultRP')
   dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]  # ['internal_alert', 'internal_baseline', 'internal_system', 'internal_keyevent']
 
   userDB = instance.get('dbName', '').strip()
@@ -159,7 +157,7 @@ def _init_influxdb(instanceUUID, instance):
   dbUUIDs = {}
 
   for dbName in dbNames:
-    defaultRPName = _init_influxdb_create_db(influxDBInfo, dbName)
+    _init_influxdb_create_db(influxDBInfo, defaultRP, dbName)
 
     with dbHelper(mysqlInfo) as dbClient:
       db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
@@ -167,7 +165,7 @@ def _init_influxdb(instanceUUID, instance):
           db_uuid,
           dbName,
           instanceUUID,
-          defaultRPName
+          defaultRP
       )
 
       sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, UNIX_TIMESTAMP());"
