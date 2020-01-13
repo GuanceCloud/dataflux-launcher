@@ -6,10 +6,13 @@ from launcher.utils.template import render
 from launcher.controller import setup
 from launcher.controller import env_check
 
-from . import SETTINGS, STEPS, DOCKERIMAGES
+from launcher.utils import decorators
+
+from . import SETTINGS, SERVICECONFIG, STEPS, DOCKERIMAGES
 
 
-def register_route(app):
+# 全新安装路由套装
+def register_install_router(app):
 
   @app.before_request
   def set_step():
@@ -38,18 +41,26 @@ def register_route(app):
 
   @app.route("/check")
   def check():
-    result = env_check.do_check()
+    checkResult = env_check.do_check()
+    serviceStatus =setup.service_status()
+    result = {
+                "check": checkResult,
+                "deploy": serviceStatus
+            }
+
     setup.init_setting()
 
     return render("check.html", {"title": "环境检查", "pageData": result, "steps": STEPS})
 
 
   @app.route("/database")
+  @decorators.upgrade_install
   def database():
     return render("database.html", {"title": "MySQL 设置", "pageData": SETTINGS['mysql'], "steps": STEPS})
 
 
   @app.route("/other")
+  @decorators.upgrade_install
   def other():
     return render("other.html", {"title": "其他设置", "pageData": SETTINGS['other'], "steps": STEPS})
 
@@ -61,7 +72,10 @@ def register_route(app):
 
   @app.route("/influxdb")
   def influxdb():
-    return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": SETTINGS['influxdb'], "steps": STEPS})
+    rps = SERVICECONFIG['influxDB']['replication']
+    influxs = SETTINGS['influxdb']
+
+    return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS})
 
 
   @app.route("/setup/info")
@@ -93,6 +107,14 @@ def register_route(app):
     return render("complete.html", {"title": "安装完毕"})
 
 
+# 升级安装路由套装
+def register_upgrade_router(app):
+
+  @app.route("/up/index")
+  def up_index():
+    return render("up/index.html", {"title": "升级安装"}) 
+
+
 def register_blueprint(app):
   from launcher.route import setup_bp
 
@@ -102,7 +124,9 @@ def register_blueprint(app):
 def create_app():
   app = Flask(__name__, static_url_path='')
 
-  register_route(app)
+  register_install_router(app)
+  register_upgrade_router(app)
+
   register_blueprint(app)
 
   return app
