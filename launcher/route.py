@@ -9,6 +9,7 @@ from launcher.controller import db_setup_message_desk
 from launcher.controller import db_setup_func
 from launcher.controller import redis_setup
 from launcher.controller import influxdb_setup
+from launcher.controller import update
 
 setup_bp = Blueprint('setup', __name__)
 
@@ -94,10 +95,21 @@ def configmap_create():
 @setup_bp.route("/service/create", methods=["POST"])
 def service_create():
   data = request.json
-  
+
   return  response_jsonify(setup.service_create(data))
 
 
 @setup_bp.route("/service/status", methods=["GET"])
 def service_status():
   return  response_jsonify(setup.service_status())
+
+
+@setup_bp.route("/up/service/status", methods=["GET"])
+def up_service_status():
+  return  response_jsonify(update.deploy_check())
+
+
+@setup_bp.route("/up/service/update", methods=["POST"])
+def up_service_update():
+  return  response_jsonify(update.deploy_update())
+

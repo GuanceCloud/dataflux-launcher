@@ -391,5 +391,61 @@ var setup = (function () {
     });
   };
 
+  /* update */
+  app.prototype.up_service_status = function(){
+    var that = this;
+
+    this.get('up/service/status').then(function(d){
+      var services = d.content || [];
+      var hasPendding = false;
+
+      // return
+      $.each(services, function(idx, ns){
+        $.each(ns.services, function(idx, item) {
+          var jqImgDiv = $('#img_' + item.key);
+          var jqOldI = jqImgDiv.find('p.old i');
+          var jqNewI = jqImgDiv.find('p.new i');
+
+          jqOldI.removeClass('text-warning glyphicon glyphicon-ban-circle icon-success service-pendding');
+          jqNewI.removeClass('text-warning glyphicon glyphicon-ban-circle icon-success service-pendding');
+
+          if(item.newImagePath == item.fullImagePath){
+            if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+              jqNewI.addClass('service-pendding');
+              jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
+
+              hasPendding = true;
+            }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+              jqNewI.addClass('icon-success');
+              jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
+            }
+          }else{
+            if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+              jqOldI.addClass('service-pendding');
+              jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
+
+              hasPendding = true;
+            }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+              jqOldI.addClass('icon-success');
+              jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
+            }
+          }
+        });
+      });
+
+      if (hasPendding){
+        window.setTimeout(function(){that.up_service_status();}, 3000);
+      }
+
+    });
+  };
+
+  app.prototype.up_service_update = function(){
+    var that = this;
+    this.post('up/service/update').then(function(d){
+      window.setTimeout(function(){that.up_service_status();}, 1000);
+    });
+  };
+
   return new app();
 })();

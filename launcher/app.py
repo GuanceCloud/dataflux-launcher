@@ -136,7 +136,8 @@ def register_update_router(app):
 
   @app.route("/up/service")
   def up_service():
-    return render("up/index.html", {"title": "应用升级", "steps": STEPS_COMMON + STEPS_UPDATE})
+    deployStatus = update.deploy_check()
+    return render("up/service.html", {"title": "应用升级", "pageData": deployStatus, "steps": STEPS_COMMON + STEPS_UPDATE})
 
 
 def register_blueprint(app):
