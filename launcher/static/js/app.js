@@ -86,7 +86,7 @@ var setup = (function () {
         }
 
         if (next && dbNames.length == 0){
-          that.go("/redis");
+          that.go("/install/redis");
         }
       }else{
         $('#spanExistsDB').parent().addClass('hide');
@@ -114,7 +114,7 @@ var setup = (function () {
       if(d.content){
         that.switch_ping_button($('#btnConnectTtest'), 'success');
         if (next){
-          that.go("/influxdb");
+          that.go("/install/influxdb");
         }
       }else{
         that.switch_ping_button($('#btnConnectTtest'), 'error');
@@ -153,7 +153,7 @@ var setup = (function () {
     var that = this;
     this.post("influxdb/remove", {"index": idx}).done(function(d){
       if(d.content){
-        that.go("/influxdb");
+        that.go("/install/influxdb");
       }
     });
   };
@@ -184,7 +184,7 @@ var setup = (function () {
         }
 
         if (next && !hasError){
-          that.go("/other");
+          that.go("/install/other");
         }
       }else{
         alert("InfluxDB 连接失败");
@@ -202,7 +202,7 @@ var setup = (function () {
 
     this.post("influxdb/add", dbs).done(function(d){
       if(d.content){
-        that.go("/influxdb");
+        that.go("/install/influxdb");
       }
     });
   };
@@ -236,7 +236,7 @@ var setup = (function () {
 
     this.post("other/config", data).done(function(d){
       if (d.content){
-        that.go("/setup/info");
+        that.go("/install/setup/info");
       }
     });
   };
@@ -287,7 +287,7 @@ var setup = (function () {
       return that.certificate_create();
     }).then(function(d){
       if (d.content){
-        that.go("/config/review");
+        that.go("/install/config/review");
       }
     }).done(function(){
       $('#btnDoSetup').attr("disabled", false);
@@ -313,7 +313,7 @@ var setup = (function () {
     });
 
     this.post("configmap/create", maps).then(function(d){
-      that.go("/service/config");
+      that.go("/install/service/config");
     }).done(function(){
       that.config_item_checked_all();
     });
@@ -350,7 +350,7 @@ var setup = (function () {
 
     this.post("service/create", configs).then(function(d){
       if (d.content){
-        that.go("/service/status");
+        that.go("/install/service/status");
       }
     }).done(function (){
       $('#btnServiceCreate').attr("disabled", false);

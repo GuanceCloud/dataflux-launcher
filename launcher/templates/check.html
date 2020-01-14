@@ -32,28 +32,37 @@
       <div class="form-group">
           <label class="col-sm-2 control-label">已有应用:</label>
           <div class="col-sm-10">
-            {% for ns in pageData.deploy %}
+          {% if pageData.deploy | length == 0 %}
+            <div class="form-group">
+              <div class="col-sm-12">
+                <p class="form-control-static">无</p>
+              </div>
+            </div>
+          {% endif %}
+          {% for ns in pageData.deploy %}
             <div class="high-block">
               <h5>命名空间：{{ ns.namespace }}</h5>
               <div class="form-group">
                 <div class="col-sm-12 service-status">
 
                   {% for item in ns.services %}
-                  <span>
-                    {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
-                    <i class="service-pendding"></i>
-                    {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
-                    <i class="icon-success"></i>
+                    {% if item.fullImagePath %}
+                    <span>
+                      {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+                      <i class="service-pendding"></i>
+                      {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+                      <i class="icon-success"></i>
+                      {% endif %}
+                    </span>
+                    <span>{{ item.name }}</span>&nbsp;&nbsp;
                     {% endif %}
-                  </span>
-                  <span>{{ item.name }}</span>&nbsp;&nbsp;
                   {%endfor%}
 
                 </div>
               </div>
 
             </div>
-            {% endfor %}
+          {% endfor %}
           </div>
       </div>
 
@@ -72,17 +81,17 @@
       <div class="form-group">
           <label class="col-sm-2">&nbsp;</label>
           <div class="col-sm-10">
-            {% if pageData.deploy | length > 0 and pageData.deploy[0].services | length > 0%}
+            {% if pageData.deploy | length > 0 %}
               {% if not pageData.check.clusterInfo or not pageData.check.storage %}
                 <a class="btn btn-primary" disabled="">升级安装</a>
               {% else %}
-                <a class="btn btn-primary" href="/database">升级安装</a>
+                <a class="btn btn-primary" href="/up/service">升级安装</a>
               {% endif %}
             {% else %}
               {% if not pageData.check.clusterInfo or not pageData.check.storage %}
                 <a class="btn btn-primary" disabled="">全新安装</a>
               {% else %}
-                <a class="btn btn-primary" href="/database">全新安装</a>
+                <a class="btn btn-primary" href="/install/database">全新安装</a>
               {% endif %}
             {% endif %}
           </div>

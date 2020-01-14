@@ -2,7 +2,7 @@
 
 import os, yaml, json
 
-STEPS = [
+STEPS_COMMON = [
   {
       "key": "/",
       "name": "安装说明",
@@ -12,40 +12,59 @@ STEPS = [
       "key": "/check",
       "name": "环境检查",
       "status": ""
-  },
+  }
+]
+
+STEPS_INSTALL = [
   {
-      "key": "/database",
+      "key": "/install/database",
       "name": "MySQL 设置"
   },
   {
-      "key": "/redis",
+      "key": "/install/redis",
       "name": "Redis 设置"
   },
   {
-      "key": "/influxdb",
+      "key": "/install/influxdb",
       "name": "InfluxDB 设置"
   },
   {
-      "key": "/other",
+      "key": "/install/other",
       "name": "其他设置"
   },
   {
-      "key": "/setup/info",
+      "key": "/install/setup/info",
       "name": "安装信息"
   },
   {
-      "key": "/config/review",
+      "key": "/install/config/review",
       "name": "应用配置文件"
   },
   {
-      "key": "/service/config",
+      "key": "/install/service/config",
       "name": "应用镜像"
   },
   {
-      "key": "/service/status",
+      "key": "/install/service/status",
       "name": "应用状态"
   }
 ]
+
+STEPS_UPDATE = [ 
+  {
+      "key": "/up/service",
+      "name": "应用升级"
+  },
+  {
+      "key": "/up/config",
+      "name": "配置升级"
+  },
+  {
+      "key": "/up/database",
+      "name": "数据库升级"
+  }
+]
+
 
 SETTINGS = {}
 SERVICECONFIG = {}
