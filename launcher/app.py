@@ -137,7 +137,23 @@ def register_update_router(app):
   @app.route("/up/service")
   def up_service():
     deployStatus = update.deploy_check()
-    return render("up/service.html", {"title": "应用升级", "pageData": deployStatus, "steps": STEPS_COMMON + STEPS_UPDATE})
+
+    allUpdated = True
+    for ns in deployStatus:
+      for deploy in ns['services']:
+        if deploy['newImagePath'] != deploy['fullImagePath'] or deploy['replicas'] != deploy['availableReplicas']:
+          allUpdated = False
+
+          break
+      else:
+        break
+
+    return render("up/service.html", {"title": "应用升级", "pageData": { "deployStatus": deployStatus, "allUpdated": allUpdated}, "steps": STEPS_COMMON + STEPS_UPDATE })
+
+
+  @app.route("/up/configmap")
+  def up_configmap():
+    return render("up/configmap.html", {"title": "配置升级", "pageData": True, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
 def register_blueprint(app):

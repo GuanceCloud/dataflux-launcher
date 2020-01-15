@@ -7,12 +7,12 @@
     <div class="form-horizontal">
       <h2 class="page-heading">{{ title }}</h2>
 
-      {% for ns in pageData %}
+      {% for ns in pageData.deployStatus %}
       <div class="high-block">
         <h5>命名空间：{{ ns.namespace }}</h5>
         {% for item in ns.services %}
 
-          {% if item.fullImagePath != item.newImagePath or item.replicas != item.availableReplicas %}
+          {% if item.isUpdate %}
           <div class="form-group app-image" id="img_{{ item.key }}">
             <label class="col-sm-2 control-label">{{ item.name }}:</label>
             <div class="col-sm-10 text-right service-status">
@@ -62,10 +62,12 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">&nbsp;</label>
       <div class="col-sm-10">
-          <button class="btn btn-primary" onclick="setup.up_service_update()">
+        <button id="btnDoUpdate" {{ 'disabled' if pageData.allUpdated }} class="btn btn-primary" onclick="setup.up_service_update()">
             确认升级
           </button>
-          <a class="btn btn-default" href="/check">上一步</a>
+          <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
+            下一步
+          </a>
       </div>
     </div>
 

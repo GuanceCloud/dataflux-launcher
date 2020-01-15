@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row form-body">
+  <div class="col-12">
+    <div class="form-horizontal">
+      <h2 class="page-heading">{{ title }}</h2>
+
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label">&nbsp;</label>
+      <div class="col-sm-10">
+        <button id="btnDoUpdate"  class="btn btn-primary" onclick="setup.up_service_update()">
+            确认升级
+          </button>
+          <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
+            下一步
+          </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+

@@ -56,7 +56,7 @@ STEPS_UPDATE = [
       "name": "应用升级"
   },
   {
-      "key": "/up/config",
+      "key": "/up/configmap",
       "name": "配置升级"
   },
   {

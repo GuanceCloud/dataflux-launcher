@@ -9,6 +9,7 @@ from launcher.utils.template import jinjia2_render
 
 from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
 
+updateDeploy = {}
 
 def deploy_check():
   deployStatus = k8s.deploy_status()
@@ -16,12 +17,20 @@ def deploy_check():
   apps = DOCKERIMAGES.get('apps', {})
   imageDir = apps.get('image_dir', '')
   defaultImage  = apps.get('images', {})
+  version = apps.get('version', '')
 
   for ns in deployStatus:
     for deploy in ns['services']:
       newImagePath = '{}/{}/{}'.format(apps.get('registry', ''), imageDir, defaultImage.get(deploy['imageKey'], ''))
 
       deploy['newImagePath'] = re.sub('/+', '/', newImagePath)
+
+      updateKey = version + deploy['key']
+
+      if updateKey not in updateDeploy:
+        updateDeploy[updateKey] = (deploy['newImagePath'] != deploy['fullImagePath'])
+
+      deploy['isUpdate'] = updateDeploy[updateKey]
 
   return deployStatus
 

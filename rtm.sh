@@ -31,7 +31,7 @@ function init(){
     version=1_0_0001_$(date +%Y%m%d)
   }
 
-  VDIR=v${version//_/.} 
+  VDIR=v${version//_/.}
 }
 
 function rtm_tag(){
@@ -107,6 +107,7 @@ function start(){
   sh release.sh -r
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
+  echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
 } 
 
 while getopts ":fm" opt; do

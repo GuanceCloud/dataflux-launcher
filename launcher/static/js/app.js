@@ -399,7 +399,6 @@ var setup = (function () {
       var services = d.content || [];
       var hasPendding = false;
 
-      // return
       $.each(services, function(idx, ns){
         $.each(ns.services, function(idx, item) {
           var jqImgDiv = $('#img_' + item.key);
@@ -434,7 +433,10 @@ var setup = (function () {
       });
 
       if (hasPendding){
+        $('#btnNext').attr('disabled', true);
         window.setTimeout(function(){that.up_service_status();}, 3000);
+      }else{
+        $('#btnNext').attr('disabled', false);
       }
 
     });
@@ -442,6 +444,8 @@ var setup = (function () {
 
   app.prototype.up_service_update = function(){
     var that = this;
+
+    $('#btnDoUpdate').attr("disabled","disabled");
     this.post('up/service/update').then(function(d){
       window.setTimeout(function(){that.up_service_status();}, 1000);
     });
