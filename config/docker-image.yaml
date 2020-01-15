@@ -1,16 +1,16 @@
 apps:
-  registry: registry.jiagouyun.com
-  image_dir: ''
+  registry: pubrepo.jiagouyun.com
+  image_dir: dataflux/
   images:
-    nsq: basis/nsq:v1.2.0
-    nginx: basis/nginx:devops
-    kapacitor: basis/kapacitor:1.5.3
-    core: cloudcare-forethought/cloudcare-forethought-backend:release_20200106_02
-    kodo: kodo/kodo:release_20200110_01
-    front-webclient: cloudcare-front/cloudcare-forethought-webclient:release_20200110_01
-    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:release_20200106_02
-    message-desk: middlewares/message-desk:release_20191229_02
-    message-desk-worker: middlewares/message-desk-worker:release_20191229_02
-    func: middlewares/ft-data-processor:release_20200108_03
-    func-worker: middlewares/ft-data-processor-worker:release_20200108_02
-    trigger: cloudcare-forethought/cloudcare-forethought-trigger:release_20191229_02
+    nsq: basis:nsq_1.2.0
+    nginx: basis:nginx_1.13.3
+    kapacitor: basis:kapacitor_1.5.3
+    core: v1.0.0012.20200115:core_rc_20200106_03
+    kodo: v1.0.0012.20200115:kodo_rc_20200110_01
+    front-webclient: v1.0.0012.20200115:front-webclient_rc_20200110_01
+    management-webclient: v1.0.0012.20200115:management-webclient_rc_20200106_02
+    message-desk: v1.0.0012.20200115:message-desk_rc_20191229_02
+    message-desk-worker: v1.0.0012.20200115:message-desk-worker_rc_20191229_02
+    func: v1.0.0012.20200115:func_rc_20200115_03
+    func-worker: v1.0.0012.20200115:func-worker_rc_20200115_03
+    trigger: v1.0.0012.20200115:trigger_rc_20191229_02
