@@ -18,7 +18,7 @@ spec:
       containers:
       - args:
         - sh
-        - /kodo/run.inner.sh
+        - /kodo/run.sh
         env:
         - name: KODO_INFLUX_WRITE_TIMEOUT_MS
           value: "500"

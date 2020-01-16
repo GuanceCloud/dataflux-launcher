@@ -127,29 +127,6 @@ def config_template():
     }
   ]
 
-def __create_namespace():
-  # 必须要等命名空间创建完，才能继续后续操作
-  for i in range(5):
-    cmd = "kubectl apply -f {}".format(os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml"))
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-    # 等待 namespace 创建完成
-    for j in range(5):
-      cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespaces']))
-      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-      output, err = p.communicate()
-      namespace = json.loads(output)
-
-      if len(namespace['items']) == len(SERVICECONFIG['namespaces']):
-        break
-
-      time.sleep(0.5)
-    else:
-      break
-
-  return True
-
 
 def certificate_create():
   otherConfig = SETTINGS['other']
@@ -159,7 +136,7 @@ def certificate_create():
           )
   domain = otherConfig['domain']
 
-  tmpPath = '/tmp/k8s'
+  tmpPath = SERVICECONFIG['tmpDir']
   certFile = '{}/tls.cert'.format(tmpPath)
   certKeyFile = '{}/tls.key'.format(tmpPath)
 
@@ -172,7 +149,7 @@ def certificate_create():
   with open(os.path.abspath(certKeyFile), 'w') as f:
     f.write(certificate['privateKey'])
 
-  __create_namespace()
+  k8s.apply_namespace()
 
   namespaces = SERVICECONFIG['namespaces']
   for ns in namespaces:
@@ -183,17 +160,18 @@ def certificate_create():
 
 
 def configmap_create(maps):
-  tmpPath = "/tmp/k8s/configmap.yaml"
+  tmpDir = SERVICECONFIG['tmpDir']
+  tmpPath = tmpDir + "/configmap.yaml"
   configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": maps})
 
-  if not os.path.exists('/tmp/k8s'):
-    os.mkdir('/tmp/k8s')
+  if not os.path.exists(tmpDir):
+    os.mkdir(tmpDir)
 
   try:
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    __create_namespace()
+    k8s.apply_namespace()
 
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -232,8 +210,9 @@ def service_image_config():
 
 
 def ingress_create():
+  tmpDir = SERVICECONFIG['tmpDir']
   ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": SETTINGS})
-  ingressYaml = os.path.abspath("/tmp/k8s/ingress.yaml")
+  ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
 
   with open(ingressYaml, 'w') as f:
     f.write(ingressTemplate)
@@ -272,8 +251,9 @@ def _registry_secret_create(registry, user, pwd):
 
 
 def _PVC_create(storageClassName):
+  tmpDir = SERVICECONFIG['tmpDir']
   pvcYaml = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": storageClassName})
-  path = os.path.abspath("/tmp/k8s/pvc.yaml")
+  path = os.path.abspath(tmpDir + "/pvc.yaml")
 
   with open(os.path.abspath(path), 'w') as f:
     f.write(pvcYaml)
@@ -285,6 +265,7 @@ def _PVC_create(storageClassName):
 
 
 def service_create(data):
+  tmpDir = SERVICECONFIG['tmpDir']
   appYamls = []
 
   imageRegistry = data.get('imageRegistry') or ''
@@ -308,7 +289,7 @@ def service_create(data):
     val['fullImagePath'] = re.sub('/+', '/', imagePath)
 
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
-    path = os.path.abspath("/tmp/k8s/app-{}.yaml".format(key))
+    path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 
     with open(path, 'w') as f:
       f.write(serviceYaml)

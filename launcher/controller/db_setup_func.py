@@ -54,7 +54,7 @@ def database_ddl():
 
 
 def _secret_password(salt, secret):
-  p = "~{}~{}~{}~".format(salt, 'admin', secret)
+  p = "~{}~{}~{}~".format(salt, '~func@admin#42~', secret)
   sha512 = hashlib.sha512()
   sha512.update(p.encode('utf-8'))
 

@@ -398,6 +398,7 @@ var setup = (function () {
     this.get('up/service/status').then(function(d){
       var services = d.content || [];
       var hasPendding = false;
+      var hasUnUpdated = false;
 
       $.each(services, function(idx, ns){
         $.each(ns.services, function(idx, item) {
@@ -429,16 +430,17 @@ var setup = (function () {
               jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
             }
           }
+
+          if (item.newImagePath != item.fullImagePath || item.replicas != item.availableReplicas){
+            hasUnUpdated = true
+          }
         });
       });
 
+      $('#btnNext').attr('disabled', hasUnUpdated);
       if (hasPendding){
-        $('#btnNext').attr('disabled', true);
         window.setTimeout(function(){that.up_service_status();}, 3000);
-      }else{
-        $('#btnNext').attr('disabled', false);
       }
-
     });
   };
 

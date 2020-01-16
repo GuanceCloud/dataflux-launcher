@@ -1,5 +1,7 @@
 debug: False
 
+tmpDir: /tmp/k8s
+
 namespaces:
   - forethought-core
   - forethought-inner-app
@@ -152,3 +154,53 @@ influxDB:
   - rpName: rp5
     duration: 8760  # 365d
     default: True
+
+updates:
+  - api: http://inner.forethought-core:5000/api/v1/update-versions
+    namespace: forethought-core
+    project: forethought
+    config:
+      - key: core
+        mapname: core
+        mapkey: config.yaml
+
+  - api: http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
+    namespace: forethought-kodo
+    project: kodo
+    config:
+      - key: kodo
+        mapname: kodo
+        mapkey: config.yaml
+
+      - key: kodo-inner
+        mapname: kodo-inner
+        mapkey: config.yaml
+
+  - api: http://inner.func:8088/api/v1/update-versions
+    namespace: func
+    project: func
+    config:
+      - key: func
+        mapname: func-config
+        mapkey: config.yaml
+
+      - key: func-inner
+        mapname: func-inner-config
+        mapkey: config.yaml
+
+      - key: func-worker
+        mapname: func-worker-config
+        mapkey: config.yaml
+
+  - api: http://message-desk.middleware:8088/api/v1/update-versions
+    namespace: middleware
+    project: message-desk
+    config:
+      - key: message-desk
+        mapname: message-desk
+        mapkey: config-api.yaml
+
+      - key: message-desk-worker
+        mapname: message-desk
+        mapkey: config-worker.yaml
+

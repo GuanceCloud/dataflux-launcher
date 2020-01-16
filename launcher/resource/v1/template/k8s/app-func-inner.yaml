@@ -21,7 +21,7 @@ spec:
           value: /func-inner-config.yaml
         image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: func
+        name: func-inner
         ports:
         - containerPort: 8088
           name: 8088tcp80882

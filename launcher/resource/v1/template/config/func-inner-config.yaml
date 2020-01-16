@@ -1,6 +1,9 @@
 ftDataProcessor:
-  # 函数调用是否需要登录
-  funcCallRequireSignIn: false
+  # 是否为公网部署，影响：
+  # 1. 直接函数调用是否需要登录（公网部署时需要登录）
+  # 2. 自动触发配置模块是否需要登录（公网部署时需要登录）
+  # 3. /dp-doc 文档页面是否需要登录（公网部署时需要登录）
+  isPublicDeployment: false
 
   # FT集群内部专用访问域名
   innerAPIBaseURL: http://func-inner.func:8088

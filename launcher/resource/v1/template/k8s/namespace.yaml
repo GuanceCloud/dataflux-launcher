@@ -1,40 +1,12 @@
+{% for name in namespaces %}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: forethought-core
+  name: {{ name }}
 
+{% if not loop.last %}
 --- 
+{% endif %}
 
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: forethought-inner-app
-
---- 
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: forethought-webclient
-
---- 
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: forethought-kodo
-
---- 
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: func
-
---- 
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: middleware
+{% endfor %}
 

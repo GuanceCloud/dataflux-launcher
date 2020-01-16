@@ -15,7 +15,7 @@ log:
     gin_log_file: "/logdata/gin.log"
 
 global:
-    enable_inner: true
+    enable_inner_api: true
     stats_on: 256
     listen: ":9527"
     workers: 8

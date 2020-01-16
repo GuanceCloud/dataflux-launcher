@@ -121,4 +121,3 @@ spec:
       storage: 20Gi
   storageClassName: {{ storageClassName }}
   volumeMode: Filesystem
-

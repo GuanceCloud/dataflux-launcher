@@ -50,14 +50,25 @@ STEPS_INSTALL = [
   }
 ]
 
-STEPS_UPDATE = [ 
+# 1、namespace 更新 + PVC 更新
+# 2、新增应用配置
+# 3、应用更新（升级与新增）
+# 4、应用配置升级
+# 5、数据库升级
+# 6、升级完成
+
+STEPS_UPDATE = [
+  # {
+  #     "key": "/up/newconfig",
+  #     "name": "新增应用配置"
+  # },
   {
       "key": "/up/service",
       "name": "应用升级"
   },
   {
       "key": "/up/configmap",
-      "name": "配置升级"
+      "name": "升级应用配置"
   },
   {
       "key": "/up/database",

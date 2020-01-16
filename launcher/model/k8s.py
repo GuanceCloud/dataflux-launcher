@@ -1,7 +1,7 @@
 # encoding=utf-8
 
 import os, re, subprocess
-import markdown, shortuuid, pymysql
+import markdown, shortuuid
 import json, time
 
 from launcher.utils.template import jinjia2_render
@@ -25,8 +25,8 @@ def deploy_status():
       image = item['spec']['template']['spec']['containers'][0]['image']
 
       status = {}
-      if 'conditions' in item['status']:
-        status = {c['type']: c['status'] for c in item['status']['conditions']}
+      # if 'conditions' in item['status']:
+      #   status = {c['type']: c['status'] for c in item['status']['conditions']}
 
       status['fullImagePath'] = image
       status['key'] = key
@@ -64,6 +64,70 @@ def deploy_status():
   return deployStatus
 
 
-def deploy_patch(patch):
-  cmd = 'kubectl get deployments -n {} -o json'.format(ns)
+def get_namespace():
+  cmd = "kubectl get namespaces {} -o json".format(' '.join(SERVICECONFIG['namespaces']))
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  namespace = json.loads(output)
+
+  return [ns['metadata']['name'] for ns in namespace['items']]
+
+
+def get_pvc():
+  pvcs = []
+  for ns in SERVICECONFIG['namespaces']:
+    cmd = "kubectl get pvc -n {} -o json".format(ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+    output, err = p.communicate()
+    data = json.loads(output)
+
+    for item in data['items']:
+      pvc = dict(
+                  namespace = ns,
+                  name = item['metadata']['name'],
+                  storageClassName = item['spec']['storageClassName']
+                )
+
+      pvcs.append(pvc)
+
+  return pvcs
+
+
+def apply_namespace():
+  tmpDir = SERVICECONFIG['tmpDir']
+  namespaces = SERVICECONFIG['namespaces']
+
+  namespaceTemplatePath = os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml")
+  namespaceYamlContent = jinjia2_render(namespaceTemplatePath, {"namespaces": namespaces})
+  namespaceYamlPath = os.path.abspath(tmpDir + "/namespace.yaml")
+
+  with open(namespaceYamlPath, 'w') as f:
+    f.write(namespaceYamlContent)
+
+  # 必须要等命名空间创建完，才能继续后续操作
+  for i in range(5):
+    cmd = "kubectl apply -f {}".format(tmpDir + "/namespace.yaml")
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+    # 等待 namespace 创建完成
+    for j in range(5):
+      k8sNamespaces = get_namespace()
+
+      if len(k8sNamespaces) == len(namespaces):
+        break
+
+      time.sleep(0.5)
+    else:
+      break
+
+  return True
+
+
+def get_configmap(namespace, name):
+  cmd = 'kubectl get configmap {} -n {} -o json'.format(name, namespace)
+
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+
