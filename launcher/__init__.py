@@ -64,7 +64,7 @@ STEPS_UPDATE = [
   # },
   {
       "key": "/up/service",
-      "name": "应用升级"
+      "name": "升级应用"
   },
   {
       "key": "/up/configmap",
@@ -72,7 +72,7 @@ STEPS_UPDATE = [
   },
   {
       "key": "/up/database",
-      "name": "数据库升级"
+      "name": "升级数据库"
   }
 ]
 

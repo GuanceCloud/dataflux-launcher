@@ -4,9 +4,6 @@ data:
 {{ config.core | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: core
   namespace: forethought-core
 
@@ -18,9 +15,6 @@ data:
 {{ config.kodo | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: kodo
   namespace: forethought-kodo
 
@@ -32,9 +26,6 @@ data:
 {{ config.kodoInner | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: kodo-inner
   namespace: forethought-kodo
 
@@ -46,9 +37,6 @@ data:
 {{ config.kodoNginx | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: kodo-nginx
   namespace: forethought-kodo
 
@@ -62,9 +50,6 @@ data:
 {{ config.messageDeskWorker | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: message-desk
   namespace: middleware
 
@@ -78,9 +63,6 @@ data:
 {{ config.frontNginx | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: front-web-config
   namespace: forethought-webclient
 
@@ -94,9 +76,6 @@ data:
 {{ config.managementNginx | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: management-web-config
   namespace: forethought-webclient
 
@@ -108,9 +87,6 @@ data:
 {{ config.func | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: func-config
   namespace: func
 
@@ -122,9 +98,6 @@ data:
 {{ config.funcInner | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: func-inner-config
   namespace: func
 
@@ -136,9 +109,6 @@ data:
 {{ config.funcWorker | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: func-worker-config
   namespace: func
 
@@ -151,8 +121,17 @@ data:
 {{ config.innerAppTrigger | indent(4) }}
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
-  labels:
-    cattle.io/creator: norman
   name: trigger-conf
   namespace: forethought-inner-app
+
+
+---
+
+apiVersion: v1
+data:
+  settings.yaml: |-
+{{ config.launcher | indent(4) }}
+kind: ConfigMap
+metadata:
+  name: df-settings
+  namespace: launcher

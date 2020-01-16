@@ -1,0 +1,43 @@
+mysql:
+  host    : {{mysql.host}}
+  port    : {{mysql.port}}
+
+  core:
+    user    : {{core.dbInfo.dbUser}}
+    password: {{core.dbInfo.dbUserPassword}}
+    database: {{core.dbInfo.dbName}}
+
+  func:
+    user    : {{func.dbInfo.dbUser}}
+    password: {{func.dbInfo.dbUserPassword}}
+    database: {{func.dbInfo.dbName}}
+
+  messageDesk:
+    user    : {{messageDesk.dbInfo.dbUser}}
+    password: {{messageDesk.dbInfo.dbUserPassword}}
+    database: {{messageDesk.dbInfo.dbName}}
+
+redis:
+  host    : {{redis.host}}
+  port    : {{redis.port}}
+  db      : 5
+  password: {{redis.password}}
+
+influxdb:
+  host    : {{ influxdb.host }}
+  port    : {{ influxdb.port }}
+  username: {{ influxdb.username }}
+  password: {{ influxdb.password }}
+  ssl     : {{ influxdb.ssl }}
+
+domain:
+  domain: {{ other.domain }}
+  subDomain:
+    console       : {{ other.subDomain.console }}
+    consoleApi    : {{ other.subDomain.consoleApi }}
+    management    : {{ other.subDomain.management }}
+    managementApi : {{ other.subDomain.managementApi }}
+    websocket     : {{ other.subDomain.websocket }}
+    function      : {{ other.subDomain.function }}
+    kodo          : {{ other.subDomain.kodo }}
+    integration   : {{ other.subDomain.integration }}

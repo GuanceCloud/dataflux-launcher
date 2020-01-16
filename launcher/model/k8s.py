@@ -99,7 +99,7 @@ def apply_namespace():
   tmpDir = SERVICECONFIG['tmpDir']
   namespaces = SERVICECONFIG['namespaces']
 
-  namespaceTemplatePath = os.path.abspath("launcher/resource/v1/template/k8s/namespace.yaml")
+  namespaceTemplatePath = "template/k8s/namespace.yaml"
   namespaceYamlContent = jinjia2_render(namespaceTemplatePath, {"namespaces": namespaces})
   namespaceYamlPath = os.path.abspath(tmpDir + "/namespace.yaml")
 
