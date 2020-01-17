@@ -44,13 +44,22 @@ metadata:
 
 apiVersion: v1
 data:
-  config-api.yaml: |-
+  config.yaml: |-
 {{ config.messageDeskApi | indent(4) }}
-  config-worker.yaml: |-
-{{ config.messageDeskWorker | indent(4) }}
 kind: ConfigMap
 metadata:
   name: message-desk
+  namespace: middleware
+
+---
+
+apiVersion: v1
+data:
+  config.yaml: |-
+{{ config.messageDeskWorker | indent(4) }}
+kind: ConfigMap
+metadata:
+  name: message-desk-work
   namespace: middleware
 
 ---

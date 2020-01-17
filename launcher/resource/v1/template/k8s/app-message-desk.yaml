@@ -33,7 +33,7 @@ spec:
           name: message-desk-logs
         - mountPath: /message-desk-config.yaml
           name: message-desk
-          subPath: config-api.yaml
+          subPath: config.yaml
       dnsPolicy: ClusterFirst
       imagePullSecrets:
       - name: registry-key

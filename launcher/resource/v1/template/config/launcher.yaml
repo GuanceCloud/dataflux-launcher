@@ -20,15 +20,16 @@ mysql:
 redis:
   host    : {{redis.host}}
   port    : {{redis.port}}
-  db      : 5
   password: {{redis.password}}
 
 influxdb:
-  host    : {{ influxdb.host }}
-  port    : {{ influxdb.port }}
-  username: {{ influxdb.username }}
-  password: {{ influxdb.password }}
-  ssl     : {{ influxdb.ssl }}
+{% for item in influxdb %}
+- host    : {{ item.host }}
+  port    : {{ item.port }}
+  username: {{ item.username }}
+  password: {{ item.password }}
+  ssl     : {{ item.ssl }}
+{% endfor %}
 
 domain:
   domain: {{ other.domain }}

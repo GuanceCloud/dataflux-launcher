@@ -25,8 +25,8 @@ spec:
         resources: {}
         volumeMounts:
         - mountPath: /message-desk-worker-config.yaml
-          name: message-desk
-          subPath: config-worker.yaml
+          name: message-desk-worker
+          subPath: config.yaml
         - mountPath: /logdata
           name: message-desk-worker-logs
       dnsPolicy: ClusterFirst
@@ -40,9 +40,9 @@ spec:
           claimName: message-desk-worker-logs
       - configMap:
           defaultMode: 292
-          name: message-desk
+          name: message-desk-worker
           optional: false
-        name: message-desk
+        name: message-desk-worker
 
 ---
 
