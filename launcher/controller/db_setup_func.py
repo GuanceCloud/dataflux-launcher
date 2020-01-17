@@ -2,7 +2,7 @@
 
 import os, shortuuid, pymysql, hashlib
 
-from .db_helper import dbHelper
+from launcher.utils.helper.db_helper import dbHelper
 from launcher import SETTINGS, SERVICECONFIG
 
 

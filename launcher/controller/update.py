@@ -109,5 +109,15 @@ def deploy_update():
 
 
 def configmap_check():
-  pass
+  launcherSettings = k8s.get_launcher_settings()
+  mysqlSetting = launcherSettings['mysql']
 
+  connInfo = dict(
+                  host = mysqlSetting['host'],
+                  port = mysqlSetting['port'],
+                  user = mysqlSetting['core']['user'],
+                  password = mysqlSetting['core']['password'],
+                  database = mysqlSetting['core']['database']
+                )
+
+  # TODO

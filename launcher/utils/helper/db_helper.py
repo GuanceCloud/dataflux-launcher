@@ -18,6 +18,7 @@ class dbHelper(object):
   def __exit__(self, ex_type, ex_value, ex_trace):
     try:
       if self._connection:
+        self._connection.commit()
         self._connection.close()
     except:
       print('db exit error')
@@ -47,7 +48,6 @@ class dbHelper(object):
 
           result.append(cursor.fetchall())
 
-      self._connection.commit()
-
+      # self._connection.commit()
       return result
 

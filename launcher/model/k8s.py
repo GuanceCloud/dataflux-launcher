@@ -1,8 +1,8 @@
 # encoding=utf-8
 
-import os, re, subprocess
+import os, re, subprocess, time
 import markdown, shortuuid
-import json, time
+import json, yaml
 
 from launcher.utils.template import jinjia2_render
 
@@ -125,9 +125,22 @@ def apply_namespace():
   return True
 
 
-def get_configmap(namespace, name):
-  cmd = 'kubectl get configmap {} -n {} -o json'.format(name, namespace)
+def get_configmap(mapname, namespace):
+  cmd = 'kubectl get configmap {} -n {} -o json'.format(mapname, namespace)
 
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
+  output, err = p.communicate()
+  result = json.loads(output)
+
+  return result
+
+
+def get_launcher_settings():
+  launcherSettings = get_configmap("df-settings", "launcher")
+  settingsYaml = launcherSettings.get('data', {}).get('settings.yaml') or ''
+
+  settings = yaml.safe_load(settingsYaml)
+
+  return settings
 

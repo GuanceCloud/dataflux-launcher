@@ -5,7 +5,7 @@ import shortuuid
 import pymysql
 
 
-from .db_helper import dbHelper
+from launcher.utils.helper.db_helper import dbHelper
 from launcher import SETTINGS, SERVICECONFIG
 
 def database_create_db():

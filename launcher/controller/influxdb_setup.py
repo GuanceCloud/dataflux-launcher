@@ -4,7 +4,7 @@ import shortuuid
 import json
 import time
 
-from .db_helper import dbHelper
+from launcher.utils.helper.db_helper import dbHelper
 from launcher import SETTINGS, SERVICECONFIG
 
 from influxdb import InfluxDBClient
