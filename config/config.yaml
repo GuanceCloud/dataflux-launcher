@@ -150,10 +150,10 @@ influxDB:
 
   - rpName: rp4
     duration: 4320  # 180d
+    default: True
 
   - rpName: rp5
     duration: 8760  # 365d
-    default: True
 
 updates:
   - api: http://inner.forethought-core:5000/api/v1/update-versions
@@ -198,9 +198,9 @@ updates:
     config:
       - key: message-desk
         mapname: message-desk
-        mapkey: config-api.yaml
+        mapkey: config.yaml
 
       - key: message-desk-worker
         mapname: message-desk
-        mapkey: config-worker.yaml
+        mapkey: config.yaml
 
