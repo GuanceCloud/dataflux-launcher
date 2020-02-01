@@ -18,14 +18,12 @@ class Settings(object):
   def __init__(self, *args, **kwargs):
     self._settingJson = self.load()
 
-    return _settingJson
-
 
   def __save(self):
     settingsYaml = yaml.dump(self._settingJson, default_flow_style=False)
 
     base_path = os.path.dirname(os.path.abspath(__file__))
-    path = base_path + "/../config/settings.yaml"
+    path = base_path + "/../../config/settings.yaml"
 
     with open(path, 'w') as f:
       f.write(settingsYaml)
@@ -47,7 +45,7 @@ class Settings(object):
   def load(self):
     settingJson = None
     base_path = os.path.dirname(os.path.abspath(__file__))
-    path = base_path + "/../config/settings.yaml"
+    path = base_path + "/../../config/settings.yaml"
 
     if not os.path.exists(path):
       return {}
@@ -56,6 +54,10 @@ class Settings(object):
         settingJson = yaml.safe_load(f)
 
     return settingJson or {}
+
+  @property  
+  def toJson(self):
+    return self._settingJson or {}
 
 
   @property

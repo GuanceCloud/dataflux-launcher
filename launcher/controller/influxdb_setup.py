@@ -42,9 +42,11 @@ def influxdb_ping_all(dbs):
 
   influxdb = settingsMdl.influxdb
 
-  settingsMdl.influxdb = n = []
+  n = []
   for idx, db in enumerate(dbs):
     n.append(dict(influxdb[idx] if idx < len(influxdb) else {}, **db))
+
+  settingsMdl.influxdb = n
 
   return [{"pingError": item['pingError']} for item in n]
 
@@ -96,7 +98,7 @@ def __insert_rp_to_mysql():
           duration
       )
 
-      dbClient.execute(sql, dbName = dbInfo['dbName'], params = params)
+      dbClient.execute(sql, dbName = dbInfo['database'], params = params)
 
   return True
 

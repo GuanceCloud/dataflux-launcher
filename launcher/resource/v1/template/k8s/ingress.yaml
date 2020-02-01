@@ -6,7 +6,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.consoleApi }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -15,8 +15,8 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.consoleApi }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
 
@@ -30,7 +30,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.managementApi }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -39,8 +39,8 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.managementApi }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
 
@@ -54,7 +54,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.websocket }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.websocket }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -62,8 +62,8 @@ spec:
           servicePort: 8080
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.websocket }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.websocket }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
 
@@ -77,7 +77,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.console }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.console }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -86,8 +86,8 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.console }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.console }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
 
@@ -101,7 +101,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.management }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.management }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -110,8 +110,8 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.management }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.management }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
 
@@ -125,7 +125,7 @@ metadata:
   namespace: func
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.other.subDomain.function }}.{{ config.other.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.function }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -134,7 +134,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.other.subDomain.function }}.{{ config.other.domain }}
-    secretName: {{ config.other.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}

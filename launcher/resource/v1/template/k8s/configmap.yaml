@@ -59,7 +59,7 @@ data:
 {{ config.messageDeskWorker | indent(4) }}
 kind: ConfigMap
 metadata:
-  name: message-desk-work
+  name: message-desk-worker
   namespace: middleware
 
 ---

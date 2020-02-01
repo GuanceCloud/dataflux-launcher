@@ -40,7 +40,7 @@ def database_ddl():
   with dbHelper(mysqlInfo) as db:
     with open(os.path.abspath("launcher/resource/v1/ddl/func.sql"), 'r') as f:
       ddl = f.read()
-      db.execute(ddl, dbName = dbInfo['dbName'])
+      db.execute(ddl, dbName = dbInfo['database'])
 
   return True
 

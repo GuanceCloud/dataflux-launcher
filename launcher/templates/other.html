@@ -11,14 +11,14 @@
         <div class="form-group">
           <label for="iptUserName" class="col-sm-2 control-label">管理员账号:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptUserName" name="userName" required value="{{ pageData.manager.username }}" placeholder="后台管理员账号">
+            <input type="text" class="form-control" id="iptUserName" name="userName" required value="{{ pageData.other.manager.username }}" placeholder="后台管理员账号">
           </div>
           <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
           <label for="iptUserEmail" class="col-sm-2 control-label">管理员邮箱:</label>
           <div class="col-sm-5">
-            <input type="email" class="form-control" id="iptUserEmail" name="userEmail" required value="{{ pageData.manager.email }}" placeholder="管理员邮箱">
+            <input type="email" class="form-control" id="iptUserEmail" name="userEmail" required value="{{ pageData.other.manager.email }}" placeholder="管理员邮箱">
           </div>
           <div class="col-sm-5 error"></div>
         </div>
@@ -29,7 +29,7 @@
         <div class="form-group">
           <label for="iptDomain" class="col-sm-2 control-label">主域名:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptDomain" name="host" required value="{{ pageData.domain }}" placeholder="系统主域名，如：dataflux.cn">
+            <input type="text" class="form-control" id="iptDomain" name="host" required value="{{ pageData.domain.domain }}" placeholder="系统主域名，如：dataflux.cn">
           </div>
           <div class="col-sm-5 error"></div>
         </div>
@@ -38,41 +38,41 @@
           <div class="col-sm-5">
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleDomain" name="console" required value="{{ pageData.subDomain.console }}" placeholder="console">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleDomain" name="console" required value="{{ pageData.domain.subDomain.console }}" placeholder="console">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleApiDomain" name="consoleApi" required value="{{ pageData.subDomain.consoleApi }}" placeholder="console API">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleApiDomain" name="consoleApi" required value="{{ pageData.domain.subDomain.consoleApi }}" placeholder="console API">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementDomain" name="management" required value="{{ pageData.subDomain.management }}" placeholder="management">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementDomain" name="management" required value="{{ pageData.domain.subDomain.management }}" placeholder="management">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementApiDomain" name="managementApi" required value="{{ pageData.subDomain.managementApi }}" placeholder="management API">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementApiDomain" name="managementApi" required value="{{ pageData.domain.subDomain.managementApi }}" placeholder="management API">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptWebSocketDomain" name="websocket" required value="{{ pageData.subDomain.websocket }}" placeholder="websocket">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptWebSocketDomain" name="websocket" required value="{{ pageData.domain.subDomain.websocket }}" placeholder="websocket">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptFuncDomain" name="function" required value="{{ pageData.subDomain.function }}" placeholder="function">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptFuncDomain" name="function" required value="{{ pageData.domain.subDomain.function }}" placeholder="function">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.subDomain.kodo }}" placeholder="kodo">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.domain.subDomain.kodo }}" placeholder="kodo">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptIntegrationDomain" name="integration" required value="{{ pageData.subDomain.integration }}" placeholder="integration">
-              <span class="form-control-static main-domain">.{{ pageData.domain }}</span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptIntegrationDomain" name="integration" required value="{{ pageData.domain.subDomain.integration }}" placeholder="integration">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
           </div>
           <div class="col-sm-5 error"></div>
@@ -87,10 +87,10 @@
         </div>
         <div class="form-group certificate-text">
           <div class="col-sm-6">
-            <textarea id="certificatePrivateKey" required name="certificatePrivateKey" placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头"></textarea>
+            <textarea id="certificatePrivateKey" class="monospaced" required name="certificatePrivateKey" placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头">{{ pageData.other.tls.certificatePrivateKey }}</textarea>
           </div>
           <div class="col-sm-6">
-            <textarea id="certificateContent" required name="certificateContent" placeholder="输入证书，以-----BEGIN CERTIFICATE-----开头"></textarea>
+            <textarea id="certificateContent" class="monospaced" required name="certificateContent" laceholder="输入证书，以-----BEGIN CERTIFICATE-----开头">{{ pageData.other.tls.certificateContent }}</textarea>
           </div>
         </div>
       </div>

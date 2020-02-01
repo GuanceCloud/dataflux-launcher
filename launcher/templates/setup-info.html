@@ -11,20 +11,20 @@
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">主域名:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.other.domain }}</p>
+                <p class="form-control-static">{{ pageData.domain.domain }}</p>
               </div>
             </div>
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">各子域名:</label>
               <div class="col-sm-5">
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.console }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.consoleApi }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.management }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.managementApi }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.websocket }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.function }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.kodo }}</strong>.{{ pageData.other.domain }}</p>
-                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.other.subDomain.integration }}</strong>.{{ pageData.other.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.console }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.consoleApi }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.management }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.managementApi }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.websocket }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.function }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.kodo }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{'deploy-' if __common__.debug}}{{ pageData.domain.subDomain.integration }}</strong>.{{ pageData.domain.domain }}</p>
               </div>
             </div>
             <div class="form-group">
@@ -41,25 +41,25 @@
             <div class="form-group">
               <label for="iptDBHost" class="col-sm-2 control-label">MySQL Host:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.mysql.host }}</p>
+                <p class="form-control-static">{{ pageData.mysql.base.host }}</p>
               </div>
             </div>
             <div class="form-group">
               <label for="iptDBPort" class="col-sm-2 control-label">端口:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.mysql.port }}</p>
+                <p class="form-control-static">{{ pageData.mysql.base.port }}</p>
               </div>
             </div>
             <div class="form-group">
               <label for="iptDBUserName" class="col-sm-2 control-label">管理员账号:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.mysql.user }}</p>
+                <p class="form-control-static">{{ pageData.mysql.base.user }}</p>
               </div>
             </div>
             <div class="form-group">
               <label for="iptDBUserPwd" class="col-sm-2 control-label">管理员密码:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.mysql.password }}</p>
+                <p class="form-control-static">{{ pageData.mysql.base.password }}</p>
               </div>
             </div>
           </div>
@@ -154,7 +154,7 @@
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">证书:</label>
               <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.other.certificateContent }}</p>
+                <p class="form-control-static monospaced">{{ pageData.other.tls.certificateContent }}</p>
               </div>
             </div>
           </div>

@@ -35,30 +35,31 @@ def other_config(params):
   }
 
   settingsMdl.other = {
-    'manager': params.get('manager')
+    'manager': params.get('manager'),
+    'tls': params.get('tls')
   }
 
   return True
 
 
 def config_template():
-  coreTemp = jinjia2_render('template/config/forethought-backend.yaml', settingsMdl)
-  kodoTemp = jinjia2_render('template/config/kodo.yaml', settingsMdl)
-  kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', settingsMdl)
-  kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', settingsMdl)
-  messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', settingsMdl)
-  messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', settingsMdl)
+  coreTemp = jinjia2_render('template/config/forethought-backend.yaml', settingsMdl.toJson)
+  kodoTemp = jinjia2_render('template/config/kodo.yaml', settingsMdl.toJson)
+  kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', settingsMdl.toJson)
+  kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', settingsMdl.toJson)
+  messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', settingsMdl.toJson)
+  messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', settingsMdl.toJson)
 
-  frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', settingsMdl)
-  frontWebTemp = jinjia2_render('template/config/front-web.js', settingsMdl)
+  frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', settingsMdl.toJson)
+  frontWebTemp = jinjia2_render('template/config/front-web.js', settingsMdl.toJson)
 
-  managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', settingsMdl)
-  managementWebTemp = jinjia2_render('template/config/management-web.json', settingsMdl)
+  managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', settingsMdl.toJson)
+  managementWebTemp = jinjia2_render('template/config/management-web.json', settingsMdl.toJson)
 
-  funcTemp = jinjia2_render('template/config/func-config.yaml', settingsMdl)
-  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', settingsMdl)
-  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', settingsMdl)
-  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', settingsMdl)
+  funcTemp = jinjia2_render('template/config/func-config.yaml', settingsMdl.toJson)
+  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', settingsMdl.toJson)
+  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', settingsMdl.toJson)
+  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', settingsMdl.toJson)
 
   return [
     {

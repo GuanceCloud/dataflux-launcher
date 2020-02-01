@@ -24,7 +24,7 @@
       </div>
       <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'in' if loop.index == 1 }}" role="tabpanel">
         <div class="panel-body">
-          <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left">{{ conf.content }}</textarea>
+          <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>
         </div>
       </div>
       {% endfor %}

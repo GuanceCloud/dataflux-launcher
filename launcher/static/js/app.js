@@ -225,8 +225,10 @@ var setup = (function () {
       data.subDomain[name] = jqMe.val();
     });
 
-    data.certificatePrivateKey = $('#certificatePrivateKey').val();
-    data.certificateContent = $('#certificateContent').val();
+    data.tls = {
+      "certificatePrivateKey": $('#certificatePrivateKey').val(),
+      "certificateContent": $('#certificateContent').val()
+    }
 
     $("#validateForm").validate();
     isValid = $('#validateForm').valid();
