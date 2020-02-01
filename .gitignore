@@ -117,8 +117,11 @@ venv.bak/
 
 # config
 # config/config.yaml
+config/settings.yaml
 
 *.pid
 
 # 本地运行时产生的dump.rdb
 dump.rdb
+
+
