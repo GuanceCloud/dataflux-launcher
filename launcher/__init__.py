@@ -2,6 +2,8 @@
 
 import os, yaml, json
 
+from launcher.model.settings import Settings
+
 STEPS_COMMON = [
   {
       "key": "/",
@@ -77,9 +79,11 @@ STEPS_UPDATE = [
 ]
 
 
-SETTINGS = {}
+# SETTINGS = {}
 SERVICECONFIG = {}
 DOCKERIMAGES = {}
+
+settingsMdl = None
 
 def __init_config():
   global SERVICECONFIG
@@ -100,107 +104,107 @@ def __init_docker_image():
 
 
 def __init_settings():
-  global SETTINGS
+  # global SETTINGS
+  global settingsMdl
 
-  if not SERVICECONFIG['debug']:
-    SETTINGS = {
-      "mysql": {},
-      "redis": {},
-      "influxdb": [{}],
-      "messageDesk": {},
-      "core": {
-        "dbInfo": {},
-        "secret": {}
-      },
-      "func": {
-        "dbInfo": {}
-      },
-      "other": {
-        "manager": {
-          "username": "",
-          "email": ""
-        },
-        "domain": "",
-        "subDomain": {
-          "console": "console",
-          "consoleApi": "console-api",
-          "management": "management",
-          "managementApi": "management-api",
-          "websocket": "ws",
-          "function": "func",
-          "kodo": "kodo",
-          "integration": "integration"
-        }
-      },
-      "serviceConfig": {}
-    }
+  settingsMdl = Settings()
 
-
-  else:
-    SETTINGS = {
-      "mysql": {
-        "host": "172.16.0.43",
-        "port": 32306,
-        "user": "root",
-        "password": "rootPassw0rd"
-      },
-      "core": {
-        "dbInfo": {
-          "dbName": "Forethought",
-          "dbUser": "Forethought",
-          "dbUserPassword": "123321"
-        },
-        "secret": {}
-      },
-      "messageDesk": {
-        "dbInfo": {
-          "dbName": "",
-          "dbUser": "",
-          "dbUserPassword": ""
-        }
-      },
-      "func": {
-        "dbInfo": {
-          "dbName": "ft_dp",
-          "dbUser": "ft_dp",
-          "dbUserPassword": "123321"
-        }
-      },
-      "redis": {
-        "host": "172.16.0.43",
-        "port": 30397,
-        "password": "viFRKZiZkoPmXnyF"
-      },
-      "influxdb": [
-        {
-          "host": "172.16.0.43",
-          "port": 32086,
-          "username": "admin",
-          "password": "admin@influxdb",
-          "ssl": False,
-          "dbName": "test_db",
-          "kapacitorHost": "http://127.0.0.1:1234"
-        }
-      ],
-      "other": {
-        "manager": {
-          "username": "admin",
-          "email": "lhm@jiagouyun.com"
-        },
-        "domain": "",
-        "subDomain": {
-          "console": "console",
-          "consoleApi": "console-api",
-          "management": "management",
-          "managementApi": "management-api",
-          "websocket": "ws",
-          "function": "func",
-          "kodo": "kodo",
-          "integration": "integration"
-        }
-      },
-      "serviceConfig":{}
-    }
+  # if not SERVICECONFIG['debug']:
+  #   SETTINGS = {
+  #     "mysql": {},
+  #     "redis": {},
+  #     "influxdb": [{}],
+  #     "messageDesk": {},
+  #     "core": {
+  #       "dbInfo": {},
+  #       "secret": {}
+  #     },
+  #     "func": {
+  #       "dbInfo": {}
+  #     },
+  #     "other": {
+  #       "manager": {
+  #         "username": "",
+  #         "email": ""
+  #       },
+  #       "domain": "",
+  #       "subDomain": {
+  #         "console": "console",
+  #         "consoleApi": "console-api",
+  #         "management": "management",
+  #         "managementApi": "management-api",
+  #         "websocket": "ws",
+  #         "function": "func",
+  #         "kodo": "kodo",
+  #         "integration": "integration"
+  #       }
+  #     },
+  #     "serviceConfig": {}
+  #   }
+  # else:
+  #   SETTINGS = {
+  #     "mysql": {
+  #       "host": "172.16.0.43",
+  #       "port": 32306,
+  #       "user": "root",
+  #       "password": "rootPassw0rd"
+  #     },
+  #     "core": {
+  #       "dbInfo": {
+  #         "dbName": "Forethought",
+  #         "dbUser": "Forethought",
+  #         "dbUserPassword": "123321"
+  #       },
+  #       "secret": {}
+  #     },
+  #     "messageDesk": {
+  #       "dbInfo": {
+  #         "dbName": "",
+  #         "dbUser": "",
+  #         "dbUserPassword": ""
+  #       }
+  #     },
+  #     "func": {
+  #       "dbInfo": {
+  #         "dbName": "ft_dp",
+  #         "dbUser": "ft_dp",
+  #         "dbUserPassword": "123321"
+  #       }
+  #     },
+  #     "redis": {
+  #       "host": "172.16.0.43",
+  #       "port": 30397,
+  #       "password": "viFRKZiZkoPmXnyF"
+  #     },
+  #     "influxdb": [
+  #       {
+  #         "host": "172.16.0.43",
+  #         "port": 32086,
+  #         "username": "admin",
+  #         "password": "admin@influxdb",
+  #         "ssl": False,
+  #         "dbName": "test_db"
+  #       }
+  #     ],
+  #     "other": {
+  #       "manager": {
+  #         "username": "admin",
+  #         "email": "lhm@jiagouyun.com"
+  #       },
+  #       "domain": "",
+  #       "subDomain": {
+  #         "console": "console",
+  #         "consoleApi": "console-api",
+  #         "management": "management",
+  #         "managementApi": "management-api",
+  #         "websocket": "ws",
+  #         "function": "func",
+  #         "kodo": "kodo",
+  #         "integration": "integration"
+  #       }
+  #     },
+  #     "serviceConfig":{}
+  #   }
 
 
 __init_config()

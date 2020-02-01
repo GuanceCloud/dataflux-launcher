@@ -6,18 +6,17 @@ import pymysql
 
 
 from launcher.utils.helper.db_helper import dbHelper
-from launcher import SETTINGS, SERVICECONFIG
+from launcher import settingsMdl, SERVICECONFIG
 
 def database_create_db():
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['messageDesk']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('messageDesk')
 
-  # dbSQL = "CREATE DATABASE IF NOT EXISTS {dbName} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;".format(**dbInfo)
-  # userSQL = "CREATE USER '{dbUser}'@'%' IDENTIFIED BY '{dbUserPassword}'; GRANT ALL PRIVILEGES ON {dbName}.* TO '{dbUser}'@'%' WITH GRANT OPTION;".format(**dbInfo)
   SQL = '''
-        SET SQL_MODE = 'NO_AUTO_CREATE_USER';CREATE DATABASE IF NOT EXISTS {dbName} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
-        CREATE USER '{dbUser}'@'%' IDENTIFIED BY '{dbUserPassword}';
-        GRANT ALL PRIVILEGES ON {dbName}.* TO '{dbUser}'@'%';
+        SET SQL_MODE = 'NO_AUTO_CREATE_USER';CREATE DATABASE IF NOT EXISTS {database} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+        CREATE USER '{user}'@'%' IDENTIFIED BY '{password}';
+        GRANT ALL PRIVILEGES ON {database}.* TO '{user}'@'%';
         '''.format(**dbInfo)
 
   with dbHelper(mysqlInfo) as db:
@@ -27,13 +26,16 @@ def database_create_db():
 
 
 def database_ddl():
-  mysqlInfo = SETTINGS['mysql']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
 
-  SETTINGS['messageDesk']['dbInfo'] = dbInfo = {
-    "dbName": SERVICECONFIG['databases']['message_desk'],
-    "dbUser": SERVICECONFIG['databases']['message_desk'],
-    "dbUserPassword": shortuuid.ShortUUID().random(length=12)
+  dbInfo = {
+    "database": SERVICECONFIG['databases']['message_desk'],
+    "user": SERVICECONFIG['databases']['message_desk'],
+    "password": shortuuid.ShortUUID().random(length=12)
   }
+
+  settingsMdl.mysql = {'messageDesk': dbInfo}
 
   database_create_db()
 
@@ -46,13 +48,14 @@ def database_ddl():
 
 
 def database_init_data():
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['messageDesk']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('messageDesk')
 
   with dbHelper(mysqlInfo) as db:
     with open(os.path.abspath("launcher/resource/v1/data/message-desk.sql"), 'r') as f:
       sql = f.read()
-      db.execute(sql, dbName = dbInfo['dbName'])
+      db.execute(sql, dbName = dbInfo['database'])
 
   return True
 

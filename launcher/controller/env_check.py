@@ -3,7 +3,7 @@
 import os, re, subprocess
 import json, time
 
-from launcher import SETTINGS, SERVICECONFIG
+from launcher import SERVICECONFIG
 
 
 def __get_k8s_cluster_info():

@@ -7,7 +7,7 @@ import json, time
 from launcher.model import k8s
 from launcher.utils.template import jinjia2_render
 
-from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
+from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
 def do_check():
@@ -29,31 +29,38 @@ def readme():
 
 
 def other_config(params):
-  SETTINGS['other'] = params
+  settingsMdl.domain = {
+    'domain': params.get('domain', ''),
+    'subDomain': params.get('subDomain', {})
+  }
+
+  settingsMdl.other = {
+    'manager': params.get('manager')
+  }
 
   return True
 
 
 def config_template():
-  coreTemp = jinjia2_render('template/config/forethought-backend.yaml', SETTINGS)
-  kodoTemp = jinjia2_render('template/config/kodo.yaml', SETTINGS)
-  kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', SETTINGS)
-  kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', SETTINGS)
-  messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', SETTINGS)
-  messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', SETTINGS)
+  coreTemp = jinjia2_render('template/config/forethought-backend.yaml', settingsMdl)
+  kodoTemp = jinjia2_render('template/config/kodo.yaml', settingsMdl)
+  kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', settingsMdl)
+  kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', settingsMdl)
+  messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', settingsMdl)
+  messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', settingsMdl)
 
-  frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', SETTINGS)
-  frontWebTemp = jinjia2_render('template/config/front-web.js', SETTINGS)
+  frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', settingsMdl)
+  frontWebTemp = jinjia2_render('template/config/front-web.js', settingsMdl)
 
-  managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', SETTINGS)
-  managementWebTemp = jinjia2_render('template/config/management-web.json', SETTINGS)
+  managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', settingsMdl)
+  managementWebTemp = jinjia2_render('template/config/management-web.json', settingsMdl)
 
-  funcTemp = jinjia2_render('template/config/func-config.yaml', SETTINGS)
-  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', SETTINGS)
-  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', SETTINGS)
-  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', SETTINGS)
+  funcTemp = jinjia2_render('template/config/func-config.yaml', settingsMdl)
+  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', settingsMdl)
+  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', settingsMdl)
+  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', settingsMdl)
 
-  launcherTemp = jinjia2_render('template/config/launcher.yaml', SETTINGS)
+  launcherTemp = jinjia2_render('template/config/launcher.yaml', settingsMdl)
 
   return [
     {
@@ -135,12 +142,13 @@ def config_template():
 
 
 def certificate_create():
-  otherConfig = SETTINGS['other']
+  tlsSetting = settingsMdl.other.get('tls')
+
   certificate = dict(
-              privateKey = otherConfig['certificatePrivateKey'],
-              content = otherConfig['certificateContent']
+              privateKey = tlsSetting['certificatePrivateKey'],
+              content = tlsSetting['certificateContent']
           )
-  domain = otherConfig['domain']
+  domain = settingsMdl.domain
 
   tmpPath = SERVICECONFIG['tmpDir']
   certFile = '{}/tls.cert'.format(tmpPath)
@@ -217,7 +225,7 @@ def service_image_config():
 
 def ingress_create():
   tmpDir = SERVICECONFIG['tmpDir']
-  ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": SETTINGS})
+  ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": settingsMdl})
   ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
 
   with open(ingressYaml, 'w') as f:
@@ -309,8 +317,6 @@ def service_create(data):
 
   ingress_create()
 
-  SETTINGS['ServiceImages'] = imageSettings
-
   return True
 
 
@@ -319,15 +325,16 @@ def service_status():
 
 
 def init_setting():
-  SETTINGS["core"] = {
-    "secret": {
-      "frontAuth": shortuuid.ShortUUID().random(length=48),
-      "manageAuth": shortuuid.ShortUUID().random(length=48)
+  settingsMdl.other = {
+    "core": {
+      "secret": {
+        "frontAuth": shortuuid.ShortUUID().random(length=48),
+        "manageAuth": shortuuid.ShortUUID().random(length=48)
+      }
+    },
+    'func': {
+      "secret": shortuuid.ShortUUID().random(length=48)
     }
-  }
-
-  SETTINGS['func'] = {
-    "secret": shortuuid.ShortUUID().random(length=48)
   }
 
   return True

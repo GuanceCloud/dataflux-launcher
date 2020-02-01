@@ -2,7 +2,7 @@
 
 import redis
 
-from launcher import SETTINGS
+from launcher import settingsMdl
 
 
 def redis_ping(params):
@@ -18,7 +18,7 @@ def redis_ping(params):
     pass
 
   if pingStatus:
-    SETTINGS["redis"] = params
+    settingsMdl.redis = params
 
     return True
 

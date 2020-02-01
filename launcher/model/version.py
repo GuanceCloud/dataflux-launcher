@@ -5,7 +5,7 @@ import markdown, shortuuid
 import json, yaml
 
 
-from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
+from launcher import SERVICECONFIG, DOCKERIMAGES
 
 def get_current_versions():
   pass

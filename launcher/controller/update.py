@@ -7,7 +7,7 @@ import json, time, yaml
 from launcher.model import k8s
 from launcher.utils.template import jinjia2_render
 
-from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
+from launcher import SERVICECONFIG, DOCKERIMAGES
 
 updateDeploy = {}
 

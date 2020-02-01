@@ -7,7 +7,7 @@ import json, time
 from flask import request
 
 from launcher.utils.template import jinjia2_render
-from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
+from launcher import SERVICECONFIG, DOCKERIMAGES
 
 
 def __get_update_content(url, seq):

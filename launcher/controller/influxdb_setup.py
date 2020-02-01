@@ -5,7 +5,7 @@ import json
 import time
 
 from launcher.utils.helper.db_helper import dbHelper
-from launcher import SETTINGS, SERVICECONFIG
+from launcher import settingsMdl, SERVICECONFIG
 
 from influxdb import InfluxDBClient
 
@@ -40,9 +40,9 @@ def influxdb_ping_all(dbs):
   for db in dbs:
     influxdb_ping(db)
 
-  influxdb = SETTINGS['influxdb']
+  influxdb = settingsMdl.influxdb
 
-  SETTINGS['influxdb'] = n = []
+  settingsMdl.influxdb = n = []
   for idx, db in enumerate(dbs):
     n.append(dict(influxdb[idx] if idx < len(influxdb) else {}, **db))
 
@@ -52,19 +52,19 @@ def influxdb_ping_all(dbs):
 def influxdb_remove(d):
   idx = d['index']
 
-  if len(SETTINGS['influxdb']) == 1:
+  if len(settingsMdl.influxdb) == 1:
     return True
 
-  if len(SETTINGS['influxdb']) > idx:
-    del SETTINGS['influxdb'][idx]
+  if len(settingsMdl.influxdb) > idx:
+    del settingsMdl.influxdb[idx]
 
   return True
 
 
 def influxdb_add(dbs):
-  influxdb = SETTINGS['influxdb']
+  influxdb = settingsMdl.influxdb
 
-  SETTINGS['influxdb'] = n = []
+  settingsMdl.influxdb = n = []
   for idx, db in enumerate(dbs):
     n.append(dict(influxdb[idx] if idx < len(influxdb) else {}, **db))
 
@@ -73,8 +73,10 @@ def influxdb_add(dbs):
   return True
 
 def __insert_rp_to_mysql():
-  mysqlInfo = SETTINGS['mysql']
-  mysqlDBInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
+
   rps = SERVICECONFIG['influxDB']['replication']
 
   sql = '''
@@ -94,7 +96,7 @@ def __insert_rp_to_mysql():
           duration
       )
 
-      dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
+      dbClient.execute(sql, dbName = dbInfo['dbName'], params = params)
 
   return True
 
@@ -136,8 +138,9 @@ def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName):
 
 
 def _init_influxdb(instanceUUID, instance):
-  mysqlInfo = SETTINGS['mysql']
-  mysqlDBInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
 
   influxDBInfo = {
     "host": instance.get('host'),
@@ -169,7 +172,7 @@ def _init_influxdb(instanceUUID, instance):
       )
 
       sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, UNIX_TIMESTAMP());"
-      dbClient.execute(sql, dbName = mysqlDBInfo['dbName'], params = params)
+      dbClient.execute(sql, dbName = dbInfo['database'], params = params)
 
       dbUUIDs[dbName] = db_uuid
 
@@ -177,8 +180,9 @@ def _init_influxdb(instanceUUID, instance):
 
 
 def _init_system_workspace(sysDBUUID):
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
 
   with dbHelper(mysqlInfo) as db:
     ws_uuid = "wksp_system"
@@ -192,7 +196,7 @@ def _init_system_workspace(sysDBUUID):
               INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) 
               VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}', UNIX_TIMESTAMP());
             '''
-    db.execute(wsSQL, dbName = dbInfo['dbName'], params = params)
+    db.execute(wsSQL, dbName = dbInfo['database'], params = params)
 
     # 工作空间 AK
     akSQL = '''
@@ -204,7 +208,7 @@ def _init_system_workspace(sysDBUUID):
               shortuuid.ShortUUID().random(length = 16),
               shortuuid.ShortUUID().random(length = 32)
             ]
-    db.execute(akSQL, dbName = dbInfo['dbName'], params = params)
+    db.execute(akSQL, dbName = dbInfo['database'], params = params)
 
     return True
 
@@ -221,8 +225,9 @@ def _init_db_instance(instance):
           "admin": user
         }
 
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
 
   with dbHelper(mysqlInfo) as db:
     # influx instance 
@@ -239,7 +244,7 @@ def _init_db_instance(instance):
       json.dumps(authorization)
     ]
     sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 4, '', '', 0, UNIX_TIMESTAMP());"
-    db.execute(sql, dbName = dbInfo['dbName'], params = params)
+    db.execute(sql, dbName = dbInfo['database'], params = params)
 
     # kapacitorHost = instance.get('kapacitorHost')
 
@@ -257,7 +262,7 @@ def _init_db_instance(instance):
 
 
 def init_influxdb_all():
-  instances = SETTINGS['influxdb']
+  instances = settingsMdl.influxdb
   __insert_rp_to_mysql()
 
   for idx, instance in enumerate(instances):

@@ -9,7 +9,7 @@ from launcher.controller import update
 
 from launcher.utils import decorators
 
-from . import SETTINGS, SERVICECONFIG, STEPS_COMMON, STEPS_INSTALL, STEPS_UPDATE, DOCKERIMAGES
+from . import settingsMdl, SERVICECONFIG, STEPS_COMMON, STEPS_INSTALL, STEPS_UPDATE, DOCKERIMAGES
 
 
 # 全新安装时的路由套装
@@ -80,31 +80,31 @@ def register_install_router(app):
   @app.route("/install/database")
   @decorators.upgrade_install
   def database():
-    return render("database.html", {"title": "MySQL 设置", "pageData": SETTINGS['mysql'], "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("database.html", {"title": "MySQL 设置", "pageData": settingsMdl.mysql, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/other")
   @decorators.upgrade_install
   def other():
-    return render("other.html", {"title": "其他设置", "pageData": SETTINGS['other'], "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("other.html", {"title": "其他设置", "pageData": settingsMdl.other, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/redis")
   def redis():
-    return render("redis.html", {"title": "Redis 设置", "pageData": SETTINGS['redis'], "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("redis.html", {"title": "Redis 设置", "pageData": settingsMdl.redis, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/influxdb")
   def influxdb():
     rps = SERVICECONFIG['influxDB']['replication']
-    influxs = SETTINGS['influxdb']
+    influxs = settingsMdl.influxdb
 
     return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/setup/info")
   def setup_info():
-    return render("setup-info.html", {"title": "安装信息", "pageData": SETTINGS, "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("setup-info.html", {"title": "安装信息", "pageData": settingsMdl, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/config/review")
@@ -118,7 +118,7 @@ def register_install_router(app):
   def serviceConfig():
     d = setup.service_image_config()
 
-    return render("service-config.html", {"title": "应用镜像", "pageData": d, "config": SETTINGS['serviceConfig'], "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("service-config.html", {"title": "应用镜像", "pageData": d, "config": {}, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/service/status")

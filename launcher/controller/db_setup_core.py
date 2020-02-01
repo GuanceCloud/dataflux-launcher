@@ -9,7 +9,7 @@ import time
 
 
 from launcher.utils.helper.db_helper import dbHelper
-from launcher import SETTINGS, SERVICECONFIG
+from launcher import settingsMdl, SERVICECONFIG
 
 def database_ping(params):
   params['port'] = int(params['port'])
@@ -21,7 +21,7 @@ def database_ping(params):
     sql = "SHOW DATABASES;"
     result = db.execute(sql)
 
-    SETTINGS["mysql"] = params
+    settingsMdl.mysql = {'base': params}
     if len(result) == 0:
       return {"connected": True}
 
@@ -34,13 +34,14 @@ def database_ping(params):
   return {"connected": True, "dbNames": dbNames}
 
 def database_create_db():
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
 
   SQL = '''
-        SET SQL_MODE = 'NO_AUTO_CREATE_USER';CREATE DATABASE IF NOT EXISTS {dbName} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
-        CREATE USER '{dbUser}'@'%' IDENTIFIED BY '{dbUserPassword}';
-        GRANT ALL PRIVILEGES ON {dbName}.* TO '{dbUser}'@'%';
+        SET SQL_MODE = 'NO_AUTO_CREATE_USER';CREATE DATABASE IF NOT EXISTS {database} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+        CREATE USER '{user}'@'%' IDENTIFIED BY '{password}';
+        GRANT ALL PRIVILEGES ON {database}.* TO '{user}'@'%';
         '''.format(**dbInfo)
 
   # print(mysqlInfo)
@@ -51,32 +52,36 @@ def database_create_db():
 
 
 def database_ddl():
-  mysqlInfo = SETTINGS['mysql']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
 
-  SETTINGS['core']['dbInfo'] = dbInfo = {
-    "dbName": SERVICECONFIG['databases']['core'],
-    "dbUser": SERVICECONFIG['databases']['core'],
-    "dbUserPassword": shortuuid.ShortUUID().random(length=12)
+  dbInfo = {
+    "database": SERVICECONFIG['databases']['core'],
+    "user": SERVICECONFIG['databases']['core'],
+    "password": shortuuid.ShortUUID().random(length=12)
   }
+
+  settingsMdl.mysql = {'core': dbInfo}
 
   database_create_db()
 
   with dbHelper(mysqlInfo) as db:
     with open(os.path.abspath("launcher/resource/v1/ddl/core.sql"), 'r') as f:
       ddl = f.read()
-      db.execute(ddl, dbName = dbInfo['dbName'])
+      db.execute(ddl, dbName = dbInfo['database'])
 
   return True
 
 
 def database_init_data():
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['core']['dbInfo']
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
 
   with dbHelper(mysqlInfo) as db:
     with open(os.path.abspath("launcher/resource/v1/data/core.sql"), 'r') as f:
       sql = f.read()
-      db.execute(sql, dbName = dbInfo['dbName'])
+      db.execute(sql, dbName = dbInfo['database'])
 
   return True
 
@@ -87,9 +92,10 @@ def database_manage_account_create():
       VALUES (%s, '管理员', %s, %s, %s, '', UNIX_TIMESTAMP());
     '''
 
-  mysqlInfo = SETTINGS['mysql']
-  dbInfo = SETTINGS['core']['dbInfo']
-  accountInfo = SETTINGS['other'].get('manager', {})
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
+  accountInfo = settingsMdl.other.get('manager', {})
 
   username = accountInfo.get('username')
   email = accountInfo.get('email')
@@ -100,7 +106,7 @@ def database_manage_account_create():
 
       params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email)
 
-      db.execute(sql, dbName = dbInfo['dbName'], params = params)
+      db.execute(sql, dbName = dbInfo['database'], params = params)
 
   return True
 

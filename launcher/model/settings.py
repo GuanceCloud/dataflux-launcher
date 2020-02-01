@@ -1,13 +1,12 @@
 # encoding=utf-8
 
-import os, re, subprocess
-import markdown, shortuuid, pymysql
-import json, time, yaml
+import os, re
+import json, yaml
 
-from launcher import SETTINGS, SERVICECONFIG, DOCKERIMAGES
+from launcher.utils import utils
 
 
-class Setting(object):
+class Settings(object):
   instance = None
   def __new__(cls, *args, **kwargs):
     if cls.instance is None:
@@ -35,6 +34,16 @@ class Setting(object):
     return True
 
 
+  def __dict_merge(self, key, value):
+    if key not in self._settingJson:
+      self._settingJson[key] = {}
+
+    dist = self._settingJson[key]
+    self._settingJson[key] = dict(dist, **(value or {}))
+
+    return self._settingJson[key]
+
+
   def load(self):
     settingJson = None
     base_path = os.path.dirname(os.path.abspath(__file__))
@@ -51,28 +60,28 @@ class Setting(object):
 
   @property
   def mysql(self):
-    return self._settingJson.get('mysql', None)
+    return self._settingJson.get('mysql') or {}
 
 
   @mysql.setter
   def mysql(self, value):
-    self._settingJson['mysql'] = value
+    self.__dict_merge('mysql', value)
 
     self.__save()
 
   @property
   def redis(self):
-    return self._settingJson.get('redis', None)
+    return self._settingJson.get('redis') or {}
 
   @redis.setter
   def redis(self, value):
-    self._settingJson['redis'] = value
+    self.__dict_merge('redis', value)
 
     self.__save()
 
   @property
   def influxdb(self):
-    return self._settingJson.get('influxdb', None)
+    return self._settingJson.get('influxdb') or []
 
   @influxdb.setter
   def influxdb(self, value):
@@ -82,11 +91,20 @@ class Setting(object):
 
   @property
   def domain(self):
-    return self._settingJson.get('domain', None)
+    return self._settingJson.get('domain') or {}
 
   @domain.setter
   def domain(self, value):
-    self._settingJson['domain'] = value
+    self.__dict_merge('domain', value)
 
+    self.__save()
+
+  @property
+  def other(self):
+    return self._settingJson.get('other') or {}
+
+  @other.setter
+  def other(self, value):
+    self.__dict_merge('other', value)
     self.__save()
 
