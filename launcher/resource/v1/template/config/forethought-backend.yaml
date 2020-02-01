@@ -3,11 +3,11 @@ envName: DataFlux
 isInternalAuth: true
 
 protocol: "https"
-hostname: "{{'deploy-' if __common__.debug}}{{ other.subDomain.console }}.{{ other.domain }}"
+hostname: "{{'deploy-' if __common__.debug}}{{ domain.subDomain.console }}.{{ domain.domain }}"
 
 database:
     # 测试环境容器外使用地址
-    connection: "mysql+pymysql://{{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@{{mysql.host}}:{{mysql.port}}/{{core.dbInfo.dbName}}?charset=utf8"
+    connection: "mysql+pymysql://{{mysql.core.user}}:{{mysql.core.password}}@{{mysql.base.host}}:{{mysql.base.port}}/{{mysql.core.database}}?charset=utf8"
     pool_size: 50
     max_overflow: 10
     echo: false
@@ -40,13 +40,13 @@ inner_app_webhook_url: http://trigger.forethought-inner-app:9000/api/v1/trigger/
 alert_callback_url: http://front-backend.forethought-core:5000/api/v1/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
-  frontAuth: {{(core.secret or {}).frontAuth}}
-  manageAuth: {{(core.secret or {}).manageAuth}}
+  frontAuth: {{(other.core.secret or {}).frontAuth}}
+  manageAuth: {{(other.core.secret or {}).manageAuth}}
 
 # 默认邀请配置
 invitation_set:
   enable: false
-  invite_url: "https://{{'deploy-' if __common__.debug}}auth.{{ other.domain }}/join/workspace?uuid={}"
+  invite_url: "https://{{'deploy-' if __common__.debug}}auth.{{ domain.domain }}/join/workspace?uuid={}"
   sender: DataFlux
   title: "工作空间邀请"
   method:
@@ -72,7 +72,7 @@ celery:
       minute: '*/30'  
 
 integration:
-  domain: "https://{{ other.subDomain.integration }}.{{ other.domain }}"
+  domain: "https://{{ domain.subDomain.integration }}.{{ domain.domain }}"
   aliyunOSS:
     bucket: "prod-ft-integration"
     accessKeyId: ""

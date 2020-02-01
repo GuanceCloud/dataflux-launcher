@@ -86,7 +86,11 @@ def register_install_router(app):
   @app.route("/install/other")
   @decorators.upgrade_install
   def other():
-    return render("other.html", {"title": "其他设置", "pageData": settingsMdl.other, "steps": STEPS_COMMON + STEPS_INSTALL})
+    data = {
+      'domain': settingsMdl.domain,
+      'other': settingsMdl.other
+    }
+    return render("other.html", {"title": "其他设置", "pageData": data, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/redis")
@@ -118,7 +122,7 @@ def register_install_router(app):
   def serviceConfig():
     d = setup.service_image_config()
 
-    return render("service-config.html", {"title": "应用镜像", "pageData": d, "config": {}, "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("service-config.html", {"title": "应用镜像", "pageData": d, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/service/status")

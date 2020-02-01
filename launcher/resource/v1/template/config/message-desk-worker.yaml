@@ -13,11 +13,11 @@ redis:
   password: {{redis.password}}
 
 mysql:
-  host    : {{mysql.host}}
-  port    : {{mysql.port}}
-  user    : {{messageDesk.dbInfo.dbUser}}
-  password: {{messageDesk.dbInfo.dbUserPassword}}
-  database: {{messageDesk.dbInfo.dbName}}
+  host    : {{mysql.base.host}}
+  port    : {{mysql.base.port}}
+  user    : {{mysql.messageDesk.user}}
+  password: {{mysql.messageDesk.password}}
+  database: {{mysql.messageDesk.database}}
 
 # 短信服务的配置
 aliyun:
@@ -36,6 +36,6 @@ mail:
   usePlainAuth: True
   sender:
     DataFlux:
-      from        : 'DataFlux <noreply@message.{{ other.domain }}>'
-      user        : noreply@message.{{ other.domain }}
+      from        : 'DataFlux <noreply@message.{{ domain.domain }}>'
+      user        : noreply@message.{{ domain.domain }}
       password    : 

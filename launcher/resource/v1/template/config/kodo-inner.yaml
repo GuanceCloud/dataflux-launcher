@@ -1,6 +1,6 @@
 database:
     db_dialect: mysql
-    connection: {{core.dbInfo.dbUser}}:{{core.dbInfo.dbUserPassword}}@tcp({{mysql.host}}:{{mysql.port}})/{{core.dbInfo.dbName}}
+    connection: {{mysql.core.user}}:{{mysql.core.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.core.database}}
 
 redis:
     host: {{redis.host}}:{{redis.port}}

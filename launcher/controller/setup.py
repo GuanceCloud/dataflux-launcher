@@ -60,8 +60,6 @@ def config_template():
   funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', settingsMdl)
   triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', settingsMdl)
 
-  launcherTemp = jinjia2_render('template/config/launcher.yaml', settingsMdl)
-
   return [
     {
       "key": "core",
@@ -132,11 +130,6 @@ def config_template():
       "key": "innerAppTrigger",
       "name": "Trigger",
       "content": triggerTemp,
-    },
-    {
-      "key": "launcher",
-      "name": "Launcher",
-      "content": launcherTemp,
     }
   ]
 

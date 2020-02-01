@@ -1,3 +1,3 @@
 {
-  "API_URL": "https://{{'deploy-' if __common__.debug}}{{ other.subDomain.managementApi }}.{{ other.domain }}/api/v1"
+  "API_URL": "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.managementApi }}.{{ domain.domain }}/api/v1"
 }
