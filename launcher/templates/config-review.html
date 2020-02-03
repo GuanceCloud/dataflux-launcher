@@ -6,7 +6,7 @@
 
   {% for ns in pageData %}
   <div class="high-block">
-    <h4>{{ ns.namespace }}</h4>
+    <h5>命名空间：{{ ns.namespace }}</h5>
     <div class="panel-group" id="configAccordion" role="tablist" aria-multiselectable="true">
       <div class="panel panel-default config-review">
         {% for conf in ns.configmaps %}
@@ -40,11 +40,6 @@
 <div class="row form-body">
   <div class="text-right">
     <button id="btnConfigmapCreate" {{ "disabled" if not __common__.debug }} class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
-    <!-- {% if dubug %}
-    <button id="btnConfigmapCreate" class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
-    {% else %}
-    <button id="btnConfigmapCreate" class="btn btn-danger" disabled onclick="setup.configmap_create()">检查完毕，生成配置！</button>
-    {% endif %} -->
   </div>
 </div>
 

@@ -75,7 +75,7 @@ def certificate_create():
               privateKey = tlsSetting['certificatePrivateKey'],
               content = tlsSetting['certificateContent']
           )
-  domain = settingsMdl.domain
+  domain = settingsMdl.domain.get('domain')
 
   tmpPath = SERVICECONFIG['tmpDir']
   certFile = '{}/tls.cert'.format(tmpPath)
