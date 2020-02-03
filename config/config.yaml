@@ -37,11 +37,27 @@ services:
       image: core
       replicas: 2
 
+    configmaps:
+    - key: core
+      services:
+      - management-backend
+      - inner
+      - front-backend
+      - integration-scanner
+      - websocket
+      file: forethought-backend.yaml
+
   - namespace: forethought-inner-app
     services:
     - key: trigger
       name: 通知触发器
       image: trigger
+
+    configmaps:
+    - key: innerAppTrigger
+      services:
+      - trigger
+      file: inner-app-trigger-config.ini
 
   - namespace: forethought-webclient
     services:
@@ -52,6 +68,27 @@ services:
     - key: front-webclient
       name: 用户前台前端
       image: front-webclient
+
+    configmaps:
+    - key: frontWeb
+      services:
+      - front-webclient
+      file: front-web.js
+
+    - key: frontNginx
+      services:
+      - front-webclient
+      file: front-nginx.conf
+
+    - key: managementWeb
+      services:
+      - management-webclient
+      file: management-web.json
+
+    - key: managementNginx
+      services:
+      - management-webclient
+      file: management-nginx.conf
 
   - namespace: forethought-kodo
     services:
@@ -66,6 +103,23 @@ services:
     - key: kodo-nginx
       name: Kodo Nginx
       image: nginx
+
+    configmaps:
+    - key: kodo
+      services:
+      - kodo
+      file: kodo.yaml
+
+    - key: kodoInner
+      services:
+      - kodo-inner
+      file: kodo-inner.yaml
+
+    - key: kodoNginx
+      services:
+      - kodo-nginx
+      file: kodo-nginx.conf
+
 
   - namespace: func
     services:
@@ -97,6 +151,25 @@ services:
       image: func-worker
       replicas: 2
 
+    configmaps:
+    - key: func
+      services:
+      - func
+      file: func-config.yaml
+
+    - key: funcInner
+      services:
+      - func-inner
+      file: func-inner-config.yaml
+
+    - key: funcWorker
+      services:
+      - func-worker-beat
+      - func-worker-debugger
+      - func-worker-rpc-crontab
+      - func-worker-utils
+      file: func-worker-config.yaml
+
   - namespace: middleware
     services:
     - key: message-desk
@@ -122,6 +195,17 @@ services:
     - key: kapacitor
       name: Kapacitor
       image: kapacitor
+
+    configmaps:
+    - key: messageDeskApi
+      services:
+      - message-desk
+      file: message-desk-api.yaml
+
+    - key: messageDeskWorker
+      services:
+      - message-desk-worker
+      file: message-desk-worker.yaml
 
 databases:
   core: df_core

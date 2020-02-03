@@ -43,96 +43,29 @@ def other_config(params):
 
 
 def config_template():
-  coreTemp = jinjia2_render('template/config/forethought-backend.yaml', settingsMdl.toJson)
-  kodoTemp = jinjia2_render('template/config/kodo.yaml', settingsMdl.toJson)
-  kodoInnerTemp = jinjia2_render('template/config/kodo-inner.yaml', settingsMdl.toJson)
-  kodoNginxTemp = jinjia2_render('template/config/kodo-nginx.conf', settingsMdl.toJson)
-  messageDeskApiTemp = jinjia2_render('template/config/message-desk-api.yaml', settingsMdl.toJson)
-  messageDeskWorkerTemp = jinjia2_render('template/config/message-desk-worker.yaml', settingsMdl.toJson)
+  result = []
 
-  frontNginxTemp = jinjia2_render('template/config/front-nginx.conf', settingsMdl.toJson)
-  frontWebTemp = jinjia2_render('template/config/front-web.js', settingsMdl.toJson)
-
-  managementNginxTemp = jinjia2_render('template/config/management-nginx.conf', settingsMdl.toJson)
-  managementWebTemp = jinjia2_render('template/config/management-web.json', settingsMdl.toJson)
-
-  funcTemp = jinjia2_render('template/config/func-config.yaml', settingsMdl.toJson)
-  funcInnerTemp = jinjia2_render('template/config/func-inner-config.yaml', settingsMdl.toJson)
-  funcWorkerTemp = jinjia2_render('template/config/func-worker-config.yaml', settingsMdl.toJson)
-  triggerTemp = jinjia2_render('template/config/inner-app-trigger-config.ini', settingsMdl.toJson)
-
-  return [
-    {
-      "key": "core",
-      "name": "DataFlux Core",
-      "content": coreTemp
-    },
-    {
-      "key": "kodo",
-      "name": "Kodo",
-      "content": kodoTemp,
-    },
-    {
-      "key": "kodoInner",
-      "name": "Kodo Inner",
-      "content": kodoInnerTemp,
-    },
-    {
-      "key": "kodoNginx",
-      "name": "Kodo Nginx",
-      "content": kodoNginxTemp,
-    },
-    {
-      "key": "messageDeskApi",
-      "name": "Message Desk API",
-      "content": messageDeskApiTemp,
-    },
-    {
-      "key": "messageDeskWorker",
-      "name": "Message Desk Worker",
-      "content": messageDeskWorkerTemp,
-    },
-    {
-      "key": "frontNginx",
-      "name": "Front Nginx",
-      "content": frontNginxTemp,
-    },
-    {
-      "key": "frontWeb",
-      "name": "Front WebClient",
-      "content": frontWebTemp,
-    },
-    {
-      "key": "managementNginx",
-      "name": "Management Nginx",
-      "content": managementNginxTemp,
-    },
-    {
-      "key": "managementWeb",
-      "name": "Management WebClient",
-      "content": managementWebTemp,
-    },
-    {
-      "key": "func",
-      "name": "Function",
-      "content": funcTemp,
-    },
-    {
-      "key": "funcInner",
-      "name": "Function Inner",
-      "content": funcInnerTemp,
-    },
-    {
-      "key": "funcWorker",
-      "name": "Function Worker",
-      "content": funcWorkerTemp,
-    },
-    {
-      "key": "innerAppTrigger",
-      "name": "Trigger",
-      "content": triggerTemp,
+  for ns in SERVICECONFIG['services']:
+    configmaps = {
+      'namespace': ns['namespace'],
+      'configmaps': []
     }
-  ]
+
+    tmpServiceDict = {item['key']: item for item in ns['services']}
+
+    for configmap in ns['configmaps']:
+      content = jinjia2_render('template/config/{}'.format(configmap['file']), settingsMdl.toJson)
+
+      cm = {
+        'key': configmap['key'],
+        'content': content,
+        'services': [tmpServiceDict[item]['name'] for item in configmap['services']]
+      }
+      configmaps['configmaps'].append(cm)
+
+    result.append(configmaps)
+
+  return result
 
 
 def certificate_create():
