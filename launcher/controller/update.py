@@ -108,16 +108,71 @@ def deploy_update():
   return True
 
 
-def configmap_check():
-  launcherSettings = k8s.get_launcher_settings()
-  mysqlSetting = launcherSettings['mysql']
+def get_configmaps():
+  mapKeyVal      = {}
+  updateProjects = SERVICECONFIG['updates']
 
-  connInfo = dict(
-                  host = mysqlSetting['host'],
-                  port = mysqlSetting['port'],
-                  user = mysqlSetting['core']['user'],
-                  password = mysqlSetting['core']['password'],
-                  database = mysqlSetting['core']['database']
-                )
+  for ns in SERVICECONFIG['services']:
+    maps      = {}
+    namespace = ns['namespace']
 
-  # TODO
+    mapKeyVal[namespace]  = maps
+    tmpServiceDict        = {item['key']: item for item in ns['services']}
+
+    for configmap in ns['configmaps']:
+      maps[configmap['key']] = {
+        'services': [tmpServiceDict[item]['name'] for item in configmap['services']]
+      }
+
+  upInfo = []
+  for project in updateProjects:
+    namespace = project['namespace']
+    up = {
+      'namespace': namespace,
+      'api': project['api'],
+      'project': project['project'],
+      'configmaps': []
+    }
+
+    for item in project['config']:
+      mapName = item['mapName']
+      mapKey = item['mapKey']
+
+      configmapData = k8s.get_configmap(mapName, namespace)
+      config = {
+        'services': mapKeyVal[namespace][item['key']]['services'],
+        'key': item['key'],
+        'mapName': mapName,
+        'mapKey': mapKey,
+        'content': configmapData[mapKey]
+      }
+
+      up['configmaps'].append(config)
+
+    upInfo.append(up)
+
+  return upInfo
+
+def configmap_update(params):
+  updateProjects = SERVICECONFIG['updates']
+
+  for project in updateProjects:
+    namespace = project['namespace']
+
+    for item in project['config']:
+      key     = item['key']
+      mapName = item['mapName']
+      mapKey  = item['mapKey']
+
+      content = params.get(key)
+
+      if not content:
+        continue
+
+      k8s.patch_configmap(mapName, mapKey, content, namespace)
+
+  return True
+
+
+
+

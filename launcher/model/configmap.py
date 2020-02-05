@@ -14,7 +14,7 @@ def __get_update_content(url, seq):
   pass
 
 
-def get_configmap_items():
+def get_update_items():
   maps = []
   for project in SERVICECONFIG['updates']:
     for configItem in project['config']:
@@ -32,4 +32,4 @@ def get_configmap_items():
 
   return maps
 
-
+  

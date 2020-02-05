@@ -3,16 +3,51 @@
 {% block content %}
 
 <div class="row form-body">
-  <div class="col-12">
-    <div class="form-horizontal">
-      <h2 class="page-heading">{{ title }}</h2>
+  <h2 class="page-heading">{{ title }}</h2>
 
+  {% for ns in pageData %}
+  <div class="high-block">
+    <h5>命名空间：{{ ns.namespace }}</h5>
+    <div class="panel-group configAccordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default config-review">
+        {% for conf in ns.configmaps %}
+        <div class="panel-heading" role="tab">
+          <label class="pull-right" onclick="setup.config_item_checked_all()">
+            <input type="checkbox" />
+            已检查
+          </label>
+          <h4 class="panel-title">
+            <i class="icon-right"></i>
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
+              {{ conf.key }}（
+              {% for serviceName in conf.services %}
+                {{ serviceName }}{{ '、' if not loop.last }}
+              {% endfor %}）
+            </a>
+          </h4>
+        </div>
+        <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
+          <div class="panel-body">
+            <div class="config-update-left">
+              &nbsp;
+            </div>
+            <div class="config-update-right">
+              <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
+  {% endfor %}
+</div>
 
+<div class="row form-body">
     <div class="form-group">
       <label class="col-sm-2 control-label">&nbsp;</label>
       <div class="col-sm-10">
-        <button id="btnDoUpdate"  class="btn btn-primary" onclick="setup.up_service_update()">
+        <button id="btnConfigmapUpdate"  class="btn btn-primary" onclick="setup.configmap_update()">
             确认升级
           </button>
           <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
@@ -23,6 +58,31 @@
 
   </div>
 </div>
+
+
+<script text="text/javascript">
+
+  $().ready(function(){
+    $('.configAccordion').on('hidden.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-Retract').addClass('icon-right');
+
+      return true;
+    }).on('shown.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-right').addClass('icon-Retract');
+
+      return true;
+    });
+  });
+
+</script>
 
 {% endblock %}
 

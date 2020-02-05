@@ -455,5 +455,28 @@ var setup = (function () {
     });
   };
 
+
+  app.prototype.configmap_update = function(){
+    var that = this;
+    var maps = {};
+
+    $('#btnConfigmapUpdate').attr("disabled","disabled");
+
+    $('.config-review textarea').each(function(idx, item){
+      var me = $(item);
+      var key = me.data('key');
+
+      maps[key] = me.val();
+    });
+
+    console.log(maps);
+
+    this.post("up/configmap/update", maps).then(function(d){
+      // that.go("/install/service/config");
+    }).done(function(){
+      that.config_item_checked_all();
+    });
+  };
+
   return new app();
 })();

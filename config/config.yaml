@@ -245,46 +245,50 @@ updates:
     project: forethought
     config:
       - key: core
-        mapname: core
-        mapkey: config.yaml
+        mapName: core
+        mapKey: config.yaml
 
   - api: http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
     namespace: forethought-kodo
     project: kodo
     config:
       - key: kodo
-        mapname: kodo
-        mapkey: config.yaml
+        mapName: kodo
+        mapKey: config.yaml
 
-      - key: kodo-inner
-        mapname: kodo-inner
-        mapkey: config.yaml
+      - key: kodoInner
+        mapName: kodo-inner
+        mapKey: config.yaml
+
+      - key: kodoNginx
+        mapName: kodo-nginx
+        mapKey: kodo.conf
 
   - api: http://inner.func:8088/api/v1/update-versions
     namespace: func
     project: func
     config:
       - key: func
-        mapname: func-config
-        mapkey: config.yaml
+        mapName: func-config
+        mapKey: config.yaml
 
-      - key: func-inner
-        mapname: func-inner-config
-        mapkey: config.yaml
+      - key: funcInner
+        mapName: func-inner-config
+        mapKey: config.yaml
 
-      - key: func-worker
-        mapname: func-worker-config
-        mapkey: config.yaml
+      - key: funcWorker
+        mapName: func-worker-config
+        mapKey: config.yaml
 
   - api: http://message-desk.middleware:8088/api/v1/update-versions
     namespace: middleware
     project: message-desk
     config:
-      - key: message-desk
-        mapname: message-desk
-        mapkey: config.yaml
+      - key: messageDeskApi
+        mapName: message-desk
+        mapKey: config.yaml
 
-      - key: message-desk-worker
-        mapname: message-desk
-        mapkey: config.yaml
+      - key: messageDeskWorker
+        mapName: message-desk
+        mapKey: config.yaml
 

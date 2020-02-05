@@ -173,10 +173,14 @@ footer{
     border: none;
 
     background-color: #fff;
+    resize: none;
+    
+    white-space:nowrap;
 }
 
 .config-review .panel-heading{
   padding-bottom: 0;
+  margin-bottom: 1px;
 
   background: none;
 }
@@ -197,6 +201,24 @@ footer{
   margin-top: -1px;
 
   border-top: none !important;
+}
+
+.config-review .config-update-left{
+  float: left;
+
+  width: 40%;
+  height: 100%;
+
+  border-right: 1px solid #eee;
+}
+
+.config-review .config-update-right{
+  margin-left: 40%;
+
+  width: 60%;
+  height: 100%; 
+
+  border-left: 1px solid #eee;
 }
 
 @keyframes r0 {

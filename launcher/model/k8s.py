@@ -125,22 +125,38 @@ def apply_namespace():
   return True
 
 
-def get_configmap(mapname, namespace):
-  cmd = 'kubectl get configmap {} -n {} -o json'.format(mapname, namespace)
+def get_configmap(mapName, namespace):
+  cmd = 'kubectl get configmap {} -n {} -o json'.format(mapName, namespace)
 
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   output, err = p.communicate()
   result = json.loads(output)
 
-  return result
+  return result.get('data') or {}
 
 
-def get_launcher_settings():
-  launcherSettings = get_configmap("df-settings", "launcher")
-  settingsYaml = launcherSettings.get('data', {}).get('settings.yaml') or ''
+def patch_configmap(mapName, mapKey, content, namespace):
+  patchYaml = yaml.dump({
+    'data': {
+      mapKey: content
+    }}, default_flow_style = False)
 
-  settings = yaml.safe_load(settingsYaml)
+  if not os.path.exists("/tmp/k8s"):
+    os.mkdir("/tmp/k8s")
 
-  return settings
+  path = "/tmp/k8s/{}-configmap-patch.yaml".format(mapName)
+
+  with open(path, 'w') as f:
+    f.write(patchYaml)
+
+  cmd = 'kubectl patch configmap {} -p "$(cat {})" -n {}'.format(mapName, path, namespace)
+
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+
+  os.remove(path)
+
+  return output, err
 
