@@ -29,7 +29,14 @@
         <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
           <div class="panel-body">
             <div class="config-update-left">
-              &nbsp;
+
+              {% for up in conf.updates %}
+              <div class="high-block-sm">
+                <h5># 版本：{{ up.seq }}</h5>
+                <pre>{{ up.content }}</pre>
+              </div>
+              {% endfor %}
+
             </div>
             <div class="config-update-right">
               <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>

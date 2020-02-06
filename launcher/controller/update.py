@@ -4,7 +4,8 @@ import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time, yaml
 
-from launcher.model import k8s
+from launcher.model import k8s as k8sMdl
+from launcher.model import version as versionMdl
 from launcher.utils.template import jinjia2_render
 
 from launcher import SERVICECONFIG, DOCKERIMAGES
@@ -12,7 +13,7 @@ from launcher import SERVICECONFIG, DOCKERIMAGES
 updateDeploy = {}
 
 def pvc_check():
-  oldPvcs = k8s.get_pvc()
+  oldPvcs = k8sMdl.get_pvc()
 
   pvcYamlContent = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": oldPvcs[0]['storageClassName']})
 
@@ -34,8 +35,8 @@ def pvc_check():
   return newPvcs
 
 def deploy_check():
-  deployStatus = k8s.deploy_status()
-  k8sNamespaces = k8s.get_namespace()
+  deployStatus = k8sMdl.deploy_status()
+  k8sNamespaces = k8sMdl.get_namespace()
 
   apps = DOCKERIMAGES.get('apps', {})
   imageDir = apps.get('image_dir', '')
@@ -88,7 +89,7 @@ def deploy_update():
     newPvcs = newPvcs + ns['newPvcs']
 
   # 1、创建新的 namespace
-  k8s.apply_namespace()
+  k8sMdl.apply_namespace()
 
   # 2、创建新的 PVC
   pvcYamlPath = os.path.abspath(tmpDir + "/pvc.yaml")
@@ -108,7 +109,7 @@ def deploy_update():
   return True
 
 
-def get_configmaps():
+def list_source_and_update_configmaps():
   mapKeyVal      = {}
   updateProjects = SERVICECONFIG['updates']
 
@@ -127,24 +128,39 @@ def get_configmaps():
   upInfo = []
   for project in updateProjects:
     namespace = project['namespace']
-    up = {
+    dataKey   = project['dataKey']
+    up        = {
       'namespace': namespace,
       'api': project['api'],
       'project': project['project'],
       'configmaps': []
     }
+    updateVersions  = versionMdl.list_project_versions(project['api'], 1, project['dataKey'])
 
     for item in project['config']:
       mapName = item['mapName']
-      mapKey = item['mapKey']
+      mapKey  = item['mapKey']
+      key     = item['key']
 
-      configmapData = k8s.get_configmap(mapName, namespace)
-      config = {
-        'services': mapKeyVal[namespace][item['key']]['services'],
-        'key': item['key'],
+      thisKeyUpdateConfig =[]
+      for upv in updateVersions:
+        updateConfigs = upv.get('config') or {}
+        upConfig = updateConfigs.get(key)
+
+        if upConfig:
+          thisKeyUpdateConfig.append({
+              "seq": upv.get('seq'),
+              "content": upConfig
+            })
+
+      configmapData = k8sMdl.get_configmap(mapName, namespace)
+      config        = {
+        'services': mapKeyVal[namespace][key]['services'],
+        'key': key,
         'mapName': mapName,
         'mapKey': mapKey,
-        'content': configmapData[mapKey]
+        'content': configmapData[mapKey],
+        'updates': thisKeyUpdateConfig
       }
 
       up['configmaps'].append(config)
@@ -169,7 +185,7 @@ def configmap_update(params):
       if not content:
         continue
 
-      k8s.patch_configmap(mapName, mapKey, content, namespace)
+      k8sMdl.patch_configmap(mapName, mapKey, content, namespace)
 
   return True
 

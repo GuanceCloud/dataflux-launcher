@@ -240,17 +240,19 @@ influxDB:
     duration: 8760  # 365d
 
 updates:
-  - api: http://inner.forethought-core:5000/api/v1/update-versions
+  - api: # http://inner.forethought-core:5000/api/v1/update-versions
     namespace: forethought-core
     project: forethought
+    dataKey: content
     config:
       - key: core
         mapName: core
         mapKey: config.yaml
 
-  - api: http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
+  - api: # http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
     namespace: forethought-kodo
     project: kodo
+    dataKey: data
     config:
       - key: kodo
         mapName: kodo
@@ -264,9 +266,10 @@ updates:
         mapName: kodo-nginx
         mapKey: kodo.conf
 
-  - api: http://inner.func:8088/api/v1/update-versions
+  - api: # http://inner.func:8088/api/v1/update-versions
     namespace: func
     project: func
+    dataKey: data
     config:
       - key: func
         mapName: func-config
@@ -280,9 +283,10 @@ updates:
         mapName: func-worker-config
         mapKey: config.yaml
 
-  - api: http://message-desk.middleware:8088/api/v1/update-versions
+  - api: # http://message-desk.middleware:8088/api/v1/update-versions
     namespace: middleware
     project: message-desk
+    dataKey: data
     config:
       - key: messageDeskApi
         mapName: message-desk

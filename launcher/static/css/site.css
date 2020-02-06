@@ -70,6 +70,18 @@ footer{
   border: 1px solid #f7f7fc;
 }
 
+.page-main .high-block-sm{
+  margin: 10px;
+  padding: 10px;
+
+  background-color: #f7f7fc;
+  border: 1px solid #f7f7fc;
+}
+
+.page-main .high-block-sm pre{
+  background-color: #fff;
+}
+
 .page-main .app-image:hover{
   background-color: #fff;
 }
@@ -167,12 +179,12 @@ footer{
 
 .config-review textarea{
     width: 100%;
-    height: 550px;
+    height: 600px;
 
     padding: 15px;
     border: none;
 
-    background-color: #fff;
+    background-color: #f7f7fc;
     resize: none;
     
     white-space:nowrap;
@@ -203,22 +215,25 @@ footer{
   border-top: none !important;
 }
 
+
+.config-review .config-update-left,
+.config-review .config-update-right{
+  overflow: auto;  
+  height: 600px;
+
+  border-right: 1px solid #eee;
+}
+
 .config-review .config-update-left{
   float: left;
 
   width: 40%;
-  height: 100%;
-
-  border-right: 1px solid #eee;
 }
 
 .config-review .config-update-right{
   margin-left: 40%;
 
   width: 60%;
-  height: 100%; 
-
-  border-left: 1px solid #eee;
 }
 
 @keyframes r0 {

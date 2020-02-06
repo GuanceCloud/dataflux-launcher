@@ -158,7 +158,8 @@ def register_update_router(app):
 
   @app.route("/up/configmap")
   def up_configmap():
-    configmaps = update.get_configmaps()
+    configmaps = update.list_source_and_update_configmaps()
+
     return render("up/configmap.html", {"title": "配置升级", "pageData": configmaps, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
