@@ -469,10 +469,8 @@ var setup = (function () {
       maps[key] = me.val();
     });
 
-    console.log(maps);
-
     this.post("up/configmap/update", maps).then(function(d){
-      // that.go("/install/service/config");
+      that.go("/up/database");
     }).done(function(){
       that.config_item_checked_all();
     });

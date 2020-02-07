@@ -136,6 +136,17 @@ def get_configmap(mapName, namespace):
   return result.get('data') or {}
 
 
+def redeployment(deployName, namespace):
+  patchJson = '{\\"spec\\": {\\"template\\": {\\"metadata\\": {\\"labels\\": {\\"redeploy\\": \\"$(date +%s)\\"} } } } }'
+
+  cmd = 'kubectl patch deployment {} -p "{}" -n {}'.format(deployName, patchJson, namespace)
+
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+
+  return True
+
 def patch_configmap(mapName, mapKey, content, namespace):
   patchYaml = yaml.dump({
     'data': {

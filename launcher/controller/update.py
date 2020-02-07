@@ -169,8 +169,35 @@ def list_source_and_update_configmaps():
 
   return upInfo
 
+
+# configmap 相关的服务
+def list_config_ref_services():
+  result = {}
+
+  for ns in SERVICECONFIG['services']:
+    namespace = ns['namespace']
+
+    result[namespace] = {}
+    for configmap in ns['configmaps']:
+      key      = configmap['key']
+      services = configmap['services']
+
+      result[namespace][key] = services
+
+  return result
+
+
+def redeployment(configServices, configKey, namespace):
+  services = configServices.get(namespace, {}).get(configKey) or []
+
+  for deployName in services:
+    k8sMdl.redeployment(deployName, namespace)
+
+  return True
+
 def configmap_update(params):
   updateProjects = SERVICECONFIG['updates']
+  configServices = list_config_ref_services()
 
   for project in updateProjects:
     namespace = project['namespace']
@@ -186,6 +213,8 @@ def configmap_update(params):
         continue
 
       k8sMdl.patch_configmap(mapName, mapKey, content, namespace)
+
+      redeployment(configServices, key, namespace)
 
   return True
 
