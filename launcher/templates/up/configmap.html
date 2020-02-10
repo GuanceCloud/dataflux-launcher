@@ -30,6 +30,12 @@
           <div class="panel-body">
             <div class="config-update-left">
 
+              {% if conf.updates | length == 0 %}
+              <div class="high-block-sm">
+                <h5># 无配置更新</h5>
+              </div>
+              {% endif %}
+
               {% for up in conf.updates %}
               <div class="high-block-sm">
                 <h5># 版本：{{ up.seq }}</h5>

@@ -242,7 +242,7 @@ influxDB:
 updates:
   - api: # http://inner.forethought-core:5000/api/v1/update-versions
     namespace: forethought-core
-    project: forethought
+    project: core
     dataKey: content
     config:
       - key: core

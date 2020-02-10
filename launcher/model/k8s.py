@@ -147,6 +147,7 @@ def redeployment(deployName, namespace):
 
   return True
 
+
 def patch_configmap(mapName, mapKey, content, namespace):
   patchYaml = yaml.dump({
     'data': {

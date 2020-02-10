@@ -90,6 +90,16 @@ def register_install_router(app):
       'domain': settingsMdl.domain,
       'other': settingsMdl.other
     }
+
+    if 'manager' not in data['other']:
+      data['other']['manager'] = {}
+
+    if 'tls' not in data['other']:
+      data['other']['tls'] = {}
+
+    if 'subDomain' not in data['domain']:
+      data['domain']['subDomain'] = {}
+
     return render("other.html", {"title": "其他设置", "pageData": data, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 

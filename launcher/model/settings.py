@@ -83,7 +83,14 @@ class Settings(object):
 
   @property
   def influxdb(self):
-    return self._settingJson.get('influxdb') or []
+    return self._settingJson.get('influxdb') or [{
+          "host": "",
+          "port": "",
+          "username": "",
+          "password": "",
+          "ssl": False,
+          "dbName": ""
+        }]
 
   @influxdb.setter
   def influxdb(self, value):
