@@ -256,7 +256,8 @@ def init_setting():
     "core": {
       "secret": {
         "frontAuth": shortuuid.ShortUUID().random(length=48),
-        "manageAuth": shortuuid.ShortUUID().random(length=48)
+        "manageAuth": shortuuid.ShortUUID().random(length=48),
+        "shareAuth": shortuuid.ShortUUID().random(length=48)
       }
     },
     'func': {

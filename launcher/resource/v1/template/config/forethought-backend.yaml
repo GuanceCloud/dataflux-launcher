@@ -16,8 +16,8 @@ kodo:
   host: kodo-inner.forethought-kodo
   port: 9527
   timeout: 60
-  installCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
-  upgradeCmd: 'DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
+  installCmd: 'DW_KODO=https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
+  upgradeCmd: 'DW_KODO=https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
   versionUrl: "https://static.dataflux.cn/dataway/version"
 
 # 报警机器人
@@ -42,6 +42,7 @@ alert_callback_url: http://front-backend.forethought-core:5000/api/v1/webhooks/w
 secret:
   frontAuth: {{(other.core.secret or {}).frontAuth}}
   manageAuth: {{(other.core.secret or {}).manageAuth}}
+  shareAuth:  {{(other.core.secret or {}).shareAuth}}
 
 # 默认邀请配置
 invitation_set:
@@ -88,3 +89,6 @@ integration:
       name: "数据源"
     scene:
       name: "场景模板"
+
+share_set:
+  share_url: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.console }}.{{ domain.domain }}/api/v1/auth-token/{share_code}/login?isAuth={is_auth}&?code={code}"

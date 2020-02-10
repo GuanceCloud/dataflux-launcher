@@ -493,3 +493,25 @@ CREATE TABLE `biz_template` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `template_owner_fk` (`owner`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `biz_share_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 scene-',
+  `shareCode` varchar(48) NOT NULL COMMENT '分享码',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `expirationAt` int(11) NOT NULL DEFAULT '0' COMMENT '发布的过期时间',
+  `extractionCode` varchar(48) NOT NULL DEFAULT '' COMMENT '访问资源所需的提取码',
+  `resourceType` varchar(32) NOT NULL DEFAULT '' COMMENT '资源类型',
+  `resourceUUID` varchar(128) NOT NULL DEFAULT '' COMMENT '资源唯一标示UUID',
+  `meta` json NOT NULL COMMENT '资源的元数据信息',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_share_code` (`shareCode`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
