@@ -118,6 +118,7 @@ venv.bak/
 # config
 # config/config.yaml
 config/settings.yaml
+persistent-data/settings.yaml
 
 *.pid
 

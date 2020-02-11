@@ -422,6 +422,7 @@ CREATE TABLE `main_subscription` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 sbsp-',
   `dbUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'DB uuid',
+  `rpName` varchar(48) NOT NULL,
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '订阅名称',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'kapa的UUID',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',

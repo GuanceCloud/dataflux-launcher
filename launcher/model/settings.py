@@ -23,8 +23,12 @@ class Settings(object):
     settingsYaml = yaml.dump(self._settingJson, default_flow_style=False)
 
     base_path = os.path.dirname(os.path.abspath(__file__))
-    path = base_path + "/../../config/settings.yaml"
+    dirPath = base_path + "/../../persistent-data"
 
+    if not os.path.exists(dirPath):
+      os.mkdir(dirPath)
+
+    path = dirPath + "/settings.yaml"
     with open(path, 'w') as f:
       f.write(settingsYaml)
       f.close()
@@ -45,7 +49,7 @@ class Settings(object):
   def load(self):
     settingJson = None
     base_path = os.path.dirname(os.path.abspath(__file__))
-    path = base_path + "/../../config/settings.yaml"
+    path = base_path + "/../../persistent-data/settings.yaml"
 
     if not os.path.exists(path):
       return {}
