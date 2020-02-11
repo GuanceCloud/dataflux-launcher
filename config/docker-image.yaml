@@ -14,3 +14,4 @@ apps:
     func: v1.1.0015.20200210:func_rc_20200210_01
     func-worker: v1.1.0015.20200210:func-worker_rc_20200210_01
     trigger: v1.1.0015.20200210:trigger_rc_20191229_02
+  version: v1.1.0015.20200210

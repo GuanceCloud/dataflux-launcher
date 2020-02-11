@@ -99,6 +99,8 @@ function start(){
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
 
+  echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
+
   cd $workDir
   git add ${imageYaml}
   git commit -m 'auto commit: RTM release'
@@ -107,7 +109,6 @@ function start(){
   sh release.sh -r
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
-  echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
 } 
 
 while getopts ":fm" opt; do
