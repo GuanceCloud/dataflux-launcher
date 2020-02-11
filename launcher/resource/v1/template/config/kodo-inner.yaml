@@ -9,22 +9,22 @@ redis:
 
 log:
     log_file: /logdata/log
-    level: "debug"
-    disable_json: false
+    level: info
+    json_format: false
     disable_long_file_name: false
-    gin_log_file: "/logdata/gin.log"
+    gin_log_file: /logdata/gin.log
 
 global:
     enable_inner_api: true
     stats_on: 256
-    listen: ":9527"
+    listen: :9527
     workers: 8
 
 influxdb:
     read_timeout: 30000
     write_timeout: 500
-    alert_rp: "rp5"
-    default_rp: "rp3"
+    alert_rp: rp5
+    default_rp: rp5
 
 nsq:
-    lookupd: "http://nsqlookupd.middleware:4161"
+    lookupd: http://nsqlookupd.middleware:4161
