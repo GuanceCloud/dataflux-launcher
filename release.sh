@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function auto_tag(){
   lastTag=$(git tag --list | grep -E "^${1}" | sort -V | tail -1)
 
