@@ -8,7 +8,7 @@ from launcher.model import k8s as k8sMdl
 from launcher.model import version as versionMdl
 from launcher.utils.template import jinjia2_render
 
-from launcher import SERVICECONFIG, DOCKERIMAGES
+from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES, CACHEDATA
 
 updateDeploy = {}
 
@@ -109,6 +109,22 @@ def deploy_update():
   return True
 
 
+def __get_current_seqs():
+  mysqlSetting = settingsMdl.mysql
+  baseInfo     = mysqlSetting.get('base') or {}
+  coreInfo     = mysqlSetting.get('core') or {}
+  mysql        = {
+                'host': baseInfo.get('host'),
+                'port': baseInfo.get('port'),
+                'user': coreInfo.get('user'),
+                'password': coreInfo.get('password')
+              }
+  dbName       = coreInfo.get('database')
+  currentSeqs  = versionMdl.get_current_update_seq(mysql, dbName)
+
+  return currentSeqs
+
+
 def list_source_and_update_configmaps():
   mapKeyVal      = {}
   updateProjects = SERVICECONFIG['updates']
@@ -125,7 +141,9 @@ def list_source_and_update_configmaps():
         'services': [tmpServiceDict[item]['name'] for item in configmap['services']]
       }
 
-  upInfo = []
+  upInfo      = []
+  currentSeqs = __get_current_seqs()
+
   for project in updateProjects:
     namespace = project['namespace']
     dataKey   = project['dataKey']
@@ -135,7 +153,9 @@ def list_source_and_update_configmaps():
       'project': project['project'],
       'configmaps': []
     }
-    updateVersions  = versionMdl.list_project_versions(project['api'], 1, project['dataKey'])
+
+    seq             = currentSeqs.get(project, {}).get('config', 0)
+    updateVersions  = versionMdl.list_project_versions(project['api'], seq, project['dataKey'])
 
     for item in project['config']:
       mapName = item['mapName']
@@ -170,6 +190,45 @@ def list_source_and_update_configmaps():
   return upInfo
 
 
+def list_update_database_sql():
+  currentSeqs  = __get_current_seqs()
+
+  allDbUpdates = []
+  for ups in SERVICECONFIG['updates']:
+    api        = ups['api']
+    project    = ups['project']
+    dataKey    = ups['dataKey']
+    namespace  = ups['namespace']
+    noDatabase = ups['noDatabase']
+
+    if noDatabase:
+      continue
+
+    currentSeq      = currentSeqs.get(project, {}).get('config', 0)
+    updateVersions  = versionMdl.list_project_versions(api, currentSeq, dataKey)
+
+    upItem  = {
+                'namespace': namespace,
+                'project': project,
+                'sqls': []
+              }
+
+    for upv in updateVersions:
+      sql = upv.get('database')
+
+      if sql:
+        upItem['sqls'].append({
+            'seq': upv.get('seq'),
+            'content': sql
+          })
+
+    allDbUpdates.append(upItem)
+
+  CACHEDATA['dbUpdates'] = allDbUpdates
+
+  return allDbUpdates
+
+
 # configmap 相关的服务
 def list_config_ref_services():
   result = {}
@@ -195,6 +254,7 @@ def redeployment(configServices, configKey, namespace):
 
   return True
 
+
 def configmap_update(params):
   updateProjects = SERVICECONFIG['updates']
   configServices = list_config_ref_services()
@@ -219,5 +279,36 @@ def configmap_update(params):
   return True
 
 
+def database_update(project):
+  dbUpdates   = CACHEDATA.get('dbUpdates')
 
+  mysqlSetting = settingsMdl.mysql
+  baseInfo     = mysqlSetting.get('base') or {}
+
+  vSqls = []
+  for item in dbUpdates:
+    itemProject = item.get('project')
+    sqls    = item.get('sqls', [])
+
+    if project != itemProject or len(sqls) == 0:
+      continue
+
+    appMySQLInfo = mysqlSetting.get(itemProject) or {}
+
+    mysql        = {
+                  'host': baseInfo.get('host'),
+                  'port': baseInfo.get('port'),
+                  'user': appMySQLInfo.get('user'),
+                  'password': appMySQLInfo.get('password')
+                }
+    dbName       = appMySQLInfo.get('database')
+
+    versionMdl.excute_update_sql(mysql, dbName, sqls)
+
+    lastSql = sqls[len(sqls) - 1]
+    versionMdl.insert_version(itemProject, 'database', lastSql['seq'])
+
+  CACHEDATA['dbUpdates'] = []
+  
+  return True
 

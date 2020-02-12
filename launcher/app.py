@@ -163,14 +163,28 @@ def register_update_router(app):
       if not allUpdated:
         break
 
-    return render("up/service.html", {"title": "应用升级", "pageData": { "deployStatus": deployStatus, "allUpdated": allUpdated}, "steps": STEPS_COMMON + STEPS_UPDATE })
+    return render("up/service.html", {"title": "升级应用", "pageData": { "deployStatus": deployStatus, "allUpdated": allUpdated}, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
   @app.route("/up/configmap")
   def up_configmap():
     configmaps = update.list_source_and_update_configmaps()
 
-    return render("up/configmap.html", {"title": "配置升级", "pageData": configmaps, "steps": STEPS_COMMON + STEPS_UPDATE })
+    return render("up/configmap.html", {"title": "升级应用配置", "pageData": configmaps, "steps": STEPS_COMMON + STEPS_UPDATE })
+
+
+  @app.route("/up/database")
+  def up_database():
+    databaseSQL = update.list_update_database_sql()
+
+    return render("up/database.html", {"title": "升级数据库", "pageData": databaseSQL, "steps": STEPS_COMMON + STEPS_UPDATE })
+
+
+  @app.route("/up/finished")
+  def up_finished():
+    databaseSQL = update.list_update_database_sql()
+
+    return render("up/finished.html", {"title": "升级完成", "pageData": None, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
 def register_blueprint(app):

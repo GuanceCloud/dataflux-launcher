@@ -243,6 +243,7 @@ updates:
   - api: # http://inner.forethought-core:5000/api/v1/update-versions
     namespace: forethought-core
     project: core
+    noDatabase: False
     dataKey: content
     config:
       - key: core
@@ -252,6 +253,7 @@ updates:
   - api: # http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
     namespace: forethought-kodo
     project: kodo
+    noDatabase: True
     dataKey: data
     config:
       - key: kodo
@@ -269,6 +271,7 @@ updates:
   - api: # http://inner.func:8088/api/v1/update-versions
     namespace: func
     project: func
+    noDatabase: False
     dataKey: data
     config:
       - key: func
@@ -285,7 +288,8 @@ updates:
 
   - api: # http://message-desk.middleware:8088/api/v1/update-versions
     namespace: middleware
-    project: message-desk
+    project: messageDesk
+    noDatabase: False
     dataKey: data
     config:
       - key: messageDeskApi

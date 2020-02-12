@@ -82,6 +82,13 @@ footer{
   background-color: #fff;
 }
 
+.page-main .db-update-item{
+  margin: 10px;
+  padding: 10px;
+
+  background-color: #fff;
+}
+
 .page-main .app-image:hover{
   background-color: #fff;
 }

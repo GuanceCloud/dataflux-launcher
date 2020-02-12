@@ -5,6 +5,9 @@ import pymysql
 class dbHelper(object):
   def __init__(self, connect_info):
     try:
+      if connect_info:
+        connect_info['cursorclass'] = pymysql.cursors.DictCursor
+        
       self._connection = pymysql.connect(**connect_info)
     except:
       self._connection = None
@@ -28,6 +31,11 @@ class dbHelper(object):
   @property
   def connection(self):
     return self._connection
+
+
+  def commit(self):
+    if self._connection:
+      self._connection.commit()
 
 
   def execute(self, ddl, dbName = None, params = None):

@@ -120,3 +120,11 @@ def up_configmap_update():
 
   return  response_jsonify(update.configmap_update(data))
 
+
+@setup_bp.route("/up/database/update", methods=["POST"])
+def up_database_update():
+  data    = request.json
+  project = data.get('project')
+
+  return  response_jsonify(update.database_update(project))
+

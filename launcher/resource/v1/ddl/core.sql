@@ -516,3 +516,14 @@ CREATE TABLE `biz_share_config` (
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_share_code` (`shareCode`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `sys_version` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project` varchar(64) NOT NULL DEFAULT '' COMMENT '项目：core、kodo、func、message-desk',
+  `version` varchar(64) NOT NULL DEFAULT '' COMMENT '大版本号',
+  `seqType` varchar(64) NOT NULL DEFAULT '' COMMENT 'config 、 database',
+  `upgradeSeq` int(11) NOT NULL DEFAULT '0' COMMENT '配置或数据库当前的 seq 号',
+  `createAt` int(11) DEFAULT '-1',
+  `updateAt` int(11) DEFAULT '-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

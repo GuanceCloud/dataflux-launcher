@@ -75,6 +75,10 @@ STEPS_UPDATE = [
   {
       "key": "/up/database",
       "name": "升级数据库"
+  },
+  {
+      "key": "/up/finished",
+      "name": "升级完成"
   }
 ]
 
@@ -82,6 +86,8 @@ STEPS_UPDATE = [
 # SETTINGS = {}
 SERVICECONFIG = {}
 DOCKERIMAGES = {}
+
+CACHEDATA = {}
 
 settingsMdl = None
 

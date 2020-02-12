@@ -476,5 +476,30 @@ var setup = (function () {
     });
   };
 
+
+  app.prototype.database_update = function(){
+    var that = this;
+    var count = 0;
+
+    $('#btnDatabaseUpdate').attr("disabled", true);
+    jqProject = $('.upgrade-sql-list')
+
+    jqProject.each(function(idx, item){
+      var me = $(item);
+      var project = me.data('project');
+    
+      that.post("up/database/update", {'project': project}).then(function(d){
+        count = count + 1;
+
+        if (count == jqProject.length){
+          that.go("/up/finished");
+        }
+      }).done(function(){
+        $('#btnDatabaseUpdate').attr("disabled", false);
+      });
+
+    });
+  };
+
   return new app();
 })();
