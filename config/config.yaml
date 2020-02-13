@@ -240,7 +240,7 @@ influxDB:
     duration: 8760  # 365d
 
 updates:
-  - api: # http://inner.forethought-core:5000/api/v1/update-versions
+  - api: # http://inner.forethought-core:5000/api/v1/inner/upgrade/list
     namespace: forethought-core
     project: core
     noDatabase: False
@@ -249,6 +249,16 @@ updates:
       - key: core
         mapName: core
         mapKey: config.yaml
+
+  - api: # http://inner.forethought-core:5000/api/v1/inner/upgrade/list
+    namespace: forethought-inner-app
+    project: trigger
+    noDatabase: True
+    dataKey: content
+    config:
+      - key: trigger
+        mapName: ft-trigger
+        mapKey: app.ini
 
   - api: # http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
     namespace: forethought-kodo
