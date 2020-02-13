@@ -6,9 +6,10 @@ class dbHelper(object):
   def __init__(self, connect_info):
     try:
       if connect_info:
-        connect_info['cursorclass'] = pymysql.cursors.DictCursor
+        _conn = connect_info.copy()
+        _conn['cursorclass'] = pymysql.cursors.DictCursor
         
-      self._connection = pymysql.connect(**connect_info)
+      self._connection = pymysql.connect(**_conn)
     except:
       self._connection = None
       pass

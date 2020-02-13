@@ -519,7 +519,7 @@ CREATE TABLE `biz_share_config` (
 
 CREATE TABLE `sys_version` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `project` varchar(64) NOT NULL DEFAULT '' COMMENT '项目：core、kodo、func、message-desk',
+  `project` varchar(64) NOT NULL DEFAULT '' COMMENT '项目：core、kodo、func、messageDesk',
   `version` varchar(64) NOT NULL DEFAULT '' COMMENT '大版本号',
   `seqType` varchar(64) NOT NULL DEFAULT '' COMMENT 'config 、 database',
   `upgradeSeq` int(11) NOT NULL DEFAULT '0' COMMENT '配置或数据库当前的 seq 号',

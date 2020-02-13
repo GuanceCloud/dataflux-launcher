@@ -1,5 +1,3 @@
-
-
 # encoding=utf-8
 
 import os
@@ -27,7 +25,7 @@ def database_ping(params):
 
     dbNames = []
     for line in result[0]:
-      dbName = line[0]
+      dbName = line['Database']
       if dbName in SERVICECONFIG['databases'].values():
         dbNames.append(dbName)
 
