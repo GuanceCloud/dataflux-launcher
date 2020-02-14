@@ -154,7 +154,7 @@ def list_source_and_update_configmaps():
       'configmaps': []
     }
 
-    seq             = currentSeqs.get(project, {}).get('config', 0)
+    seq             = currentSeqs.get(project['project'], {}).get('config', 0)
     updateVersions  = versionMdl.list_project_versions(project['api'], seq, project['dataKey'])
 
     for item in project['config']:
@@ -246,11 +246,11 @@ def list_config_ref_services():
   return result
 
 
-def redeployment(configServices, configKey, namespace):
+def redeploy(configServices, configKey, namespace):
   services = configServices.get(namespace, {}).get(configKey) or []
 
   for deployName in services:
-    k8sMdl.redeployment(deployName, namespace)
+    k8sMdl.redeploy(deployName, namespace)
 
   return True
 
@@ -274,7 +274,7 @@ def configmap_update(params):
 
       k8sMdl.patch_configmap(mapName, mapKey, content, namespace)
 
-      redeployment(configServices, key, namespace)
+      # redeploy(configServices, key, namespace)
 
   return True
 

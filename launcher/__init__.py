@@ -77,8 +77,8 @@ STEPS_UPDATE = [
       "name": "升级数据库"
   },
   {
-      "key": "/up/finished",
-      "name": "升级完成"
+      "key": "/up/redeploy",
+      "name": "重启应用"
   }
 ]
 

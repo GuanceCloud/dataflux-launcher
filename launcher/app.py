@@ -180,11 +180,11 @@ def register_update_router(app):
     return render("up/database.html", {"title": "升级数据库", "pageData": databaseSQL, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
-  @app.route("/up/finished")
-  def up_finished():
-    databaseSQL = update.list_update_database_sql()
+  @app.route("/up/service/status")
+  def up_service_status():
+    serviceStatus = setup.service_status()
 
-    return render("up/finished.html", {"title": "升级完成", "pageData": None, "steps": STEPS_COMMON + STEPS_UPDATE })
+    return render("up/finished.html", {"title": "重启应用", "pageData": serviceStatus, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
 def register_blueprint(app):

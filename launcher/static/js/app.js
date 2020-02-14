@@ -492,7 +492,11 @@ var setup = (function () {
         count = count + 1;
 
         if (count == jqProject.length){
-          that.go("/up/finished");
+          // that.go("/up/finished");
+
+          that.get('service/redeploy/all').then(function(d){
+            that.go("/up/service/status");
+          });
         }
       }).done(function(){
         $('#btnDatabaseUpdate').attr("disabled", false);

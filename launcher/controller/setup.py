@@ -4,7 +4,7 @@ import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time
 
-from launcher.model import k8s
+from launcher.model import k8s as k8sMdl
 from launcher.utils.template import jinjia2_render
 
 from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
@@ -90,7 +90,7 @@ def certificate_create():
   with open(os.path.abspath(certKeyFile), 'w') as f:
     f.write(certificate['privateKey'])
 
-  k8s.apply_namespace()
+  k8sMdl.apply_namespace()
 
   namespaces = SERVICECONFIG['namespaces']
   for ns in namespaces:
@@ -112,7 +112,7 @@ def configmap_create(maps):
     with open(os.path.abspath(tmpPath), 'w') as f:
       f.write(configmap)
 
-    k8s.apply_namespace()
+    k8sMdl.apply_namespace()
 
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -247,8 +247,18 @@ def service_create(data):
   return True
 
 
+def redeploy_all():
+  for ns in SERVICECONFIG['services']:
+    namespace = ns['namespace']
+
+    for deploy in ns['services']:
+      k8sMdl.redeploy(deploy['key'], namespace)
+
+  return True
+
+
 def service_status():
-  return k8s.deploy_status()
+  return k8sMdl.deploy_status()
 
 
 def init_setting():

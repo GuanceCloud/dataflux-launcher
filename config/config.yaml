@@ -256,8 +256,8 @@ updates:
     noDatabase: True
     dataKey: content
     config:
-      - key: trigger
-        mapName: ft-trigger
+      - key: innerAppTrigger
+        mapName: trigger-conf
         mapKey: app.ini
 
   - api: # http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
