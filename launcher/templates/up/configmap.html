@@ -12,11 +12,11 @@
       <div class="panel panel-default config-review">
         {% for conf in ns.configmaps %}
         <div class="panel-heading" role="tab">
-          <label class="pull-right" onclick="setup.config_item_checked_all()">
-            <input type="checkbox" />
-            已检查
-          </label>
           <h4 class="panel-title">
+            {% if conf.updates | length > 0 %}
+            <span class="text-danger pull-right">配置有更新!!!</span>
+            {% endif %}
+
             <i class="icon-right"></i>
             <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
               {{ conf.key }}（
@@ -32,7 +32,7 @@
 
               {% if conf.updates | length == 0 %}
               <div class="high-block-sm">
-                <h5># 无配置更新</h5>
+                <h5># 无配置更新，但也可以在右侧修改配置</h5>
               </div>
               {% endif %}
 
@@ -63,8 +63,8 @@
         <button id="btnConfigmapUpdate"  class="btn btn-primary" onclick="setup.configmap_update()">
             确认升级
           </button>
-          <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
-            下一步
+          <a id="btnNext" class="btn btn-default" href="/up/database">
+            不更新，直接下一步
           </a>
       </div>
     </div>

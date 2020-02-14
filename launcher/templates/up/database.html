@@ -18,7 +18,7 @@
         {% for item in ups.sqls %}
         <div class="db-update-item">
           <h5></h5>
-          <code>-- 版本：{{ item.seq }}<br />{{ item.content }}</code>
+          <pre>-- 版本：{{ item.seq }}<br />{{ item.content }}</pre>
         </div>
         {% endfor %}
     </div>

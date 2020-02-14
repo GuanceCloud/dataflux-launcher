@@ -155,7 +155,6 @@ def register_update_router(app):
     allUpdated = True
     for ns in deployStatus:
       for deploy in ns['services']:
-        print(deploy)
         if deploy['newImagePath'] != deploy['fullImagePath'] or deploy['replicas'] != deploy['availableReplicas']:
           allUpdated = False
 

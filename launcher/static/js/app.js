@@ -472,7 +472,7 @@ var setup = (function () {
     this.post("up/configmap/update", maps).then(function(d){
       that.go("/up/database");
     }).done(function(){
-      that.config_item_checked_all();
+
     });
   };
 
