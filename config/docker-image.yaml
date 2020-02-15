@@ -5,13 +5,5 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    core: v1.1.0016.20200215:core_rc_20200210_01
-    kodo: v1.1.0016.20200215:kodo_rc_20200210_03
-    front-webclient: v1.1.0016.20200215:front-webclient_rc_20200210_02
-    management-webclient: v1.1.0016.20200215:management-webclient_rc_20200106_02
-    message-desk: v1.1.0016.20200215:message-desk_rc_20191229_02
-    message-desk-worker: v1.1.0016.20200215:message-desk-worker_rc_20191229_02
-    func: v1.1.0016.20200215:func_rc_20200210_01
-    func-worker: v1.1.0016.20200215:func-worker_rc_20200210_01
-    trigger: v1.1.0016.20200215:trigger_rc_20191229_02
-  version: v1.1.0016.20200215
+    kodo: v1.1.0017.20200215:kodo_rc_20200210_03
+  version: v1.1.0017.20200215
