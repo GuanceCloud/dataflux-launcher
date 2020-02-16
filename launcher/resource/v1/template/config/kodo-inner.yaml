@@ -17,7 +17,7 @@ log:
 global:
     enable_inner_api: true
     stats_on: 256
-    listen: :9527
+    listen: ":9527"
     workers: 8
 
 influxdb:
