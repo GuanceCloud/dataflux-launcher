@@ -240,7 +240,7 @@ influxDB:
     duration: 8760  # 365d
 
 updates:
-  - api: # http://inner.forethought-core:5000/api/v1/inner/upgrade/list
+  - api: http://inner.forethought-core:5000/api/v1/inner/upgrade/list
     namespace: forethought-core
     project: core
     noDatabase: False
@@ -250,21 +250,21 @@ updates:
         mapName: core
         mapKey: config.yaml
 
-  - api: # http://inner.forethought-core:5000/api/v1/inner/upgrade/list
+  - api: http://trigger.forethought-inner-app:9000/api/v1/upgrade
     namespace: forethought-inner-app
     project: trigger
     noDatabase: True
-    dataKey: content
+    dataKey: data
     config:
       - key: innerAppTrigger
         mapName: trigger-conf
         mapKey: app.ini
 
-  - api: # http://kodo-inner.forethought-kodo:9527/api/v1/update-versions
+  - api: http://kodo-inner.forethought-kodo:9527/api/v1/app/update
     namespace: forethought-kodo
     project: kodo
     noDatabase: True
-    dataKey: data
+    dataKey: content
     config:
       - key: kodo
         mapName: kodo
@@ -278,7 +278,7 @@ updates:
         mapName: kodo-nginx
         mapKey: kodo.conf
 
-  - api: # http://inner.func:8088/api/v1/update-versions
+  - api: http://inner.func:8088/api/v1/update-versions
     namespace: func
     project: func
     noDatabase: False
@@ -296,7 +296,7 @@ updates:
         mapName: func-worker-config
         mapKey: config.yaml
 
-  - api: # http://message-desk.middleware:8088/api/v1/update-versions
+  - api: http://message-desk.middleware:8088/api/v1/upgrade
     namespace: middleware
     project: messageDesk
     noDatabase: False
