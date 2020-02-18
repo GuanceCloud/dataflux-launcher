@@ -11,6 +11,8 @@ worker:
   webhook:
     enableHTTP : false
     enableKafka: false
+    
+  secret: {{ other.func.secret }}
 
 redis:
   host    : {{redis.host}}

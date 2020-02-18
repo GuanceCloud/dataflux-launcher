@@ -24,6 +24,8 @@ webServer:
   baseURL : https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.function }}.{{ domain.domain }}
   bind    : 0.0.0.0
   port    : 8088
+  
+  secret: {{ other.func.secret }}
 
 mysql:
   host    : {{mysql.base.host}}
