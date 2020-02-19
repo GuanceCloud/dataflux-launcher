@@ -251,6 +251,16 @@ influxDB:
   - rpName: rp5
     duration: 8760  # 365d
 
+defaultSubdomain:
+  console: dataflux
+  consoleApi: df-api
+  management: df-management
+  managementApi: df-management-api
+  websocket: df-websocket
+  function: df-func
+  kodo: df-kodo
+  integration: df-integration
+
 updates:
   - api: http://inner.forethought-core:5000/api/v1/inner/upgrade/list
     namespace: forethought-core

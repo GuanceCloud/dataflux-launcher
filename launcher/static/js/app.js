@@ -230,6 +230,8 @@ var setup = (function () {
       "certificateContent": $('#certificateContent').val()
     }
 
+    data.nodeInternalIP = $('#iptNodeIps').val();
+
     $("#validateForm").validate();
     isValid = $('#validateForm').valid();
 

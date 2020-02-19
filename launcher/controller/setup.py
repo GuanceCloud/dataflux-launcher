@@ -36,10 +36,15 @@ def other_config(params):
 
   settingsMdl.other = {
     'manager': params.get('manager'),
-    'tls': params.get('tls')
+    'tls': params.get('tls'),
+    'nodeInternalIP': params.get('nodeInternalIP')
   }
 
   return True
+
+
+def get_node_internal_ip():
+  return k8sMdl.get_node_internal_ip()
 
 
 def config_template():

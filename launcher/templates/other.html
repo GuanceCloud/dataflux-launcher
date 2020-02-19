@@ -23,6 +23,24 @@
           <div class="col-sm-5 error"></div>
         </div>
       </div>
+
+      <div class="high-block">
+        <h4>集群节点内网 IP</h4>
+        <div class="form-group">
+          <label for="iptUserEmail" class="col-sm-2 control-label">IP 地址:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptNodeIps" name="nodeIps" required value="{{ pageData.other.nodeInternalIP | join('; ') }}" placeholder="IP 地址">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="iptUserName" class="col-sm-2 control-label">&nbsp;</label>
+          <div class="col-sm-5">
+            <p class="form-control-static text-danger"><strong>节点内网 IP，目前会应用于 Kapacitor 的内网调用地址，请确认是否正确，多个 IP 就不用 “;” 分隔！</strong></p>
+          </div>
+        </div>
+      </div>
       
       <div class="high-block">
         <h4>系统域名</h4>
@@ -38,40 +56,40 @@
           <div class="col-sm-5">
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleDomain" name="console" required value="{{ pageData.domain.subDomain.console }}" placeholder="console">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleDomain" name="console" required value="{{ pageData.domain.subDomain.console }}" placeholder="dataflux">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleApiDomain" name="consoleApi" required value="{{ pageData.domain.subDomain.consoleApi }}" placeholder="console API">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptConsoleApiDomain" name="consoleApi" required value="{{ pageData.domain.subDomain.consoleApi }}" placeholder="dataflux API">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementDomain" name="management" required value="{{ pageData.domain.subDomain.management }}" placeholder="management">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementDomain" name="management" required value="{{ pageData.domain.subDomain.management }}" placeholder="dataflux management">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementApiDomain" name="managementApi" required value="{{ pageData.domain.subDomain.managementApi }}" placeholder="management API">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptManagementApiDomain" name="managementApi" required value="{{ pageData.domain.subDomain.managementApi }}" placeholder="dataflux management API">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptWebSocketDomain" name="websocket" required value="{{ pageData.domain.subDomain.websocket }}" placeholder="websocket">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptWebSocketDomain" name="websocket" required value="{{ pageData.domain.subDomain.websocket }}" placeholder="dataflux websocket">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptFuncDomain" name="function" required value="{{ pageData.domain.subDomain.function }}" placeholder="function">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptFuncDomain" name="function" required value="{{ pageData.domain.subDomain.function }}" placeholder="dataflux function">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.domain.subDomain.kodo }}" placeholder="kodo">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.domain.subDomain.kodo }}" placeholder="dataflux kodo">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             <p>
               <span class="form-control-static">{{'deploy-' if __common__.debug}}</span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptIntegrationDomain" name="integration" required value="{{ pageData.domain.subDomain.integration }}" placeholder="integration">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptIntegrationDomain" name="integration" required value="{{ pageData.domain.subDomain.integration }}" placeholder="dataflux integration">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
           </div>

@@ -394,9 +394,7 @@ CREATE TABLE `main_kapa` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1',
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `kapa_is_uuid` (`influxInstanceUUID`),
-  CONSTRAINT `kapa_is_uuid` FOREIGN KEY (`influxInstanceUUID`) REFERENCES `main_influx_instance` (`uuid`)
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

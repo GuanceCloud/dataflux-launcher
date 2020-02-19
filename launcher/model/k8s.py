@@ -95,6 +95,29 @@ def get_pvc():
   return pvcs
 
 
+def get_node_internal_ip():
+  cmd = 'kubectl get nodes -o json'
+
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  result = json.loads(output)
+
+  ips = []
+  nodeItems = result.get('items') or []
+  for node in nodeItems:
+    addresses = node.get('status', {}).get('addresses') or []
+
+    for addr in addresses:
+      if addr.get('type', '') == 'InternalIP':
+        ip = addr.get('address')
+
+        if ip:
+          ips.append(ip)
+
+  return ips
+
+
 def apply_namespace():
   tmpDir = SERVICECONFIG['tmpDir']
   namespaces = SERVICECONFIG['namespaces']
