@@ -91,4 +91,4 @@ integration:
       name: "场景模板"
 
 share_set:
-  share_url: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.console }}.{{ domain.domain }}/api/v1/auth-token/{share_code}/login?isAuth={is_auth}&?code={code}"
+  share_url: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.consoleApi }}.{{ domain.domain }}/api/v1/auth-token/{share_code}/login?isAuth={is_auth}&?code={code}"
