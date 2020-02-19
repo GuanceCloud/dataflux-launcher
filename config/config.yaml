@@ -204,6 +204,10 @@ services:
       name: Kapacitor
       image: kapacitor
 
+    - key: kapacitor02
+      name: Kapacitor 02
+      image: kapacitor
+
     configmaps:
     - key: messageDeskApi
       services:

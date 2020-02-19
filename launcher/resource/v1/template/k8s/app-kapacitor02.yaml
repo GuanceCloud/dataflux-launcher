@@ -2,40 +2,40 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-middleware-kapacitor
-  name: kapacitor
+    app: deployment-middleware-kapacitor02
+  name: kapacitor02
   namespace: middleware
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deployment-middleware-kapacitor
+      app: deployment-middleware-kapacitor02
   template:
     metadata:
       labels:
-        app: deployment-middleware-kapacitor
+        app: deployment-middleware-kapacitor02
     spec:
       containers:
       - env:
         - name: KAPACITOR_HOSTNAME
-          value: kapa-01
+          value: kapa-02
         - name: KAPACITOR_INFLUXDB_0_DISABLE_SUBSCRIPTIONS
           value: "true"
         - name: KAPACITOR_LOGGING_LEVEL
           value: INFO
         image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: kapacitor
+        name: kapacitor02
         ports:
         - containerPort: 9092
-          name: 9092tcp30991
+          name: 9092tcp30992
           protocol: TCP
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /var/lib/kapacitor
-          name: kapacitor-data-01
+          name: kapacitor-data-02
       dnsPolicy: ClusterFirst
       imagePullSecrets:
       - name: registry-key
@@ -44,9 +44,9 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: kapacitor-data-01
+      - name: kapacitor-data-02
         persistentVolumeClaim:
-          claimName: kapacitor-data-01
+          claimName: kapacitor-data-02
 
 
 ---
@@ -54,17 +54,17 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kapacitor
+  name: kapacitor02
   namespace: middleware
 spec:
   externalTrafficPolicy: Cluster
   ports:
-  - name: 9092tcp30991-kapacitor
-    nodePort: 30991
+  - name: 9092tcp30992-kapacitor02
+    nodePort: 30992
     port: 19091
     protocol: TCP
     targetPort: 9092
   selector:
-    app: deployment-middleware-kapacitor
+    app: deployment-middleware-kapacitor02
   sessionAffinity: None
   type: NodePort

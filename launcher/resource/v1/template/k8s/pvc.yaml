@@ -143,3 +143,19 @@ spec:
       storage: 20Gi
   storageClassName: {{ storageClassName }}
   volumeMode: Filesystem
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kapacitor-data-02
+  namespace: middleware
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: {{ storageClassName }}
+  volumeMode: Filesystem
