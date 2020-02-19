@@ -192,6 +192,14 @@ services:
       name: NSQ Node
       image: nsq
 
+    - key: nsqd2
+      name: NSQ Node 02
+      image: nsq
+
+    - key: nsqd3
+      name: NSQ Node 03
+      image: nsq
+
     - key: kapacitor
       name: Kapacitor
       image: kapacitor

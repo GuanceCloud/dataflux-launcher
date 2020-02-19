@@ -2,30 +2,30 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-middleware-nsqd
-  name: nsqd
+    app: deployment-middleware-nsqd3
+  name: nsqd3
   namespace: middleware
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deployment-middleware-nsqd
+      app: deployment-middleware-nsqd3
   template:
     metadata:
       labels:
-        app: deployment-middleware-nsqd
+        app: deployment-middleware-nsqd3
     spec:
       containers:
       - args:
         - /nsqd
-        - --broadcast-address=nsqd.middleware
+        - --broadcast-address=nsqd3.middleware
         - --lookupd-tcp-address=nsqlookupd:4160
         - --data-path=/data/nsqd
         - --msg-timeout
         - 30h
         image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: nsqd
+        name: nsqd3
         ports:
         - containerPort: 4150
           name: 4150tcp02
@@ -40,23 +40,23 @@ spec:
         tty: true
         volumeMounts:
         - mountPath: /data/nsqd
-          name: nsqd-data-1
+          name: nsqd-data-3
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: nsqd-data-1
+      - name: nsqd-data-3
         persistentVolumeClaim:
-          claimName: nsqd-data-1
+          claimName: nsqd-data-3
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: nsqd
+  name: nsqd3
   namespace: middleware
 spec:
   ports:
@@ -69,6 +69,6 @@ spec:
     protocol: TCP
     targetPort: 4151
   selector:
-    app: deployment-middleware-nsqd
+    app: deployment-middleware-nsqd3
   sessionAffinity: None
   type: ClusterIP
