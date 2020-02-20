@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-utils-server
+  name: utils-server
+  namespace: utils
+spec:
+  replicas: {{ config.replicas or 1 }}
+  selector:
+    matchLabels:
+      app: deployment-utils-server
+  template:
+    metadata:
+      labels:
+        app: deployment-utils-server
+    spec:
+      containers:
+      - args:
+        - node
+        - server.js
+        image: {{ config.fullImagePath }} 
+        imagePullPolicy: IfNotPresent
+        name: utils-server
+        ports:
+        - containerPort: 3000
+          name: 3000tcp02
+          protocol: TCP
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: utils-server
+  namespace: utils
+spec:
+  ports:
+  - name: 3000tcp02
+    port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: deployment-utils-server
+  type: ClusterIP

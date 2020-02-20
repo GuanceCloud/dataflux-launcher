@@ -173,7 +173,7 @@ def _init_influxdb(instanceUUID, instance):
           defaultRP
       )
 
-      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 0, UNIX_TIMESTAMP());"
+      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `cqrp`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 'autogen', 0, UNIX_TIMESTAMP());"
       dbClient.execute(sql, dbName = dbInfo['database'], params = params)
 
       dbUUIDs[dbName] = db_uuid

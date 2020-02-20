@@ -44,7 +44,7 @@ def other_config(params):
 
 
 def get_node_internal_ip():
-  return k8sMdl.get_node_internal_ip()
+  return '; '.join(k8sMdl.get_node_internal_ip())
 
 
 def config_template():

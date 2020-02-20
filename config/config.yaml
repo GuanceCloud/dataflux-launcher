@@ -9,6 +9,7 @@ namespaces:
   - forethought-kodo
   - func
   - middleware
+  - utils
 
 services:
   - namespace: forethought-core
@@ -218,6 +219,14 @@ services:
       services:
       - message-desk-worker
       file: message-desk-worker.yaml
+
+  - namespace: utils
+    services:
+    - key: utils-server
+      name: 工具服务
+      image: utils-server
+
+    configmaps: []
 
 databases:
   core: df_core
