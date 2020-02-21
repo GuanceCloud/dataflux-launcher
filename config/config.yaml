@@ -309,7 +309,7 @@ updates:
         mapName: kodo-nginx
         mapKey: kodo.conf
 
-  - api: http://inner.func:8088/api/v1/update-versions
+  - api: http://func-inner.func:8088/api/v1/upgrade-info
     namespace: func
     project: func
     noDatabase: False
