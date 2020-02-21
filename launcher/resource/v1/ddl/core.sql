@@ -695,6 +695,20 @@ CREATE TABLE `main_workspace_accesskey` (
 
 
 
+# Dump of table sys_version
+# ------------------------------------------------------------
+
+CREATE TABLE `sys_version` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `project` varchar(64) NOT NULL DEFAULT '' COMMENT '项目：core、kodo、func、messageDesk',
+  `version` varchar(64) NOT NULL DEFAULT '' COMMENT '大版本号',
+  `seqType` varchar(64) NOT NULL DEFAULT '' COMMENT 'config 、 database',
+  `upgradeSeq` int(11) NOT NULL DEFAULT '0' COMMENT '配置或数据库当前的 seq 号',
+  `createAt` int(11) DEFAULT '-1',
+  `updateAt` int(11) DEFAULT '-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
