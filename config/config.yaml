@@ -223,7 +223,7 @@ services:
   - namespace: utils
     services:
     - key: utils-server
-      name: 工具服务
+      name: 公共工具服务
       image: utils-server
 
     configmaps: []

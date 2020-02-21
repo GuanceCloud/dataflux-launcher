@@ -196,3 +196,14 @@ def patch_configmap(mapName, mapKey, content, namespace):
 
   return output, err
 
+# 创建镜像凭证
+def registry_secret_create(namespace, server, username, password):
+  patch = { "imagePullSecrets": [{"name": "registry-key"}] }
+
+  cmd = 'kubectl create secret docker-registry registry-key --docker-server={} --docker-username={} --docker-password={} -n {}'.format(server, username, password, namespace)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  cmd = "kubectl patch sa default -p '{}' -n {}".format(json.dumps(patch), namespace)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True

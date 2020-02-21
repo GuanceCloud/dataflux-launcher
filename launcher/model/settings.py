@@ -121,3 +121,12 @@ class Settings(object):
     self.__dict_merge('other', value)
     self.__save()
 
+  @property
+  def registry(self):
+    return self._settingJson.get('registry') or {}
+
+  @registry.setter
+  def registry(self, value):
+    self.__dict_merge('registry', value)
+    self.__save()
+

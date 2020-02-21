@@ -184,14 +184,9 @@ def _get_storageclass():
   return storageNames
 
 
-def _registry_secret_create(registry, user, pwd):
-  patch = { "imagePullSecrets": [{"name": "registry-key"}] }
+def _registry_secret_create(registrySetting):
   for ns in SERVICECONFIG['namespaces']:
-    cmd = 'kubectl create secret docker-registry registry-key --docker-server={} --docker-username={} --docker-password={} -n {}'.format(registry, user, pwd, ns)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-    cmd = "kubectl patch sa default -p '{}' -n {}".format(json.dumps(patch), ns)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    k8sMdl.registry_secret_create(ns, **registrySetting)
 
   return True
 
@@ -227,7 +222,13 @@ def service_create(data):
     "images": {}
   }
 
-  _registry_secret_create(imageRegistry, imageRegistryUser, imageRegistryPwd)
+  settingsMdl.registry = {
+    "server": imageRegistry,
+    "username": imageRegistryUser,
+    "password": imageRegistryPwd
+  }
+
+  _registry_secret_create(settingsMdl.registry)
   _PVC_create(storageClassName)
 
   for key, val in images.items():

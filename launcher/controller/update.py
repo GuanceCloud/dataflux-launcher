@@ -12,6 +12,7 @@ from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES, CACHEDATA
 
 updateDeploy = {}
 
+
 def pvc_check():
   oldPvcs = k8sMdl.get_pvc()
 
@@ -34,6 +35,7 @@ def pvc_check():
 
   return newPvcs
 
+
 def deploy_check():
   deployStatus = k8sMdl.deploy_status()
   k8sNamespaces = k8sMdl.get_namespace()
@@ -53,12 +55,19 @@ def deploy_check():
 
       deploy['newImagePath'] = re.sub('/+', '/', newImagePath)
 
-      updateKey = version + deploy['key']
+      # updateKey = version + deploy['key']
 
-      if updateKey not in updateDeploy:
-        updateDeploy[updateKey] = (deploy['newImagePath'] != deploy['fullImagePath'])
+      # if updateKey not in updateDeploy:
+      if 'fullImagePath' not in deploy:
+        deploy['isNew']    = True
+        deploy['isUpdate'] = False
+      else:
+        deploy['isNew']    = False
+        deploy['isUpdate'] = deploy['newImagePath'] != deploy.get('fullImagePath', '')
 
-      deploy['isUpdate'] = updateDeploy[updateKey]
+        # updateDeploy[updateKey] = (deploy['newImagePath'] != deploy.get('fullImagePath', ''))
+
+      # deploy['isUpdate'] = updateDeploy[updateKey]
 
     ns['newPvcs'] = [item for item in newPvcs if item['metadata']['namespace'] == namespaceName]
 
@@ -66,14 +75,14 @@ def deploy_check():
 
 
 def deploy_update():
-  tmpDir = SERVICECONFIG['tmpDir']
-  appYamls = []
-  newPvcs = []  
+  tmpDir    = SERVICECONFIG['tmpDir']
+  appYamls  = []
+  newPvcs   = []  
   deployStatus = deploy_check()
 
   for ns in deployStatus:
     for deploy in ns['services']:
-      if deploy['fullImagePath'] != deploy['newImagePath']:
+      if 'fullImagePath' not in deploy or deploy['fullImagePath'] != deploy['newImagePath']:
         key = deploy['key']
         params = {
                     "replicas": deploy['replicas'],
@@ -91,7 +100,13 @@ def deploy_update():
   # 1、创建新的 namespace
   k8sMdl.apply_namespace()
 
-  # 2、创建新的 PVC
+  # 2、新的命名空间，要创建 registry key
+  for ns in deployStatus:    
+    isNew = ns['isNew']
+    if isNew:
+      k8sMdl.registry_secret_create(ns['namespace'], **settingsMdl.registry)
+
+  # 3、创建新的 PVC
   pvcYamlPath = os.path.abspath(tmpDir + "/pvc.yaml")
   newPvcYamls = [ yaml.dump(item, default_flow_style = False) for item in newPvcs]
   newPvcYamlContent = '\n\n---\n\n'.join(newPvcYamls)
@@ -102,7 +117,7 @@ def deploy_update():
   cmd = "kubectl apply  -f {}".format(pvcYamlPath)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
-  # 3、更新该更新的 deploy 及 service
+  # 4、更新该更新的 deploy 及 service
   cmd = "kubectl apply -f {}".format(' -f '.join(appYamls))
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 

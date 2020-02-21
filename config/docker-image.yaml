@@ -5,13 +5,13 @@ apps:
     nsq: basis/nsq:v1.2.0
     nginx: basis/nginx:devops
     kapacitor: basis/kapacitor:1.5.3
-    core: cloudcare-forethought/cloudcare-forethought-backend:release_20200210_02
-    kodo: kodo/kodo:release_20200210_03
-    front-webclient: cloudcare-front/cloudcare-forethought-webclient:release_20200215_02
+    core: cloudcare-forethought/cloudcare-forethought-backend:release_20200220_01
+    kodo: kodo/kodo:release_20200220_01
+    front-webclient: cloudcare-front/cloudcare-forethought-webclient:release_20200220_01
     management-webclient: cloudcare-front/cloudcare-forethought-webmanage:release_20200216_02
     message-desk: middlewares/message-desk:release_20191229_02
     message-desk-worker: middlewares/message-desk-worker:release_20191229_02
     func: middlewares/ft-data-processor:release_20200220_01
     func-worker: middlewares/ft-data-processor-worker:release_20200220_01
-    trigger: cloudcare-forethought/cloudcare-forethought-trigger:release_20191229_02
-    utils-server: cloudcare-forethought/screenhot-server:release_20200220_03
+    trigger: cloudcare-forethought/cloudcare-forethought-trigger:release_20200220_01
+    utils-server: cloudcare-forethought/utils-server:release_20200220_05
