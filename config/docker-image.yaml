@@ -5,14 +5,14 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    core: v1.2.0022.20200221:core_rc_20200220_01
-    kodo: v1.2.0022.20200221:kodo_rc_20200220_01
-    front-webclient: v1.2.0022.20200221:front-webclient_rc_20200220_01
-    management-webclient: v1.2.0022.20200221:management-webclient_rc_20200216_02
-    message-desk: v1.2.0022.20200221:message-desk_rc_20200221_02
-    message-desk-worker: v1.2.0022.20200221:message-desk-worker_rc_20191229_02
-    func: v1.2.0022.20200221:func_rc_20200220_01
-    func-worker: v1.2.0022.20200221:func-worker_rc_20200220_01
-    trigger: v1.2.0022.20200221:trigger_rc_20200220_01
-    utils-server: v1.2.0022.20200221:utils-server_rc_20200220_05
-  version: v1.2.0022.20200221
+    core: v1.2.0023.20200221:core_rc_20200220_01
+    kodo: v1.2.0023.20200221:kodo_rc_20200220_01
+    front-webclient: v1.2.0023.20200221:front-webclient_rc_20200220_01
+    management-webclient: v1.2.0023.20200221:management-webclient_rc_20200216_02
+    message-desk: v1.2.0023.20200221:message-desk_rc_20200221_02
+    message-desk-worker: v1.2.0023.20200221:message-desk-worker_rc_20191229_02
+    func: v1.2.0023.20200221:func_rc_20200220_01
+    func-worker: v1.2.0023.20200221:func-worker_rc_20200220_01
+    trigger: v1.2.0023.20200221:trigger_rc_20200220_01
+    utils-server: v1.2.0023.20200221:utils-server_rc_20200220_06
+  version: v1.2.0023.20200221
