@@ -9,6 +9,7 @@ buildProd:
   stage: build
   only:
     - /^release[\/-_]?.*$/
+    - /^pre[\/-_]?.*$/
   script:
     - docker build -t $REPOSITORY:$CI_COMMIT_REF_NAME .
     - docker tag $REPOSITORY:$CI_COMMIT_REF_NAME registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME
