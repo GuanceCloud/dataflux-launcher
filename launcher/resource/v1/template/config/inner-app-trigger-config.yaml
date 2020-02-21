@@ -1,0 +1,20 @@
+# debug or release
+app:
+  mode: release
+
+server:
+  port: 9000
+  readTimeout: 60
+  writeTimeout: 60
+
+funcServer:
+  server: "http://func-inner.func:8088"
+
+messageDesk:
+  akId: ""
+  akSecret: ""
+  server: "http://message-desk.cloudcare.cn"
+
+sms:
+  templateCode: 
+  signName:

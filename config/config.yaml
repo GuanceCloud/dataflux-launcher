@@ -58,7 +58,7 @@ services:
     - key: innerAppTrigger
       services:
       - trigger
-      file: inner-app-trigger-config.ini
+      file: inner-app-trigger-config.yaml
 
   - namespace: forethought-webclient
     services:
