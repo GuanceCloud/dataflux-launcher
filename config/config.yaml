@@ -289,7 +289,7 @@ updates:
     config:
       - key: innerAppTrigger
         mapName: trigger-conf
-        mapKey: app.ini
+        mapKey: config.yaml
 
   - api: http://kodo-inner.forethought-kodo:9527/api/v1/app/update
     namespace: forethought-kodo
