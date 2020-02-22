@@ -118,6 +118,20 @@ def get_node_internal_ip():
   return ips
 
 
+def get_storageclass():
+  cmd = "kubectl get storageclass -o json"
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  storage = json.loads(output)
+
+  storageNames = []
+  for item in storage['items']:
+    storageNames.append(item['metadata']['name'])
+
+  return storageNames
+
+
 def apply_namespace():
   tmpDir = SERVICECONFIG['tmpDir']
   namespaces = SERVICECONFIG['namespaces']

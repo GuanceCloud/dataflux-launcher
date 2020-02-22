@@ -50,6 +50,11 @@ services:
       - websocket
       file: forethought-backend.yaml
 
+    pvcs:
+    - name: ft-sysconfig
+      storage: 10Gi
+
+
   - namespace: forethought-inner-app
     services:
     - key: trigger
@@ -139,6 +144,12 @@ services:
       - kodo-nginx
       file: kodo-nginx.conf
 
+    pvcs:
+    - name: kodo-logs
+      storage: 20Gi
+
+    - name: kodo-inner-logs
+      storage: 20Gi
 
   - namespace: func
     services:
@@ -247,6 +258,28 @@ services:
       services:
       - message-desk-worker
       file: message-desk-worker.yaml
+
+    pvcs:
+    - name: message-desk-logs
+      storage: 20Gi
+
+    - name: message-desk-worker-logs
+      storage: 20Gi
+
+    - name: nsqd-data-1
+      storage: 40Gi
+
+    - name: nsqd-data-2
+      storage: 40Gi
+
+    - name: nsqd-data-3
+      storage: 40Gi
+
+    - name: kapacitor-data-01
+      storage: 40Gi
+
+    - name: kapacitor-data-02
+      storage: 40Gi
 
   - namespace: utils
     services:

@@ -176,7 +176,7 @@ def service_image_config():
       item['replicas'] = item.get('replicas', 1)
 
   d['images'] = services
-  d['storageNames'] = _get_storageclass()
+  d['storageNames'] = k8sMdl.get_storageclass()
 
   return d
 
@@ -196,20 +196,6 @@ def ingress_create():
   return True
 
 
-def _get_storageclass():
-  cmd = "kubectl get storageclass -o json"
-  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-  output, err = p.communicate()
-  storage = json.loads(output)
-
-  storageNames = []
-  for item in storage['items']:
-    storageNames.append(item['metadata']['name'])
-
-  return storageNames
-
-
 def _registry_secret_create(registrySetting):
   for ns in SERVICECONFIG['namespaces']:
     k8sMdl.registry_secret_create(ns, **registrySetting)
@@ -217,9 +203,25 @@ def _registry_secret_create(registrySetting):
   return True
 
 
+def _PVC_list():
+  result = []
+
+  for ns in SERVICECONFIG['services']:
+    namespace = ns['namespace']
+
+    for pvc in ns.get('pvcs', []):
+      result.append(dict(
+          namespace = namespace,
+          name      = pvc['name'],
+          storage   = pvc['storage']
+        ))
+
+  return result
+
+
 def _PVC_create(storageClassName):
   tmpDir = SERVICECONFIG['tmpDir']
-  pvcYaml = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": storageClassName})
+  pvcYaml = jinjia2_render("template/k8s/pvc.yaml", {"pvcs": _PVC_list(),  "storageClassName": storageClassName})
   path = os.path.abspath(tmpDir + "/pvc.yaml")
 
   with open(os.path.abspath(path), 'w') as f:
