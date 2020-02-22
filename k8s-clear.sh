@@ -14,6 +14,7 @@ kubectl delete deployments front-webclient management-webclient -n forethought-w
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-utils -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
+kubectl delete deployments utils-server -n utils --force --grace-period=0
 
 # 清理 service
 kubectl delete services front-backend inner integration-scanner management-backend websocket -n forethought-core --force --grace-period=0
@@ -22,6 +23,7 @@ kubectl delete services front-webclient management-webclient -n forethought-webc
 kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-utils -n func --force --grace-period=0
 kubectl delete services trigger -n forethought-inner-app --force --grace-period=0
+kubectl delete services utils-server -n utils --force --grace-period=0
 
 # 清理 ingress
 kubectl delete ingress front-backend management-backend websocket -n forethought-core --force --grace-period=0
@@ -41,6 +43,7 @@ kubectl delete secret registry-key -n forethought-inner-app --force --grace-peri
 kubectl delete secret registry-key -n forethought-webclient --force --grace-period=0
 kubectl delete secret registry-key -n middleware --force --grace-period=0
 kubectl delete secret registry-key -n func --force --grace-period=0
+kubectl delete secret registry-key -n utils --force --grace-period=0
 
 # 清理 namespace
 # kubectl delete namespaces forethought-core forethought-kodo forethought-inner-app forethought-webclient func --force --grace-period=0
