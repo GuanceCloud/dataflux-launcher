@@ -163,6 +163,18 @@ def apply_namespace():
   return True
 
 
+def get_configmap_list(namespace):
+  cmd = 'kubectl get configmap -n {} -o json'.format(namespace)
+
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+
+  result = json.loads(output)
+
+  return result.get('items') or []
+
+
 def get_configmap(mapName, namespace):
   cmd = 'kubectl get configmap {} -n {} -o json'.format(mapName, namespace)
 

@@ -119,6 +119,13 @@ def up_service_update():
   return  response_jsonify(update.deploy_update())
 
 
+@setup_bp.route("/up/configmap/create", methods=["POST"])
+def up_configmap_create():
+  data = request.json
+
+  return  response_jsonify(update.configmap_create(data))
+
+
 @setup_bp.route("/up/configmap/update", methods=["POST"])
 def up_configmap_update():
   data = request.json

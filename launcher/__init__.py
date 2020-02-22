@@ -60,10 +60,10 @@ STEPS_INSTALL = [
 # 6、升级完成
 
 STEPS_UPDATE = [
-  # {
-  #     "key": "/up/newconfig",
-  #     "name": "新增应用配置"
-  # },
+  {
+      "key": "/up/newconfigmap",
+      "name": "新增应用配置"
+  },
   {
       "key": "/up/service",
       "name": "升级应用"

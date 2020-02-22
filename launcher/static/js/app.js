@@ -507,5 +507,25 @@ var setup = (function () {
     });
   };
 
+  app.prototype.new_configmap_create = function(){
+    var that = this;
+    var maps = {};
+
+    $('#btnConfigmapCreate').attr("disabled","disabled");
+
+    $('.config-review textarea').each(function(idx, item){
+      var me = $(item);
+      var key = me.data('key');
+
+      maps[key] = me.val();
+    });
+
+    this.post("up/configmap/create", maps).then(function(d){
+      that.go("/up/service");
+    }).done(function(){
+      that.config_item_checked_all();
+    });
+  };
+
   return new app();
 })();

@@ -13,7 +13,96 @@ from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES, CACHEDATA
 updateDeploy = {}
 
 
-def pvc_check():
+def _configmap_to_template_data(maps):
+  result = []
+
+  for ns in SERVICECONFIG['services']:
+    configmaps = ns["configmaps"]
+    namespace  = ns['namespace']
+
+    for cm in configmaps:
+      key     = cm['key']
+      mapname = cm['mapname']
+      mapkey  = cm['mapkey']
+
+      if key not in maps:
+        continue
+
+      item = dict(
+                namespace = namespace,
+                key       = key,
+                mapname   = mapname,
+                mapkey    = mapkey,
+                content   = maps.get(key, '')
+              )
+
+      result.append(item)
+
+  return result
+
+
+def configmap_create(maps):
+  tmpDir  = SERVICECONFIG['tmpDir']
+  tmpPath = tmpDir + "/configmap.yaml"
+
+  configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": _configmap_to_template_data(maps)})
+
+  if not os.path.exists(tmpDir):
+    os.mkdir(tmpDir)
+
+  try:
+    with open(os.path.abspath(tmpPath), 'w') as f:
+      f.write(configmap)
+
+    k8sMdl.apply_namespace()
+
+    cmd = "kubectl apply  -f {}".format(tmpPath)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+  except Exception as e:
+    print(e)
+    return False
+
+  return True
+
+
+def new_configmap_check():
+  result = []
+
+  for ns in SERVICECONFIG['services']:
+    namespace  = ns['namespace']
+
+    configmaps = {
+      'namespace': namespace,
+      'configmaps': []
+    }
+
+    tmpServiceDict = {item['key']: item for item in ns['services']}
+
+    oldMaps    = k8sMdl.get_configmap_list(namespace)
+    oldMapKeys = {item['metadata']['name']: item['data'].keys() for item in oldMaps}
+
+    for cm in ns['configmaps']:
+      mapname = cm['mapname']
+      mapkey  = cm['mapkey']
+
+      if mapname in oldMapKeys and mapkey in oldMapKeys[mapname]:
+        continue
+
+      content = jinjia2_render('template/config/{}'.format(cm['file']), settingsMdl.toJson)
+
+      cm = {
+        'key': cm['key'],
+        'content': content,
+        'services': [tmpServiceDict[item]['name'] for item in cm['services']]
+      }
+      configmaps['configmaps'].append(cm)
+
+    result.append(configmaps)
+
+  return result
+
+
+def new_pvc_check():
   oldPvcs     = k8sMdl.get_pvc()
   oldPvcNames = [ item['name'] for item in oldPvcs ]
   newPvcs     = []
@@ -44,7 +133,7 @@ def deploy_check():
   imageDir = apps.get('image_dir', '')
   defaultImage  = apps.get('images', {})
   version = apps.get('version', '')
-  newPvcs = pvc_check()
+  newPvcs = new_pvc_check()
 
   for ns in deployStatus:
     namespaceName = ns['namespace']

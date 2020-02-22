@@ -154,11 +154,18 @@ def register_install_router(app):
 # 升级安装路由套装
 def register_update_router(app):
 
+  @app.route("/up/newconfigmap")
+  def up_new_configmap():
+    newConfigmap = update.new_configmap_check()
+
+    newCount = sum([len(item['configmaps']) for item in newConfigmap])
+
+    return render("up/new-config.html", {"title": "新增应用配置", "pageData": {"data": newConfigmap, "count": newCount}, "steps": STEPS_COMMON + STEPS_UPDATE})
+
+
   @app.route("/up/service")
   def up_service():
     deployStatus = update.deploy_check()
-
-    print(deployStatus)
 
     allUpdated = True
     for ns in deployStatus:
