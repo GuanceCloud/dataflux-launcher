@@ -25,7 +25,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
-          name: management-web-config
+          name: management-nginx-config
         - mountPath: /config/cloudcare-forethought-webmanage/config/config.json
           name: management-web-config
           subPath: config.json
@@ -38,6 +38,11 @@ spec:
           name: management-web-config
           optional: false
         name: management-web-config
+      - configMap:
+          defaultMode: 292
+          name: management-nginx-config
+          optional: false
+        name: management-nginx-config
 
 ---
 

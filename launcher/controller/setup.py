@@ -105,10 +105,36 @@ def certificate_create():
   return True
 
 
+def _configmap_to_template_data(maps):
+  result = []
+
+  for ns in SERVICECONFIG['services']:
+    configmaps = ns["configmaps"]
+    namespace  = ns['namespace']
+
+    for cm in configmaps:
+      key     = cm['key']
+      mapname = cm['mapname']
+      mapkey  = cm['mapkey']
+
+      item = dict(
+                namespace = namespace,
+                key       = key,
+                mapname   = mapname,
+                mapkey    = mapkey,
+                content   = maps.get(key, '')
+              )
+
+      result.append(item)
+
+  return result
+
+
 def configmap_create(maps):
-  tmpDir = SERVICECONFIG['tmpDir']
+  tmpDir  = SERVICECONFIG['tmpDir']
   tmpPath = tmpDir + "/configmap.yaml"
-  configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": maps})
+
+  configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": _configmap_to_template_data(maps)})
 
   if not os.path.exists(tmpDir):
     os.mkdir(tmpDir)

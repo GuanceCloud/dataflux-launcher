@@ -24,7 +24,7 @@ spec:
           protocol: TCP
         volumeMounts:
         - mountPath: /etc/nginx/conf.d
-          name: front-web-config
+          name: front-nginx-config
         - mountPath: /config/cloudcare-forethought-webclient/deployConfig.js
           name: front-web-config
           subPath: config.js
@@ -36,6 +36,11 @@ spec:
           name: front-web-config
           optional: false
         name: front-web-config
+      - configMap:
+          defaultMode: 292
+          name: front-nginx-config
+          optional: false
+        name: front-nginx-config
 
 
 ---

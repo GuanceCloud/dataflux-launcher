@@ -1,146 +1,15 @@
-﻿apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.core | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: core
-  namespace: forethought-core
-
----
-
+﻿{% for item in config %}
 apiVersion: v1
 data:
-  config.yaml: |-
-{{ config.kodo | indent(4) }}
+  {{ item.mapkey }}: |-
+{{ item.content | indent(4) }}
 kind: ConfigMap
 metadata:
-  name: kodo
-  namespace: forethought-kodo
+  name: {{ item.mapname }}
+  namespace: {{ item.namespace }}
 
----
+{% if not loop.last %}
+--- 
+{% endif %}
 
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.kodoInner | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: kodo-inner
-  namespace: forethought-kodo
-
----
-
-apiVersion: v1
-data:
-  kodo.conf: |-
-{{ config.kodoNginx | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: kodo-nginx
-  namespace: forethought-kodo
-
----
-
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.messageDeskApi | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: message-desk
-  namespace: middleware
-
----
-
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.messageDeskWorker | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: message-desk-worker
-  namespace: middleware
-
----
-
-apiVersion: v1
-data:
-  config.js: |-
-{{ config.frontWeb | indent(4) }}
-  nginx.conf: |-
-{{ config.frontNginx | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: front-web-config
-  namespace: forethought-webclient
-
----
-
-apiVersion: v1
-data:
-  config.json: |-
-{{ config.managementWeb | indent(4) }}
-  nginx.conf: |-
-{{ config.managementNginx | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: management-web-config
-  namespace: forethought-webclient
-
----
-
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.func | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: func-config
-  namespace: func
-
----
-
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.funcInner | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: func-inner-config
-  namespace: func
-
----
-
-apiVersion: v1
-data:
-  config.yaml: |-
-{{ config.funcWorker | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: func-worker-config
-  namespace: func
-
-
----
-
-apiVersion: v1
-data:
-  app.ini: |-
-{{ config.innerAppTrigger | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: trigger-conf
-  namespace: forethought-inner-app
-
-
----
-
-apiVersion: v1
-data:
-  settings.yaml: |-
-{{ config.launcher | indent(4) }}
-kind: ConfigMap
-metadata:
-  name: df-settings
-  namespace: launcher
+{% endfor %}
