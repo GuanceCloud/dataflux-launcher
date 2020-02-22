@@ -14,10 +14,6 @@ updateDeploy = {}
 
 
 def pvc_check():
-
-  # pvcYamlContent = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": oldPvcs[0]['storageClassName']})
-  # pvcYamls = pvcYamlContent.split('---')
-
   oldPvcs     = k8sMdl.get_pvc()
   oldPvcNames = [ item['name'] for item in oldPvcs ]
   newPvcs     = []
@@ -37,16 +33,6 @@ def pvc_check():
           storage   = pvc['storage']
         ))
 
-  # for item in pvcYamls:
-  #   pvcJson = yaml.safe_load(item)
-  #   pvcName = pvcJson['metadata']['name']
-  #   # pvcStorage = pvcJson['spec']['resources']['requests']['storage']
-
-  #   if pvcName in oldPvcNames:
-  #     continue
-
-  #   newPvcs.append(pvcJson)
-
   return newPvcs
 
 
@@ -60,8 +46,6 @@ def deploy_check():
   version = apps.get('version', '')
   newPvcs = pvc_check()
 
-  print(newPvcs)
-
   for ns in deployStatus:
     namespaceName = ns['namespace']
     ns['isNew'] = (namespaceName not in k8sNamespaces)
@@ -71,9 +55,6 @@ def deploy_check():
 
       deploy['newImagePath'] = re.sub('/+', '/', newImagePath)
 
-      # updateKey = version + deploy['key']
-
-      # if updateKey not in updateDeploy:
       if 'fullImagePath' not in deploy:
         deploy['isNew']    = True
         deploy['isUpdate'] = False
@@ -81,9 +62,6 @@ def deploy_check():
         deploy['isNew']    = False
         deploy['isUpdate'] = deploy['newImagePath'] != deploy.get('fullImagePath', '')
 
-        # updateDeploy[updateKey] = (deploy['newImagePath'] != deploy.get('fullImagePath', ''))
-
-      # deploy['isUpdate'] = updateDeploy[updateKey]
 
     ns['newPvcs'] = [item for item in newPvcs if item['namespace'] == namespaceName]
 
