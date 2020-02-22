@@ -98,6 +98,11 @@ def __init_config():
   with open(base_path + "/../config/config.yaml") as f:
     SERVICECONFIG  = yaml.safe_load(f)
 
+  tmpDir = SERVICECONFIG['tmpDir']
+  if not os.path.exists(tmpDir):
+    os.mkdir(tmpDir)
+
+
 def __init_docker_image():
   global DOCKERIMAGES
 
@@ -115,148 +120,8 @@ def __init_settings():
 
   settingsMdl = Settings()
 
-  # if not SERVICECONFIG['debug']:
-  #   SETTINGS = {
-  #     "mysql": {},
-  #     "redis": {},
-  #     "influxdb": [{}],
-  #     "messageDesk": {},
-  #     "core": {
-  #       "dbInfo": {},
-  #       "secret": {}
-  #     },
-  #     "func": {
-  #       "dbInfo": {}
-  #     },
-  #     "other": {
-  #       "manager": {
-  #         "username": "",
-  #         "email": ""
-  #       },
-  #       "domain": "",
-  #       "subDomain": {
-  #         "console": "console",
-  #         "consoleApi": "console-api",
-  #         "management": "management",
-  #         "managementApi": "management-api",
-  #         "websocket": "ws",
-  #         "function": "func",
-  #         "kodo": "kodo",
-  #         "integration": "integration"
-  #       }
-  #     },
-  #     "serviceConfig": {}
-  #   }
-  # else:
-  #   SETTINGS = {
-  #     "mysql": {
-  #       "host": "172.16.0.43",
-  #       "port": 32306,
-  #       "user": "root",
-  #       "password": "rootPassw0rd"
-  #     },
-  #     "core": {
-  #       "dbInfo": {
-  #         "dbName": "Forethought",
-  #         "dbUser": "Forethought",
-  #         "dbUserPassword": "123321"
-  #       },
-  #       "secret": {}
-  #     },
-  #     "messageDesk": {
-  #       "dbInfo": {
-  #         "dbName": "",
-  #         "dbUser": "",
-  #         "dbUserPassword": ""
-  #       }
-  #     },
-  #     "func": {
-  #       "dbInfo": {
-  #         "dbName": "ft_dp",
-  #         "dbUser": "ft_dp",
-  #         "dbUserPassword": "123321"
-  #       }
-  #     },
-  #     "redis": {
-  #       "host": "172.16.0.43",
-  #       "port": 30397,
-  #       "password": "viFRKZiZkoPmXnyF"
-  #     },
-  #     "influxdb": [
-  #       {
-  #         "host": "172.16.0.43",
-  #         "port": 32086,
-  #         "username": "admin",
-  #         "password": "admin@influxdb",
-  #         "ssl": False,
-  #         "dbName": "test_db"
-  #       }
-  #     ],
-  #     "other": {
-  #       "manager": {
-  #         "username": "admin",
-  #         "email": "lhm@jiagouyun.com"
-  #       },
-  #       "domain": "",
-  #       "subDomain": {
-  #         "console": "console",
-  #         "consoleApi": "console-api",
-  #         "management": "management",
-  #         "managementApi": "management-api",
-  #         "websocket": "ws",
-  #         "function": "func",
-  #         "kodo": "kodo",
-  #         "integration": "integration"
-  #       }
-  #     },
-  #     "serviceConfig":{}
-  #   }
-
 
 __init_config()
 __init_docker_image()
 __init_settings()
 
-
-''' 结构
-  ============================
-
-  mysql:
-    host:
-    port:
-    user:
-    password:
-
-  core:
-    dbInfo:
-      dbName:
-      dbUser:
-      dbUserPassword:
-    manager:
-      username:
-      email:
-
-  messageDesk:
-    dbInfo:
-      dbName:
-      dbUser:
-      dbUserPassword:
-
-  redis:
-    host:
-    port:
-    password:
-
-  influxdb:
-  -   host:
-    port:
-    username:
-    password:
-    ssl:
-    dbName:
-    kapacitorHost:
-  other:
-    manager:
-    domain
-  serviceConfig:
-'''
