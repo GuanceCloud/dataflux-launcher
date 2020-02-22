@@ -14,24 +14,38 @@ updateDeploy = {}
 
 
 def pvc_check():
-  oldPvcs = k8sMdl.get_pvc()
 
-  pvcYamlContent = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": oldPvcs[0]['storageClassName']})
+  # pvcYamlContent = jinjia2_render("template/k8s/pvc.yaml", {"storageClassName": oldPvcs[0]['storageClassName']})
+  # pvcYamls = pvcYamlContent.split('---')
 
-  pvcYamls = pvcYamlContent.split('---')
-  newPvcs = []
-
+  oldPvcs     = k8sMdl.get_pvc()
   oldPvcNames = [ item['name'] for item in oldPvcs ]
+  newPvcs     = []
 
-  for item in pvcYamls:
-    pvcJson = yaml.safe_load(item)
-    pvcName = pvcJson['metadata']['name']
-    # pvcStorage = pvcJson['spec']['resources']['requests']['storage']
+  for ns in SERVICECONFIG['services']:
+    namespace = ns['namespace']
 
-    if pvcName in oldPvcNames:
-      continue
+    for pvc in ns.get('pvcs', []):
+      pvcName = pvc['name']
 
-    newPvcs.append(pvcJson)
+      if pvcName in oldPvcNames:
+        continue
+
+      newPvcs.append(dict(
+          namespace = namespace,
+          name      = pvc['name'],
+          storage   = pvc['storage']
+        ))
+
+  # for item in pvcYamls:
+  #   pvcJson = yaml.safe_load(item)
+  #   pvcName = pvcJson['metadata']['name']
+  #   # pvcStorage = pvcJson['spec']['resources']['requests']['storage']
+
+  #   if pvcName in oldPvcNames:
+  #     continue
+
+  #   newPvcs.append(pvcJson)
 
   return newPvcs
 
@@ -45,6 +59,8 @@ def deploy_check():
   defaultImage  = apps.get('images', {})
   version = apps.get('version', '')
   newPvcs = pvc_check()
+
+  print(newPvcs)
 
   for ns in deployStatus:
     namespaceName = ns['namespace']
@@ -69,7 +85,7 @@ def deploy_check():
 
       # deploy['isUpdate'] = updateDeploy[updateKey]
 
-    ns['newPvcs'] = [item for item in newPvcs if item['metadata']['namespace'] == namespaceName]
+    ns['newPvcs'] = [item for item in newPvcs if item['namespace'] == namespaceName]
 
   return deployStatus
 
@@ -107,12 +123,12 @@ def deploy_update():
       k8sMdl.registry_secret_create(ns['namespace'], **settingsMdl.registry)
 
   # 3、创建新的 PVC
-  pvcYamlPath = os.path.abspath(tmpDir + "/pvc.yaml")
-  newPvcYamls = [ yaml.dump(item, default_flow_style = False) for item in newPvcs]
-  newPvcYamlContent = '\n\n---\n\n'.join(newPvcYamls)
+  storageClassName  = settingsMdl.other.get('storageClassName', '')
+  pvcYamlPath       = os.path.abspath(tmpDir + "/pvc.yaml")
+  pvcYaml           = jinjia2_render("template/k8s/pvc.yaml", {"pvcs": newPvcs, "storageClassName": storageClassName})
 
   with open(pvcYamlPath, 'w') as f:
-    f.write(newPvcYamlContent)
+    f.write(pvcYaml)
 
   cmd = "kubectl apply  -f {}".format(pvcYamlPath)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)

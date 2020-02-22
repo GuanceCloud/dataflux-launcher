@@ -85,9 +85,10 @@ def get_pvc():
 
     for item in data['items']:
       pvc = dict(
-                  namespace = ns,
-                  name = item['metadata']['name'],
-                  storageClassName = item['spec']['storageClassName']
+                  namespace         = ns,
+                  name              = item['metadata']['name'],
+                  storageClassName  = item['spec']['storageClassName'],
+                  storage           = item['spec']['resources']['requests']['storage']
                 )
 
       pvcs.append(pvc)

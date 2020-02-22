@@ -54,7 +54,6 @@ services:
     - name: ft-sysconfig
       storage: 10Gi
 
-
   - namespace: forethought-inner-app
     services:
     - key: trigger

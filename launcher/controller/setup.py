@@ -256,6 +256,10 @@ def service_create(data):
     "password": imageRegistryPwd
   }
 
+  settingsMdl.other = {
+    "storageClassName": storageClassName
+  }
+
   _registry_secret_create(settingsMdl.registry)
   _PVC_create(storageClassName)
 

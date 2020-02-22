@@ -103,6 +103,9 @@ def register_install_router(app):
     if 'nodeInternalIP' not in data['other']:
       data['other']['nodeInternalIP'] = setup.get_node_internal_ip()
 
+    if 'storageClassName' not in data['other']:
+      data['other']['storageClassName'] = ''
+
     return render("other.html", {"title": "其他设置", "pageData": data, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
