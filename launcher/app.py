@@ -203,7 +203,7 @@ def register_update_router(app):
 
     noUpdate = True
 
-    for key, val in databaseSQL:
+    for key, val in databaseSQL.items():
       sqls = val.get('sqls')
 
       if sqls and len(sqls) > 0:
