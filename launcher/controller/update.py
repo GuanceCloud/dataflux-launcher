@@ -322,6 +322,8 @@ def list_update_database_sql():
 
     allDbUpdates.append(upItem)
 
+  print('>>>>>>>>>>>')
+  print(allDbUpdates)
   CACHEDATA['dbUpdates'] = allDbUpdates
 
   return allDbUpdates
@@ -388,6 +390,8 @@ def database_update(project):
     itemProject = item.get('project')
     sqls    = item.get('sqls', [])
 
+    print('==========')
+    print(itemProject,  sqls)
     if project != itemProject or len(sqls) == 0:
       continue
 
