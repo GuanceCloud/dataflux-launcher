@@ -291,7 +291,7 @@ def list_source_and_update_configmaps():
 def list_update_database_sql():
   currentSeqs  = __get_current_seqs()
 
-  allDbUpdates = []
+  allDbUpdates = {}
   for ups in SERVICECONFIG['updates']:
     api        = ups['api']
     project    = ups['project']
@@ -320,10 +320,8 @@ def list_update_database_sql():
             'content': sql
           })
 
-    allDbUpdates.append(upItem)
+    allDbUpdates[project] = upItem
 
-  print('>>>>>>>>>>>')
-  print(allDbUpdates)
   CACHEDATA['dbUpdates'] = allDbUpdates
 
   return allDbUpdates
@@ -380,37 +378,36 @@ def configmap_update(params):
 
 
 def database_update(project):
-  dbUpdates   = CACHEDATA.get('dbUpdates')
+  dbUpdates     = CACHEDATA.get('dbUpdates') or {}
+  projectUpSqls = dbUpdates.get('project')
+
+  if not projectUpSqls:
+    return True
 
   mysqlSetting = settingsMdl.mysql
   baseInfo     = mysqlSetting.get('base') or {}
 
-  vSqls = []
-  for item in dbUpdates:
-    itemProject = item.get('project')
-    sqls    = item.get('sqls', [])
+  sqls    = projectUpSqls.get('sqls', [])
 
-    print('==========')
-    print(itemProject,  sqls)
-    if project != itemProject or len(sqls) == 0:
-      continue
+  if len(sqls) == 0:
+    return True
 
-    appMySQLInfo = mysqlSetting.get(itemProject) or {}
+  appMySQLInfo = mysqlSetting.get(project) or {}
 
-    mysql        = {
-                  'host': baseInfo.get('host'),
-                  'port': baseInfo.get('port'),
-                  'user': appMySQLInfo.get('user'),
-                  'password': appMySQLInfo.get('password')
-                }
-    dbName       = appMySQLInfo.get('database')
+  mysql        = {
+                'host': baseInfo.get('host'),
+                'port': baseInfo.get('port'),
+                'user': appMySQLInfo.get('user'),
+                'password': appMySQLInfo.get('password')
+              }
+  dbName       = appMySQLInfo.get('database')
 
-    versionMdl.excute_update_sql(mysql, dbName, sqls)
+  versionMdl.excute_update_sql(mysql, dbName, sqls)
 
-    lastSql = sqls[len(sqls) - 1]
-    versionMdl.save_version(itemProject, 'database', lastSql['seq'])
+  lastSql = sqls[len(sqls) - 1]
+  versionMdl.save_version(project, 'database', lastSql['seq'])
 
-  CACHEDATA['dbUpdates'] = []
+  del CACHEDATA['dbUpdates'][project]
   
   return True
 
