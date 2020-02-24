@@ -302,7 +302,7 @@ def list_update_database_sql():
     if noDatabase:
       continue
 
-    currentSeq      = currentSeqs.get(project, {}).get('config', 0)
+    currentSeq      = currentSeqs.get(project, {}).get('database', 0)
     updateVersions  = versionMdl.list_project_versions(api, currentSeq, dataKey)
 
     upItem  = {
@@ -372,14 +372,12 @@ def configmap_update(params):
 
       k8sMdl.patch_configmap(mapName, mapKey, content, namespace)
 
-      # redeploy(configServices, key, namespace)
-
   return True
 
 
 def database_update(project):
   dbUpdates     = CACHEDATA.get('dbUpdates') or {}
-  projectUpSqls = dbUpdates.get('project')
+  projectUpSqls = dbUpdates.get(project)
 
   if not projectUpSqls:
     return True

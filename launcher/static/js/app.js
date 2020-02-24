@@ -490,7 +490,7 @@ var setup = (function () {
     var that = this;
     var count = 0;
 
-    $('#btnDatabaseUpdate').attr("disabled", true);
+    $('#btnDatabaseUpdate').attr("disabled", 'disabled');
     jqProject = $('.upgrade-sql-list')
 
     jqProject.each(function(idx, item){
@@ -501,8 +501,6 @@ var setup = (function () {
         count = count + 1;
 
         if (count == jqProject.length){
-          // that.go("/up/finished");
-
           that.get('service/redeploy/all').then(function(d){
             that.go("/up/service/status");
           });
@@ -511,6 +509,16 @@ var setup = (function () {
         $('#btnDatabaseUpdate').attr("disabled", false);
       });
 
+    });
+  };
+
+  app.prototype.redeploy_all = function(){
+    var that = this;
+
+    $('#btnRedeployAll').attr("disabled", 'disabled');
+
+    this.get('service/redeploy/all').then(function(d){
+      that.go("/up/service/status");
     });
   };
 

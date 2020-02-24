@@ -201,7 +201,16 @@ def register_update_router(app):
   def up_database():
     databaseSQL = update.list_update_database_sql()
 
-    return render("up/database.html", {"title": "升级数据库", "pageData": databaseSQL, "steps": STEPS_COMMON + STEPS_UPDATE })
+    noUpdate = True
+
+    for key, val in databaseSQL:
+      sqls = val.get('sqls')
+
+      if sqls and len(sqls) > 0:
+        noUpdate = False
+        break
+
+    return render("up/database.html", {"title": "升级数据库", "pageData": databaseSQL, "noUpdate": noUpdate, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
   @app.route("/up/service/status")
