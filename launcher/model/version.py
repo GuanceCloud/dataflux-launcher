@@ -116,7 +116,7 @@ def get_project_last_seq():
 
       if len(data) > 0:
         last = data[len(data) - 1]
-        result[project] = last['seq']
+        result[project] = last.get('seq', -1)
       else:
         result[project] = -1
 
