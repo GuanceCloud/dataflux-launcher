@@ -109,6 +109,11 @@ def redeploy_all():
   return  response_jsonify(setup.redeploy_all())
 
 
+@setup_bp.route("/version/save", methods=["POST"])
+def save_version():
+  return  response_jsonify(setup.save_version())
+
+
 @setup_bp.route("/up/service/status", methods=["GET"])
 def up_service_status():
   return  response_jsonify(update.deploy_check())

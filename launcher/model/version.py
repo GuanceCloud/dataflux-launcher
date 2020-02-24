@@ -52,7 +52,7 @@ def get_current_update_seq(mysqlInfo, dbName):
   return dictResult
 
 
-def insert_version(project, seqType, seq):
+def save_version(project, seqType, seq):
   version = DOCKERIMAGES['apps']['version']
 
   mysqlSetting = settingsMdl.mysql
@@ -67,15 +67,26 @@ def insert_version(project, seqType, seq):
               }
   dbName       = coreInfo.get('database')
 
-  sql = '''
+  querySql = '''
+          SELECT * 
+          FROM sys_version
+          WHERE project=%s AND version=$s AND seqType=%s;
+          '''
+
+  queryParams = (project, version, seqType, seq)
+
+  insertSql = '''
           INSERT INTO `sys_version` (`project`, `version`, `seqType`, `upgradeSeq`, `createAt`, `updateAt`)
           VALUES (%s, %s, %s, %s, UNIX_TIMESTAMP(), -1);        
         '''
 
-  params = (project, version, seqType, seq)
+  insertParams = (project, version, seqType, seq)
 
   with dbHelper(mysql) as db:
-    db.execute(sql, dbName = dbName, params = params)
+    result = db.execute(querySql, dbName = dbName, params = queryParams)
+
+    if len(result) == 0 or len(result[0]) == 0:
+      db.execute(insertSql, dbName = dbName, params = insertParams)
 
   return True
 
@@ -85,6 +96,31 @@ def excute_update_sql(mysqlInfo, dbName, sqls):
     for sql in sqls:
       db.execute(sql['content'], dbName = dbName)
       db.commit()
+
+
+# 从当前应用中获取最新的版本 seq
+def get_project_last_seq():
+  result = {}
+
+  for up in SERVICECONFIG['updates']:
+    project = up['project']
+    api     = up['api']
+    dataKey = up['dataKey']
+
+    url     = "{}?seq={}".format(api, -1)
+    rsp     = requests.get(url)
+    content = rsp.json()
+
+    if content and dataKey in content:
+      data = content.get(dataKey) or []
+
+      if len(data) > 0:
+        last = data[len(data) - 1]
+        result[project] = last['seq']
+      else:
+        result[project] = -1
+
+  return result
 
 
 def list_project_versions(url, versionSeq, dataKey):

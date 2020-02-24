@@ -389,8 +389,15 @@ var setup = (function () {
         });
       });
 
+      console.log(hasPendding);
       if (hasPendding){
         window.setTimeout(function(){that.refresh_service_status();}, 5000);
+      }else{
+        that.post('version/save').then(function(d){
+          if(!d.content){
+            alert("写入版本失败!");
+          }
+        });
       }
     });
   };

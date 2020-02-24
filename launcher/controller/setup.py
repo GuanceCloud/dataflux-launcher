@@ -5,6 +5,7 @@ import markdown, shortuuid, pymysql
 import json, time
 
 from launcher.model import k8s as k8sMdl
+from launcher.model import version as versionMdl
 from launcher.utils.template import jinjia2_render
 
 from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
@@ -297,6 +298,20 @@ def redeploy_all():
 
 def service_status():
   return k8sMdl.deploy_status()
+
+
+def save_version():
+  # version        = DOCKERIMAGES['version']
+  # try:
+  projectLastSeq = versionMdl.get_project_last_seq()
+
+  for project, seq in projectLastSeq.items():
+    versionMdl.save_version(project, 'database', seq)
+    versionMdl.save_version(project, 'config', seq)
+  # except:
+  #   return False
+
+  return True
 
 
 def init_setting():

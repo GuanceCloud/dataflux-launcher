@@ -404,7 +404,7 @@ def database_update(project):
     versionMdl.excute_update_sql(mysql, dbName, sqls)
 
     lastSql = sqls[len(sqls) - 1]
-    versionMdl.insert_version(itemProject, 'database', lastSql['seq'])
+    versionMdl.save_version(itemProject, 'database', lastSql['seq'])
 
   CACHEDATA['dbUpdates'] = []
   
