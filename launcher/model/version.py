@@ -70,7 +70,7 @@ def save_version(project, seqType, seq):
   querySql = '''
           SELECT * 
           FROM sys_version
-          WHERE project=%s AND version=$s AND seqType=%s;
+          WHERE project=%s AND version=%s AND seqType=%s;
           '''
 
   queryParams = (project, version, seqType)
