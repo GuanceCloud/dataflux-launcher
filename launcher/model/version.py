@@ -73,7 +73,7 @@ def save_version(project, seqType, seq):
           WHERE project=%s AND version=$s AND seqType=%s;
           '''
 
-  queryParams = (project, version, seqType, seq)
+  queryParams = (project, version, seqType)
 
   insertSql = '''
           INSERT INTO `sys_version` (`project`, `version`, `seqType`, `upgradeSeq`, `createAt`, `updateAt`)
