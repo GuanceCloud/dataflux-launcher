@@ -5,17 +5,17 @@
 <div class="row form-body">
   <h2 class="page-heading">{{ title }}</h2>
 
-  {% for ups in pageData %}
+  {% for project, val in pageData.items() %}
   <div class="high-block">
-    <h5>项目：{{ ups.project }}（命名空间：{{ ups.namespace }}）</h5>
-    <div class="upgrade-sql-list" data-project="{{ ups.project }}">
-        {% if ups.sqls | length == 0 %}
+    <h5>项目：{{ project }}（命名空间：{{ val.namespace }}）</h5>
+    <div class="upgrade-sql-list" data-project="{{ project }}">
+        {% if val.sqls | length == 0 %}
         <div class="high-block-sm">
           <h5># 无数据库更新</h5>
         </div>
         {% endif %}
 
-        {% for item in ups.sqls %}
+        {% for item in val.sqls %}
         <div class="db-update-item">
           <h5></h5>
           <pre>-- 版本：{{ item.seq }}<br />{{ item.content }}</pre>
