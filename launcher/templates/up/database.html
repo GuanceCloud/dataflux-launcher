@@ -36,9 +36,11 @@
         </button>
         {% endif %}
 
+        {% if noUpdate %}
         <button id="btnRedeployAll" class="btn btn-primary" onclick="setup.redeploy_all()">
           无数据库升级，重启所有应用（如果没有配置更新，可以不重启）
         </button>
+        {% endif %}
           <!-- <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
             下一步
           </a> -->
