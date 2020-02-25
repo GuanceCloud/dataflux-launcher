@@ -187,29 +187,40 @@ def _init_system_workspace(sysDBUUID):
   dbInfo = mysqlSetting.get('core')
 
   with dbHelper(mysqlInfo) as db:
-    ws_uuid = "wksp_system"
-    token = "tokn_" + shortuuid.ShortUUID().random(length = 24)
-    params = [
-        ws_uuid,
-        token,
-        sysDBUUID
-    ]
-    wsSQL = '''
+    ws_uuid         = "wksp_system"
+    token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
+    wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
+    bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
+
+    params  = (
+                  ws_uuid,
+                  token,
+                  sysDBUUID,
+                  bindInfo
+              )
+    wsSQL   = '''
               INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) 
-              VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, '{}', UNIX_TIMESTAMP());
+              VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, %s, UNIX_TIMESTAMP());
             '''
     db.execute(wsSQL, dbName = dbInfo['database'], params = params)
+
+    params = (wsDashboardUUID, )
+    wsDashboard = '''
+              INSERT INTO `biz_dashboard` (`uuid`, `workspaceUUID`, `name`, `status`, `chartPos`, `chartGroupPos`, `type`, `creator`, `updator`, `createAt`) 
+              VALUES (%s, 'wksp_system', '工作空间概览', 0, '[]', '[]', 'CUSTOM', '', '', UNIX_TIMESTAMP());
+            '''
+    db.execute(wsDashboard, dbName = dbInfo['database'], params = params)
 
     # 工作空间 AK
     akSQL = '''
               INSERT INTO `main_workspace_accesskey` (`uuid`, `ak`, `sk`, `workspaceUUID`, `creator`, `updator`, `status`, `createAt`) 
               VALUES (%s, %s, %s, 'wksp_system', '', '', 0, UNIX_TIMESTAMP());
             '''
-    params = [
+    params = (
               "wsak_" + shortuuid.ShortUUID().random(length = 24),
               shortuuid.ShortUUID().random(length = 16),
               shortuuid.ShortUUID().random(length = 32)
-            ]
+            )
     db.execute(akSQL, dbName = dbInfo['database'], params = params)
 
     return True

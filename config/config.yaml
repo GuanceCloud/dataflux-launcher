@@ -48,7 +48,7 @@ services:
       - front-backend
       - integration-scanner
       - websocket
-     template: forethought-backend.yaml
+      template: forethought-backend.yaml
 
     pvcs:
     - name: ft-sysconfig
