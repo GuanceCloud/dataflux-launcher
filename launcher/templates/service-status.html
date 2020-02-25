@@ -4,7 +4,10 @@
 
 <div class="row form-body">
     <div class="form-horizontal">
-      <h2 class="page-heading">{{ title }}</h2>
+      <h2 class="page-heading">
+        {{ title }}
+        <span id="spanStatusInfo" class="text-success" style="display: none; font-size: 16px;">写入版本信息成功！</span>
+      </h2>
 
       {% for ns in pageData %}  
       <div class="high-block">

@@ -389,15 +389,20 @@ var setup = (function () {
         });
       });
 
-      console.log(hasPendding);
       if (hasPendding){
         window.setTimeout(function(){that.refresh_service_status();}, 5000);
       }else{
-        that.post('version/save').then(function(d){
-          if(!d.content){
-            alert("写入版本失败!");
-          }
-        });
+        window.setTimeout(function(){
+          that.post('version/save').then(function(d){
+            if(!d.content){
+              alert("写入版本失败，刷新本页面可以重试写入版本。");
+            }else{
+              $('#spanStatusInfo').show();
+            }
+          }).fail(function(d){
+            alert("写入版本失败，刷新本页面可以重试写入版本。");
+          });
+        }, 2000);
       }
     });
   };
