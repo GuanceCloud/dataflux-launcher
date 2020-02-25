@@ -48,7 +48,7 @@ services:
       - front-backend
       - integration-scanner
       - websocket
-      file: forethought-backend.yaml
+     template: forethought-backend.yaml
 
     pvcs:
     - name: ft-sysconfig
@@ -66,7 +66,7 @@ services:
       mapkey: config.yaml
       services:
       - trigger
-      file: inner-app-trigger-config.yaml
+      template: inner-app-trigger-config.yaml
 
   - namespace: forethought-webclient
     services:
@@ -84,28 +84,28 @@ services:
       mapkey: config.js
       services:
       - front-webclient
-      file: front-web.js
+      template: front-web.js
 
     - key: frontNginx
       mapname: front-nginx-config
       mapkey: nginx.conf
       services:
       - front-webclient
-      file: front-nginx.conf
+      template: front-nginx.conf
 
     - key: managementWeb
       mapname: management-web-config
       mapkey: config.json
       services:
       - management-webclient
-      file: management-web.json
+      template: management-web.json
 
     - key: managementNginx
       mapname: management-nginx-config
       mapkey: nginx.conf
       services:
       - management-webclient
-      file: management-nginx.conf
+      template: management-nginx.conf
 
   - namespace: forethought-kodo
     services:
@@ -127,21 +127,21 @@ services:
       mapkey: config.yaml
       services:
       - kodo
-      file: kodo.yaml
+      template: kodo.yaml
 
     - key: kodoInner
       mapname: kodo-inner
       mapkey: config.yaml
       services:
       - kodo-inner
-      file: kodo-inner.yaml
+      template: kodo-inner.yaml
 
     - key: kodoNginx
       mapname: kodo-nginx
       mapkey: kodo.conf
       services:
       - kodo-nginx
-      file: kodo-nginx.conf
+      template: kodo-nginx.conf
 
     pvcs:
     - name: kodo-logs
@@ -186,14 +186,14 @@ services:
       mapkey: config.yaml
       services:
       - func
-      file: func-config.yaml
+      template: func-config.yaml
 
     - key: funcInner
       mapname: func-inner-config
       mapkey: config.yaml
       services:
       - func-inner
-      file: func-inner-config.yaml
+      template: func-inner-config.yaml
 
     - key: funcWorker
       mapname: func-worker-config
@@ -203,7 +203,7 @@ services:
       - func-worker-debugger
       - func-worker-rpc-crontab
       - func-worker-utils
-      file: func-worker-config.yaml
+      template: func-worker-config.yaml
 
   - namespace: middleware
     services:
@@ -249,14 +249,14 @@ services:
       mapkey: config.yaml
       services:
       - message-desk
-      file: message-desk-api.yaml
+      template: message-desk-api.yaml
 
     - key: messageDeskWorker
       mapname: message-desk-worker
       mapkey: config.yaml
       services:
       - message-desk-worker
-      file: message-desk-worker.yaml
+      template: message-desk-worker.yaml
 
     pvcs:
     - name: message-desk-logs

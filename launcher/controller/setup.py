@@ -60,7 +60,7 @@ def config_template():
     tmpServiceDict = {item['key']: item for item in ns['services']}
 
     for configmap in ns['configmaps']:
-      content = jinjia2_render('template/config/{}'.format(configmap['file']), settingsMdl.toJson)
+      content = jinjia2_render('template/config/{}'.format(configmap['template']), settingsMdl.toJson)
 
       cm = {
         'key': configmap['key'],
