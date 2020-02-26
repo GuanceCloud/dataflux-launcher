@@ -3,35 +3,35 @@
 tmpRTMDir=/tmp/rtm
 workDir=$(pwd)
 imageYaml=config/docker-image.yaml
-
+timestamp=$(date +%s)
 
 function init(){
   opt=$1
 
   git fetch --tag
-  lastRTM=$(git tag --list | grep -E "^rtm_\d{1,2}_" | sort -V | tail -1)
+  lastRTM=$(git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+-prod" | sort -V | tail -1)
 
   [[ ${#lastRTM} > 0 ]] && {
-    v=(${lastRTM//_/ })
+    v=(${lastRTM//[\.-]/ })
 
-    releaseCount=$[10#${v[3]} + 10001]
-    releaseCount=${releaseCount:1:4}
+    releaseCount=$[10#${v[2]} + 1]
+    # releaseCount=${releaseCount:1:4}
 
     case ${opt} in
       f )
-        minorVersion=${v[2]}
+        minorVersion=${v[1]}
         ;;
       m )
-        minorVersion=$[10#${v[2]} + 1]
+        minorVersion=$[10#${v[1]} + 1]
         ;;
     esac
 
-    version=${v[1]}_${minorVersion}_${releaseCount}_$(date +%Y%m%d)
+    version=${v[0]}.${minorVersion}.${releaseCount} #_$(date +%Y%m%d)
   } || {
-    version=1_0_0001_$(date +%Y%m%d)
+    version=1.0.1 #_$(date +%Y%m%d)
   }
 
-  VDIR=v${version//_/.}
+  VDIR=${version}
 }
 
 function rtm_tag(){
@@ -57,11 +57,13 @@ function rtm_tag(){
   git checkout $lastReleaseTag
 
   # 格式化成 release_20191216_01 格式
-  lastReleaseTag=${lastReleaseTag//[\.-\/]/_}
+  # lastReleaseTag=${lastReleaseTag//[\.-\/]/_}
 
-  [[ ${lastReleaseTag:0-3:1} != _ ]] && lastReleaseTag=${lastReleaseTag}_01
+  # [[ ${lastReleaseTag:0-3:1} != _ ]] && lastReleaseTag=${lastReleaseTag}_01
 
-  rtmTag=rtm_${version}_${lastReleaseTag//release_/}
+  commitId=$(git log -n 1 --format="%h")
+
+  rtmTag=${version}-${commitId}-${timestamp}-prod
 
   git tag $rtmTag
   git push --tag
@@ -70,7 +72,7 @@ function rtm_tag(){
   echo "\n"
 
   [[ $project != "launcher" ]] && {
-    echo "    ${project}: ${VDIR}:${project}_${lastReleaseTag//release_/rc_}" >> ${workDir}/${imageYaml}
+    echo "    ${project}: ${VDIR}:${project}-${commitId}-${timestamp}" >> ${workDir}/${imageYaml}
   }
 }
 
