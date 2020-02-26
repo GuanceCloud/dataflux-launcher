@@ -33,7 +33,7 @@ buildTesting:
 buildRTM:
   stage: build
   only:
-    - /^\d+\.\d+\.\d+-\w+-\d+-prod$/
+    - /\d+\.\d+\.\d+-\w+-\d+-prod/
   script:
     - V=(${CI_COMMIT_REF_NAME//[\.-]/ })
     - VDIR=${V[0]}.${V[1]}.${V[2]}
