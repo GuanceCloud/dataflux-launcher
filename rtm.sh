@@ -5,6 +5,10 @@ workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 timestamp=$(date +%s)
 
+# 清空临时工作区
+# 危险操作，必须显式指定目录
+rm -rf /tmp/rtm
+
 function init(){
   opt=$1
 
@@ -50,16 +54,11 @@ function rtm_tag(){
   }
 
   # 最后的 release tag
-  lastReleaseTag=$(git tag --list | grep -E '^release_' | sort -V | tail -1)
-  # echo ${#lastReleaseTag}
-  [[ ${#lastReleaseTag} == 0 ]] && return
+  # lastReleaseTag=$(git tag --list | grep -E '^release_' | sort -V | tail -1)
+  # [[ ${#lastReleaseTag} == 0 ]] && return
+  # git checkout $lastReleaseTag
 
-  git checkout $lastReleaseTag
-
-  # 格式化成 release_20191216_01 格式
-  # lastReleaseTag=${lastReleaseTag//[\.-\/]/_}
-
-  # [[ ${lastReleaseTag:0-3:1} != _ ]] && lastReleaseTag=${lastReleaseTag}_01
+  git checkout master
 
   commitId=$(git log -n 1 --format="%h")
 
