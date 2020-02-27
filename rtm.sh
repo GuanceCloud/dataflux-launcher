@@ -110,6 +110,11 @@ function start(){
 
   sh release.sh -r
 
+  git checkout master
+  git merge dev
+  git push
+  git checkout dev
+
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
 } 
 
