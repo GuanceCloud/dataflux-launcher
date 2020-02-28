@@ -1,0 +1,54 @@
+upgrade:
+  - seq: 1
+    database: |-
+      -- cq 2020/0212
+      CREATE TABLE `main_influx_cq` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifcq-',
+        `influxUUID` varchar(48) NOT NULL DEFAULT '',
+        `cqName` varchar(128) NOT NULL DEFAULT 'cq_' COMMENT 'CQ name',
+        `namePrefix` varchar(48) NOT NULL DEFAULT '',
+        `sampleEvery` varchar(48) NOT NULL DEFAULT '30m' COMMENT 'RESAMPLE every XXX',
+        `sampleFor` varchar(48) NOT NULL DEFAULT '1h' COMMENT 'RESAMPLE for XXX',
+        `db` varchar(48) NOT NULL DEFAULT '' COMMENT '原始 Measurement 所在 DB 名称',
+        `rp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则只用 @db 的默认 RP',
+        `cqrp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则用 CQ 默认的 RP, 比如 rpcq',
+        `measurement` varchar(48) NOT NULL DEFAULT '' COMMENT '指标名',
+        `cqMeasName` varchar(128) NOT NULL DEFAULT '' COMMENT 'cq 后的指标名，，不指定则  @name',
+        `keepTags` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否在 CQ 的 measurement 上保 原始 tag， 然原始 tag 会被转换成 field',
+        `groupByTime` varchar(48) NOT NULL DEFAULT '30m',
+        `groupByOffset` varchar(48) NOT NULL DEFAULT '15m',
+        `funcFields` json NOT NULL COMMENT '["""mean("field-1") AS "field-1-mean"""",...]',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 2/18
+      ALTER TABLE main_influx_db ADD COLUMN cqrp VARCHAR(48) NOT NULL AFTER influxRpName;
+      UPDATE main_influx_db set cqrp='autogen';
+
+      ALTER TABLE main_kapa DROP FOREIGN KEY kapa_is_uuid;
+
+      -- 场景新增 指标集数据集过滤条件
+      ALTER TABLE `biz_scene` 
+      ADD COLUMN `measurementLimit` json NOT NULL COMMENT '指标集限制' AFTER `describe`,
+      ADD COLUMN `filter` json NOT NULL COMMENT '过滤条件' AFTER `measurementLimit`;
+
+      -- 设置场景历史数据中的 数据范围
+      UPDATE biz_scene set filter='[]', measurementLimit='[]' where status=0;
+
+      -- 节点新增 icon 地址配置
+      ALTER TABLE `biz_node` 
+      ADD COLUMN `iconSet` json NULL COMMENT '图标设置' AFTER `name`;
+
+      -- 同时初始化历史数据
+      UPDATE biz_node set iconSet='{}';
+
+      -- 修复生产环境中 已删除场景的分享设置
+      UPDATE biz_share_config set status=3 WHERE status=0 and resourceUUID in (select DISTINCT(uuid) from biz_scene WHERE status=3);

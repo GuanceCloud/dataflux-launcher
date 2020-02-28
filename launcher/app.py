@@ -217,7 +217,7 @@ def register_update_router(app):
   def up_service_status():
     serviceStatus = setup.service_status()
 
-    return render("up/finished.html", {"title": "重启应用", "pageData": serviceStatus, "steps": STEPS_COMMON + STEPS_UPDATE })
+    return render("up/finished.html", {"title": "重启应用状态", "pageData": serviceStatus, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
 def register_blueprint(app):

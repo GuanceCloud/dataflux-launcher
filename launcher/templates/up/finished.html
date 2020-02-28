@@ -4,7 +4,12 @@
 
 <div class="row form-body">
     <div class="form-horizontal">
-      <h2 class="page-heading">{{ title }}</h2>
+      <h2 class="page-heading">
+        <span class="pull-right">
+          <span id="successTotal" class="text-success"></span><span id="statusTotal"></span>
+        </span>
+        {{ title }}
+      </h2>
 
       {% for ns in pageData %}  
       <div class="high-block">

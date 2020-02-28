@@ -11,14 +11,14 @@
     <div class="upgrade-sql-list" data-project="{{ project }}">
         {% if val.sqls | length == 0 %}
         <div class="high-block-sm">
-          <h5># 无数据库更新</h5>
+          <h5>-- 无数据库更新</h5>
         </div>
         {% endif %}
 
         {% for item in val.sqls %}
         <div class="db-update-item">
-          <h5></h5>
-          <pre>-- 版本：{{ item.seq }}<br />{{ item.content }}</pre>
+          <h5>序列：{{ item.seq }}</h5>
+          <pre>{{ item.content }}</pre>
         </div>
         {% endfor %}
     </div>
@@ -28,18 +28,20 @@
 
 <div class="row form-body">
     <div class="form-group">
-      <label class="col-sm-2 control-label">&nbsp;</label>
       <div class="col-sm-10">
         {% if not noUpdate %}
         <button id="btnDatabaseUpdate" class="btn btn-primary" onclick="setup.database_update()">
-          确认升级，并重启所有应用
+          确认升级，请勿重复点击
         </button>
         {% endif %}
 
         {% if noUpdate %}
-        <button id="btnRedeployAll" class="btn btn-primary" onclick="setup.redeploy_all()">
-          无数据库升级，重启所有应用（如果没有配置更新，可以不重启）
-        </button>
+          <a id="btnNext" class="btn btn-primary" href="/up/service">
+            无数据库升级，下一步
+          </a>
+        <!-- <button id="btnRedeployAll" class="btn btn-primary" onclick="setup.redeploy_all()">
+          无数据库升级，下一步
+        </button> -->
         {% endif %}
           <!-- <a id="btnNext" class="btn btn-default" disabled="disabled" href="/up/configmap">
             下一步

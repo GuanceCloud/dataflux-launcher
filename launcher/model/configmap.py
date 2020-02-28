@@ -19,7 +19,6 @@ def get_update_items():
   for project in SERVICECONFIG['updates']:
     for configItem in project['config']:
       mapItem = {
-                "api": project['api'],
                 "namespace": project['namespace'],
                 "project": project['project'],
 

@@ -367,6 +367,8 @@ var setup = (function () {
     this.get('service/status').then(function(d){
       var services = d.content || [];
       var hasPendding = false;
+      var total = 0;
+      var penddingCount = 0;
 
       // return
       $.each(services, function(idx, ns){
@@ -374,20 +376,24 @@ var setup = (function () {
           var jqImgDiv = $('#img_' + item.key);
           var jqI = jqImgDiv.find('i');
 
+          total = total + 1;
+
           jqI.removeClass('icon-success service-pendding');
           if(item.replicas == 0 || item.replicas > item.availableReplicas ){
             jqI.addClass('service-pendding');
 
             hasPendding = true;
+            penddingCount = penddingCount + 1;
           }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
             jqI.addClass('icon-success');
-          // }else{
-          //   jqI.addClass('glyphicon-remove-circle');
           }
 
           $('#img_path_' + item.key).text(item.fullImagePath);
         });
       });
+
+      $("#successTotal").text(total - penddingCount);
+      $("#statusTotal").text(" / " + total);
 
       if (hasPendding){
         window.setTimeout(function(){that.refresh_service_status();}, 5000);
@@ -465,7 +471,8 @@ var setup = (function () {
 
     $('#btnDoUpdate').attr("disabled","disabled");
     this.post('up/service/update').then(function(d){
-      window.setTimeout(function(){that.up_service_status();}, 1000);
+      // window.setTimeout(function(){that.up_service_status();}, 1000);
+      that.go("/up/service/status");
     });
   };
 
@@ -506,9 +513,10 @@ var setup = (function () {
         count = count + 1;
 
         if (count == jqProject.length){
-          that.get('service/redeploy/all').then(function(d){
-            that.go("/up/service/status");
-          });
+          that.go("/up/service");
+          // that.get('service/redeploy/all').then(function(d){
+          //   that.go("/up/service/status");
+          // });
         }
       }).done(function(){
         $('#btnDatabaseUpdate').attr("disabled", false);
@@ -517,15 +525,15 @@ var setup = (function () {
     });
   };
 
-  app.prototype.redeploy_all = function(){
-    var that = this;
+  // app.prototype.redeploy_all = function(){
+  //   var that = this;
 
-    $('#btnRedeployAll').attr("disabled", 'disabled');
+  //   $('#btnRedeployAll').attr("disabled", 'disabled');
 
-    this.get('service/redeploy/all').then(function(d){
-      that.go("/up/service/status");
-    });
-  };
+  //   this.get('service/redeploy/all').then(function(d){
+  //     that.go("/up/service/status");
+  //   });
+  // };
 
   app.prototype.new_configmap_create = function(){
     var that = this;
@@ -541,7 +549,7 @@ var setup = (function () {
     });
 
     this.post("up/configmap/create", maps).then(function(d){
-      that.go("/up/service");
+      that.go("/up/configmap");
     }).done(function(){
       that.config_item_checked_all();
     });

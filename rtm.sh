@@ -38,6 +38,25 @@ function init(){
   VDIR=${version}
 }
 
+# 从各项目中捞各个 upgrade.yaml 文件
+function copy_upgrade(){
+  project=$1
+
+  [[ ! -d "${workDir}/upgrade" ]] && mkdir "${workDir}/upgrade"
+
+  if [ $project = "core" ]; then
+    cp upgrade/upgrade.yaml ${workDir}/upgrade/core-upgrade.yaml
+  elif [ $project = "trigger" ]; then
+    cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
+  elif [ $project = "kodo" ]; then
+    cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
+  elif [ $project = "func" ]; then
+    cp upgrade-info.yaml ${workDir}/upgrade/func-upgrade.yaml
+  elif [ $project = "message-desk" ]; then
+    cp upgrade.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
+  fi
+}
+
 function rtm_tag(){
   gitUrl=$1
   project=$2
@@ -71,6 +90,9 @@ function rtm_tag(){
   echo "\n"
 
   [[ $project != "launcher" ]] && {
+    # 复制项目内最新的 upgrade 文件到 launcher 内
+    copy_upgrade $project
+
     echo "    ${project}: ${VDIR}:${project}-${commitId}-${timestamp}" >> ${workDir}/${imageYaml}
   }
 }
@@ -105,6 +127,7 @@ function start(){
 
   cd $workDir
   git add ${imageYaml}
+  git add upgrade/*
   git commit -m 'auto commit: RTM release'
   git push
 

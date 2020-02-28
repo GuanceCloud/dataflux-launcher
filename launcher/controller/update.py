@@ -244,16 +244,14 @@ def list_source_and_update_configmaps():
 
   for project in updateProjects:
     namespace = project['namespace']
-    dataKey   = project['dataKey']
     up        = {
       'namespace': namespace,
-      'api': project['api'],
       'project': project['project'],
       'configmaps': []
     }
 
     seq             = currentSeqs.get(project['project'], {}).get('config', 0)
-    updateVersions  = versionMdl.list_project_versions(project['api'], seq, project['dataKey'])
+    updateVersions  = versionMdl.list_project_versions(project['project'], seq)
 
     for item in project['config']:
       mapName = item['mapName']
@@ -293,7 +291,6 @@ def list_update_database_sql():
 
   allDbUpdates = {}
   for ups in SERVICECONFIG['updates']:
-    api        = ups['api']
     project    = ups['project']
     dataKey    = ups['dataKey']
     namespace  = ups['namespace']
@@ -303,7 +300,7 @@ def list_update_database_sql():
       continue
 
     currentSeq      = currentSeqs.get(project, {}).get('database', 0)
-    updateVersions  = versionMdl.list_project_versions(api, currentSeq, dataKey)
+    updateVersions  = versionMdl.list_project_versions(project, currentSeq)
 
     upItem  = {
                 'namespace': namespace,

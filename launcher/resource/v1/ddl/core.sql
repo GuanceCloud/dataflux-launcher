@@ -5,9 +5,9 @@
 # https://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: rm-bp12uq8v6x5274ennao.mysql.rds.aliyuncs.com (MySQL 5.7.25-log)
-# Database: forethought20
-# Generation Time: 2020-02-20 13:55:51 +0000
+# Host: 172.16.0.43 (MySQL 5.7.28)
+# Database: db_standard
+# Generation Time: 2020-02-28 14:19:37 +0000
 # ************************************************************
 
 
@@ -162,7 +162,7 @@ CREATE TABLE `biz_query` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
   `metric` varchar(256) NOT NULL DEFAULT '' COMMENT 'metric 名称',
   `query` json DEFAULT NULL COMMENT '查询条件, sql 或 json body',
-  `qtype` enum('HTTP','TSQL','SQL') NOT NULL COMMENT '查询类型',
+  `qtype` enum('HTTP','TSQL','SQL','CUSTOM_FUNC') NOT NULL COMMENT '查询类型',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `color` varchar(32) NOT NULL DEFAULT '' COMMENT '折线颜色代码',
   `unit` varchar(32) NOT NULL DEFAULT '' COMMENT '数据单位',
@@ -295,6 +295,7 @@ CREATE TABLE `biz_variable` (
   `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE') NOT NULL COMMENT '类型',
   `datasource` varchar(48) NOT NULL COMMENT '数据源类型',
   `definition` json DEFAULT NULL COMMENT '解说，原content内容',
+  `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
   `content` json DEFAULT NULL COMMENT '变量配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -606,6 +607,7 @@ CREATE TABLE `main_manage_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'account 唯一标识 mact-',
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '昵称',
+  `role` varchar(10) NOT NULL COMMENT '角色  admin: 管理员/ dev: 开发者',
   `username` varchar(128) NOT NULL DEFAULT '' COMMENT '账户名',
   `password` varchar(128) NOT NULL DEFAULT '' COMMENT '帐户密码',
   `email` varchar(64) NOT NULL DEFAULT '' COMMENT '邮箱',
@@ -708,6 +710,8 @@ CREATE TABLE `sys_version` (
   `updateAt` int(11) DEFAULT '-1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

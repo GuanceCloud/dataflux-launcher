@@ -116,8 +116,8 @@ def database_init_kapa():
 
 def database_manage_account_create():
   sql = '''
-      INSERT INTO `main_manage_account` (`uuid`, `name`, `username`, `password`, `email`, `mobile`, `createAt`)
-      VALUES (%s, '管理员', %s, %s, %s, '', UNIX_TIMESTAMP());
+      INSERT INTO `main_manage_account` (`uuid`, `name`, `role`, `username`, `password`, `email`, `mobile`, `createAt`)
+      VALUES (%s, '管理员', 'admin', %s, %s, %s, '', UNIX_TIMESTAMP());
     '''
 
   mysqlSetting = settingsMdl.mysql

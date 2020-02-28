@@ -1,0 +1,12 @@
+upgradeInfo: []
+
+# 示例
+# upgradeInfo:
+#   - seq: 0
+#     config:
+#       messageDeskApi: |-
+#         # message-desk更新配置
+#       messageDeskWorker: |-
+#         # message-desk-work更新配置
+#     database: |-
+#       # db更新语句

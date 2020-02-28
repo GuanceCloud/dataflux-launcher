@@ -1,0 +1,6 @@
+upgradeInfo:
+  - seq: 0
+    config:
+      trigger: |-
+        # trigger更新配置
+    

@@ -24,6 +24,7 @@ def get_current_update_seq(mysqlInfo, dbName):
         }
     }
   '''
+  print(mysqlInfo, dbName)
   sql = '''
           SELECT project, seqType, max(upgradeSeq) AS upgradeSeq 
           FROM sys_version 
@@ -104,26 +105,45 @@ def get_project_last_seq():
 
   for up in SERVICECONFIG['updates']:
     project = up['project']
-    api     = up['api']
     dataKey = up['dataKey']
 
-    url     = "{}?seq={}".format(api, -1)
-    rsp     = requests.get(url)
-    content = rsp.json()
+    data = list_project_versions(project, -1)
 
-    if content and dataKey in content:
-      data = content.get(dataKey) or []
-
-      if len(data) > 0:
-        last = data[len(data) - 1]
-        result[project] = last.get('seq', -1)
-      else:
-        result[project] = -1
+    if len(data) > 0:
+      last = data[len(data) - 1]
+      result[project] = last.get('seq', -1)
+    else:
+      result[project] = -1
 
   return result
 
 
-def list_project_versions(url, versionSeq, dataKey):
+def list_project_versions(project, versionSeq):
+  base_path = os.path.dirname(os.path.abspath(__file__))
+  path = base_path + "/../../upgrade/" + project + "-upgrade.yaml"
+
+  if not os.path.exists(path):
+    return []
+
+  upgradeJson = None
+  with open(path) as f:
+      upgradeJson = yaml.safe_load(f)
+
+  if not upgradeJson:
+    return []
+
+  upgrades = []
+
+  # 兼容不同项目使用的字典 key 不同，后面必须矫正
+  if 'upgradeInfo' in upgradeJson:
+    upgrades = upgradeJson.get('upgradeInfo', []) or []
+  elif 'update' in upgradeJson:
+    upgrades = upgradeJson.get('update', []) or []
+  elif 'upgrade' in upgradeJson:
+    upgrades = upgradeJson.get('upgrade', []) or []
+  
+  return [item for item in upgrades if item['seq'] > versionSeq]
+
   # 示例数据
   # return  [
   #           {
@@ -142,17 +162,14 @@ def list_project_versions(url, versionSeq, dataKey):
   #             }
   #           }
   #         ]
-
-  if not url:
-    return []
     
-  url = "{}?seq={}".format(url, versionSeq)
+  # url = "{}?seq={}".format(url, versionSeq)
 
-  rsp = requests.get(url)
-  content = rsp.json()
-  data = None
+  # rsp = requests.get(url)
+  # content = rsp.json()
+  # data = None
 
-  if content and dataKey in content:
-    data = content[dataKey]
+  # if content and dataKey in content:
+  #   data = content[dataKey]
 
-  return data
+  # return data

@@ -1,0 +1,38 @@
+upgradeInfo:
+  - seq: 1
+    database: |-
+      -- 配合授权链接生成文档时，允许隐藏部分接口
+      ALTER TABLE `biz_main_auth_link`
+        ADD COLUMN `showInDoc` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在文档中显示'
+        AFTER `throttlingJSON`;
+  - seq: 2
+    database: |-
+      -- 提供函数文档中，按顺序排列的Python参数列表
+      ALTER TABLE biz_main_func
+      ADD COLUMN `argsJSON` json DEFAULT NULL COMMENT '位置参数JSON' AFTER definition;
+      ALTER TABLE biz_main_func
+      MODIFY COLUMN `kwargsJSON` json DEFAULT NULL COMMENT '命名参数JSON';
+
+      -- 配合「函数可指定适用的工作空间」功能
+      CREATE TABLE `biz_cache_df_workspace` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+        `uuid` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'UUID',
+        `wsName` varchar(256) DEFAULT NULL COMMENT '名称',
+        `dataJSON` json NOT NULL COMMENT '数据JSON',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `BIZ` (`id`),
+        UNIQUE KEY `UUID` (`uuid`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='DataFlux工作空间（缓存）';
+
+      CREATE TABLE `biz_rel_func_df_workspace` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `funcId` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '函数ID',
+        `dfWorkspaceUUID` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'DataFlux 工作空间 UUID',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `BIZ` (`funcId`,`dfWorkspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数-DataFlux工作空间关联';
