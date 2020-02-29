@@ -52,3 +52,23 @@ upgrade:
 
       -- 修复生产环境中 已删除场景的分享设置
       UPDATE biz_share_config set status=3 WHERE status=0 and resourceUUID in (select DISTINCT(uuid) from biz_scene WHERE status=3);
+
+  - seq: 2
+    database: |-
+      -- 管理员添加权限
+      ALTER TABLE main_manage_account ADD COLUMN role VARCHAR(10) NOT NULL COMMENT "角色  admin: 管理员/ dev: 开发者" AFTER name;
+      -- 数据处理
+      update main_manage_account set role="admin" where role = "";
+
+  - seq: 3
+    database: |-
+      -- 新增 视图变量排序字段
+      ALTER TABLE `biz_variable` ADD COLUMN `valueSort` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '视图变量的值排序' AFTER `definition`;
+
+      -- 修复创建工作空间未指定成员时默认添加了 空字符串UUID的成员导致的垃圾数据, 修复方式：直接设置删除状态
+      UPDATE main_account_workspace set `status`=3 WHERE (accountUUID="" or (accountUUID not REGEXP 'acnt[-_]')) and `status`!= 3;
+      UPDATE main_account_privilege set `status`=3 WHERE (accountUUID="" or (accountUUID not REGEXP 'acnt[-_]')) and `status`!= 3;
+
+      -- query 增加枚举类型
+      ALTER TABLE `biz_query` MODIFY COLUMN `qtype` enum('HTTP','TSQL','SQL','CUSTOM_FUNC') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '查询类型' AFTER `query`;
+
