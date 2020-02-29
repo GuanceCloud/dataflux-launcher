@@ -5,14 +5,14 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    core: 1.2.28:core-9af8178-1582985439
-    kodo: 1.2.28:kodo-405df21-1582985439
-    front-webclient: 1.2.28:front-webclient-4e6c84a-1582985439
-    management-webclient: 1.2.28:management-webclient-1a4fcc5-1582985439
-    message-desk: 1.2.28:message-desk-faca440-1582985439
-    message-desk-worker: 1.2.28:message-desk-worker-185871b-1582985439
-    func: 1.2.28:func-a51e1d8-1582985439
-    func-worker: 1.2.28:func-worker-c200109-1582985439
-    trigger: 1.2.28:trigger-2d70fa5-1582985439
-    utils-server: 1.2.28:utils-server-ec15f24-1582985439
-  version: 1.2.28
+    core: 1.2.29:core-9af8178-1582989625
+    kodo: 1.2.29:kodo-405df21-1582989625
+    front-webclient: 1.2.29:front-webclient-4e6c84a-1582989625
+    management-webclient: 1.2.29:management-webclient-1a4fcc5-1582989625
+    message-desk: 1.2.29:message-desk-faca440-1582989625
+    message-desk-worker: 1.2.29:message-desk-worker-185871b-1582989625
+    func: 1.2.29:func-a51e1d8-1582989625
+    func-worker: 1.2.29:func-worker-7da616e-1582989625
+    trigger: 1.2.29:trigger-2d70fa5-1582989625
+    utils-server: 1.2.29:utils-server-ec15f24-1582989625
+  version: 1.2.29
