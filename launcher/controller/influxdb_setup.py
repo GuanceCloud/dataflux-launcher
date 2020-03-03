@@ -228,13 +228,14 @@ def _init_system_workspace(sysDBUUID):
 
 
 def _init_db_instance(instance):
-  encryptKey = settingsMdl.other['core']['secret']['encryptKey']
-  influxPassword = instance.get('password')
-  passwordEncrypt = str(encrypt.cipher_by_aes(influxPassword, encryptKey), encoding="utf-8")
+  # encryptKey = settingsMdl.other['core']['secret']['encryptKey']
+  # influxPassword = instance.get('password')
+  # passwordEncrypt = str(encrypt.cipher_by_aes(influxPassword, encryptKey), encoding="utf-8")
 
   user = {
     "username": instance.get('username'),
-    "passwordEncrypt": passwordEncrypt
+    "password": instance.get('password'),
+    # "passwordEncrypt": passwordEncrypt
   }
 
   authorization = {
