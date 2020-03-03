@@ -6,6 +6,7 @@ import time
 
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl, SERVICECONFIG
+from launcher.utils import encrypt
 
 from influxdb import InfluxDBClient
 
@@ -227,9 +228,13 @@ def _init_system_workspace(sysDBUUID):
 
 
 def _init_db_instance(instance):
+  encryptKey = settingsMdl.other['core']['secret']['encryptKey']
+  influxPassword = instance.get('password')
+  passwordEncrypt = str(encrypt.cipher_by_aes(influxPassword, encryptKey), encoding="utf-8")
+
   user = {
     "username": instance.get('username'),
-    "password": instance.get('password')
+    "passwordEncrypt": passwordEncrypt
   }
 
   authorization = {

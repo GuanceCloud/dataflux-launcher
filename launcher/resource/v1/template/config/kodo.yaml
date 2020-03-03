@@ -26,5 +26,8 @@ influxdb:
     alert_rp: rp5
     default_rp: rp5
 
+secret:
+    encrypt_key: {{ (other.core.secret or {}).encryptKey }}
+
 nsq:
     lookupd: http://nsqlookupd.middleware:4161

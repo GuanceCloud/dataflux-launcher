@@ -40,9 +40,10 @@ inner_app_webhook_url: http://trigger.forethought-inner-app:9000/api/v1/trigger/
 alert_callback_url: http://front-backend.forethought-core:5000/api/v1/webhooks/workspace/{}/rule/{}/type/{}/forward_to
 
 secret:
-  frontAuth: {{(other.core.secret or {}).frontAuth}}
-  manageAuth: {{(other.core.secret or {}).manageAuth}}
-  shareAuth:  {{(other.core.secret or {}).shareAuth}}
+  frontAuth: {{ (other.core.secret or {}).frontAuth}}
+  manageAuth: {{ (other.core.secret or {}).manageAuth}}
+  shareAuth:  {{ (other.core.secret or {}).shareAuth}}
+  encryptKey: {{ (other.core.secret or {}).encryptKey }}
 
 # 默认邀请配置
 invitation_set:
