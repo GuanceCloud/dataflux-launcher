@@ -318,7 +318,10 @@ influxDB:
     default: True
 
   - rpName: rp5
-    duration: 8760  # 365d
+    duration: 8640  # 1 年
+
+  - rpName: rp6
+    duration: 25920  # 3 年
 
 defaultSubdomain:
   console: dataflux
