@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-utils-internal-dataway
+  name: internal-dataway
+  namespace: utils
+spec:
+  replicas: {{ config.replicas or 1 }}
+  selector:
+    matchLabels:
+      app: deployment-utils-internal-dataway
+  template:
+    metadata:
+      labels:
+        app: deployment-utils-internal-dataway
+    spec:
+      containers:
+      - image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: internal-dataway
+        ports:
+        - containerPort: 9528
+          name: 9528tcp01
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/local/cloudcare/forethought/dataway/dataway.yaml
+          name: dataway-config
+          subPath: config.yaml
+        - mountPath: /usr/local/cloudcare/forethought/dataway/license
+          name: dataway-license
+          subPath: license
+        - mountPath: /usr/local/cloudcare/forethought/dataway/cache
+          name: dataway-cache
+        - mountPath: /logdata
+          name: dataway-logs
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: dataway-config
+          optional: false
+        name: dataway-config
+      - configMap:
+          defaultMode: 256
+          name: dataway-license
+          optional: false
+        name: dataway-license
+      - name: dataway-cache
+        persistentVolumeClaim:
+          claimName: internal-dataway-cache
+      - name: dataway-logs
+        persistentVolumeClaim:
+          claimName: internal-dataway-logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-dataway
+  namespace: utils
+spec:
+  ports:
+  - name: 9528tcp02
+    port: 9528
+    protocol: TCP
+    targetPort: 9528
+  selector:
+    app: deployment-utils-internal-dataway
+  type: ClusterIP
+  

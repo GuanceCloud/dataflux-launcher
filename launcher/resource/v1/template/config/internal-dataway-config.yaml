@@ -1,0 +1,34 @@
+# dataway oerating parameters
+
+uuid: agnt_internal_dataway_1
+
+# 初始安装是默认工作空间的 token
+token: {{ (other.workspace or {}).token }}
+collect_second: 6000000
+
+bind: "0.0.0.0:9528"
+
+# 初始安装是默认工作空间的 ak、sk
+access_key: {{ (other.workspace or {}).ak }}
+secret_key: {{ (other.workspace or {}).sk }}
+
+remote_host: http://kodo.forethought-kodo:9527
+
+log: /logdata/log
+log_level: info
+gin_log: /logdata/gin.log
+
+# routes config
+routes_config:
+  - name: default
+    ak_open: false
+    lua:
+
+# batch config
+batch_config:
+  workers: 8
+  batch_size: 100
+  batch_interval: 5
+  queue_size: 128
+
+retag_configs:

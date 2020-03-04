@@ -5,6 +5,16 @@ workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 timestamp=$(date +%s)
 
+# (?<="version"\s*:\s*")[\d\w\.\-]+(?=\")
+dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "\d+\.\d+-\d+-[a-zA-Z0-9]+"`
+
+if [ ! -n "$dwVersion" ]; then
+  echo '未获取到 DataWay 的最新版本'
+  exit 0
+else
+  echo "DataWay 最新版本号：$dwVersion \n"
+fi
+
 # 清空临时工作区
 # 危险操作，必须显式指定目录
 rm -rf /tmp/rtm
@@ -108,6 +118,9 @@ function start(){
   echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
   echo "    nginx: basis:nginx_1.13.3" >> ${workDir}/${imageYaml}
   echo "    kapacitor: basis:kapacitor_1.5.3" >> ${workDir}/${imageYaml}
+  
+  # 最新 DataWay 镜像版本
+  echo "    internal-dataway: dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"

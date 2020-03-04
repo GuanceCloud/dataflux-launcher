@@ -5,7 +5,7 @@ import json
 import time
 
 from launcher.utils.helper.db_helper import dbHelper
-from launcher import settingsMdl, SERVICECONFIG
+from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 from launcher.utils import encrypt
 
 from influxdb import InfluxDBClient
@@ -188,20 +188,18 @@ def _init_system_workspace(sysDBUUID):
   dbInfo = mysqlSetting.get('core')
 
   with dbHelper(mysqlInfo) as db:
-    ws_uuid         = "wksp_system"
     token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
     wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
     bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
 
     params  = (
-                  ws_uuid,
                   token,
                   sysDBUUID,
                   bindInfo
               )
     wsSQL   = '''
               INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) 
-              VALUES (%s, '系统工作空间', %s, '{}', %s, NULL, '', NULL, %s, UNIX_TIMESTAMP());
+              VALUES ('wksp_system', '系统工作空间', %s, '{}', %s, NULL, '', NULL, %s, UNIX_TIMESTAMP());
             '''
     db.execute(wsSQL, dbName = dbInfo['database'], params = params)
 
@@ -213,16 +211,35 @@ def _init_system_workspace(sysDBUUID):
     db.execute(wsDashboard, dbName = dbInfo['database'], params = params)
 
     # 工作空间 AK
-    akSQL = '''
+    akSQL  = '''
               INSERT INTO `main_workspace_accesskey` (`uuid`, `ak`, `sk`, `workspaceUUID`, `creator`, `updator`, `status`, `createAt`) 
               VALUES (%s, %s, %s, 'wksp_system', '', '', 0, UNIX_TIMESTAMP());
-            '''
+             '''
+    ak     = shortuuid.ShortUUID().random(length = 16)
+    sk     = shortuuid.ShortUUID().random(length = 32)
     params = (
               "wsak_" + shortuuid.ShortUUID().random(length = 24),
-              shortuuid.ShortUUID().random(length = 16),
-              shortuuid.ShortUUID().random(length = 32)
+              ak,
+              sk
             )
     db.execute(akSQL, dbName = dbInfo['database'], params = params)
+
+    # 内置 DataWay
+    datawayVersion = DOCKERIMAGES['apps']['images']['internal-dataway'][9:]
+    params = (datawayVersion, )
+    dwSQL  = '''
+              INSERT INTO `main_agent` (`uuid`, `name`, `creator`, `version`, `host`, `port`, `domainName`, `workspaceUUID`, `status`, `updator`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)
+              VALUES ('agnt_internal_dataway_1', '内置 DataWay', '', %s, '', 0, '', 'wksp_system', 0, '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());
+              '''
+    db.execute(dwSQL, dbName = dbInfo['database'], params = params)
+
+    settingsMdl.other = {
+      "workspace": {
+        "token": token,
+        "ak": ak,
+        "sk": sk
+      }
+    }
 
     return True
 

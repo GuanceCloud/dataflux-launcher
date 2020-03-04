@@ -286,7 +286,32 @@ services:
       name: 公共工具服务
       image: utils-server
 
-    configmaps: []
+    - key: internal-dataway
+      name: 内置 DataWay
+      image: internal-dataway
+
+    configmaps: 
+    - key: internalDataWay
+      mapname: dataway-config
+      mapkey: config.yaml
+      services:
+      - internal-dataway
+      template: internal-dataway-config.yaml
+
+    - key: internalDataWayLicense
+      mapname: dataway-license
+      mapkey: license
+      services:
+      - internal-dataway
+      template: internal-dataway-license
+
+    pvcs:
+    - name: internal-dataway-cache
+      storage: 10Gi
+
+    - name: internal-dataway-logs
+      storage: 20Gi
+
 
 databases:
   core: df_core
