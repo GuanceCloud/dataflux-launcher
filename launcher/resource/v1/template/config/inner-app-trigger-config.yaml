@@ -13,7 +13,7 @@ funcServer:
 messageDesk:
   akId: ""
   akSecret: ""
-  server: "http://message-desk.cloudcare.cn"
+  server: "http://message-desk.middleware:8088"
 
 sms:
   templateCode: 
