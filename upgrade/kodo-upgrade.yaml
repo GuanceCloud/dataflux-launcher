@@ -1,11 +1,11 @@
 update:
     - seq: 1
       config:
-          kodo: -|
+          kodo: |-
             # 新增配置项，用于敏感信息的加密和解密，key长度16位
             secret:
               encrypt_key:  xxxxxxxxxxxxxxx
-          kodoInner: -|
+          kodoInner: |-
             # 新增配置项，用于敏感信息的加密和解密，key长度16位
             secret:
               encrypt_key:  xxxxxxxxxxxxxxx
