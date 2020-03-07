@@ -44,3 +44,18 @@ buildRTM:
     - docker push pubrepo.jiagouyun.com/$REPO:$TAG
   tags:
     - cloudcare
+
+buildRTMPrev:
+  stage: build
+  only:
+    - /\d+\.\d+\.\d+\.\d+-\w+-prev/
+  script:
+    - V=(${CI_COMMIT_REF_NAME//[\.-]/ })
+    - VDIR=${V[0]}.${V[1]}.${V[2]}.${V[3]}
+    - REPO=dataflux-prev/$VDIR
+    - TAG=${PROJECT}-${V[4]}
+    - docker build -t $REPO:$TAG .
+    - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
+    - docker push pubrepo.jiagouyun.com/$REPO:$TAG
+  tags:
+    - cloudcare
