@@ -118,7 +118,7 @@ function start(){
   : > ${imageYaml}
   echo "apps:" > ${workDir}/${imageYaml}
   echo "  registry: pubrepo.jiagouyun.com" >> ${workDir}/${imageYaml}
-  echo "  image_dir: dataflux/" >> ${workDir}/${imageYaml}
+  echo "  image_dir: dataflux-prev/" >> ${workDir}/${imageYaml}
   echo "  images:" >> ${workDir}/${imageYaml}
   echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
   echo "    nginx: basis:nginx_1.13.3" >> ${workDir}/${imageYaml}
