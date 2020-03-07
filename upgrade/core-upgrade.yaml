@@ -72,3 +72,14 @@ upgrade:
       -- query 增加枚举类型
       ALTER TABLE `biz_query` MODIFY COLUMN `qtype` enum('HTTP','TSQL','SQL','CUSTOM_FUNC') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '查询类型' AFTER `query`;
 
+  - seq: 4
+    database: |-
+      -- 增加内置 DataWay
+      INSERT INTO `main_agent` (`uuid`, `name`, `version`, `host`, `port`, `domainName`, `workspaceUUID`, `status`, `creator`, `updator`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)
+      VALUES ('agnt_internal_dataway_1', '内置 DataWay', '0.1-349-gfff24b0', '', 0, '', 'wksp_system', 0, '', '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());
+
+  - seq: 5
+    database: |-
+      -- 节点新增 是否打开继承开关字段，默认打开
+      ALTER TABLE `biz_node` ADD COLUMN `isInheritance` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否继承' AFTER `filter`;
+      

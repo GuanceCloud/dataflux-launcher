@@ -36,3 +36,54 @@ upgradeInfo:
         PRIMARY KEY (`seq`),
         UNIQUE KEY `BIZ` (`funcId`,`dfWorkspaceUUID`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数-DataFlux工作空间关联';
+  - seq: 3
+    database: |-
+      -- 拼写错误：全局 offical -> official
+      ALTER TABLE biz_main_script_set
+      MODIFY COLUMN `type` varchar(64) NOT NULL DEFAULT 'user' COMMENT '类型 user|official';
+
+      UPDATE biz_main_script_set SET `type` = 'official' WHERE `type` = 'offical';
+
+      ALTER TABLE biz_main_script_set_export_history
+      MODIFY COLUMN `exportType` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '导出类型 user|official';
+
+      UPDATE biz_main_script_set_export_history SET `exportType` = 'official' WHERE `exportType` = 'offical';
+
+      ALTER TABLE biz_main_script_set_import_history
+      MODIFY COLUMN `importType` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '导入类型 user|official';
+
+      UPDATE biz_main_script_set_import_history SET `importType` = 'official' WHERE `importType` = 'offical';
+  - seq: 4
+    database: |-
+      -- 增加 category=check 的函数
+      ALTER TABLE biz_main_func
+      MODIFY COLUMN `category` varchar(64) NOT NULL DEFAULT 'general' COMMENT '类别 general|prediction|transformation|action|command|query|check';
+
+      ALTER TABLE biz_main_func
+      ADD COLUMN `extraConfigJSON` json DEFAULT NULL COMMENT '函数额外配置JSON' AFTER `kwargsJSON`;
+
+      -- 函数增加 tag 功能
+      ALTER TABLE biz_main_func
+      ADD COLUMN `tagsJSON` json DEFAULT NULL COMMENT '函数标签JSON' AFTER `category`;
+
+      -- 函数增加指定 crontab 功能
+      ALTER TABLE biz_main_crontab_config
+      MODIFY COLUMN `crontab` varchar(64) DEFAULT NULL COMMENT '执行频率（Crontab语法）';
+
+      -- 自动触发配置增加 tag 功能
+      ALTER TABLE biz_main_crontab_config
+      ADD COLUMN `tagsJSON` json DEFAULT NULL COMMENT '自动触发配置标签JSON' AFTER `crontab`;
+
+      -- 增加函数存储区功能
+      CREATE TABLE `biz_main_func_store` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+        `key` varchar(256) NOT NULL COMMENT '键名',
+        `valueJSON` json NOT NULL COMMENT '值JSON',
+        `scope` varchar(64) NOT NULL COMMENT '范围',
+        `expireAt` int(11) DEFAULT NULL COMMENT '过期时间（秒级UNIX时间戳）',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `ID` (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数存储';
