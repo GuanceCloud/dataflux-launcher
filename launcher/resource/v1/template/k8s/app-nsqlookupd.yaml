@@ -28,9 +28,6 @@ spec:
         - containerPort: 4160
           name: 4160tcp2
           protocol: TCP
-        - containerPort: 4161
-          name: 4161tcp309931
-          protocol: TCP
         resources: {}
         stdin: true
         terminationMessagePath: /dev/termination-log
