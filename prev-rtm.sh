@@ -4,14 +4,6 @@ tmpRTMDir=/tmp/rtm
 workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 
-dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "\d+\.\d+-\d+-[a-zA-Z0-9]+"`
-
-if [ ! -n "$dwVersion" ]; then
-  echo '未获取到 DataWay 的最新版本'
-  exit 0
-else
-  echo "DataWay 最新版本号：$dwVersion \n"
-fi
 
 # 清空临时工作区
 # 危险操作，必须显式指定目录
@@ -113,6 +105,14 @@ function rtm_tag(){
 }
 
 function start(){
+  dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "\d+\.\d+-\d+-[a-zA-Z0-9]+"`
+  if [ ! -n "$dwVersion" ]; then
+    echo '未获取到 DataWay 的最新版本'
+    exit 0
+  else
+    echo "DataWay 最新版本号：$dwVersion \n"
+  fi
+
   init $1
 
   : > ${imageYaml}
