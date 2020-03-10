@@ -318,14 +318,14 @@ def init_setting():
   settingsMdl.other = {
     "core": {
       "secret": {
-        "frontAuth": shortuuid.ShortUUID().random(length=48),
-        "manageAuth": shortuuid.ShortUUID().random(length=48),
-        "shareAuth": shortuuid.ShortUUID().random(length=48),
-        "encryptKey": shortuuid.ShortUUID().random(length=16)
+        "frontAuth": shortuuid.ShortUUID().random(length=31),
+        "manageAuth": shortuuid.ShortUUID().random(length=31),
+        "shareAuth": shortuuid.ShortUUID().random(length=31),
+        "encryptKey": shortuuid.ShortUUID().random(length=31)
       }
     },
     'func': {
-      "secret": shortuuid.ShortUUID().random(length=48)
+      "secret": shortuuid.ShortUUID().random(length=31)
     }
   }
 
