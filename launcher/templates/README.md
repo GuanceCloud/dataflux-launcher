@@ -1,13 +1,19 @@
-### 本安装程序说明
+#### Launcher 使用说明
 
-* 本安装程序是**全新部署安装** DataFlux 应用使用， **目前不可用于应用升级**
+本安装程序是全新安装或升级 DataFlux 应用使用，看到此界面，说明已经配置好了 kubernetes 集群环境。
 
-### 运行本安装程序前的准备工作
+#### **在开始安装之前，请注意先完成以下几个事项：**
 
-* 安装并配置好 kubernetes 集群
-2. 本安装配置程序必须在目标集群内启动并运行
-3. kubectl config 文件放入本服务容器内的 **root/.kube/config** 位置
-4. 准备好 **MySQL、Redis、InfluxDB、镜像仓库** 等基础设施服务
-5. 镜像仓库中要准备好应用所有需要的所有镜像
+* 已根据部署手册中的资源清单开通了所需的资源，如 **_MySQL、Redis、InfluxDB_** 等基础设施服务
+* 已创建 **_MySQL、InfluxDB_** 的管理员账号，必须是管理员账号，因为需要使用管理员账号去初始化数据库
+* 将 RDS 的默认参数  **_innodb\_large\_prefix_** 修改为  **_ON_**
+* InfluxDB 必须开通 **_VPC 双向访问功能_**
 
  
+#### **!!! 必须注意的事项：**
+
+* 安装完成后，必须将 Launcher 的 Pod 副本数调为0，即停止 Launcher 服务，防止被误访问后破坏集群环境，可执行以下命令：
+
+    ```
+    kubectl patch deployment launcher -p '{"spec": {"replicas": 0}}' -n launcher
+    ```
