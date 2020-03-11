@@ -469,10 +469,29 @@ var setup = (function () {
   app.prototype.up_service_update = function(){
     var that = this;
 
-    $('#btnDoUpdate').attr("disabled","disabled");
+    $('#btnDoUpdate').attr("disabled", true);
     this.post('up/service/update').then(function(d){
       // window.setTimeout(function(){that.up_service_status();}, 1000);
       that.go("/up/service/status");
+    });
+  };
+
+  app.prototype.up_config_check_edit = function(){
+    var jqCheckbox = $('label.config-check-edit > :checkbox');
+    var btnConfigmapUpdate = $('#btnConfigmapUpdate');
+
+    btnConfigmapUpdate.attr("disabled", true);
+    jqCheckbox.each(function(idx, item){
+      var me = $(item);
+      var key = me.data('key');
+
+      if(me.is(":checked")){
+        $('#collapse' + key).addClass('checked-edit');
+
+        btnConfigmapUpdate.attr("disabled", false);
+      }else{
+        $('#collapse' + key).removeClass('checked-edit');
+      }
     });
   };
 
@@ -481,14 +500,23 @@ var setup = (function () {
     var that = this;
     var maps = {};
 
-    $('#btnConfigmapUpdate').attr("disabled","disabled");
-
+    $('#btnConfigmapUpdate').attr("disabled", true);
     $('.config-review textarea').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
 
-      maps[key] = me.val();
+      // 只更新勾选了 “升级配置” 的配置项
+      if ($('#chk' + key).is(":checked")){
+        maps[key] = me.val();
+      }
+
     });
+
+    if (Object.keys(maps).length == 0){
+      alert("未勾选需要升级的配置项。");
+
+      return;
+    }
 
     this.post("up/configmap/update", maps).then(function(d){
       that.go("/up/database");
@@ -502,9 +530,10 @@ var setup = (function () {
     var that = this;
     var count = 0;
 
-    $('#btnDatabaseUpdate').attr("disabled", 'disabled');
-    jqProject = $('.upgrade-sql-list')
+    $('#btnDatabaseUpdate').attr("disabled", true);
+    jqProject = $('.upgrade-sql-list');
 
+    // window.setTimeout(function() {
     jqProject.each(function(idx, item){
       var me = $(item);
       var project = me.data('project');
@@ -519,10 +548,11 @@ var setup = (function () {
           // });
         }
       }).done(function(){
-        $('#btnDatabaseUpdate').attr("disabled", false);
+        // $('#btnDatabaseUpdate').attr("disabled", false);
       });
 
     });
+    // }, 10);
   };
 
   // app.prototype.redeploy_all = function(){

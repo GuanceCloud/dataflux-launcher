@@ -14,7 +14,13 @@
         <div class="panel-heading" role="tab">
           <h4 class="panel-title">
             {% if conf.updates | length > 0 %}
-            <span class="text-danger pull-right">配置有更新!!!</span>
+              <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
+                <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" checked="checked"/>&nbsp;升级配置
+              </label>
+            {% else %}
+              <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
+                <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" />&nbsp;升级配置
+              </label>
             {% endif %}
 
             <i class="icon-right"></i>
@@ -24,9 +30,13 @@
                 {{ serviceName }}{{ '、' if not loop.last }}
               {% endfor %}）
             </a>
+
+            {% if conf.updates | length > 0 %}
+            <span class="text-danger">配置有更新!!!</span>
+            {% endif %}
           </h4>
         </div>
-        <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
+        <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'checked-edit' if conf.updates | length > 0  }}" role="tabpanel">
           <div class="panel-body">
             <div class="config-update-left">
 
@@ -45,6 +55,7 @@
 
             </div>
             <div class="config-update-right">
+              <div class="disable-layer"></div>
               <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>
             </div>
           </div>
@@ -57,19 +68,17 @@
 </div>
 
 <div class="row form-body">
-    <div class="form-group">
-      <label class="col-sm-2 control-label">&nbsp;</label>
-      <div class="col-sm-10">
-        <button id="btnConfigmapUpdate"  class="btn btn-primary" onclick="setup.configmap_update()">
-            确认升级
-          </button>
-          <a id="btnNext" class="btn btn-default" href="/up/database">
-            不更新，直接下一步
-          </a>
-      </div>
-    </div>
+    <div class="pull-right">
+      <span class="text-danger" style="font-weight: bold;">只会升级勾选了“升级配置”的配置项 !!！</span>
 
-  </div>
+      <a id="btnNext" class="btn btn-default" href="/up/database">
+        不更新，直接下一步
+      </a>
+
+      <button id="btnConfigmapUpdate"  class="btn btn-primary" onclick="setup.configmap_update()">
+        确认升级配置
+      </button>
+    </div>
 </div>
 
 
@@ -93,6 +102,8 @@
 
       return true;
     });
+
+    setup.up_config_check_edit()
   });
 
 </script>
