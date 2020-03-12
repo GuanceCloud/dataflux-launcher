@@ -53,6 +53,8 @@ upgradeInfo:
       MODIFY COLUMN `importType` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '导入类型 user|official';
 
       UPDATE biz_main_script_set_import_history SET `importType` = 'official' WHERE `importType` = 'offical';
+
+  # ft_data_processor_2020-03-05.sql
   - seq: 4
     database: |-
       -- 增加 category=check 的函数
@@ -87,3 +89,32 @@ upgradeInfo:
         PRIMARY KEY (`seq`),
         UNIQUE KEY `ID` (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数存储';
+  - seq: 5
+    database: |-
+      -- 自动触发配置增加重复检查
+      ALTER TABLE biz_main_crontab_config
+      ADD COLUMN `configHash` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '配置哈希' AFTER `saveResult`;
+
+      ALTER TABLE biz_main_crontab_config
+      ADD UNIQUE KEY `CONFIG_HASH` (`configHash`);
+
+      -- 自动触发配置区分从UI/API创建
+      ALTER TABLE biz_main_crontab_config
+      ADD COLUMN `origin` varchar(64) NOT NULL DEFAULT 'api' COMMENT '来源 api|ui' AFTER `configHash`;
+
+      UPDATE biz_main_crontab_config SET `origin` = 'ui';
+
+      ALTER TABLE biz_main_crontab_config
+      ADD KEY `ORIGIN` (`origin`);
+
+      -- 授权链接区分从UI/API创建
+      ALTER TABLE biz_main_auth_link
+      ADD COLUMN `origin` varchar(64) NOT NULL DEFAULT 'api' COMMENT '来源 api|ui' AFTER `throttlingJSON`;
+
+      UPDATE biz_main_auth_link SET `origin` = 'ui';
+
+      ALTER TABLE biz_main_auth_link
+      ADD KEY `ORIGIN` (`origin`);
+
+
+  # ft_data_processor_2020-03-12.sql
