@@ -345,10 +345,10 @@ var setup = (function () {
       images[key]['replicas'] = me.val();
     });
 
-    configs['imageRegistry'] = $('#iptImageRegistry').val();
+    // configs['imageRegistry'] = $('#iptImageRegistry').val();
     configs['imageDir'] = $('#iptImageDir').val();
-    configs['imageRegistryUser'] = $('#iptImageRegistryUser').val();
-    configs['imageRegistryPwd'] = $('#iptImageRegistryPwd').val();
+    // configs['imageRegistryUser'] = $('#iptImageRegistryUser').val();
+    // configs['imageRegistryPwd'] = $('#iptImageRegistryPwd').val();
     configs['storageClassName'] = $('#sltStorageClassName').val();
     configs['images'] = images;
 
@@ -398,17 +398,15 @@ var setup = (function () {
       if (hasPendding){
         window.setTimeout(function(){that.refresh_service_status();}, 5000);
       }else{
-        window.setTimeout(function(){
-          that.post('version/save').then(function(d){
-            if(!d.content){
-              alert("写入版本失败，刷新本页面可以重试写入版本。");
-            }else{
-              $('#spanStatusInfo').show();
-            }
-          }).fail(function(d){
+        that.post('version/save').then(function(d){
+          if(!d.content){
             alert("写入版本失败，刷新本页面可以重试写入版本。");
-          });
-        }, 2000);
+          }else{
+            $('#spanStatusInfo').show();
+          }
+        }).fail(function(d){
+          alert("写入版本失败，刷新本页面可以重试写入版本。");
+        });
       }
     });
   };

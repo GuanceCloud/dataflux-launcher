@@ -2,7 +2,7 @@
 
 import os, re, subprocess, time
 import markdown, shortuuid
-import json, yaml
+import json, yaml, base64
 
 from launcher.utils.template import jinjia2_render
 
@@ -222,6 +222,29 @@ def patch_configmap(mapName, mapKey, content, namespace):
   os.remove(path)
 
   return output, err
+
+
+def registry_secret_get(namespace, registryKeyName):
+  cmd = "kubectl get secret {} -n {} -o json".format(registryKeyName, namespace)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  secretJson  = json.loads(output)
+
+  dockerConfigJson = base64.b64decode(secretJson['data']['.dockerconfigjson'])
+  dockerConfig     = json.loads(dockerConfigJson)
+  auths            = dockerConfig['auths']  
+
+  result = []
+  for key, val in auths.items():
+    result.append({
+        "address": key,
+        "username": val['username'],
+        "password": val['password']
+      })
+
+  return result
+
 
 # 创建镜像凭证
 def registry_secret_create(namespace, server, username, password):

@@ -238,23 +238,27 @@ def service_create(data):
   tmpDir = SERVICECONFIG['tmpDir']
   appYamls = []
 
-  imageRegistry = data.get('imageRegistry') or ''
   imageDir = data.get('imageDir') or ''
-  imageRegistryUser = data.get('imageRegistryUser') or ''
-  imageRegistryPwd = data.get('imageRegistryPwd') or ''
   storageClassName = data.get('storageClassName') or ''
   images = data.get('images', {})
 
+  registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
+  
+  registry      = registrySecrets[0]
+  registryAddr  = registry.get('address') or ''
+  registryUser  = registry.get('username') or ''
+  registryPwd   = registry.get('password') or ''
+
   imageSettings = {
-    "imageRegistry": imageRegistry,
+    "imageRegistry": registryAddr,
     "imageDir": imageDir,
     "images": {}
   }
 
   settingsMdl.registry = {
-    "server": imageRegistry,
-    "username": imageRegistryUser,
-    "password": imageRegistryPwd
+    "server": registryAddr,
+    "username": registryUser,
+    "password": registryPwd
   }
 
   settingsMdl.other = {
@@ -265,7 +269,7 @@ def service_create(data):
   _PVC_create(storageClassName)
 
   for key, val in images.items():
-    imagePath = '{}/{}/{}'.format(imageRegistry, imageDir, val.get('imagePath') or '')
+    imagePath = '{}/{}/{}'.format(registryAddr, imageDir, val.get('imagePath') or '')
     val['fullImagePath'] = re.sub('/+', '/', imagePath)
 
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
