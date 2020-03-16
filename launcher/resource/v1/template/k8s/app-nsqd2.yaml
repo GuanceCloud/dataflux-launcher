@@ -22,7 +22,7 @@ spec:
         - --lookupd-tcp-address=nsqlookupd:4160
         - --data-path=/data/nsqd
         - --max-msg-size
-        - 104857600
+        - "104857600"
         - --msg-timeout
         - 30h
         image: {{ config.fullImagePath }}
