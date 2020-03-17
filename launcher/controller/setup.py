@@ -272,6 +272,10 @@ def service_create(data):
     imagePath = '{}/{}/{}'.format(registryAddr, imageDir, val.get('imagePath') or '')
     val['fullImagePath'] = re.sub('/+', '/', imagePath)
 
+    # 0 副本的服务，不创建
+    if val.get('replicas', 1) == 0:
+      continue
+
     serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
     path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 

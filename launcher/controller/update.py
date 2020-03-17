@@ -165,12 +165,17 @@ def deploy_update():
 
   for ns in deployStatus:
     for deploy in ns['services']:
+      # 新增的 0 副本应用，不做创建
+      if deploy['isNew'] and deploy['replicas'] == 0:
+        continue
+
       if 'fullImagePath' not in deploy or deploy['fullImagePath'] != deploy['newImagePath']:
         key = deploy['key']
         params = {
                     "replicas": deploy['replicas'],
                     "fullImagePath": deploy['newImagePath']
                   }
+
         serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": params})
         path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 

@@ -42,12 +42,20 @@ def deploy_status():
       "services": []
     }
     for service in ns['services']:
-      key = service['key']
-      name = service['name']
+      key      = service['key']
+      name     = service['name']
+      replicas = service.get('replicas', 1)
+
+      disabled = (replicas == 0)
 
       if key in tempStatus:
+          if replicas == 0:
+            # 配置里的 replaces 为0，表示此服务已经下线，但不做删除，只是将副本数设为0
+            tempStatus[key]['replicas'] = 0
+
           tempStatus[key]['name'] = name
           tempStatus[key]['imageKey'] = service['image']
+          tempStatus[key]['disabled'] = disabled
 
           ds["services"].append(tempStatus[key])
       else:
@@ -56,7 +64,8 @@ def deploy_status():
                   'name': name,
                   'imageKey': service['image'],
                   'replicas': 0,
-                  'availableReplicas': 0
+                  'availableReplicas': 0,
+                  'disabled': disabled
               })
 
     deployStatus.append(ds)

@@ -6,7 +6,7 @@ metadata:
   name: func-worker-beat
   namespace: func
 spec:
-  replicas: {{ config.replicas or 1 }}
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-func-func-worker-beat

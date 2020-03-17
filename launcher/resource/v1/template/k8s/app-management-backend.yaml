@@ -6,7 +6,7 @@ metadata:
   name: management-backend
   namespace: forethought-core
 spec:
-  replicas: {{ config.replicas or 1 }}
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-forethought-core-management-backend

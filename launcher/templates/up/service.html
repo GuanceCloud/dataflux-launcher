@@ -30,9 +30,9 @@
                     {{ item.fullImagePath }}
                   </span>
                   {% if item.newImagePath != item.fullImagePath %}
-                    {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+                    {% if not item.fullImagePath or item.replicas != item.availableReplicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+                    {% elif item.replicas == item.availableReplicas %}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}
@@ -47,9 +47,9 @@
                     {{ item.newImagePath }}
                   </span>
                   {% if item.newImagePath == item.fullImagePath %}
-                    {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+                    {% if item.replicas != item.availableReplicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+                    {% elif item.replicas == item.availableReplicas %}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}
@@ -67,7 +67,7 @@
         <div class="high-block">
           <h5> 新的应用：</h5>
           {% for item in ns.services %}
-            {% if item.isNew %}
+            {% if item.isNew and not item.disabled %}
             <div class="form-group app-image" id="img_{{ item.key }}">
               <label class="col-sm-2 control-label">{{ item.name }}:</label>
               <div class="col-sm-10 text-right service-status">
@@ -76,9 +76,9 @@
                     {{ item.newImagePath }}
                   </span>
                   {% if item.newImagePath == item.fullImagePath %}
-                    {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+                    {% if item.replicas > item.availableReplicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+                    {% elif item.replicas == item.availableReplicas %}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}

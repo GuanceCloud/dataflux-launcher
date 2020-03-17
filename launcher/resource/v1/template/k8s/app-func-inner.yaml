@@ -6,7 +6,7 @@ metadata:
   name: func-inner
   namespace: func
 spec:
-  replicas: {{ config.replicas or 1 }}
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-func-func-inner

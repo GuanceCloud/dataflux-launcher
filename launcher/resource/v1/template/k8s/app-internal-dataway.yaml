@@ -6,7 +6,7 @@ metadata:
   name: internal-dataway
   namespace: utils
 spec:
-  replicas: {{ config.replicas or 1 }}
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-utils-internal-dataway

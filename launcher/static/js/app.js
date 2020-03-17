@@ -376,19 +376,21 @@ var setup = (function () {
           var jqImgDiv = $('#img_' + item.key);
           var jqI = jqImgDiv.find('i');
 
-          total = total + 1;
+          if (item.replicas > 0){
+            total = total + 1;
 
-          jqI.removeClass('icon-success service-pendding');
-          if(item.replicas == 0 || item.replicas > item.availableReplicas ){
-            jqI.addClass('service-pendding');
+            jqI.removeClass('icon-success service-pendding');
+            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
+              jqI.addClass('service-pendding');
 
-            hasPendding = true;
-            penddingCount = penddingCount + 1;
-          }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
-            jqI.addClass('icon-success');
+              hasPendding = true;
+              penddingCount = penddingCount + 1;
+            }else if(item.replicas == item.availableReplicas){
+              jqI.addClass('icon-success');
+            }
+
+            $('#img_path_' + item.key).text(item.fullImagePath);
           }
-
-          $('#img_path_' + item.key).text(item.fullImagePath);
         });
       });
 
@@ -430,22 +432,22 @@ var setup = (function () {
           jqNewI.removeClass('text-warning glyphicon glyphicon-ban-circle icon-success service-pendding');
 
           if(item.newImagePath == item.fullImagePath){
-            if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
               jqNewI.addClass('service-pendding');
               jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
 
               hasPendding = true;
-            }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+            }else if(item.replicas == item.availableReplicas){
               jqNewI.addClass('icon-success');
               jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
             }
           }else{
-            if(item.replicas == 0 || item.replicas > item.availableReplicas ){
+            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
               jqOldI.addClass('service-pendding');
               jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
 
               hasPendding = true;
-            }else if(item.replicas > 0 || item.replicas == item.availableReplicas){
+            }else if(item.replicas == item.availableReplicas){
               jqOldI.addClass('icon-success');
               jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
             }

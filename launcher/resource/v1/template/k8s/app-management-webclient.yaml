@@ -6,7 +6,7 @@ metadata:
   name: management-webclient
   namespace: forethought-webclient
 spec:
-  replicas: {{ config.replicas or 1 }}
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-forethought-webclient-management-webclient

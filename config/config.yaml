@@ -59,6 +59,7 @@ services:
     - key: trigger
       name: 通知触发器
       image: trigger
+      replicas: 1
 
     configmaps:
     - key: innerAppTrigger
@@ -73,10 +74,12 @@ services:
     - key: management-webclient
       name: 管理后台前端
       image: management-webclient
+      replicas: 1
 
     - key: front-webclient
       name: 用户前台前端
       image: front-webclient
+      replicas: 1
 
     configmaps:
     - key: frontWeb
@@ -112,14 +115,17 @@ services:
     - key: kodo
       name: Kodo
       image: kodo
+      replicas: 1
 
     - key: kodo-inner
       name: Kodo Inner
       image: kodo
+      replicas: 1
 
     - key: kodo-nginx
       name: Kodo Nginx
       image: nginx
+      replicas: 1
 
     configmaps:
     - key: kodo
@@ -165,10 +171,12 @@ services:
     - key: func-worker-beat
       name: 函数计算 Worker Beat
       image: func-worker
+      replicas: 1
 
     - key: func-worker-debugger
       name: 函数计算 Worker Debugger
       image: func-worker
+      replicas: 1
 
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
@@ -210,38 +218,47 @@ services:
     - key: message-desk
       name: 消息中心 API
       image: message-desk
+      replicas: 1
 
     - key: message-desk-worker
       name: 消息中心 Worker
       image: message-desk-worker
+      replicas: 1
 
     - key: nsqadmin
       name: NSQ Admin
       image: nsq
+      replicas: 1
 
     - key: nsqlookupd
       name: NSQ Lookupd
       image: nsq
+      replicas: 1
 
     - key: nsqd
       name: NSQ Node
       image: nsq
+      replicas: 1
 
     - key: nsqd2
       name: NSQ Node 02
       image: nsq
+      replicas: 1
 
     - key: nsqd3
       name: NSQ Node 03
       image: nsq
+      replicas: 1
 
     - key: kapacitor
       name: Kapacitor
       image: kapacitor
+      replicas: 1
 
     - key: kapacitor02
       name: Kapacitor 02
       image: kapacitor
+      replicas: 1
 
     configmaps:
     - key: messageDeskApi
@@ -285,10 +302,12 @@ services:
     - key: utils-server
       name: 公共工具服务
       image: utils-server
+      replicas: 1
 
     - key: internal-dataway
       name: 内置 DataWay
       image: internal-dataway
+      replicas: 1
 
     configmaps: 
     - key: internalDataWay

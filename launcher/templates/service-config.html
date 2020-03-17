@@ -48,6 +48,7 @@
       <div class="high-block">
         <h5>命名空间：{{ item.namespace }}</h5>
         {% for svc in item.services %}
+        {% if svc.replicas > 0 %}
         <div class="form-group app-image">
           <label for="ipt{{ svc.key }}" class="col-sm-2 control-label">{{ svc.name or svc.key }}:</label>
           <div class="col-sm-5">
@@ -55,6 +56,7 @@
             <input id="hid{{ svc.key }}" type="hidden" data-key="{{ svc.key }}" value="{{ svc.replicas }}">
           </div>
         </div>
+        {% endif %}
         {%endfor%}
       </div>
       {%endfor%}  

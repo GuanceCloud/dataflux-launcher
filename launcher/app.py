@@ -173,19 +173,16 @@ def register_update_router(app):
       ns['newCount']    = 0
 
       for deploy in ns['services']:
-        if deploy['newImagePath'] != deploy.get('fullImagePath', '') or deploy['replicas'] != deploy['availableReplicas']:
-          allUpdated = False
+        # if deploy['newImagePath'] != deploy.get('fullImagePath', '') or deploy['replicas'] != deploy['availableReplicas']:
+        #   allUpdated = False
 
         if deploy['isUpdate']:
           ns['updateCount'] = ns['updateCount'] + 1
+          allUpdated = False
 
-        if deploy['isNew']:
+        if deploy['isNew'] and not deploy['disabled']:
           ns['newCount'] = ns['newCount'] + 1
-
-          # break
-
-      # if not allUpdated:
-      #   break
+          allUpdated = False
 
     return render("up/service.html", {"title": "升级应用", "pageData": { "deployStatus": deployStatus, "allUpdated": allUpdated}, "steps": STEPS_COMMON + STEPS_UPDATE })
 
