@@ -165,8 +165,8 @@ def deploy_update():
 
   for ns in deployStatus:
     for deploy in ns['services']:
-      # 新增的 0 副本应用，不做创建
-      if deploy['isNew'] and deploy['replicas'] == 0:
+      # 新增的 禁用应用，不做创建
+      if deploy['isNew'] and deploy['disabled']:
         continue
 
       if 'fullImagePath' not in deploy or deploy['fullImagePath'] != deploy['newImagePath']:

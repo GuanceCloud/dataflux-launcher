@@ -63,7 +63,7 @@ def deploy_status():
                   'key': key,
                   'name': name,
                   'imageKey': service['image'],
-                  'replicas': 0,
+                  'replicas': replicas,
                   'availableReplicas': 0,
                   'disabled': disabled
               })
