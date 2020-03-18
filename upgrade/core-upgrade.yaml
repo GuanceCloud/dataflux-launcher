@@ -77,3 +77,39 @@ upgrade:
       -- 增加内置 DataWay
       INSERT INTO `main_agent` (`uuid`, `name`, `version`, `host`, `port`, `domainName`, `workspaceUUID`, `status`, `creator`, `updator`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)
       VALUES ('agnt_internal_dataway_1', '内置 DataWay', '0.1-349-gfff24b0', '', 0, '', 'wksp_system', 0, '', '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());
+
+  # 3.16 迭代
+  - seq: 5
+    database: |-
+      -- 节点新增 是否打开继承开关字段，默认打开
+      ALTER TABLE `biz_node` ADD COLUMN `isInheritance` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否继承' AFTER `filter`;
+
+      -- 节点上新增2个字段，用来控制子节点的图标和继承信息
+      ALTER TABLE `biz_node`
+      ADD COLUMN `subIconSet` json NULL COMMENT '子节点的图标信息' AFTER `exclude`,
+      ADD COLUMN `subIsInheritance` tinyint(1) NOT NULL DEFAULT 1 COMMENT '子节点是否继承父节点过滤条件' AFTER `subIconSet`;
+
+      --  新增ck 黑名单表  03/16/2020
+      CREATE TABLE `main_ck_blacklist` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ckbl-',
+        `dbUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '原始 Measurement 所在 DB uuid',
+        `measurement` varchar(48) NOT NULL DEFAULT '' COMMENT '指标名',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    config:
+      core: |-
+        kodo:
+          # 在原有的 命令中追加了 DW_VERSION
+          upgradeCmd: 'DW_KODO=http://172.16.0.12:10556  DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_VERSION={version} DW_UPGRADE=1  bash -c "$(curl http://cloudcare-kodo.oss-cn-hangzhou.aliyuncs.com/dataway/test/install.sh)"'
+
+        clickhouse:
+          # 新增 clickhouse 启用开关配置项，默认值 false，可以不配置
+          open: false

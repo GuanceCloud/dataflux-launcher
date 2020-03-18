@@ -116,5 +116,4 @@ upgradeInfo:
       ALTER TABLE biz_main_auth_link
       ADD KEY `ORIGIN` (`origin`);
 
-
   # ft_data_processor_2020-03-12.sql
