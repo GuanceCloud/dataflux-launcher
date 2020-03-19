@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-intergration-nginx
+  name: integration-nginx
+  namespace: forethought-core
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-intergration-nginx
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-intergration-nginx
+    spec:
+      containers:
+      - image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: integration-nginx
+        ports:
+        - containerPort: 80
+          name: 80tcp802
+          protocol: TCP
+        tty: true
+        volumeMounts:
+        - mountPath: /usr/share/nginx/image/
+          name: static-folder
+          readOnly: true
+        - mountPath: /etc/nginx/conf.d
+          name: intergration-nginx
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - name: static-folder
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+      - configMap:
+          defaultMode: 256
+          name: intergration-nginx
+          optional: false
+        name: intergration-nginx
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: intergration-nginx
+  namespace: forethought-core
+spec:
+  ports:
+  - name: 80tcp4432
+    port: 443
+    protocol: TCP
+    targetPort: 80
+  - name: 80tcp802
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deployment-forethought-intergration-nginx
+  type: ClusterIP

@@ -73,6 +73,29 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   generation: 1
+  name: intergration-nginx
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.integration }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: intergration-nginx
+          servicePort: 80
+  tls:
+  - hosts:
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.integration }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
   name: front-webclient
   namespace: forethought-webclient
 spec:

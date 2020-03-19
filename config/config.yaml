@@ -32,11 +32,17 @@ services:
     - key: integration-scanner
       name: 集成扫描 Worker
       image: core
+      replicas: 1
 
     - key: websocket
       name: Websocket
       image: core
       replicas: 2
+
+    - key: integration-nginx
+      name: 集成服务
+      image: nginx
+      replicas: 1
 
     configmaps:
     - key: core
@@ -49,6 +55,13 @@ services:
       - integration-scanner
       - websocket
       template: forethought-backend.yaml
+
+    - key: integrationNginx
+      mapname: intergration-nginx
+      mapkey: intergration.conf
+      services:
+      - integration-nginx
+      template: intergration-nginx.conf
 
     pvcs:
     - name: ft-sysconfig
@@ -115,7 +128,7 @@ services:
     - key: kodo
       name: Kodo
       image: kodo
-      replicas: 1
+      replicas: 2
 
     - key: kodo-inner
       name: Kodo Inner

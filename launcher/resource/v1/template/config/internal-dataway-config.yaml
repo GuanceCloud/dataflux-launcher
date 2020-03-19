@@ -4,7 +4,7 @@ uuid: agnt_internal_dataway_1
 
 # 初始安装是默认工作空间的 token
 token: {{ (other.workspace or {}).token }}
-collect_second: 6000000
+collect_second: 60
 
 bind: "0.0.0.0:9528"
 
