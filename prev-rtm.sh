@@ -149,7 +149,7 @@ function start(){
   git commit -m 'auto commit: 预览版 release'
   git push
 
-  sh release.sh -r
+  sh release.sh -p
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
 } 
