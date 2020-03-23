@@ -78,7 +78,7 @@ STEPS_UPDATE = [
   },
   {
       "key": "/up/service/status",
-      "name": "重启应用状态"
+      "name": "应用启动状态"
   }
 ]
 
