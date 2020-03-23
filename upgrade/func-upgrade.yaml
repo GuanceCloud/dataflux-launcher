@@ -89,6 +89,7 @@ upgradeInfo:
         PRIMARY KEY (`seq`),
         UNIQUE KEY `ID` (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数存储';
+
   - seq: 5
     database: |-
       -- 自动触发配置增加重复检查
@@ -117,3 +118,15 @@ upgradeInfo:
       ADD KEY `ORIGIN` (`origin`);
 
   # ft_data_processor_2020-03-12.sql
+
+  - seq: 6
+    database: |-
+      -- 删除多余字段
+      ALTER TABLE `biz_main_script_set_import_history` DROP COLUMN `fileBLOB`;
+      ALTER TABLE `biz_main_script_set_import_history` DROP COLUMN `isConfirmed`;
+
+      -- 脚本存储区增加索引
+      ALTER TABLE biz_main_func_store
+      ADD UNIQUE KEY `BIZ` (`scope`, `key`);
+
+  # ft_data_processor_2020-03-23.sql

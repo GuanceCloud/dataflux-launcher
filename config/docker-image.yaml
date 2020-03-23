@@ -5,15 +5,15 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.3
     kapacitor: basis:kapacitor_1.5.3
-    internal-dataway: dataway:v0.1-378-gc1d0534
-    core: 1.3.34.1:core-5a25218
-    kodo: 1.3.34.1:kodo-6fe0fca
-    front-webclient: 1.3.34.1:front-webclient-86526fce
-    management-webclient: 1.3.34.1:management-webclient-6d07025
-    message-desk: 1.3.34.1:message-desk-9e9dc82
-    message-desk-worker: 1.3.34.1:message-desk-worker-54d6e1f
-    func: 1.3.34.1:func-22963f7
-    func-worker: 1.3.34.1:func-worker-bb67675
-    trigger: 1.3.34.1:trigger-d9c7b6c
-    utils-server: 1.3.34.1:utils-server-44e10b9
-  version: 1.3.34.1
+    internal-dataway: dataway:v0.1-380-g8e60a8a
+    core: 1.3.34.2:core-5a25218
+    kodo: 1.3.34.2:kodo-6fe0fca
+    front-webclient: 1.3.34.2:front-webclient-86526fce
+    management-webclient: 1.3.34.2:management-webclient-6d07025
+    message-desk: 1.3.34.2:message-desk-9e9dc82
+    message-desk-worker: 1.3.34.2:message-desk-worker-54d6e1f
+    func: 1.3.34.2:func-6bb36d9
+    func-worker: 1.3.34.2:func-worker-bc09125
+    trigger: 1.3.34.2:trigger-d9c7b6c
+    utils-server: 1.3.34.2:utils-server-44e10b9
+  version: 1.3.34.2
