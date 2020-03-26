@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-forethought-intergration-nginx
+    app: deployment-forethought-integration-nginx
   name: integration-nginx
   namespace: forethought-core
 spec:
   replicas: {{ config.replicas }}
   selector:
     matchLabels:
-      app: deployment-forethought-intergration-nginx
+      app: deployment-forethought-integration-nginx
   template:
     metadata:
       labels:
-        app: deployment-forethought-intergration-nginx
+        app: deployment-forethought-integration-nginx
     spec:
       containers:
       - image: {{ config.fullImagePath }}
@@ -29,7 +29,7 @@ spec:
           name: static-folder
           readOnly: true
         - mountPath: /etc/nginx/conf.d
-          name: intergration-nginx
+          name: integration-nginx
       dnsPolicy: ClusterFirst
       imagePullSecrets:
       - name: registry-key
@@ -41,16 +41,16 @@ spec:
           claimName: ft-sysconfig
       - configMap:
           defaultMode: 256
-          name: intergration-nginx
+          name: integration-nginx
           optional: false
-        name: intergration-nginx
+        name: integration-nginx
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: intergration-nginx
+  name: integration-nginx
   namespace: forethought-core
 spec:
   ports:
@@ -63,5 +63,5 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    app: deployment-forethought-intergration-nginx
+    app: deployment-forethought-integration-nginx
   type: ClusterIP

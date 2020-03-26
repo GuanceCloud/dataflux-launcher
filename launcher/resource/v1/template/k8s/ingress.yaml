@@ -73,7 +73,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   generation: 1
-  name: intergration-nginx
+  name: integration-nginx
   namespace: forethought-core
 spec:
   rules:
@@ -81,7 +81,7 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: intergration-nginx
+          serviceName: integration-nginx
           servicePort: 80
   tls:
   - hosts:

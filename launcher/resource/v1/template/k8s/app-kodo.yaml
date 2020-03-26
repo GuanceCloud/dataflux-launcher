@@ -15,6 +15,16 @@ spec:
       labels:
         app: deployment-forethought-kodo-kodo
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - deployment-forethought-kodo-kodo
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - sh
@@ -40,6 +50,8 @@ spec:
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
+      tolerations:
+      - operator: Exists
       volumes:
       - name: kodo-logs
         persistentVolumeClaim:

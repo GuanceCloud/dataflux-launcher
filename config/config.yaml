@@ -57,11 +57,11 @@ services:
       template: forethought-backend.yaml
 
     - key: integrationNginx
-      mapname: intergration-nginx
-      mapkey: intergration.conf
+      mapname: integration-nginx
+      mapkey: integration.conf
       services:
       - integration-nginx
-      template: intergration-nginx.conf
+      template: integration-nginx.conf
 
     pvcs:
     - name: ft-sysconfig
@@ -128,7 +128,7 @@ services:
     - key: kodo
       name: Kodo
       image: kodo
-      replicas: 2
+      replicas: 3
 
     - key: kodo-inner
       name: Kodo Inner
@@ -138,7 +138,7 @@ services:
     - key: kodo-nginx
       name: Kodo Nginx
       image: nginx
-      replicas: 1
+      replicas: 3
 
     configmaps:
     - key: kodo

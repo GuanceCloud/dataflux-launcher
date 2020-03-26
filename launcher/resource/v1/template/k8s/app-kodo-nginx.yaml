@@ -15,6 +15,16 @@ spec:
       labels:
         app: deployment-forethought-kodo-kodo-nginx
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - deployment-forethought-kodo-kodo-nginx
+            topologyKey: kubernetes.io/hostname
       containers:
       - image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
@@ -32,6 +42,8 @@ spec:
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
+      tolerations:
+      - operator: Exists
       volumes:
       - configMap:
           defaultMode: 256
