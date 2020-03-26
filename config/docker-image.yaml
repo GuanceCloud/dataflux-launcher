@@ -3,7 +3,7 @@ apps:
   image_dir: dataflux-prev/
   images:
     nsq: basis:nsq_1.2.0
-    nginx: basis:nginx_1.13.3
+    nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.3
     internal-dataway: dataway:v0.1-380-g8e60a8a
     core: 1.3.34.4:core-5a25218

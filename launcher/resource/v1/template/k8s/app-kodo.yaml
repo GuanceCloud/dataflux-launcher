@@ -10,6 +10,11 @@ spec:
   selector:
     matchLabels:
       app: deployment-forethought-kodo-kodo
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -17,14 +22,16 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - deployment-forethought-kodo-kodo
-            topologyKey: kubernetes.io/hostname
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - deployment-forethought-kodo-kodo
+              topologyKey: kubernetes.io/hostname
+            weight: 100
       containers:
       - args:
         - sh
