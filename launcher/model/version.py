@@ -24,7 +24,7 @@ def get_current_update_seq(mysqlInfo, dbName):
         }
     }
   '''
-  print(mysqlInfo, dbName)
+  # print(mysqlInfo, dbName)
   sql = '''
           SELECT project, seqType, max(upgradeSeq) AS upgradeSeq 
           FROM sys_version 

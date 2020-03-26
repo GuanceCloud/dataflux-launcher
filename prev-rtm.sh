@@ -121,7 +121,7 @@ function start(){
   echo "  image_dir: dataflux-prev/" >> ${workDir}/${imageYaml}
   echo "  images:" >> ${workDir}/${imageYaml}
   echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
-  echo "    nginx: basis:nginx_1.13.3" >> ${workDir}/${imageYaml}
+  echo "    nginx: basis:nginx_1.13.7" >> ${workDir}/${imageYaml}
   echo "    kapacitor: basis:kapacitor_1.5.3" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本
