@@ -46,14 +46,17 @@ function copy_upgrade(){
 
   if [ $project = "core" ]; then
     cp upgrade/upgrade.yaml ${workDir}/upgrade/core-upgrade.yaml
+    cp launcher/resource/v1/ddl/core.sql ${workDir}/db/core_latest.sql
   elif [ $project = "trigger" ]; then
     cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
   elif [ $project = "kodo" ]; then
     cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
   elif [ $project = "func" ]; then
     cp upgrade-info.yaml ${workDir}/upgrade/func-upgrade.yaml
+    cp launcher/resource/v1/ddl/func.sql ${workDir}/db/ft_data_processor_latest.sql
   elif [ $project = "message-desk" ]; then
     cp upgrade.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
+    cp launcher/resource/v1/ddl/message-desk.sql ${workDir}/db/message_desk_latest.sql
   fi
 }
 
@@ -141,6 +144,7 @@ function start(){
   cd $workDir
   git add ${imageYaml}
   git add upgrade/*
+  git add launcher/resource/v1/ddl/*
   git commit -m 'auto commit: RTM release'
   git push
 
