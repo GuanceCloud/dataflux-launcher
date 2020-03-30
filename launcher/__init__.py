@@ -7,7 +7,7 @@ from launcher.model.settings import Settings
 STEPS_COMMON = [
   {
       "key": "/",
-      "name": "安装说明",
+      "name": "使用协议",
       "status": ""
   },
   {

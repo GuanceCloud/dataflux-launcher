@@ -45,7 +45,7 @@ def register_install_router(app):
   def index():
     readme = setup.readme()
 
-    return render("index.html", {"title": "安装说明", "pageData": readme, "steps": STEPS_COMMON + [{'name': '......'}]})
+    return render("index.html", {"title": "使用协议", "pageData": readme, "steps": STEPS_COMMON + [{'name': '......'}]})
 
 
   @app.route("/check")
