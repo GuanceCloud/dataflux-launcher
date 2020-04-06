@@ -37,7 +37,7 @@ services:
     - key: websocket
       name: Websocket
       image: core
-      replicas: 2
+      replicas: 0
 
     - key: integration-nginx
       name: 集成服务
@@ -53,7 +53,7 @@ services:
       - inner
       - front-backend
       - integration-scanner
-      - websocket
+      # - websocket
       template: forethought-backend.yaml
 
     - key: integrationNginx
@@ -385,7 +385,7 @@ defaultSubdomain:
   consoleApi: df-api
   management: df-management
   managementApi: df-management-api
-  websocket: df-websocket
+  # websocket: df-websocket
   function: df-func
   kodo: df-kodo
   integration: df-integration
