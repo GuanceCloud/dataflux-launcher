@@ -72,6 +72,7 @@ def register_install_router(app):
                 "deploy": deploys
             }
 
+    print(deploys)
     setup.init_setting()
 
     return render("check.html", {"title": "环境检查", "pageData": result, "steps": STEPS_COMMON + [{'name': '......'}]})

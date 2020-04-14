@@ -46,11 +46,11 @@
                 <div class="col-sm-12 service-status">
 
                   {% for item in ns.services %}
-                    {% if item.fullImagePath %}
+                    {% if item.fullImagePath and item.replicas > 0 %}
                     <span>
-                      {% if item.replicas == 0 or item.replicas > item.availableReplicas %}
+                      {% if item.replicas > item.availableReplicas %}
                       <i class="service-pendding"></i>
-                      {% elif item.replicas > 0 or item.replicas == item.availableReplicas %}
+                      {% elif item.replicas == item.availableReplicas %}
                       <i class="icon-success"></i>
                       {% endif %}
                     </span>

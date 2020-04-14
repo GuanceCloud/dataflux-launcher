@@ -4,7 +4,7 @@ apps:
   images:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
-    kapacitor: basis:kapacitor_1.5.3
+    kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:v0.1-380-g8e60a8a
     core: 1.4.34:core-1c6e908-1586139153
     kodo: 1.4.34:kodo-8cf5fe8-1586139153

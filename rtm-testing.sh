@@ -64,7 +64,7 @@ echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
 echo "    nsq: basis/nsq:v1.2.0" >> ${workDir}/${imageYaml}
 echo "    nginx: basis/nginx:devops" >> ${workDir}/${imageYaml}
-echo "    kapacitor: basis/kapacitor:1.5.3" >> ${workDir}/${imageYaml}
+echo "    kapacitor: basis/kapacitor:1.5.4" >> ${workDir}/${imageYaml}
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core" "cloudcare-forethought/cloudcare-forethought-backend"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo" "kodo/kodo"

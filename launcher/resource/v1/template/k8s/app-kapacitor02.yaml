@@ -6,7 +6,7 @@ metadata:
   name: kapacitor02
   namespace: middleware
 spec:
-  replicas: 1
+  replicas: {{ config.replicas }}
   selector:
     matchLabels:
       app: deployment-middleware-kapacitor02

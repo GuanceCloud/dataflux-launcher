@@ -67,6 +67,18 @@ services:
     - name: ft-sysconfig
       storage: 10Gi
 
+    - name: front-backend-logs
+      storage: 5Gi
+
+    - name: management-backend-logs
+      storage: 5Gi
+
+    - name: inner-logs
+      storage: 5Gi
+
+    - name: integration-scanner-logs
+      storage: 5Gi
+
   - namespace: forethought-inner-app
     services:
     - key: trigger
@@ -194,6 +206,16 @@ services:
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
       image: func-worker
+      replicas: 0
+
+    - key: func-worker-rpc
+      name: 函数计算 Worker RPC
+      image: func-worker
+      replicas: 4
+
+    - key: func-worker-crontab
+      name: 函数计算 Worker Crontab
+      image: func-worker
       replicas: 4
 
     - key: func-worker-utils
@@ -222,7 +244,8 @@ services:
       services:
       - func-worker-beat
       - func-worker-debugger
-      - func-worker-rpc-crontab
+      - func-worker-rpc
+      - func-worker-crontab
       - func-worker-utils
       template: func-worker-config.yaml
 
@@ -266,12 +289,12 @@ services:
     - key: kapacitor
       name: Kapacitor
       image: kapacitor
-      replicas: 1
+      replicas: 0
 
     - key: kapacitor02
       name: Kapacitor 02
       image: kapacitor
-      replicas: 1
+      replicas: 0
 
     configmaps:
     - key: messageDeskApi
