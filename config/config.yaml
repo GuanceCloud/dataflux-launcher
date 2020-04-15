@@ -32,6 +32,16 @@ services:
     - key: integration-scanner
       name: 集成扫描 Worker
       image: core
+      replicas: 0
+
+    - key: core-worker
+      name: Worker
+      image: core
+      replicas: 3
+
+    - key: core-worker-beat
+      name: Worker Beat
+      image: core
       replicas: 1
 
     - key: websocket
@@ -39,10 +49,15 @@ services:
       image: core
       replicas: 0
 
+    - key: static-resource-nginx
+      name: 静态资源服务
+      image: nginx
+      replicas: 1
+
     - key: integration-nginx
       name: 集成服务
       image: nginx
-      replicas: 1
+      replicas: 0
 
     configmaps:
     - key: core
@@ -52,39 +67,50 @@ services:
       - management-backend
       - inner
       - front-backend
-      - integration-scanner
+      - core-worker
+      - core-worker-beat
       # - websocket
       template: forethought-backend.yaml
 
-    - key: integrationNginx
-      mapname: integration-nginx
-      mapkey: integration.conf
+    # - key: integrationNginx
+    #   mapname: integration-nginx
+    #   mapkey: integration.conf
+    #   services:
+    #   - integration-nginx
+    #   template: integration-nginx.conf
+
+    - key: staticResourceNginx
+      mapname: static-resource-nginx
+      mapkey: static-resource-nginx.conf
       services:
-      - integration-nginx
-      template: integration-nginx.conf
+      - static-resource-nginx
+      template: static-resource-nginx.conf
 
     pvcs:
     - name: ft-sysconfig
       storage: 10Gi
 
     - name: front-backend-logs
-      storage: 5Gi
+      storage: 10Gi
 
     - name: management-backend-logs
-      storage: 5Gi
+      storage: 10Gi
 
     - name: inner-logs
-      storage: 5Gi
+      storage: 10Gi
 
-    - name: integration-scanner-logs
-      storage: 5Gi
+    - name: core-worker-logs
+      storage: 10Gi
+
+    - name: core-worker-beat-logs
+      storage: 10Gi
 
   - namespace: forethought-inner-app
     services:
     - key: trigger
       name: 通知触发器
       image: trigger
-      replicas: 1
+      replicas: 0
 
     configmaps:
     - key: innerAppTrigger

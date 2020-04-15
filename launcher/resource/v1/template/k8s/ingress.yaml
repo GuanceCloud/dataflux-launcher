@@ -73,19 +73,19 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   generation: 1
-  name: integration-nginx
+  name: static-resource-nginx
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.integration }}.{{ config.domain.domain }}
+  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
-          serviceName: integration-nginx
+          serviceName: static-resource-nginx
           servicePort: 80
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.integration }}.{{ config.domain.domain }}
+    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}

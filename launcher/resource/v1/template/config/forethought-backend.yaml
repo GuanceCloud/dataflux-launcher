@@ -73,23 +73,8 @@ celery:
     cron_notification:
       minute: '*/30'  
 
-integration:
-  domain: "https://{{ domain.subDomain.integration }}.{{ domain.domain }}"
-  aliyunOSS:
-    bucket: "prod-ft-integration"
-    accessKeyId: ""
-    secretAccessKey: ""
-    endpoint: 'http://oss-cn-hangzhou.aliyuncs.com'
-    rootFolder: "/"
-  typeDict:
-    collector:
-      name: "采集器"
-    dashboard:
-      name: "视图模板"
-    datasource:
-      name: "数据源"
-    scene:
-      name: "场景模板"
+staticResource:
+  domain: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.staticResource }}.{{ domain.domain }}"
 
 share_set:
   share_url: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.consoleApi }}.{{ domain.domain }}/api/v1/auth-token/{share_code}/login?isAuth={is_auth}&?code={code}"

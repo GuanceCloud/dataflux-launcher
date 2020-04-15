@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-core-worker-beat
+  name: core-worker-beat
+  namespace: forethought-core
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-worker-beat
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-worker-beat
+    spec:
+      containers:
+      - args:
+        - bash
+        - run_celery_beat.sh
+        name: core-worker-beat
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: core
+          subPath: config.yaml
+        - mountPath: /config/cloudcare-forethought-backend/sysconfig
+          name: ft-sysconfig
+        - mountPath: /logdata
+          name: logs
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: core
+          optional: false
+        name: core
+      - name: ft-sysconfig
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+      - name: logs
+        persistentVolumeClaim:
+          claimName: core-worker-beat-logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-worker-beat
+  namespace: forethought-core
+spec:
+  clusterIP: None
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-forethought-core-worker-beat
+  type: ClusterIP
