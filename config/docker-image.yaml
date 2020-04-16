@@ -1,19 +1,19 @@
 apps:
   registry: pubrepo.jiagouyun.com
-  image_dir: dataflux-prev/
+  image_dir: dataflux/
   images:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:v0.1-401-ga917b59
-    core: 1.5.35.1:core-38895a6c
-    kodo: 1.5.35.1:kodo-019cacc
-    front-webclient: 1.5.35.1:front-webclient-ec214b50
-    management-webclient: 1.5.35.1:management-webclient-b26eb41
-    message-desk: 1.5.35.1:message-desk-f26cbba
-    message-desk-worker: 1.5.35.1:message-desk-worker-4974330
-    func: 1.5.35.1:func-b7a3ecf
-    func-worker: 1.5.35.1:func-worker-bc09125
-    trigger: 1.5.35.1:trigger-d9c7b6c
-    utils-server: 1.5.35.1:utils-server-44e10b9
-  version: 1.5.35.1
+    internal-dataway: dataway:v1.0.1-401-ga917b59
+    core: 1.5.35:core-037896a3-1587022823
+    kodo: 1.5.35:kodo-e2c32de-1587022823
+    front-webclient: 1.5.35:front-webclient-9eaf22b4-1587022823
+    management-webclient: 1.5.35:management-webclient-b26eb41-1587022823
+    message-desk: 1.5.35:message-desk-7021690-1587022823
+    message-desk-worker: 1.5.35:message-desk-worker-b9eba65-1587022823
+    func: 1.5.35:func-309b654-1587022823
+    func-worker: 1.5.35:func-worker-70ed4e2-1587022823
+    trigger: 1.5.35:trigger-d9c7b6c-1587022823
+    utils-server: 1.5.35:utils-server-44e10b9-1587022823
+  version: 1.5.35

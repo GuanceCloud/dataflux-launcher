@@ -7,7 +7,7 @@
 #
 # Host: 172.16.0.43 (MySQL 5.7.28)
 # Database: core
-# Generation Time: 2020-04-06 01:57:22 +0000
+# Generation Time: 2020-04-16 02:22:29 +0000
 # ************************************************************
 
 
@@ -239,6 +239,7 @@ CREATE TABLE `biz_rule` (
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
   `tickInfo` json DEFAULT NULL COMMENT '提交后Kapa 返回的Tasks数据',
+  `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -767,8 +768,11 @@ CREATE TABLE `main_workspace` (
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '工作空间概览-视图UUID',
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `desc` text,
+  `versionInfo` json DEFAULT NULL COMMENT '版本信息',
   `bindInfo` json NOT NULL COMMENT '绑定到当前工作空间的信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长',
+  `autoAggregation` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否自动聚合',
   `enablePublicDataway` int(1) NOT NULL DEFAULT '1' COMMENT '允许公网Dataway上传数据',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -815,6 +819,8 @@ CREATE TABLE `main_workspace_license` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'license lcn-',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `instanceId` varchar(64) NOT NULL DEFAULT '' COMMENT 'LicenseId',
+  `expire` int(11) NOT NULL COMMENT 'license 过期时间',
+  `version` varchar(48) NOT NULL COMMENT 'license 版本',
   `extend` json NOT NULL COMMENT '额外拓展字段',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
