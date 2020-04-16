@@ -50,29 +50,6 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   generation: 1
-  name: websocket
-  namespace: forethought-core
-spec:
-  rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.websocket }}.{{ config.domain.domain }}
-    http:
-      paths:
-      - backend:
-          serviceName: websocket
-          servicePort: 8080
-  tls:
-  - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.websocket }}.{{ config.domain.domain }}
-    secretName: {{ config.domain.domain }}
-status:
-  loadBalancer: {}
-
----
-
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  generation: 1
   name: static-resource-nginx
   namespace: forethought-core
 spec:

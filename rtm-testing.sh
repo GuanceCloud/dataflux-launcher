@@ -12,17 +12,17 @@ function copy_upgrade(){
 
   if [ $project = "core" ]; then
     cp upgrade/upgrade.yaml ${workDir}/upgrade/core-upgrade.yaml
-    cp launcher/resource/v1/ddl/core.sql ${workDir}/db/core_latest.sql
+    cp db/core_latest.sql ${workDir}/launcher/resource/v1/ddl/core.sql
   elif [ $project = "trigger" ]; then
     cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
   elif [ $project = "kodo" ]; then
     cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
   elif [ $project = "func" ]; then
     cp upgrade-info.yaml ${workDir}/upgrade/func-upgrade.yaml
-    cp launcher/resource/v1/ddl/func.sql ${workDir}/db/ft_data_processor_latest.sql
+    cp db/ft_data_processor_latest.sql ${workDir}/launcher/resource/v1/ddl/func.sql
   elif [ $project = "message-desk" ]; then
     cp upgrade.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
-    cp launcher/resource/v1/ddl/message-desk.sql ${workDir}/db/message_desk_latest.sql
+    cp db/message_desk_latest.sql ${workDir}/launcher/resource/v1/ddl/message-desk.sql
   fi
 }
 
@@ -57,14 +57,27 @@ function rtm_tag(){
   }
 }
 
+# (?<="version"\s*:\s*")[\d\w\.\-]+(?=\")
+dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.)+\d+-\d+-[a-zA-Z0-9]+"`
+
+if [ ! -n "$dwVersion" ]; then
+  echo '未获取到 DataWay 的最新版本'
+  exit 0
+else
+  echo "DataWay 最新版本号：$dwVersion \n"
+fi
+
 : > ${imageYaml}
 echo "apps:" > ${workDir}/${imageYaml}
 echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
 echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
-echo "    nsq: basis/nsq:v1.2.0" >> ${workDir}/${imageYaml}
-echo "    nginx: basis/nginx:devops" >> ${workDir}/${imageYaml}
+echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
+echo "    nginx: basis:nginx_1.13.7" >> ${workDir}/${imageYaml}
 echo "    kapacitor: basis/kapacitor:1.5.4" >> ${workDir}/${imageYaml}
+
+# 最新 DataWay 镜像版本
+echo "    internal-dataway: dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core" "cloudcare-forethought/cloudcare-forethought-backend"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo" "kodo/kodo"

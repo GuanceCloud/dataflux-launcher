@@ -37,7 +37,8 @@ def database_create_db():
   dbInfo = mysqlSetting.get('core')
 
   SQL = '''
-        SET SQL_MODE = 'NO_AUTO_CREATE_USER';CREATE DATABASE IF NOT EXISTS {database} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+        SET SQL_MODE = 'NO_AUTO_CREATE_USER';
+        CREATE DATABASE IF NOT EXISTS {database} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
         CREATE USER '{user}'@'%' IDENTIFIED BY '{password}';
         GRANT ALL PRIVILEGES ON {database}.* TO '{user}'@'%';
         '''.format(**dbInfo)

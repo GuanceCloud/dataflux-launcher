@@ -161,8 +161,29 @@ upgrade:
       # 新增 加载标记
       ALTER TABLE `biz_node` ADD COLUMN `isLoading` tinyint(1) NULL AFTER `status`;
 
+  # 4.09 迭代
+  - seq: 7
+    database: |-
+      -- 触发规则 表新增 crontab 配置信息
+      ALTER TABLE `biz_rule`
+      ADD COLUMN `crontabInfo` json NULL COMMENT 'crontab配置信息' AFTER `tickInfo`;
+
+      ALTER TABLE `main_workspace_license` ADD COLUMN `version` varchar(48) NOT NULL  COMMENT 'license 版本' AFTER `instanceId`;
+      ALTER TABLE `main_workspace_license` ADD COLUMN `expire` int(11) NOT NULL  COMMENT 'license 过期时间' AFTER `instanceId`;
+      ALTER TABLE `main_workspace` ADD COLUMN `versionInfo` json  COMMENT '版本信息' AFTER `desc`;
+
+      -- 新增 是否自动聚合
+      ALTER TABLE `main_workspace` ADD COLUMN `autoAggregation` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '是否自动聚合' AFTER `status`;
+
+      -- 新增 告警历史保留时长
+      ALTER TABLE `main_workspace` ADD COLUMN `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长' AFTER `status`;
+
+      -- 特别说明: 此为 PAAS 版必须执行的，用来更新工作空间中的 时间线和RP等信息
+      update main_workspace set alarmHistoryPeriod="rp2", maxTsCount=-1;
+
     config:
       core: |-
-        # 新增
-        # 静态资源下载地址前缀, 生产环境更新时只需修改【http://127.0.0.1:5000】这一部分即可
-        static_resource_url_prefix: "http://127.0.0.1:5000/api/v1/static_resource/download/"
+        # 静态文件域名
+        staticResource:
+          domain: "http://static.cloudcare.cn:10561"
+

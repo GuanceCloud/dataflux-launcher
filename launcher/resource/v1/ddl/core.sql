@@ -1,24 +1,31 @@
--- -------------------------------------------------------------
--- TablePlus 3.1.2(296)
---
--- https://tableplus.com/
---
--- Database: db_standard
--- Generation Time: 2020-03-18 14:01:04.6300
--- -------------------------------------------------------------
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 5446
+#
+# https://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: 172.16.0.43 (MySQL 5.7.28)
+# Database: core
+# Generation Time: 2020-04-16 02:22:29 +0000
+# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+SET NAMES utf8mb4;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
+# Dump of table biz_chart
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_chart`;
+
 CREATE TABLE `biz_chart` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 chrt- 前缀',
@@ -39,7 +46,13 @@ CREATE TABLE `biz_chart` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_chart_group
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_chart_group`;
+
 CREATE TABLE `biz_chart_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID chtg-',
@@ -58,7 +71,13 @@ CREATE TABLE `biz_chart_group` (
   KEY `k_dashboardUUID` (`dashboardUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_dashboard
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_dashboard`;
+
 CREATE TABLE `biz_dashboard` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dsbd-前缀',
@@ -78,7 +97,40 @@ CREATE TABLE `biz_dashboard` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_decorate_node
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_decorate_node`;
+
+CREATE TABLE `biz_decorate_node` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 node- 前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `sceneUUID` varchar(48) NOT NULL COMMENT '场景 uuid',
+  `parentUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '父节点 uuid',
+  `name` varchar(128) NOT NULL COMMENT '子节点名称',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `scene_node_fk` (`sceneUUID`),
+  KEY `node_parent_uuid_fk` (`parentUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_integration
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_integration`;
+
 CREATE TABLE `biz_integration` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
@@ -97,7 +149,13 @@ CREATE TABLE `biz_integration` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_node
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_node`;
+
 CREATE TABLE `biz_node` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 node- 前缀',
@@ -121,6 +179,7 @@ CREATE TABLE `biz_node` (
   `bindInfo` json NOT NULL COMMENT '节点绑定信息',
   `path` json NOT NULL COMMENT '路径列表',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `isLoading` tinyint(1) DEFAULT NULL,
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
@@ -133,7 +192,13 @@ CREATE TABLE `biz_node` (
   KEY `node_dashboard_fk` (`dashboardUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_query
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_query`;
+
 CREATE TABLE `biz_query` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID qry- 前缀',
@@ -159,7 +224,13 @@ CREATE TABLE `biz_query` (
   KEY `k_chart_uuid` (`chartUUID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_rule
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_rule`;
+
 CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
@@ -168,6 +239,7 @@ CREATE TABLE `biz_rule` (
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
   `tickInfo` json DEFAULT NULL COMMENT '提交后Kapa 返回的Tasks数据',
+  `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -180,7 +252,13 @@ CREATE TABLE `biz_rule` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_scene
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_scene`;
+
 CREATE TABLE `biz_scene` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 scene-',
@@ -200,7 +278,13 @@ CREATE TABLE `biz_scene` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_share_config
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_share_config`;
+
 CREATE TABLE `biz_share_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 scene-',
@@ -223,7 +307,13 @@ CREATE TABLE `biz_share_config` (
   KEY `k_share_code` (`shareCode`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_template
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_template`;
+
 CREATE TABLE `biz_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID tpl-',
@@ -242,7 +332,13 @@ CREATE TABLE `biz_template` (
   KEY `template_owner_fk` (`owner`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table biz_variable
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_variable`;
+
 CREATE TABLE `biz_variable` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID,varl-',
@@ -266,7 +362,13 @@ CREATE TABLE `biz_variable` (
   KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_accesskey
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_accesskey`;
+
 CREATE TABLE `main_accesskey` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识',
@@ -283,7 +385,13 @@ CREATE TABLE `main_accesskey` (
   KEY `idx_ak` (`ak`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_account
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_account`;
+
 CREATE TABLE `main_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'account 唯一标识 acnt-前缀',
@@ -304,7 +412,13 @@ CREATE TABLE `main_account` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_account_privilege
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_account_privilege`;
+
 CREATE TABLE `main_account_privilege` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 acpv',
@@ -324,7 +438,13 @@ CREATE TABLE `main_account_privilege` (
   KEY `accountUUID_fk` (`accountUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_account_workspace
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_account_workspace`;
+
 CREATE TABLE `main_account_workspace` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rlaw-前缀',
@@ -344,7 +464,13 @@ CREATE TABLE `main_account_workspace` (
   KEY `accountUUID_fk` (`accountUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_agent
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_agent`;
+
 CREATE TABLE `main_agent` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ftagent的uuid,唯一id 待 agnt-前缀',
@@ -367,7 +493,13 @@ CREATE TABLE `main_agent` (
   KEY `idx_uuid` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_agent_license
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_agent_license`;
+
 CREATE TABLE `main_agent_license` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识 wsak-',
@@ -385,7 +517,13 @@ CREATE TABLE `main_agent_license` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_ck_blacklist
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_ck_blacklist`;
+
 CREATE TABLE `main_ck_blacklist` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ckbl-',
@@ -401,7 +539,13 @@ CREATE TABLE `main_ck_blacklist` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_influx_cq
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_influx_cq`;
+
 CREATE TABLE `main_influx_cq` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifcq-',
@@ -429,7 +573,13 @@ CREATE TABLE `main_influx_cq` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_influx_db
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_influx_db`;
+
 CREATE TABLE `main_influx_db` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifdb_',
@@ -450,7 +600,13 @@ CREATE TABLE `main_influx_db` (
   KEY `db_rpuuid` (`influxRpUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_influx_instance
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_influx_instance`;
+
 CREATE TABLE `main_influx_instance` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 iflx_',
@@ -469,7 +625,13 @@ CREATE TABLE `main_influx_instance` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_influx_rp
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_influx_rp`;
+
 CREATE TABLE `main_influx_rp` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀ifrp_',
@@ -487,7 +649,13 @@ CREATE TABLE `main_influx_rp` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_inner_app
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_inner_app`;
+
 CREATE TABLE `main_inner_app` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，关联用，带 inap_ 前缀',
@@ -508,7 +676,13 @@ CREATE TABLE `main_inner_app` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_kapa
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_kapa`;
+
 CREATE TABLE `main_kapa` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 kapa_',
@@ -524,7 +698,13 @@ CREATE TABLE `main_kapa` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_manage_account
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_manage_account`;
+
 CREATE TABLE `main_manage_account` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'account 唯一标识 mact-',
@@ -544,7 +724,13 @@ CREATE TABLE `main_manage_account` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_subscription
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_subscription`;
+
 CREATE TABLE `main_subscription` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 sbsp_',
@@ -564,7 +750,13 @@ CREATE TABLE `main_subscription` (
   KEY `kapa_uuid` (`kapaUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_workspace
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_workspace`;
+
 CREATE TABLE `main_workspace` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 wksp_',
@@ -572,11 +764,15 @@ CREATE TABLE `main_workspace` (
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
   `dataRestriction` json NOT NULL COMMENT '数据权限',
+  `maxTsCount` int(11) NOT NULL DEFAULT '100' COMMENT '最大时间线',
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '工作空间概览-视图UUID',
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `desc` text,
+  `versionInfo` json DEFAULT NULL COMMENT '版本信息',
   `bindInfo` json NOT NULL COMMENT '绑定到当前工作空间的信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长',
+  `autoAggregation` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否自动聚合',
   `enablePublicDataway` int(1) NOT NULL DEFAULT '1' COMMENT '允许公网Dataway上传数据',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -587,7 +783,13 @@ CREATE TABLE `main_workspace` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_workspace_accesskey
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `main_workspace_accesskey`;
+
 CREATE TABLE `main_workspace_accesskey` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识 wsak-',
@@ -605,7 +807,38 @@ CREATE TABLE `main_workspace_accesskey` (
   KEY `idx_ak` (`ak`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# Dump of table main_workspace_license
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_workspace_license`;
+
+CREATE TABLE `main_workspace_license` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'license lcn-',
+  `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `instanceId` varchar(64) NOT NULL DEFAULT '' COMMENT 'LicenseId',
+  `expire` int(11) NOT NULL COMMENT 'license 过期时间',
+  `version` varchar(48) NOT NULL COMMENT 'license 版本',
+  `extend` json NOT NULL COMMENT '额外拓展字段',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+  PRIMARY KEY (`id`) COMMENT '主键',
+  UNIQUE KEY `uk_instanceId` (`instanceId`) COMMENT 'license id 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table sys_version
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `sys_version`;
+
 CREATE TABLE `sys_version` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `project` varchar(64) NOT NULL DEFAULT '' COMMENT '项目：core、kodo、func、messageDesk',
@@ -620,10 +853,9 @@ CREATE TABLE `sys_version` (
 
 
 
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

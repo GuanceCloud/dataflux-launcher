@@ -46,7 +46,7 @@ class dbHelper(object):
     result = []
     with self._connection.cursor() as cursor:
 
-      for statement in ddl.split(';'):
+      for statement in ddl.split(';\n'):
         statement = statement.strip()
 
         if len(statement) > 0:

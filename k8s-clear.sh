@@ -13,7 +13,7 @@ kubectl delete deployments front-backend inner core-worker core-worker-beat stat
 kubectl delete deployments kodo kodo-inner kodo-nginx -n forethought-kodo --force --grace-period=0
 kubectl delete deployments front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
-kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-crontab func-worker-rpc func-worker-utils -n func --force --grace-period=0
+kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete deployments utils-server internal-dataway -n utils --force --grace-period=0
 
@@ -22,7 +22,7 @@ kubectl delete services front-backend inner core-worker core-worker-beat static-
 kubectl delete services kodo kodo-inner kodo-nginx -n forethought-kodo --force --grace-period=0
 kubectl delete services front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
-kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-crontab func-worker-crontab func-worker-rpc func-worker-utils -n func --force --grace-period=0
+kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-crontab func-worker-rpc func-worker-utils -n func --force --grace-period=0
 kubectl delete services trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete services utils-server internal-dataway -n utils --force --grace-period=0
 

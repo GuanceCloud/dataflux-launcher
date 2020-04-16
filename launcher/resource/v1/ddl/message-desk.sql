@@ -1,31 +1,24 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 5446
-#
-# https://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: ubuntu16-dev-big.vm (MySQL 5.7.27-0ubuntu0.16.04.1)
-# Database: message_desk
-# Generation Time: 2019-12-04 07:36:12 +0000
-# ************************************************************
+-- -------------------------------------------------------------
+-- TablePlus 3.3.0(300)
+--
+-- https://tableplus.com/
+--
+-- Database: message_desk
+-- Generation Time: 2020-04-01 22:49:59.4910
+-- -------------------------------------------------------------
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-SET NAMES utf8mb4;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table biz_main_task_result_alidayu_double_call
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_double_call`;
-
 CREATE TABLE `biz_main_task_result_alidayu_double_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -53,13 +46,7 @@ CREATE TABLE `biz_main_task_result_alidayu_double_call` (
   KEY `accountId` (`toAccountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于多方通话任务结果';
 
-
-
-# Dump of table biz_main_task_result_alidayu_sms
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_sms`;
-
 CREATE TABLE `biz_main_task_result_alidayu_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -87,13 +74,7 @@ CREATE TABLE `biz_main_task_result_alidayu_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于短信任务结果';
 
-
-
-# Dump of table biz_main_task_result_alidayu_tts_call
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_tts_call`;
-
 CREATE TABLE `biz_main_task_result_alidayu_tts_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -120,13 +101,7 @@ CREATE TABLE `biz_main_task_result_alidayu_tts_call` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于TTS语音任务结果';
 
-
-
-# Dump of table biz_main_task_result_aliyun_click_to_dial
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_click_to_dial`;
-
 CREATE TABLE `biz_main_task_result_aliyun_click_to_dial` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -156,13 +131,7 @@ CREATE TABLE `biz_main_task_result_aliyun_click_to_dial` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云点击拨号任务结果';
 
-
-
-# Dump of table biz_main_task_result_aliyun_sms
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_sms`;
-
 CREATE TABLE `biz_main_task_result_aliyun_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -190,13 +159,7 @@ CREATE TABLE `biz_main_task_result_aliyun_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云通讯短信任务结果';
 
-
-
-# Dump of table biz_main_task_result_aliyun_tts_call
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_tts_call`;
-
 CREATE TABLE `biz_main_task_result_aliyun_tts_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -224,13 +187,7 @@ CREATE TABLE `biz_main_task_result_aliyun_tts_call` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云通讯TTS语音任务结果';
 
-
-
-# Dump of table biz_main_task_result_ding_talk_robot
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_ding_talk_robot`;
-
 CREATE TABLE `biz_main_task_result_ding_talk_robot` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -252,13 +209,33 @@ CREATE TABLE `biz_main_task_result_ding_talk_robot` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钉钉机器人任务结果';
 
-
-
-# Dump of table biz_main_task_result_jiguang
-# ------------------------------------------------------------
+DROP TABLE IF EXISTS `biz_main_task_result_http_request`;
+CREATE TABLE `biz_main_task_result_http_request` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `task` varchar(128) NOT NULL DEFAULT '',
+  `origin` varchar(128) DEFAULT NULL,
+  `accountId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '帐号Id',
+  `teamId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '团队ID',
+  `method` text COMMENT 'HTTP方法',
+  `url` text COMMENT 'URL',
+  `startTime` int(11) DEFAULT NULL COMMENT '任务开始时间(秒级UNIX时间戳)',
+  `endTime` int(11) DEFAULT NULL COMMENT '任务结束时间(秒级UNIX时间戳)',
+  `argsJSON` text COMMENT '列表参数JSON',
+  `kwargsJSON` text COMMENT '字典参数JSON',
+  `retvalJSON` text COMMENT '执行结果JSON',
+  `status` varchar(64) DEFAULT '' COMMENT '任务状态: SUCCESS|FAILURE',
+  `einfoTEXT` text COMMENT '错误信息TEXT',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `task` (`task`),
+  KEY `origin` (`origin`),
+  KEY `accountId` (`accountId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='HTTP请求任务结果';
 
 DROP TABLE IF EXISTS `biz_main_task_result_jiguang`;
-
 CREATE TABLE `biz_main_task_result_jiguang` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -298,13 +275,7 @@ CREATE TABLE `biz_main_task_result_jiguang` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='极光推送任务结果';
 
-
-
-# Dump of table biz_main_task_result_mail
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_mail`;
-
 CREATE TABLE `biz_main_task_result_mail` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -332,13 +303,7 @@ CREATE TABLE `biz_main_task_result_mail` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件任务结果';
 
-
-
-# Dump of table biz_main_task_result_old_sms
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `biz_main_task_result_old_sms`;
-
 CREATE TABLE `biz_main_task_result_old_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -364,13 +329,7 @@ CREATE TABLE `biz_main_task_result_old_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='旧平台短信任务结果';
 
-
-
-# Dump of table wat_main_access_key
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_access_key`;
-
 CREATE TABLE `wat_main_access_key` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -389,13 +348,7 @@ CREATE TABLE `wat_main_access_key` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
-# Dump of table wat_main_file
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_file`;
-
 CREATE TABLE `wat_main_file` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -413,13 +366,7 @@ CREATE TABLE `wat_main_file` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
-# Dump of table wat_main_organization
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_organization`;
-
 CREATE TABLE `wat_main_organization` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -432,24 +379,9 @@ CREATE TABLE `wat_main_organization` (
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`),
   UNIQUE KEY `UNIQUE_ID` (`uniqueId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-LOCK TABLES `wat_main_organization` WRITE;
-/*!40000 ALTER TABLE `wat_main_organization` DISABLE KEYS */;
-
-INSERT INTO `wat_main_organization` (`seq`, `id`, `uniqueId`, `name`, `markers`, `isDisabled`, `createTime`, `updateTime`)
-VALUES
-	(1,X'6F2D737973',X'73797374656D','System Organization',NULL,0,'2017-07-28 18:08:03','2018-05-24 00:47:06');
-
-/*!40000 ALTER TABLE `wat_main_organization` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table wat_main_post
-# ------------------------------------------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `wat_main_post`;
-
 CREATE TABLE `wat_main_post` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -465,13 +397,7 @@ CREATE TABLE `wat_main_post` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
-# Dump of table wat_main_system_config
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_system_config`;
-
 CREATE TABLE `wat_main_system_config` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -482,13 +408,7 @@ CREATE TABLE `wat_main_system_config` (
   UNIQUE KEY `ID` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
-# Dump of table wat_main_task_result_example
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_task_result_example`;
-
 CREATE TABLE `wat_main_task_result_example` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -509,13 +429,7 @@ CREATE TABLE `wat_main_task_result_example` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-
-# Dump of table wat_main_user
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `wat_main_user`;
-
 CREATE TABLE `wat_main_user` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -534,24 +448,9 @@ CREATE TABLE `wat_main_user` (
   UNIQUE KEY `ID` (`id`),
   UNIQUE KEY `USERNAME` (`username`),
   KEY `ORGANIZATION_ID` (`organizationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-LOCK TABLES `wat_main_user` WRITE;
-/*!40000 ALTER TABLE `wat_main_user` DISABLE KEYS */;
-
-INSERT INTO `wat_main_user` (`seq`, `id`, `organizationId`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`)
-VALUES
-	(1,X'752D61646D696E',X'6F2D737973','admin','03449cf93ebd8f67f652f9a82b2148380b2597eedd777963245472be3311e75f3ae516244b6d7648b9b044e2523c2840bdf86a852037db7e58e9b216539b2d21','系统管理员',NULL,NULL,'sa','*',0,'2017-07-28 18:08:03','2019-02-25 03:19:24');
-
-/*!40000 ALTER TABLE `wat_main_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table wat_ref_tag
-# ------------------------------------------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `wat_ref_tag`;
-
 CREATE TABLE `wat_ref_tag` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `entityId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -566,13 +465,18 @@ CREATE TABLE `wat_ref_tag` (
   KEY `TAG_K` (`tagK`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO `wat_main_organization` (`seq`, `id`, `uniqueId`, `name`, `markers`, `isDisabled`, `createTime`, `updateTime`) VALUES
+('1', 'o-sys', 'system', 'System Organization', NULL, '0', '2017-07-28 18:08:03', '2018-05-24 00:47:06');
+
+INSERT INTO `wat_main_user` (`seq`, `id`, `organizationId`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`) VALUES
+('1', 'u-admin', 'o-sys', 'admin', '03449cf93ebd8f67f652f9a82b2148380b2597eedd777963245472be3311e75f3ae516244b6d7648b9b044e2523c2840bdf86a852037db7e58e9b216539b2d21', '系统管理员', NULL, NULL, 'sa', '*', '0', '2017-07-28 18:08:03', '2019-02-25 03:19:24');
 
 
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

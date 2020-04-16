@@ -1,6 +1,3 @@
-upgradeInfo: []
-
-# 示例
 # upgradeInfo:
 #   - seq: 0
 #     config:
@@ -10,3 +7,32 @@ upgradeInfo: []
 #         # message-desk-work更新配置
 #     database: |-
 #       # db更新语句
+
+upgradeInfo:
+  - seq: 0
+    database: |-
+      -- 添加HTTP请求支持
+      CREATE TABLE `biz_main_task_result_http_request` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+        `task` varchar(128) NOT NULL DEFAULT '',
+        `origin` varchar(128) DEFAULT NULL,
+        `accountId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '帐号Id',
+        `teamId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '团队ID',
+        `method` text COMMENT 'HTTP方法',
+        `url` text COMMENT 'URL',
+        `startTime` int(11) DEFAULT NULL COMMENT '任务开始时间(秒级UNIX时间戳)',
+        `endTime` int(11) DEFAULT NULL COMMENT '任务结束时间(秒级UNIX时间戳)',
+        `argsJSON` text COMMENT '列表参数JSON',
+        `kwargsJSON` text COMMENT '字典参数JSON',
+        `retvalJSON` text COMMENT '执行结果JSON',
+        `status` varchar(64) DEFAULT '' COMMENT '任务状态: SUCCESS|FAILURE',
+        `einfoTEXT` text COMMENT '错误信息TEXT',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `ID` (`id`),
+        KEY `task` (`task`),
+        KEY `origin` (`origin`),
+        KEY `accountId` (`accountId`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='HTTP请求任务结果';

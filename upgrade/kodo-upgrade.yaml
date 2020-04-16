@@ -5,9 +5,29 @@ update:
             # 新增配置项，用于敏感信息的加密和解密，key长度16位
             secret:
               encrypt_key:  xxxxxxxxxxxxxxx
+
           kodoInner: |-
             # 新增配置项，用于敏感信息的加密和解密，key长度16位
             secret:
               encrypt_key:  xxxxxxxxxxxxxxx
 
+    - seq: 2
+      config:
+          kodo: |-
 
+            #【更新】配置项
+            influxdb:
+              read_timeout: 30     # 统一改成秒为单位(之前是毫秒)
+              write_timeout: 30    # 统一改成秒为单位(之前是毫秒)
+              enable_gz: true      #【增加】这个字段配置
+
+          kodoInner: |-
+
+            #【更新】配置项
+            influxdb:
+              read_timeout: 30     # 统一改成秒为单位(之前是毫秒)
+              write_timeout: 30    # 统一改成秒为单位(之前是毫秒)
+              enable_gz: true      #【增加】这个字段配置
+
+            global:                # 将这里的 worker 改成 0，即不会启动 worker 消费 NSQ 中的数据
+              workers: 0
