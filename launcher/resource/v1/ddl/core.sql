@@ -763,7 +763,7 @@ CREATE TABLE `main_workspace` (
   `name` varchar(128) NOT NULL COMMENT '命名',
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
-  `dataRestriction` json NOT NULL COMMENT '数据权限',
+  `dataRestriction` json DEFAULT NULL COMMENT '数据权限',
   `maxTsCount` int(11) NOT NULL DEFAULT '100' COMMENT '最大时间线',
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '工作空间概览-视图UUID',
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',

@@ -178,6 +178,8 @@ upgrade:
       -- 新增 告警历史保留时长
       ALTER TABLE `main_workspace` ADD COLUMN `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长' AFTER `status`;
 
+      ALTER TABLE `main_workspace` CHANGE `dataRestriction` `dataRestriction` JSON  NULL  COMMENT '数据权限';
+
       -- 特别说明: 此为 PAAS 版必须执行的，用来更新工作空间中的 时间线和RP等信息
       update main_workspace set alarmHistoryPeriod="rp2", maxTsCount=-1;
 
