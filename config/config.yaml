@@ -437,7 +437,7 @@ defaultSubdomain:
   # websocket: df-websocket
   function: df-func
   kodo: df-kodo
-  integration: df-integration
+  staticResource: df-static-res
 
 updates:
   - namespace: forethought-core
