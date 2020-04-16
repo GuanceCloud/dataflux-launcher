@@ -18,13 +18,11 @@ global:
     enable_inner_api: true
     stats_on: 256
     listen: ":9527"
-    workers: 8
+    workers: 0
 
 influxdb:
-    read_timeout: 30000
-    write_timeout: 500
-    alert_rp: rp5
-    default_rp: rp5
+    read_timeout: 30
+    write_timeout: 30
 
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}

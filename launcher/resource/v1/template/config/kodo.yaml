@@ -21,10 +21,8 @@ global:
     workers: 8
 
 influxdb:
-    read_timeout: 30000
-    write_timeout: 500
-    alert_rp: rp5
-    default_rp: rp5
+    read_timeout: 30
+    write_timeout: 30
 
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
