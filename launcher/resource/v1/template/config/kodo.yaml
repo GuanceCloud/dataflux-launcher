@@ -23,6 +23,7 @@ global:
 influxdb:
     read_timeout: 30
     write_timeout: 30
+    enable_gz: true
 
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
