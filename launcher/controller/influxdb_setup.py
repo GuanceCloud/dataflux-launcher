@@ -191,15 +191,18 @@ def _init_system_workspace(sysDBUUID):
     token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
     wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
     bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
+    versionInfo     = '{"rp": "rp5", "name": "无限版", "version": "unlimited", "ruleCount": -1, "maxTsCount": -1, "ruleActivePeriod": -1, "alarmHistoryPeriod": "rp2"}'
 
     params  = (
                   token,
                   sysDBUUID,
+                  wsDashboardUUID,
+                  versionInfo,
                   bindInfo
               )
     wsSQL   = '''
-              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `bindInfo`, `createAt`) 
-              VALUES ('wksp_system', '系统工作空间', %s, '{}', %s, NULL, '', NULL, %s, UNIX_TIMESTAMP());
+              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `versionInfo`, `bindInfo`, `createAt`) 
+              VALUES ('wksp_system', '系统工作空间', %s, '{}', %s, %s, '', NULL, %s, %s, UNIX_TIMESTAMP());
             '''
     db.execute(wsSQL, dbName = dbInfo['database'], params = params)
 
