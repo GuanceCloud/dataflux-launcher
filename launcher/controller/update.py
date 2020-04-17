@@ -209,6 +209,9 @@ def deploy_update():
   cmd = "kubectl apply -f {}".format(' -f '.join(appYamls))
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
+  # 更新 ingress
+  k8sMdl.ingress_apply()
+
   return True
 
 

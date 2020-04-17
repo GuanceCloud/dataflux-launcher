@@ -6,7 +6,7 @@ import json, yaml, base64
 
 from launcher.utils.template import jinjia2_render
 
-from launcher import SERVICECONFIG, DOCKERIMAGES
+from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
 def deploy_status():
@@ -71,6 +71,21 @@ def deploy_status():
     deployStatus.append(ds)
 
   return deployStatus
+
+
+def ingress_apply():
+  tmpDir = SERVICECONFIG['tmpDir']
+  ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": settingsMdl})
+  ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
+
+  with open(ingressYaml, 'w') as f:
+    f.write(ingressTemplate)
+
+  # 创建所有 ingress
+  cmd = "kubectl apply -f {}".format(ingressYaml)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
 
 
 def get_namespace():
