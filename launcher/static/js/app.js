@@ -132,7 +132,7 @@ var setup = (function () {
         "port": $("#iptInfluxDBPort" + i).val(),
         "username": $("#iptInfluxDBUserName" + i).val(),
         "password": $("#iptInfluxDBPassword" + i).val(),
-        "dbName": $("#iptInfluxDBName" + i).val(),
+        // "dbName": $("#iptInfluxDBName" + i).val(),
         "ssl": $("#ckbInfluxDBSSL" + i).is(":checked"),
         "defaultRP": $("#sltInfluxRP" + i).val()
       }

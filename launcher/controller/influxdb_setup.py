@@ -13,10 +13,10 @@ from influxdb import InfluxDBClient
 
 def influxdb_ping(db):
   dbInfo = {
-    "host": db.get('host'),
-    "port": int(db.get('port')),
-    "username": db.get('username'),
-    "password": db.get('password'),
+    "host": db.get('host', '').strip(),
+    "port": int(db.get('port', '').strip()),
+    "username": db.get('username', '').strip(),
+    "password": db.get('password', '').strip(),
     "ssl": db.get('ssl')
   }
 
@@ -75,52 +75,52 @@ def influxdb_add(dbs):
 
   return True
 
-def __insert_rp_to_mysql():
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
+# def __insert_rp_to_mysql():
+#   mysqlSetting = settingsMdl.mysql
+#   mysqlInfo = mysqlSetting.get('base')
+#   dbInfo = mysqlSetting.get('core')
 
-  rps = SERVICECONFIG['influxDB']['replication']
+#   rps = SERVICECONFIG['influxDB']['replication']
 
-  sql = '''
-          INSERT INTO `main_influx_rp` (`uuid`, `name`, `duration`, `shardGroupDuration`, `replication`, `status`, `creator`, `updator`, `createAt`)
-          VALUES (%s, %s, %s, '', 1, 0, '', '', UNIX_TIMESTAMP());
-        '''
+#   sql = '''
+#           INSERT INTO `main_influx_rp` (`uuid`, `name`, `duration`, `shardGroupDuration`, `replication`, `status`, `creator`, `updator`, `createAt`)
+#           VALUES (%s, %s, %s, '', 1, 0, '', '', UNIX_TIMESTAMP());
+#         '''
 
-  with dbHelper(mysqlInfo) as dbClient:
-    for rp in rps:
-      rpName = rp['rpName']
-      duration = rp['duration']
-      rpUUID = "ifrp_" + shortuuid.ShortUUID().random(length = 24)
+#   with dbHelper(mysqlInfo) as dbClient:
+#     for rp in rps:
+#       rpName = rp['rpName']
+#       duration = rp['duration']
+#       rpUUID = "ifrp_" + shortuuid.ShortUUID().random(length = 24)
 
-      params = (
-          rpUUID,
-          rpName,
-          duration
-      )
+#       params = (
+#           rpUUID,
+#           rpName,
+#           duration
+#       )
 
-      dbClient.execute(sql, dbName = dbInfo['database'], params = params)
+#       dbClient.execute(sql, dbName = dbInfo['database'], params = params)
 
-  return True
+#   return True
 
 
-def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName):
+def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, roUser, wrUser):
   client = InfluxDBClient(**influxDBInfo)
   rps = SERVICECONFIG['influxDB']['replication']
 
   params = {
     "db": dbName,
-    "ro_user": influxDBInfo['username'], 
-    "rw_user": influxDBInfo['username']
+    "ro_user": roUser['username'],
+    "rw_user": wrUser['username']
   }
 
   querySQL = '''
     CREATE DATABASE {db};
     GRANT READ ON {db} TO {ro_user};
+    GRANT READ ON {db} TO {rw_user};
     GRANT WRITE ON {db} TO {rw_user};
   '''.format(**params)
 
-  # defaultRPName = ''
   rpSQLs = []
   for rp in rps:
     isDefault = rp['rpName'] == defaultRP
@@ -154,16 +154,16 @@ def _init_influxdb(instanceUUID, instance):
   }
 
   defaultRP = instance.get('defaultRP')
-  dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]  # ['internal_alert', 'internal_baseline', 'internal_system', 'internal_keyevent']
+  dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]
 
-  userDB = instance.get('dbName', '').strip()
-  if userDB:
-    dbNames.append(userDB)
+  # userDB = instance.get('dbName', '').strip()
+  # if userDB:
+  #   dbNames.append(userDB)
 
   dbUUIDs = {}
 
   for dbName in dbNames:
-    _init_influxdb_create_db(influxDBInfo, defaultRP, dbName)
+    _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, instance['ro'], instance['wr'])
 
     with dbHelper(mysqlInfo) as dbClient:
       db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
@@ -246,6 +246,33 @@ def _init_system_workspace(sysDBUUID):
 
     return True
 
+def _init_influx_user(instance, roUser, wrUser):
+  influxDBInfo = {
+    "host": instance.get('host'),
+    "port": int(instance.get('port')),
+    "username": instance.get('username'),
+    "password": instance.get('password'),
+    "ssl": instance.get('ssl')
+  }
+  client = InfluxDBClient(**influxDBInfo)
+
+  params = {
+    "ro_user": roUser['username'],
+    "ro_password": roUser['password'],
+    "wr_user": wrUser['username'],
+    "wr_password": wrUser['password']
+  }
+
+  influxQL = '''
+    CREATE USER {ro_user} WITH PASSWORD \'{ro_password}\';
+    CREATE USER {wr_user} WITH PASSWORD \'{wr_password}\';
+  '''.format(**params)
+
+  print(influxQL)
+  client.query(influxQL)
+
+  return True
+
 
 def _init_db_instance(instance):
   # encryptKey = settingsMdl.other['core']['secret']['encryptKey']
@@ -258,11 +285,23 @@ def _init_db_instance(instance):
     # "passwordEncrypt": passwordEncrypt
   }
 
+  roUser = {
+    "username": instance['ro']['username'],
+    "password": instance['ro']['password']
+  }
+
+  wrUser = {
+    "username": instance['wr']['username'],
+    "password": instance['wr']['password']
+  }
+
   authorization = {
-          "ro": user,
-          "wr": user,
+          "ro": roUser,
+          "wr": wrUser,
           "admin": user
         }
+
+  _init_influx_user(instance, roUser, wrUser)
 
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
@@ -302,7 +341,19 @@ def _init_db_instance(instance):
 
 def init_influxdb_all():
   instances = settingsMdl.influxdb
-  __insert_rp_to_mysql()
+  # __insert_rp_to_mysql()
+
+  for instance in instances:
+    instance["ro"] = {
+      "username": "user_ro",
+      "password": shortuuid.ShortUUID().random(length = 16)
+    }
+    instance["wr"] = {
+      "username": "user_wr",
+      "password": shortuuid.ShortUUID().random(length = 16)
+    }
+
+  settingsMdl.influxdb = instances
 
   for idx, instance in enumerate(instances):
     instanceUUID = _init_db_instance(instance)
