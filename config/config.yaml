@@ -33,6 +33,7 @@ services:
       name: 集成扫描 Worker
       image: core
       replicas: 0
+      deleted: True
 
     - key: core-worker
       name: Worker
@@ -48,6 +49,7 @@ services:
       name: Websocket
       image: core
       replicas: 0
+      deleted: True
 
     - key: static-resource-nginx
       name: 静态资源服务
@@ -58,6 +60,7 @@ services:
       name: 集成服务
       image: nginx
       replicas: 0
+      deleted: True
 
     configmaps:
     - key: core
@@ -111,6 +114,7 @@ services:
       name: 通知触发器
       image: trigger
       replicas: 0
+      deleted: True
 
     configmaps:
     - key: innerAppTrigger
@@ -233,6 +237,7 @@ services:
       name: 函数计算 Worker RPC
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-rpc
       name: 函数计算 Worker RPC
@@ -316,11 +321,13 @@ services:
       name: Kapacitor
       image: kapacitor
       replicas: 0
+      deleted: True
 
     - key: kapacitor02
       name: Kapacitor 02
       image: kapacitor
       replicas: 0
+      deleted: True
 
     configmaps:
     - key: messageDeskApi
@@ -401,10 +408,10 @@ databases:
 
 influxDB:
   databases:
-    - internal_alert
-    - internal_baseline
     - internal_system
-    - internal_keyevent
+    # - internal_alert
+    # - internal_baseline
+    # - internal_keyevent
 
   replication:
   - rpName: rp0
