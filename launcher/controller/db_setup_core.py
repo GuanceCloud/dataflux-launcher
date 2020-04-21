@@ -85,35 +85,35 @@ def database_init_data():
   return True
 
 
-def database_init_kapa():
-  # kapa instance
-  # 固定两个 kapa 实例，如调整实例个数，要相应调整这里的代码
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
+# def database_init_kapa():
+#   # kapa instance
+#   # 固定两个 kapa 实例，如调整实例个数，要相应调整这里的代码
+#   mysqlSetting = settingsMdl.mysql
+#   mysqlInfo = mysqlSetting.get('base')
+#   dbInfo = mysqlSetting.get('core')
 
-  with dbHelper(mysqlInfo) as db:
-    nodeInternalIP = settingsMdl.other.get('nodeInternalIP', "")
-    ips = re.split('\s*[;,、]\s*', nodeInternalIP)
+#   with dbHelper(mysqlInfo) as db:
+#     nodeInternalIP = settingsMdl.other.get('nodeInternalIP', "")
+#     ips = re.split('\s*[;,、]\s*', nodeInternalIP)
 
-    kapacitorHost1 = "http://{}:30991".format(ips[0])
-    kapacitorHost2 = "http://{}:30992".format(ips[0])
+#     kapacitorHost1 = "http://{}:30991".format(ips[0])
+#     kapacitorHost2 = "http://{}:30992".format(ips[0])
 
-    params = [
-      "kapa-" + shortuuid.ShortUUID().random(length = 24),
-      kapacitorHost1
-    ]
-    sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
-    db.execute(sql, dbName = dbInfo['database'], params = params)
+#     params = [
+#       "kapa-" + shortuuid.ShortUUID().random(length = 24),
+#       kapacitorHost1
+#     ]
+#     sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
+#     db.execute(sql, dbName = dbInfo['database'], params = params)
 
-    params = [
-      "kapa-" + shortuuid.ShortUUID().random(length = 24),
-      kapacitorHost2
-    ]
-    sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
-    db.execute(sql, dbName = dbInfo['database'], params = params)
+#     params = [
+#       "kapa-" + shortuuid.ShortUUID().random(length = 24),
+#       kapacitorHost2
+#     ]
+#     sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
+#     db.execute(sql, dbName = dbInfo['database'], params = params)
 
-  return True
+#   return True
 
 def database_manage_account_create():
   sql = '''
@@ -144,6 +144,6 @@ def database_setup():
   database_ddl()
   database_init_data()
 
-  database_init_kapa()
+  # database_init_kapa()
 
   return True
