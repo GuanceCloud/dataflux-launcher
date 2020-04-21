@@ -7,5 +7,6 @@ window.DEPLOYCONFIG = {
     innerAppRegister: 'https://auth.{{ domain.domain }}/redirectpage/register',
     innerAppProfile: 'https://auth.{{ domain.domain }}/redirectpage/profile',
     innerAppCreateworkspace: 'https://auth.{{ domain.domain }}/redirectpage/createworkspace',
+    staticFileUrl: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.staticResource }}.{{ domain.domain }}",
     cloudDatawayUrl: ''
 };
