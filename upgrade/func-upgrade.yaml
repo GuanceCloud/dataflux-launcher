@@ -179,3 +179,10 @@ upgradeInfo:
       UPDATE `biz_main_auth_link` SET `origin` = UPPER(`origin`);
 
   # ft_data_processor_2020-04-14.sql
+
+  - seq: 8
+    database: |-
+      -- 删除发布脚本创建的还原点（发布脚本不再创建还原点）
+      DELETE FROM `biz_main_script_recover_point` WHERE `type` = 'publish';
+
+  # ft_data_processor_2020-04-20.sql
