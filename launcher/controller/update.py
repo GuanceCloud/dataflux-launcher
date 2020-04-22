@@ -228,6 +228,16 @@ def __get_current_seqs():
   dbName       = coreInfo.get('database')
   currentSeqs  = versionMdl.get_current_update_seq(mysql, dbName)
 
+  for upProject in SERVICECONFIG['updates']:
+    projectName = upProject['project']
+    if projectName in currentSeqs:
+      continue
+
+    currentSeqs[projectName] = {
+      "config": -1,
+      "database": -1
+    }
+
   return currentSeqs
 
 

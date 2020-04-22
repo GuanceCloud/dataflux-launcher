@@ -5,15 +5,15 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:v1.0.1-401-ga917b59
-    core: 1.5.39:core-14703b9d-1587396161
-    kodo: 1.5.39:kodo-ef4bd4d-1587396161
-    front-webclient: 1.5.39:front-webclient-9eaf22b4-1587396161
-    management-webclient: 1.5.39:management-webclient-b26eb41-1587396161
-    message-desk: 1.5.39:message-desk-e2369fb-1587396161
-    message-desk-worker: 1.5.39:message-desk-worker-3bf98cf-1587396161
-    func: 1.5.39:func-9258f86-1587396161
-    func-worker: 1.5.39:func-worker-5e95ce7-1587396161
-    trigger: 1.5.39:trigger-d9c7b6c-1587396161
-    utils-server: 1.5.39:utils-server-44e10b9-1587396161
-  version: 1.5.39
+    internal-dataway: dataway:v1.0.1-405-g95c5a49
+    core: 1.6.40:core-01360718-1587544585
+    kodo: 1.6.40:kodo-72644f1-1587544585
+    front-webclient: 1.6.40:front-webclient-1db1f110-1587544585
+    management-webclient: 1.6.40:management-webclient-0b343b3-1587544585
+    message-desk: 1.6.40:message-desk-e2369fb-1587544585
+    message-desk-worker: 1.6.40:message-desk-worker-b9bc165-1587544585
+    func: 1.6.40:func-9046660-1587544585
+    func-worker: 1.6.40:func-worker-29fe167-1587544585
+    trigger: 1.6.40:trigger-d9c7b6c-1587544585
+    utils-server: 1.6.40:utils-server-44e10b9-1587544585
+  version: 1.6.40

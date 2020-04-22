@@ -1,0 +1,8 @@
+upgradeInfo:
+  - seq: 0
+    config:
+      frontWeb: |-
+        // 新增的配置 key
+        // 静态资源访问域名
+        staticFileUrl: 'https://static-res.demo-domain.cn'
+    
