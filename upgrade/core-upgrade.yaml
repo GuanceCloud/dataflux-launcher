@@ -164,7 +164,7 @@ upgrade:
   # 4.09 迭代
   - seq: 7
     database: |-
-      -- 触发规则 表新增 crontab 配置信息
+      -- 触发规则 表新增 crontab
       ALTER TABLE `biz_rule`
       ADD COLUMN `crontabInfo` json NULL COMMENT 'crontab配置信息' AFTER `tickInfo`;
 
@@ -188,4 +188,21 @@ upgrade:
         # 静态文件域名
         staticResource:
           domain: "http://static.cloudcare.cn:10561"
+
+  # 4.21 迭代
+  - seq: 8
+    database: |-
+      -- 新增 db rp时长
+      ALTER TABLE `main_workspace` ADD COLUMN `rpName` varchar(48) NOT NULL DEFAULT '' COMMENT 'db rp' AFTER `status`;
+
+      -- 更新寄存rp db数据
+      update main_workspace ws, main_influx_db db set ws.rpName = db.`influxRpName`  where ws.`dbUUID` = db.`uuid` and ws.`rpName` = "";
+
+      -- 刷新 versionInfo字段数据 pass版对应 unlimited
+      UPDATE main_workspace set versionInfo='{"rp": "rp5", "name": "无限版", "version": "unlimited", "ruleCount": -1, "maxTsCount": -1, "ruleActivePeriod": -1}';
+
+      -- 节点新增 指标集字段
+      ALTER TABLE `biz_node` ADD COLUMN `subTagKeyMeasurements` json NULL COMMENT '衍生节点标签指标集' AFTER `isInheritance`;
+      -- 设置默认值
+      UPDATE `biz_node` set subTagKeyMeasurements='[]';
 

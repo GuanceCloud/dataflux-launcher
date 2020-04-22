@@ -449,14 +449,14 @@ updates:
         mapName: core
         mapKey: config.yaml
 
-  - namespace: forethought-inner-app
-    project: trigger
+  - namespace: forethought-webclient
+    project: frontWeb
     noDatabase: True
     dataKey: data
     config:
-      - key: innerAppTrigger
-        mapName: trigger-conf
-        mapKey: config.yaml
+      - key: frontWeb
+        mapName: front-web-config
+        mapKey: config.js
 
   - namespace: forethought-kodo
     project: kodo
