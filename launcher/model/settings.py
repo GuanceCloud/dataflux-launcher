@@ -4,7 +4,9 @@ import os, re
 import json, yaml
 
 from launcher.utils import utils
+from launcher.utils import encrypt
 
+_SETTING_ENCRYPT_KEY = "wcjGFpkXWyMDZ2Vpkmewizs5yub35Dz"
 
 class Settings(object):
   instance = None
@@ -30,7 +32,8 @@ class Settings(object):
 
     path = dirPath + "/settings.yaml"
     with open(path, 'w') as f:
-      f.write(settingsYaml)
+      cipheredSetting = encrypt.cipher_by_aes(settingsYaml, _SETTING_ENCRYPT_KEY)
+      f.write(str(cipheredSetting, encoding="utf-8"))
       f.close()
 
     return True
@@ -56,6 +59,11 @@ class Settings(object):
 
     with open(path) as f:
         settingJson = yaml.safe_load(f)
+
+    # 兼容旧的未加密情况
+    if isinstance(settingJson, str):
+      settingContent = encrypt.decipher_by_aes(settingJson, _SETTING_ENCRYPT_KEY)
+      settingJson = yaml.safe_load(settingContent)
 
     return settingJson or {}
 
