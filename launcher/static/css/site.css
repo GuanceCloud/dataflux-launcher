@@ -38,6 +38,10 @@ footer{
   font-family: Courier New;
 }
 
+.CodeMirror{
+  height: 100% !important;
+}
+
 .form-body{
     /* padding: 20px 0; */
 }

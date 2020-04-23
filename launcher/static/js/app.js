@@ -585,5 +585,39 @@ var setup = (function () {
     });
   };
 
+  app.prototype.open_setting = function(key, title){    
+    var params = {
+      "key": key
+    }
+
+    $("#settingModalLabel").text(title);
+    $("#settingModalButtonOK").attr('disabled', true);
+    $("#settingTextarea + .CodeMirror").remove();
+
+    this.get('setting/get', params).done(function(d){
+      var jqSettingTextarea = $("#settingTextarea");
+
+      jqSettingTextarea.val(d.content);
+      $("#settingModal").modal("show");
+
+      setTimeout(function(){
+        var codemirrorEditor = CodeMirror.fromTextArea(document.getElementById('settingTextarea'), {
+          mode: 'yaml',
+          lineNumbers: true
+        });
+
+        codemirrorEditor.on('change', function(){
+          $("#settingModalButtonOK").attr('disabled', false);
+        });
+
+        jqSettingTextarea.data('codemirror', codemirrorEditor);
+      }, 200);
+    });
+  };
+
+  app.prototype.save_setting = function(){
+    console.log(1);
+  };
+
   return new app();
 })();

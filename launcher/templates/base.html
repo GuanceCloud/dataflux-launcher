@@ -11,16 +11,43 @@
 
         <link rel="stylesheet" href="/css/site.css" crossorigin="anonymous" />
         <link rel="stylesheet" href="/vendor/iconfont/style.css" crossorigin="anonymous" />
+        <link rel="stylesheet" href="/css/codemirror.css" crossorigin="anonymous" />
 
         <script src="/vendor/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/jquery.validate/jquery.validate.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/jquery.validate/messages_zh.min.js" crossorigin="anonymous"></script>
+        <script src="/vendor/js-yaml.min.js" crossorigin="anonymous"></script>
+        <script src="/vendor/codemirror.js" crossorigin="anonymous"></script>
         <script src="/vendor/bootstrap/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
     </head>
     <body>
         <header>
           <div class="container-fluid">
+            <div class="dropdown pull-right">
+              <a data-toggle="dropdown" style="text-decoration:none;" role="button" aria-haspopup="true" aria-expanded="false" href="javascript:void(0);">
+                <i class="glyphicon glyphicon-cog"></i>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="dLabel">
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.open_setting('mysql', 'MySQL 配置信息')">MySQL</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.open_setting('redis', 'Redis 配置信息')">Redis</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.open_setting('influxdb', ' InfluxDB 配置信息')">InfluxDB</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.open_setting('domain', '域名配置信息')">域名</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.open_setting('other', '其他配置信息')">其他</a>
+                </li>
+              </ul>
+            </div>
+
             <img src="/images/launcher.png"/>&nbsp;DataFlux Launcher
           </div>
         </header>
@@ -50,6 +77,26 @@
         <footer class="text-center">
             ©2013-{{ __common__.year }} 上海驻云信息科技有限公司
         </footer>
+
+        <!-- Large modal -->
+        <div id="settingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="settingModalLabel">Modal title</h4>
+              </div>
+              <div class="modal-body" style="padding: 0; height: 400px;">
+                <textarea id="settingTextarea" class="form-control" style="width: 100%; height: 400px;"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="settingModalButtonOK" type="button" onclick="setup.save_setting()" class="btn btn-primary">保存修改</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
 
         <script src="/js/app.js" crossorigin="anonymous"></script>
         <script src="/js/validation.js" crossorigin="anonymous"></script>

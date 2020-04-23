@@ -3,6 +3,7 @@
 from flask import Blueprint, request
 from launcher.utils.handler import response_jsonify
 
+from launcher.controller import setting
 from launcher.controller import setup
 from launcher.controller import db_setup_core
 from launcher.controller import db_setup_message_desk
@@ -97,6 +98,13 @@ def service_create():
   data = request.json
 
   return  response_jsonify(setup.service_create(data))
+
+
+@setup_bp.route("/setting/get", methods=["get"])
+def setting_get():
+  args = request.args.to_dict()
+
+  return  response_jsonify(setting.setting_get(args.get('key')))
 
 
 @setup_bp.route("/service/status", methods=["GET"])
