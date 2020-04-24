@@ -12,3 +12,12 @@ def setting_get(key):
   settingsYaml = yaml.dump(settingJson, default_flow_style=False)
 
   return settingsYaml
+
+
+def setting_save(data):
+  key = data['key']
+  content = data['content']
+
+  setattr(settingsMdl, key, content)
+
+  return True

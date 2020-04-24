@@ -107,6 +107,13 @@ def setting_get():
   return  response_jsonify(setting.setting_get(args.get('key')))
 
 
+@setup_bp.route("/setting/save", methods=["post"])
+def setting_save():
+  data = request.json
+
+  return  response_jsonify(setting.setting_save(data))
+
+
 @setup_bp.route("/service/status", methods=["GET"])
 def service_status():
   return  response_jsonify(setup.service_status())

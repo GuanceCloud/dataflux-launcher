@@ -39,7 +39,7 @@ var setup = (function () {
     };
 
     this.get = function(url, data, headers){
-      return _send(url, "GET", data, null, headers)
+      return _send(url, "GET", data, headers)
     };
 
     this.post = function(url, data, headers){
@@ -585,25 +585,29 @@ var setup = (function () {
     });
   };
 
-  app.prototype.open_setting = function(key, title){    
+  app.prototype.open_setting = function(key, title){   
+    var that = this;
+    var jqSettingTextarea = $("#settingTextarea"); 
     var params = {
       "key": key
-    }
+    };
 
     $("#settingModalLabel").text(title);
     $("#settingModalButtonOK").attr('disabled', true);
     $("#settingTextarea + .CodeMirror").remove();
+    $("#spanYAMLError").hide();
+
+    jqSettingTextarea.data('configKey', key);
 
     this.get('setting/get', params).done(function(d){
-      var jqSettingTextarea = $("#settingTextarea");
-
       jqSettingTextarea.val(d.content);
       $("#settingModal").modal("show");
 
       setTimeout(function(){
         var codemirrorEditor = CodeMirror.fromTextArea(document.getElementById('settingTextarea'), {
           mode: 'yaml',
-          lineNumbers: true
+          lineNumbers: true,
+          tabSize: 2
         });
 
         codemirrorEditor.on('change', function(){
@@ -616,7 +620,33 @@ var setup = (function () {
   };
 
   app.prototype.save_setting = function(){
-    console.log(1);
+    var jqSettingTextarea = $("#settingTextarea");
+    var codemirrorEditor = jqSettingTextarea.data('codemirror');
+    var key = jqSettingTextarea.data('configKey');
+    var val = codemirrorEditor.getValue();
+
+    var dict = null;
+
+    $("#settingModalButtonOK").attr('disabled', true);
+    try {
+      dict = jsyaml.safeLoad(val);
+    } catch (err) {
+      console.log(err);
+      $("#spanYAMLError").show();
+    }
+
+    if (dict){
+      var data = {
+        "key": key,
+        "content": dict
+      };
+
+      this.post('setting/save', data).done(function(d){
+        console.log(d);
+        $("#settingModal").modal("hide");
+        $("#settingModalButtonOK").attr('disabled', false);
+      });
+    }
   };
 
   return new app();
