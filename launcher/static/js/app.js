@@ -642,7 +642,6 @@ var setup = (function () {
       };
 
       this.post('setting/save', data).done(function(d){
-        console.log(d);
         $("#settingModal").modal("hide");
         $("#settingModalButtonOK").attr('disabled', false);
       });
