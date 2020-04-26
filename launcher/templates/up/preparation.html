@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row form-body">
+  <h2 class="page-heading">{{ title }}</h2>
+
+  <div class="high-block">
+    {% if pageData | length == 0 %}
+    <h4>无升级前的准备工作，直接进入下一步！</h4>
+    {% endif %}
+
+    {% for conf in pageData %}
+    <div class="high-block-sm">
+      <h5>序列号：{{ conf.seq }}</h5>
+      <pre>{{ conf.config }}</pre>
+    </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<div class="row form-body">
+    <div class="pull-left">
+      <a class="btn btn-success" href="/up/newconfigmap">
+        下一步
+      </a>
+    </div>
+</div>
+
+{% endblock %}
+

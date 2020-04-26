@@ -154,6 +154,13 @@ def register_install_router(app):
 # 升级安装路由套装
 def register_update_router(app):
 
+  @app.route("/up/preparation")
+  def up_preparation():
+    launcherPreparation = update.list_launcher_preparation()
+
+    return render("up/preparation.html", {"title": "升级准备", "pageData": launcherPreparation, "steps": STEPS_COMMON + STEPS_UPDATE})
+
+
   @app.route("/up/newconfigmap")
   def up_new_configmap():
     newConfigmap = update.new_configmap_check()

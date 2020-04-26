@@ -311,7 +311,8 @@ def service_status():
 def save_version():
   # version        = DOCKERIMAGES['version']
   # try:
-  projectLastSeq = versionMdl.get_project_last_seq()
+  projects = [item['project'] for item in SERVICECONFIG['updates']]
+  projectLastSeq = versionMdl.get_project_last_seq(projects + ['launcher'])
 
   for project, seq in projectLastSeq.items():
     versionMdl.save_version(project, 'database', seq)

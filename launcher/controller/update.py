@@ -241,6 +241,15 @@ def __get_current_seqs():
   return currentSeqs
 
 
+def list_launcher_preparation():
+  currentSeqs = __get_current_seqs()
+  launcherSeq = currentSeqs.get('launcher', {'config': -1})
+
+  updateVersions  = versionMdl.list_project_versions('launcher', launcherSeq['config'])
+
+  return [{'seq': item['seq'], 'config': item.get('config', {})}  for item in updateVersions]
+
+
 def list_source_and_update_configmaps():
   mapKeyVal      = {}
   updateProjects = SERVICECONFIG['updates']

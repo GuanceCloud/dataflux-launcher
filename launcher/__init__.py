@@ -61,6 +61,10 @@ STEPS_INSTALL = [
 
 STEPS_UPDATE = [
   {
+      "key": "/up/preparation",
+      "name": "升级准备"
+  },
+  {
       "key": "/up/newconfigmap",
       "name": "新增应用配置"
   },

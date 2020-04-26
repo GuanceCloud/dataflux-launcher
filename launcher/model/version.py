@@ -100,12 +100,11 @@ def excute_update_sql(mysqlInfo, dbName, sqls):
 
 
 # 从当前应用中获取最新的版本 seq
-def get_project_last_seq():
+def get_project_last_seq(projects):
   result = {}
 
-  for up in SERVICECONFIG['updates']:
-    project = up['project']
-    dataKey = up['dataKey']
+  for project in projects:
+    # project = up['project']
 
     data = list_project_versions(project, -1)
 
@@ -134,7 +133,7 @@ def list_project_versions(project, versionSeq):
 
   upgrades = []
 
-  # 兼容不同项目使用的字典 key 不同，后面必须矫正
+  # 兼容不同项目使用的字典key 不同，后面必须矫正
   if 'upgradeInfo' in upgradeJson:
     upgrades = upgradeJson.get('upgradeInfo', []) or []
   elif 'update' in upgradeJson:
