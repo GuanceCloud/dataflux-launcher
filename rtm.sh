@@ -55,7 +55,7 @@ function copy_upgrade(){
     cp upgrade-info.yaml ${workDir}/upgrade/func-upgrade.yaml
     cp db/ft_data_processor_latest.sql ${workDir}/launcher/resource/v1/ddl/func.sql
   elif [ $project = "message-desk" ]; then
-    cp upgrade.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
+    cp upgrade-info.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
     cp db/message_desk_latest.sql ${workDir}/launcher/resource/v1/ddl/message-desk.sql
   elif [ $project = "front-webclient" ]; then
     cp upgrade.yaml ${workDir}/upgrade/frontWeb-upgrade.yaml
