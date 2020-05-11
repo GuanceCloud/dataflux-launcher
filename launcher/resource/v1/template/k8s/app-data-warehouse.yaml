@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-utils-data-warehouse
+  name: data-warehouse
+  namespace: utils
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-utils-data-warehouse
+  template:
+    metadata:
+      labels:
+        app: deployment-utils-data-warehouse
+    spec:
+      containers:
+      - args:
+        - /ft-data-warehouse/ft-data-warehouse
+        - --cfg
+        - /ft-data-warehouse/config.yaml
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: data-warehouse
+        ports:
+        - containerPort: 9528
+          name: 9528tcp01
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /ft-data-warehouse/config.yaml
+          name: data-warehouse-config
+          subPath: config.yaml
+        - mountPath: /logdata
+          name: data-warehouse-logs
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: data-warehouse-config
+          optional: false
+        name: data-warehouse-config
+      - name: data-warehouse-logs
+        persistentVolumeClaim:
+          claimName: data-warehouse-logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-warehouse
+  namespace: utils
+spec:
+  clusterIP: None
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-utils-data-warehouse
+  type: ClusterIP
+  

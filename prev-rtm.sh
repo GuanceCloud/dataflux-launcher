@@ -68,6 +68,8 @@ function copy_upgrade(){
     cp db/message_desk_latest.sql ${workDir}/launcher/resource/v1/ddl/message-desk.sql
   elif [ $project = "front-webclient" ]; then
     cp upgrade.yaml ${workDir}/upgrade/frontWeb-upgrade.yaml
+  elif [ $project = "data-warehouse" ]; then
+    cp image/upgrade.yaml ${workDir}/upgrade/data-warehouse-upgrade.yaml
   fi
 }
 
@@ -145,6 +147,7 @@ function start(){
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server"
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse"
 
   echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
 

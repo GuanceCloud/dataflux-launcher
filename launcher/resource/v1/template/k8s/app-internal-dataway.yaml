@@ -26,7 +26,7 @@ spec:
         volumeMounts:
         - mountPath: /usr/local/cloudcare/forethought/dataway/dataway.yaml
           name: dataway-config
-          subPath: config.yaml
+          subPath: dataway.yaml
         - mountPath: /usr/local/cloudcare/forethought/dataway/license
           name: dataway-license
           subPath: license

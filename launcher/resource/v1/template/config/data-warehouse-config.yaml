@@ -1,0 +1,32 @@
+# clickhouse 数据库的配置信息
+# 
+ck:
+    host: ""
+    user: ""
+    password: ""
+    read_timeout:  30
+    write_timeout:  30
+    cluster_name: "default"
+
+global:
+    interval:  8640
+    workers:   8
+    job_interval: 60
+    dataway: "http://internal-dataway.utils:9528/v1/write/metrics"
+
+log:
+    log_file: "/logdata/log"
+    level: info
+    json_format: false
+
+database:
+    db_dialect: mysql
+    connection: {{mysql.core.user}}:{{mysql.core.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.core.database}}
+
+redis:
+    host: {{redis.host}}:{{redis.port}}
+    password: {{redis.password}}
+    db:  0
+
+secret:
+    encrypt_key: {{ (other.core.secret or {}).encryptKey }}

@@ -378,6 +378,11 @@ services:
       image: internal-dataway
       replicas: 1
 
+    - key: data-warehouse
+      name: 数据仓库管理
+      image: data-warehouse
+      replicas: 1
+
     configmaps: 
     - key: internalDataWay
       mapname: dataway-config
@@ -392,6 +397,13 @@ services:
       services:
       - internal-dataway
       template: internal-dataway-license
+
+    - key: dataWarehouseConfig
+      mapname: data-warehouse
+      mapkey: config.yaml
+      services:
+      - data-warehouse
+      template: data-warehouse-config
 
     pvcs:
     - name: internal-dataway-cache
@@ -510,5 +522,14 @@ updates:
 
       - key: messageDeskWorker
         mapName: message-desk
+        mapKey: config.yaml
+
+  - namespace: utils
+    project: dataWarehouse
+    noDatabase: True
+    dataKey: data
+    config:
+      - key: dataWarehouseConfig
+        mapName: data-warehouse
         mapKey: config.yaml
 
