@@ -74,6 +74,7 @@ fi
 : > ${imageYaml}
 echo "apps:" > ${workDir}/${imageYaml}
 echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
+echo "  version: testing"
 echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
 echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}

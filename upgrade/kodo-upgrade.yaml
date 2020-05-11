@@ -31,3 +31,29 @@ update:
 
             global:                # 将这里的 worker 改成 0，即不会启动 worker 消费 NSQ 中的数据
               workers: 0
+
+    - seq: 3
+      config:
+
+          kodoInner: |-
+
+            #【新增】配置项
+            # 未配置 host，或配置错误，表示不启用 ClickHouse 数仓功能
+            ck:
+              # clickhouse host + tcp port 3306
+              host: ""
+
+              # clickhouse user name
+              user: ""
+
+              # clickhouse user password
+              password: "" 
+
+              # clickhouse read timeout set
+              read_timeout: 30
+              
+              # clickhouse write timeout set 
+              write_timeout: 30   
+
+              # clickhouse cluster name 
+              cluster_name: "default"

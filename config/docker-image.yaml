@@ -1,19 +1,20 @@
 apps:
-  registry: pubrepo.jiagouyun.com
-  image_dir: dataflux/
+  registry: registry.jiagouyun.com
+  image_dir: ''
+  version: 1.7
   images:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
-    kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:v1.0.1-405-g95c5a49
-    core: 1.6.42:core-89272f4e-1588163200
-    kodo: 1.6.42:kodo-72644f1-1588163200
-    front-webclient: 1.6.42:front-webclient-d71050eb-1588163200
-    management-webclient: 1.6.42:management-webclient-0b343b3-1588163200
-    message-desk: 1.6.42:message-desk-e2369fb-1588163200
-    message-desk-worker: 1.6.42:message-desk-worker-b9bc165-1588163200
-    func: 1.6.42:func-e22b619-1588163200
-    func-worker: 1.6.42:func-worker-a4823e1-1588163200
-    trigger: 1.6.42:trigger-d9c7b6c-1588163200
-    utils-server: 1.6.42:utils-server-44e10b9-1588163200
-  version: 1.6.42
+    kapacitor: basis/kapacitor:1.5.4
+    internal-dataway: dataway:v1.0.1-419-g26fcb75
+    core: cloudcare-forethought/cloudcare-forethought-backend:release_20200507_02
+    kodo: kodo/kodo:release_20200507_04
+    front-webclient: cloudcare-front/cloudcare-forethought-webclient:release_20200508_01
+    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:release_20200507_01
+    message-desk: middlewares/message-desk:release_20200421_01
+    message-desk-worker: middlewares/message-desk-worker:release_20200421_01
+    func: middlewares/ft-data-processor:release_20200508_02
+    func-worker: middlewares/ft-data-processor-worker:release_20200508_01
+    trigger: cloudcare-forethought/cloudcare-forethought-trigger:release_20200220_04
+    utils-server: cloudcare-forethought/utils-server:release_20200316_01
+    data-warehouse: ft-data-warehouse/ft-data-warehouse:release_20200511_02

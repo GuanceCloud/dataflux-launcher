@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50727
  Source Host           : 127.0.0.1:3306
- Source Schema         : ft-test
+ Source Schema         : ft2-new
 
  Target Server Type    : MySQL
  Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 20/04/2020 18:26:24
+ Date: 07/05/2020 18:15:38
 */
 
 SET NAMES utf8mb4;
@@ -120,6 +120,7 @@ CREATE TABLE `biz_integration` (
   `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类型',
   `path` varchar(512) DEFAULT NULL,
   `name` varchar(128) DEFAULT '' COMMENT '名称',
+  `fileName` varchar(128) DEFAULT '' COMMENT '文件名 用于排序',
   `metaHash` varchar(256) DEFAULT NULL COMMENT 'meta hash值',
   `meta` json DEFAULT NULL COMMENT '数据集meta信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -463,14 +464,16 @@ CREATE TABLE `main_agent_license` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for main_ck_blacklist
+-- Table structure for main_ck_datasync
 -- ----------------------------
-DROP TABLE IF EXISTS `main_ck_blacklist`;
-CREATE TABLE `main_ck_blacklist` (
+DROP TABLE IF EXISTS `main_ck_datasync`;
+CREATE TABLE `main_ck_datasync` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
-  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ckbl-',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ckds-',
   `dbUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '原始 Measurement 所在 DB uuid',
-  `measurement` varchar(48) NOT NULL DEFAULT '' COMMENT '指标名',
+  `measurement` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '指标名',
+  `tableName` varchar(128) NOT NULL DEFAULT '' COMMENT 'ck table name',
+  `startTime` int(11) NOT NULL COMMENT '单位: 秒',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -488,20 +491,16 @@ DROP TABLE IF EXISTS `main_influx_cq`;
 CREATE TABLE `main_influx_cq` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifcq-',
-  `influxUUID` varchar(48) NOT NULL DEFAULT '',
-  `cqName` varchar(128) NOT NULL DEFAULT 'cq_' COMMENT 'CQ name',
-  `namePrefix` varchar(48) NOT NULL DEFAULT '',
+  `dbUUID` varchar(48) NOT NULL DEFAULT '',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `sampleEvery` varchar(48) NOT NULL DEFAULT '30m' COMMENT 'RESAMPLE every XXX',
   `sampleFor` varchar(48) NOT NULL DEFAULT '1h' COMMENT 'RESAMPLE for XXX',
-  `db` varchar(48) NOT NULL DEFAULT '' COMMENT '原始 Measurement 所在 DB 名称',
+  `measurement` varchar(256) NOT NULL DEFAULT '' COMMENT '指标名',
   `rp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则只用 @db 的默认 RP',
   `cqrp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则用 CQ 默认的 RP, 比如 rpcq',
-  `measurement` varchar(48) NOT NULL DEFAULT '' COMMENT '指标名',
-  `cqMeasName` varchar(128) NOT NULL DEFAULT '' COMMENT 'cq 后的指标名，，不指定则  @name',
-  `keepTags` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否在 CQ 的 measurement 上保 原始 tag， 然原始 tag 会被转换成 field',
+  `aggrFunc` varchar(48) NOT NULL DEFAULT 'mean',
   `groupByTime` varchar(48) NOT NULL DEFAULT '30m',
   `groupByOffset` varchar(48) NOT NULL DEFAULT '15m',
-  `funcFields` json NOT NULL COMMENT '["""mean("field-1") AS "field-1-mean"""",...]',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -678,6 +677,7 @@ CREATE TABLE `main_workspace` (
   `name` varchar(128) NOT NULL COMMENT '命名',
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
+  `isOpenWarehouse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启数据仓库',
   `dataRestriction` json DEFAULT NULL COMMENT '数据权限',
   `maxTsCount` int(11) NOT NULL DEFAULT '100' COMMENT '最大时间线',
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '工作空间概览-视图UUID',

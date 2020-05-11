@@ -1,5 +1,4 @@
-# clickhouse 数据库的配置信息
-# 
+# 如要开启 ClickHouse 数据仓库功能，请配置 ClickHouse 数据库的相关信息
 ck:
     host: ""
     user: ""

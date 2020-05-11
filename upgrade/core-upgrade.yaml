@@ -206,3 +206,61 @@ upgrade:
       -- 设置默认值
       UPDATE `biz_node` set subTagKeyMeasurements='[]';
 
+
+
+  # 4.30 迭代
+  - seq: 9
+    database: |-
+      -- 新增 是否开启数仓字段
+      ALTER TABLE `main_workspace` ADD COLUMN `isOpenWarehouse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启数据仓库' AFTER `dbUUID`;
+
+      -- 新增 集成 fileName 用于排序
+      ALTER TABLE `biz_integration` ADD COLUMN `fileName` varchar(128)  DEFAULT "" COMMENT '文件名 用于排序' AFTER `name`;
+
+      -- 更新 main_ck_blacklist
+      drop table main_ck_blacklist;
+
+      -- 创建CK同步表
+      CREATE TABLE `main_ck_datasync` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ckds-',
+        `dbUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '原始 Measurement 所在 DB uuid',
+        `measurement` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '指标名',
+        `tableName` varchar(128) NOT NULL DEFAULT '' COMMENT 'ck table name',
+        `startTime` int(11) NOT NULL COMMENT '单位: 秒',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 更新 main_influx_cq
+      drop table main_influx_cq;
+
+      -- 重建 CQ表, 原表无数据
+      CREATE TABLE `main_influx_cq` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ifcq-',
+        `dbUUID` varchar(48) NOT NULL DEFAULT '',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `sampleEvery` varchar(48) NOT NULL DEFAULT '30m' COMMENT 'RESAMPLE every XXX',
+        `sampleFor` varchar(48) NOT NULL DEFAULT '1h' COMMENT 'RESAMPLE for XXX',
+        `measurement` varchar(256) NOT NULL DEFAULT '' COMMENT '指标名',
+        `rp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则只用 @db 的默认 RP',
+        `cqrp` varchar(48) NOT NULL DEFAULT '' COMMENT '不填则用 CQ 默认的 RP, 比如 rpcq',
+        `aggrFunc` varchar(48) NOT NULL DEFAULT 'mean',
+        `groupByTime` varchar(48) NOT NULL DEFAULT '30m',
+        `groupByOffset` varchar(48) NOT NULL DEFAULT '15m',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

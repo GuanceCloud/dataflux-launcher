@@ -403,7 +403,7 @@ services:
       mapkey: config.yaml
       services:
       - data-warehouse
-      template: data-warehouse-config
+      template: data-warehouse-config.yaml
 
     pvcs:
     - name: internal-dataway-cache
