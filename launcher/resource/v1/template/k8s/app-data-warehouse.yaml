@@ -23,10 +23,6 @@ spec:
         image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
         name: data-warehouse
-        ports:
-        - containerPort: 9528
-          name: 9528tcp01
-          protocol: TCP
         volumeMounts:
         - mountPath: /ft-data-warehouse/config.yaml
           name: data-warehouse-config

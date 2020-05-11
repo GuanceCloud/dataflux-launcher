@@ -268,7 +268,6 @@ def _init_influx_user(instance, roUser, wrUser):
     CREATE USER {wr_user} WITH PASSWORD \'{wr_password}\';
   '''.format(**params)
 
-  print(influxQL)
   client.query(influxQL)
 
   return True

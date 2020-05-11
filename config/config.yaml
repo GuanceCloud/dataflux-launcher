@@ -399,7 +399,7 @@ services:
       template: internal-dataway-license
 
     - key: dataWarehouseConfig
-      mapname: data-warehouse
+      mapname: data-warehouse-config
       mapkey: config.yaml
       services:
       - data-warehouse
@@ -410,6 +410,9 @@ services:
       storage: 10Gi
 
     - name: internal-dataway-logs
+      storage: 20Gi
+
+    - name: data-warehouse-logs
       storage: 20Gi
 
 

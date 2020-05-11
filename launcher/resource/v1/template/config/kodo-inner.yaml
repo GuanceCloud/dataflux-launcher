@@ -25,6 +25,26 @@ influxdb:
     write_timeout: 30
     enable_gz: true
 
+# 未配置 host，或配置错误，表示不启用 ClickHouse 数仓功能
+ck:
+    # clickhouse host + tcp port 3306
+    host: ""
+
+    # clickhouse user name
+    user: ""
+
+    # clickhouse user password
+    password: "" 
+
+    # clickhouse read timeout set
+    read_timeout: 30
+
+    # clickhouse write timeout set 
+    write_timeout: 30   
+
+    # clickhouse cluster name 
+    cluster_name: "default"
+
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
 
