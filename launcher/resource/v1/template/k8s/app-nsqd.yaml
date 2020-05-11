@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       app: deployment-middleware-nsqd
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
