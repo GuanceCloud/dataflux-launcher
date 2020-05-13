@@ -6,15 +6,15 @@ apps:
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:v1.0.1-419-g26fcb75
-    core: 1.7.43:core-907f8fb1-1589192863
-    kodo: 1.7.43:kodo-e16c547-1589192863
-    front-webclient: 1.7.43:front-webclient-085c4307-1589192863
-    management-webclient: 1.7.43:management-webclient-c939ac7-1589192863
-    message-desk: 1.7.43:message-desk-e2369fb-1589192863
-    message-desk-worker: 1.7.43:message-desk-worker-b9bc165-1589192863
-    func: 1.7.43:func-9027eb3-1589192863
-    func-worker: 1.7.43:func-worker-d1c3da6-1589192863
-    trigger: 1.7.43:trigger-d9c7b6c-1589192863
-    utils-server: 1.7.43:utils-server-44e10b9-1589192863
-    data-warehouse: 1.7.43:data-warehouse-3bc7389-1589192863
-  version: 1.7.43
+    core: 1.7.44:core-907f8fb1-1589353037
+    kodo: 1.7.44:kodo-e16c547-1589353037
+    front-webclient: 1.7.44:front-webclient-085c4307-1589353037
+    management-webclient: 1.7.44:management-webclient-c939ac7-1589353037
+    message-desk: 1.7.44:message-desk-e2369fb-1589353037
+    message-desk-worker: 1.7.44:message-desk-worker-b9bc165-1589353037
+    func: 1.7.44:func-9027eb3-1589353037
+    func-worker: 1.7.44:func-worker-d1c3da6-1589353037
+    trigger: 1.7.44:trigger-d9c7b6c-1589353037
+    utils-server: 1.7.44:utils-server-44e10b9-1589353037
+    data-warehouse: 1.7.44:data-warehouse-3bc7389-1589353037
+  version: 1.7.44
