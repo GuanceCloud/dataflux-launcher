@@ -533,6 +533,6 @@ updates:
     dataKey: data
     config:
       - key: dataWarehouseConfig
-        mapName: data-warehouse
+        mapName: data-warehouse-config
         mapKey: config.yaml
 
