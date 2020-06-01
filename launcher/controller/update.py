@@ -404,7 +404,7 @@ def database_update(project):
   projectUpSqls = dbUpdates.get(project)
 
   if not projectUpSqls:
-    return True
+    return -1
 
   mysqlSetting = settingsMdl.mysql
   baseInfo     = mysqlSetting.get('base') or {}
@@ -412,7 +412,7 @@ def database_update(project):
   sqls    = projectUpSqls.get('sqls', [])
 
   if len(sqls) == 0:
-    return True
+    return -1
 
   appMySQLInfo = mysqlSetting.get(project) or {}
 
@@ -424,12 +424,13 @@ def database_update(project):
               }
   dbName       = appMySQLInfo.get('database')
 
-  versionMdl.excute_update_sql(mysql, dbName, sqls)
+  errorSeq = versionMdl.excute_update_sql(mysql, dbName, sqls)
 
-  lastSql = sqls[len(sqls) - 1]
-  versionMdl.save_version(project, 'database', lastSql['seq'])
+  if errorSeq == -1:
+    lastSql = sqls[len(sqls) - 1]
+    versionMdl.save_version(project, 'database', lastSql['seq'])
 
-  del CACHEDATA['dbUpdates'][project]
-  
-  return True
+    del CACHEDATA['dbUpdates'][project]
+
+  return errorSeq
 

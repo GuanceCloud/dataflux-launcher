@@ -158,5 +158,5 @@ def up_database_update():
   data    = request.json
   project = data.get('project')
 
-  return  response_jsonify(update.database_update(project))
+  return  response_jsonify({"project": project, "errorSeq": update.database_update(project)})
 

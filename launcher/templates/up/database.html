@@ -16,7 +16,7 @@
         {% endif %}
 
         {% for item in val.sqls %}
-        <div class="db-update-item">
+        <div id="dvProject_{{ project }}_update_{{ item.seq }}" class="db-update-item">
           <h5>序列：{{ item.seq }}</h5>
           <pre>{{ item.content }}</pre>
         </div>

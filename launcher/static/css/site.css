@@ -93,6 +93,10 @@ footer{
   background-color: #fff;
 }
 
+.page-main .db-update-item.update-error pre{
+  border-color: #f00;
+}
+
 .page-main .app-image:hover{
   background-color: #fff;
 }

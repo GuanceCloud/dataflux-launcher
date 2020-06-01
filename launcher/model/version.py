@@ -93,10 +93,19 @@ def save_version(project, seqType, seq):
 
 
 def excute_update_sql(mysqlInfo, dbName, sqls):
-  with dbHelper(mysqlInfo) as db:
-    for sql in sqls:
-      db.execute(sql['content'], dbName = dbName)
-      db.commit()
+  seq = 0
+
+  try:
+    with dbHelper(mysqlInfo) as db:
+      for sql in sqls:
+        seq = sql['seq']
+        db.execute(sql['content'], dbName = dbName)
+    
+  except Exception as e:
+    print(e)
+    return seq
+
+  return -1
 
 
 # 从当前应用中获取最新的版本 seq

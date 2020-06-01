@@ -1,6 +1,9 @@
 # encoding=utf-8
 
 import pymysql
+import traceback
+import io
+
 
 class dbHelper(object):
   def __init__(self, connect_info):
@@ -20,13 +23,19 @@ class dbHelper(object):
 
 
   def __exit__(self, ex_type, ex_value, ex_trace):
-    try:
-      if self._connection:
-        self._connection.commit()
-        self._connection.close()
-    except:
-      print('db exit error')
-      pass
+    if ex_type is None:
+      self.commit()
+    else:
+      self.rollback()
+
+      fo = io.StringIO()
+      traceback.print_exception(ex_type, ex_value, ex_trace, file = fo)
+      trace_message = fo.getvalue()
+
+      print(trace_message)
+      raise Exception(trace_message)
+      
+    self.close()
 
 
   @property
@@ -34,9 +43,19 @@ class dbHelper(object):
     return self._connection
 
 
+  def rollback(self):
+    if self._connection:
+      self._connection.rollback()
+
+
   def commit(self):
     if self._connection:
       self._connection.commit()
+
+
+  def close(self):
+    if self._connection:
+      self._connection.close()
 
 
   def execute(self, ddl, dbName = None, params = None):

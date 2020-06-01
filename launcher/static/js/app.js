@@ -528,7 +528,7 @@ var setup = (function () {
 
   app.prototype.database_update = function(){
     var that = this;
-    var count = 0;
+    var count = 0, error = 0;
 
     $('#btnDatabaseUpdate').attr("disabled", true);
     jqProject = $('.upgrade-sql-list');
@@ -541,11 +541,15 @@ var setup = (function () {
       that.post("up/database/update", {'project': project}).then(function(d){
         count = count + 1;
 
-        if (count == jqProject.length){
+        if (d.content.errorSeq != -1){
+          error = error + 1;
+
+          id = "dvProject_" + d.content.project + "_update_" + d.content.errorSeq;
+          $("#" + id).addClass("update-error");
+        }
+
+        if (count == jqProject.length && error == 0){
           that.go("/up/service");
-          // that.get('service/redeploy/all').then(function(d){
-          //   that.go("/up/service/status");
-          // });
         }
       }).done(function(){
         // $('#btnDatabaseUpdate').attr("disabled", false);
