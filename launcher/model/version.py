@@ -92,6 +92,27 @@ def save_version(project, seqType, seq):
   return True
 
 
+# 数据库备份
+def sqldump(mysqlInfo, dbName):
+  base_path = os.path.dirname(os.path.abspath(__file__))
+  dirPath = base_path + "/../../persistent-data/sqldumps"
+  filename = "{}/{}_$(date +%Y%m%d%H%M%S).tar.gz".format(dirPath, mysqlInfo['database'])
+
+  if not os.path.exists(dirPath):
+    os.mkdir(dirPath)
+
+  dumpSQLCMD = '''
+                mysqldump -h{host} -u{user} -P{port} -p{password} {database} | \
+                gzip > {}
+            '''.format(filename, **dict(**mysqlInfo, **{"database": dbName}))
+
+  p = subprocess.Popen(dumpSQLCMD, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+
+  return filename
+
+
 def excute_update_sql(mysqlInfo, dbName, sqls):
   seq = 0
 

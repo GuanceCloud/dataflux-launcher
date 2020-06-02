@@ -424,6 +424,7 @@ def database_update(project):
               }
   dbName       = appMySQLInfo.get('database')
 
+  versionMdl.sqldump(mysql, dbName)
   errorSeq = versionMdl.excute_update_sql(mysql, dbName, sqls)
 
   if errorSeq == -1:
