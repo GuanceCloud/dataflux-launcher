@@ -96,7 +96,7 @@ def save_version(project, seqType, seq):
 def sqldump(mysqlInfo, dbName):
   base_path = os.path.dirname(os.path.abspath(__file__))
   dirPath = base_path + "/../../persistent-data/sqldumps"
-  filename = "{}/{}_$(date +%Y%m%d%H%M%S).tar.gz".format(dirPath, mysqlInfo['database'])
+  filename = "{}/{}_$(date +%Y%m%d%H%M%S).sql.gz".format(dirPath, dbName)
 
   if not os.path.exists(dirPath):
     os.mkdir(dirPath)
