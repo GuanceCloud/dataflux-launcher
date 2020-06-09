@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row form-body">
+    <form id="validateForm" class="form-horizontal" onsubmit="return false;">
+      <h2 class="page-heading">{{ title }}</h2>
+      <div class="high-block influxdb-list">
+        <div class="form-group">
+          <label for="iptESHost" class="col-sm-2 control-label">Elasticsearch Host:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptESHost" name="iptESHost" required value="{{ pageData.host }}" placeholder="Elasticsearch 实例地址">
+            <label class="checkbox-inline">
+              {% if pageData.ssl %}
+              <input type="checkbox" id="ckbElasticsearchSSL" checked="checked"> SSL
+              {% else %}
+              <input type="checkbox" id="ckbElasticsearchSSL"> SSL
+              {% endif %}
+            </label>
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptESPort" class="col-sm-2 control-label">端口:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptESPort" name="iptESPort" required value="{{ pageData.port }}" placeholder="Elasticsearch 实例端口">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptESUserName" class="col-sm-2 control-label">账号:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptESUserName" name="iptESUserName" required value="{{ pageData.user }}" placeholder="Elasticsearch 实例账号">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptESUserPwd" class="col-sm-2 control-label">密码:</label>
+          <div class="col-sm-5">
+            <input type="password" class="form-control" id="iptESUserPwd" name="iptESUserPwd" required value="{{ pageData.password }}" placeholder="Elasticsearch 实例密码">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">&nbsp;</label>
+          <div class="col-sm-3">
+              <button class="btn btn-primary" onclick="setup.elasticsearch_ping(true)">
+                下一步
+              </button>
+              <a class="btn btn-default" href="/install/redis">上一步</a>
+          </div>
+          <div class="col-sm-2 text-right">
+              <a id="btnConnectTtest" class="btn btn-warning" onclick="setup.elasticsearch_ping(false)">
+                <i class="glyphicon glyphicon-question-sign"></i> 测试连接
+              </a>
+          </div>
+        </div>
+      </div>
+    </form>
+</div>
+
+{% endblock %}

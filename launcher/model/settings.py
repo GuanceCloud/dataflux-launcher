@@ -94,6 +94,19 @@ class Settings(object):
 
     self.__save()
 
+
+  @property
+  def elasticsearch(self):
+    return self._settingJson.get('elasticsearch') or {}
+
+
+  @elasticsearch.setter
+  def elasticsearch(self, value):
+    self.__dict_merge('elasticsearch', value)
+
+    self.__save()
+
+
   @property
   def influxdb(self):
     return self._settingJson.get('influxdb') or [{
@@ -104,6 +117,7 @@ class Settings(object):
           "ssl": False,
           "dbName": ""
         }]
+
 
   @influxdb.setter
   def influxdb(self, value):

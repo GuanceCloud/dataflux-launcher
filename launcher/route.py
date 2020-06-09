@@ -9,6 +9,7 @@ from launcher.controller import db_setup_core
 from launcher.controller import db_setup_message_desk
 from launcher.controller import db_setup_func
 from launcher.controller import redis_setup
+from launcher.controller import elasticsearch_setup
 from launcher.controller import influxdb_setup
 from launcher.controller import update
 
@@ -53,6 +54,13 @@ def redis_ping():
   args = request.args.to_dict()
 
   return  response_jsonify(redis_setup.redis_ping(args))
+  
+
+@setup_bp.route("/elasticsearch/ping", methods=["GET"])
+def elasticsearch_ping():
+  args = request.args.to_dict()
+
+  return  response_jsonify(elasticsearch_setup.elasticsearch_ping(args))
   
 
 @setup_bp.route("/influxdb/ping", methods=["POST"])

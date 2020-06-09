@@ -114,6 +114,35 @@ var setup = (function () {
       if(d.content){
         that.switch_ping_button($('#btnConnectTtest'), 'success');
         if (next){
+          that.go("/install/elasticsearch");
+        }
+      }else{
+        that.switch_ping_button($('#btnConnectTtest'), 'error');
+      }
+    });
+  };
+
+  // elasticsearch 连接测试
+  app.prototype.elasticsearch_ping = function(next){
+    var that = this;
+    var params = {
+      "host": $("#iptESHost").val(),
+      "port": $("#iptESPort").val(),
+      "ssl": $("#ckbElasticsearchSSL").is(":checked"),
+      "user": $("#iptESUserName").val(),
+      "password": $("#iptESUserPwd").val()
+    }
+
+    $("#validateForm").validate();
+    isValid = $('#validateForm').valid();
+
+    if (!isValid)
+      return false;
+
+    this.get("elasticsearch/ping", params).done(function(d){
+      if (d.content){
+        that.switch_ping_button($('#btnConnectTtest'), 'success');
+        if (next){
           that.go("/install/influxdb");
         }
       }else{

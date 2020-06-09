@@ -27,6 +27,10 @@ STEPS_INSTALL = [
       "name": "Redis 设置"
   },
   {
+      "key": "/install/elasticsearch",
+      "name": "Elasticsearch 设置"
+  },
+  {
       "key": "/install/influxdb",
       "name": "InfluxDB 设置"
   },

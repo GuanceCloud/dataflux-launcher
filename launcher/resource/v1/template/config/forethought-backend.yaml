@@ -12,6 +12,15 @@ database:
     max_overflow: 10
     echo: false
 
+# Elasticsearch Server 配置
+ElasticsearchServer:
+  protocol: {{ 'https' if elasticsearch.ssl else 'http' }}
+  host: {{ elasticsearch.host }}
+  port: {{ elasticsearch.port }}
+  user: {{ elasticsearch.user }}
+  password: {{ elasticsearch.password }}
+  timeout: 30
+
 kodo:
   host: kodo-inner.forethought-kodo
   port: 9527
@@ -73,6 +82,11 @@ celery:
     cron_notification:
       minute: '*/30'  
 
+sysDatawaySet:
+  defaultCfg:
+    token: {{ (other.workspace or {}).token }}
+    timeout: 3
+    
 staticResource:
   domain: "https://{{'deploy-' if __common__.debug}}{{ domain.subDomain.staticResource }}.{{ domain.domain }}"
 

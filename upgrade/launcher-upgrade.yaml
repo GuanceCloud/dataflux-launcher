@@ -1,1 +1,12 @@
-upgradeInfo:  []
+upgradeInfo:
+  - seq: 1
+    config: |-
+      当前版本的升级功能，需要 Elasticsearch 的支持，继续下一步之前，请先准备好 Elasticsearch 实例，并在右上角的 **Elasticsearch** 菜单中，按以下模板，增加 Elasticsearch 的实例配置信息：
+
+      ```yaml
+      ssl:  True
+      host: 192.168.0.1
+      port: 9200
+      user: elastic
+      password: 123456
+      ```

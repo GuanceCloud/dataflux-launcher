@@ -114,6 +114,11 @@ def register_install_router(app):
     return render("redis.html", {"title": "Redis 设置", "pageData": settingsMdl.redis, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
+  @app.route("/install/elasticsearch")
+  def elasticsearch():
+    return render("elasticsearch.html", {"title": "Elasticsearch 设置", "pageData": settingsMdl.elasticsearch, "steps": STEPS_COMMON + STEPS_INSTALL})
+
+
   @app.route("/install/influxdb")
   def influxdb():
     rps = SERVICECONFIG['influxDB']['replication']

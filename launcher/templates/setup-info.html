@@ -70,6 +70,40 @@
             </div>
           </div>
 
+          <div class="high-block well-mysql">
+            <h4>Elasticserch 信息</h4>
+            <div class="form-group">
+              <label for="iptESHost" class="col-sm-2 control-label">Host:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.elasticsearch.host }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESHost" class="col-sm-2 control-label">SSL:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ '是' if pageData.elasticsearch.ssl else '否' }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESPort" class="col-sm-2 control-label">端口:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.elasticsearch.port }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESUserName" class="col-sm-2 control-label">账号:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.elasticsearch.user }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESUserPwd" class="col-sm-2 control-label">密码:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.elasticsearch.password }}</p>
+              </div>
+            </div>
+          </div>
+
           <div class="high-block well-redis">
             <h4>Redis 信息</h4>
             <div class="form-group">

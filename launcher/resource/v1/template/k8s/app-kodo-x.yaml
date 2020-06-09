@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-x
+  name: kodo-x
+  namespace: forethought-kodo
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-x
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-x
+    spec:
+      containers:
+      - args:
+        - sh
+        - /kodo/run.sh
+        image: {{ config.fullImagePath }} 
+        imagePullPolicy: IfNotPresent
+        name: kodo-x
+        ports:
+        - containerPort: 9527
+          name: 9527tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /kodo/config/config.yaml
+          name: kodo-x
+          subPath: config.yaml
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: kodo-x
+          optional: false
+        name: kodo-x
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kodo-x
+  namespace: forethought-kodo
+spec:
+  ports:
+  - name: 9527tcp02
+    port: 9527
+    protocol: TCP
+    targetPort: 9527
+  selector:
+    app: deployment-forethought-kodo-kodo-x
+  type: ClusterIP

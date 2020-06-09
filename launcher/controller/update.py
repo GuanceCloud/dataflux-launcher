@@ -220,11 +220,11 @@ def __get_current_seqs():
   baseInfo     = mysqlSetting.get('base') or {}
   coreInfo     = mysqlSetting.get('core') or {}
   mysql        = {
-                'host': baseInfo.get('host'),
-                'port': baseInfo.get('port'),
-                'user': coreInfo.get('user'),
-                'password': coreInfo.get('password')
-              }
+                  'host': baseInfo.get('host'),
+                  'port': baseInfo.get('port'),
+                  'user': coreInfo.get('user'),
+                  'password': coreInfo.get('password')
+                }
   dbName       = coreInfo.get('database')
   currentSeqs  = versionMdl.get_current_update_seq(mysql, dbName)
 
@@ -247,7 +247,7 @@ def list_launcher_preparation():
 
   updateVersions  = versionMdl.list_project_versions('launcher', launcherSeq['config'])
 
-  return [{'seq': item['seq'], 'config': item.get('config', {})}  for item in updateVersions]
+  return [{'seq': item['seq'], 'config': markdown.markdown(item.get('config', ''), extensions = ['extra', 'codehilite'])}  for item in updateVersions]
 
 
 def list_source_and_update_configmaps():

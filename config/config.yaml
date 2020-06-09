@@ -177,6 +177,11 @@ services:
       image: kodo
       replicas: 1
 
+    - key: kodo-x
+      name: Kodo X
+      image: kodo
+      replicas: 3
+
     - key: kodo-nginx
       name: Kodo Nginx
       image: nginx
@@ -196,6 +201,13 @@ services:
       services:
       - kodo-inner
       template: kodo-inner.yaml
+
+    - key: kodoX
+      mapname: kodo-x
+      mapkey: config.yaml
+      services:
+      - kodo-x
+      template: kodo-x.yaml
 
     - key: kodoNginx
       mapname: kodo-nginx

@@ -13,7 +13,7 @@
     {% for conf in pageData %}
     <div class="high-block-sm">
       <h5>序列号：{{ conf.seq }}</h5>
-      <pre>{{ conf.config }}</pre>
+      <div>{{ conf.config | safe }}</div>
     </div>
     {% endfor %}
 
