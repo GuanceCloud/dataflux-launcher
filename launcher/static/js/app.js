@@ -438,6 +438,14 @@ var setup = (function () {
         }).fail(function(d){
           alert("写入版本失败，刷新本页面可以重试写入版本。");
         });
+
+        that.post('elasticsearch/init').then(function(d){
+          if(d.content.status_code != 200){
+            alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
+          }
+        }).fail(function(d){
+          alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
+        });
       }
     });
   };

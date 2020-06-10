@@ -1,5 +1,6 @@
 # encoding=utf-8
 
+import requests
 import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time
@@ -310,17 +311,26 @@ def service_status():
 
 def save_version():
   # version        = DOCKERIMAGES['version']
-  # try:
-  projects = [item['project'] for item in SERVICECONFIG['updates']]
-  projectLastSeq = versionMdl.get_project_last_seq(projects + ['launcher'])
+  try:
+    projects = [item['project'] for item in SERVICECONFIG['updates']]
+    projectLastSeq = versionMdl.get_project_last_seq(projects + ['launcher'])
 
-  for project, seq in projectLastSeq.items():
-    versionMdl.save_version(project, 'database', seq)
-    versionMdl.save_version(project, 'config', seq)
-  # except:
-  #   return False
+    for project, seq in projectLastSeq.items():
+      versionMdl.save_version(project, 'database', seq)
+      versionMdl.save_version(project, 'config', seq)
+  except:
+    return False
 
   return True
+
+
+# 初始化工作空间的 ES 
+def elasticsearch_init():
+  headers = {"Content-Type": "application/json"}
+
+  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/es/init", headers = headers)
+
+  return { "status_code": resp.status_code }
 
 
 def init_setting():

@@ -3,15 +3,15 @@
 
  Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50727
+ Source Server Version : 50729
  Source Host           : 127.0.0.1:3306
- Source Schema         : ft2-new
+ Source Schema         : ft-new
 
  Target Server Type    : MySQL
- Target Server Version : 50727
+ Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 07/05/2020 18:15:38
+ Date: 09/06/2020 13:45:41
 */
 
 SET NAMES utf8mb4;
@@ -622,6 +622,29 @@ CREATE TABLE `main_kapa` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for main_log_extract_rule
+-- ----------------------------
+DROP TABLE IF EXISTS `main_log_extract_rule`;
+CREATE TABLE `main_log_extract_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 taly-',
+  `batchesID` varchar(48) NOT NULL COMMENT 'func批处理id',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `source` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '来源',
+  `funcId` varchar(48) NOT NULL DEFAULT '' COMMENT '解析方法',
+  `url` varchar(128) NOT NULL DEFAULT '' COMMENT 'url',
+  `funcKwargsJSON` json NOT NULL COMMENT 'func函数所需参数',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_batchesID` (`batchesID`) COMMENT 'batchesID  做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for main_manage_account
 -- ----------------------------
 DROP TABLE IF EXISTS `main_manage_account`;
@@ -689,6 +712,7 @@ CREATE TABLE `main_workspace` (
   `rpName` varchar(48) NOT NULL DEFAULT '' COMMENT 'db rp',
   `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长',
   `autoAggregation` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否自动聚合',
+  `esRP` json DEFAULT NULL COMMENT 'es 生命周期管理',
   `enablePublicDataway` int(1) NOT NULL DEFAULT '1' COMMENT '允许公网Dataway上传数据',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -730,6 +754,7 @@ CREATE TABLE `main_workspace_license` (
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `instanceId` varchar(64) NOT NULL DEFAULT '' COMMENT 'LicenseId',
   `expire` int(11) NOT NULL COMMENT 'license 过期时间',
+  `disableTime` int(11) DEFAULT '0' COMMENT '数据失效时间',
   `version` varchar(48) NOT NULL COMMENT 'license 版本',
   `extend` json NOT NULL COMMENT '额外拓展字段',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',

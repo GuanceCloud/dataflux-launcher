@@ -47,7 +47,7 @@ function rtm_tag(){
   }
 
   # 最后的 release tag
-  lastReleaseTag=$(git tag --list | grep -E '^release_' | sort -V | tail -1)
+  lastReleaseTag=$(git tag --list | grep -E '^pre_' | sort -V | tail -1)
   # echo ${#lastReleaseTag}
   [[ ${#lastReleaseTag} == 0 ]] && return
 
@@ -74,7 +74,7 @@ fi
 : > ${imageYaml}
 echo "apps:" > ${workDir}/${imageYaml}
 echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
-echo "  version: testing"
+echo "  version: testing" >> ${workDir}/${imageYaml}
 echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
 echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}

@@ -1,1 +1,7 @@
-update: []
+update: 
+ - seq: 0
+      config:
+          ft-data-warehouse: |-
+            # 新增配置项，用于设置同步的最新数据与当前时间的差值,即延迟设置，单位为秒
+            global:
+              delay_time:  600

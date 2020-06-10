@@ -10,3 +10,9 @@ upgradeInfo:
       user: elastic
       password: 123456
       ```
+
+      在升级完成，并全部服务启动之后，进入 launcher 容器，执行以下命令，初始化所有工作空间的 ES RP 信息：
+
+      ```shell
+      curl http://inner.forethought-core:5000/api/v1/inner/es/init -H "Content-Type:application/json" -X POST
+      ```
