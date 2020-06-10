@@ -521,6 +521,10 @@ updates:
         mapName: kodo-nginx
         mapKey: kodo.conf
 
+      - key: kodoX
+        mapName: kodo-x
+        mapKey: config.yaml
+
   - namespace: func
     project: func
     noDatabase: False
@@ -558,5 +562,9 @@ updates:
     config:
       - key: dataWarehouseConfig
         mapName: data-warehouse-config
+        mapKey: config.yaml
+
+      - key: internalDataWay
+        mapName: dataway-config
         mapKey: config.yaml
 
