@@ -243,7 +243,7 @@ services:
     - key: func-worker-debugger
       name: 函数计算 Worker Debugger
       image: func-worker
-      replicas: 1
+      replicas: 2
 
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
@@ -264,7 +264,17 @@ services:
     - key: func-worker-utils
       name: 函数计算 Worker Utils
       image: func-worker
-      replicas: 2
+      replicas: 4
+
+    - key: func-worker-batch
+      name: 函数计算 Worker Batch
+      image: func-worker
+      replicas: 4
+
+    - key: func-worker-batch-buildin
+      name: 函数计算 Worker Batch Buildin
+      image: func-worker
+      replicas: 4
 
     configmaps:
     - key: func
@@ -290,6 +300,8 @@ services:
       - func-worker-rpc
       - func-worker-crontab
       - func-worker-utils
+      - func-worker-batch
+      - func-worker-batch-buildin
       template: func-worker-config.yaml
 
   - namespace: middleware

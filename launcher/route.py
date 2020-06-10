@@ -56,9 +56,9 @@ def redis_ping():
   return  response_jsonify(redis_setup.redis_ping(args))
   
 
-@setup_bp.route("/elasticsearch/ping", methods=["GET"])
+@setup_bp.route("/elasticsearch/ping", methods=["POST"])
 def elasticsearch_ping():
-  args = request.args.to_dict()
+  args = request.json
 
   return  response_jsonify(elasticsearch_setup.elasticsearch_ping(args))
   

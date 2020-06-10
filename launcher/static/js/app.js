@@ -139,7 +139,7 @@ var setup = (function () {
     if (!isValid)
       return false;
 
-    this.get("elasticsearch/ping", params).done(function(d){
+    this.post("elasticsearch/ping", params).done(function(d){
       if (d.content){
         that.switch_ping_button($('#btnConnectTtest'), 'success');
         if (next){

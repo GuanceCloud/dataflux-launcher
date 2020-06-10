@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-func-func-worker-batch-buildin
+  name: func-worker-batch-buildin
+  namespace: func
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-func-func-worker-batch-buildin
+  template:
+    metadata:
+      labels:
+        app: deployment-func-func-worker-batch-buildin
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - deployment-func-func-worker-batch-buildin
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - ./run-by-queue.sh
+        - runnerOnBatchBuiltin
+        env:
+        - name: FT_DATA_PROCESSOR_WORKER_CONFIG
+          value: /func-worker-config.yaml
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: func-worker-batch-buildin
+        resources: {}
+        volumeMounts:
+        - mountPath: /func-worker-config.yaml
+          name: func-worker-config
+          subPath: config.yaml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: func-worker-config
+          optional: false
+        name: func-worker-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: func-worker-batch-buildin
+  namespace: func
+spec:
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-func-func-worker-batch-buildin
+  type: ClusterIP
