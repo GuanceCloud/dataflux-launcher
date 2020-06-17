@@ -390,7 +390,7 @@ var setup = (function () {
     });
   };
 
-  app.prototype.refresh_service_status = function(){
+  app.prototype.refresh_service_status = function(mode){
     var that = this;
 
     this.get('service/status').then(function(d){
@@ -427,7 +427,7 @@ var setup = (function () {
       $("#statusTotal").text(" / " + total);
 
       if (hasPendding){
-        window.setTimeout(function(){that.refresh_service_status();}, 5000);
+        window.setTimeout(function(){that.refresh_service_status(mode);}, 5000);
       }else{
         that.post('version/save').then(function(d){
           if(!d.content){
@@ -439,13 +439,16 @@ var setup = (function () {
           alert("写入版本失败，刷新本页面可以重试写入版本。");
         });
 
-        that.post('elasticsearch/init').then(function(d){
-          if(d.content.status_code != 200){
+        // 全新安装时，需要初始化 ES 的 RP，升级安装时需要进入 Launcher 容器，手工执行 ES 初始化的接口
+        if(mode == 'install'){
+          that.post('elasticsearch/init').then(function(d){
+            if(d.content.status_code != 200){
+              alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
+            }
+          }).fail(function(d){
             alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
-          }
-        }).fail(function(d){
-          alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
-        });
+          });
+        }
       }
     });
   };
