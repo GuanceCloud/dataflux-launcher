@@ -18,6 +18,15 @@ def setting_save(data):
   key = data['key']
   content = data['content']
 
+  if key == 'mysql':
+    pass
+  elif key == 'redis':
+    pass
+  elif key == 'elasticsearch':
+    pass
+  elif key == 'influxdb':
+    pass
+
   setattr(settingsMdl, key, content)
 
   return True
