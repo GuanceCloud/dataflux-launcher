@@ -259,3 +259,24 @@ upgradeInfo:
           AFTER `publishVersion`;
 
   # ft_data_processor_2020-06-09.sql
+
+  - seq: 10
+    database: |-
+      -- 新增反馈功能
+      CREATE TABLE `biz_main_feedback` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+        `descriptionTEXT` text COMMENT '描述TEXT',
+        `locationHrefTEXT` text COMMENT '浏览器location.href内容TEXT',
+        `vuexStateJSON` json COMMENT 'vuex state内容JSON',
+        `screenshotBase64` longtext COMMENT '屏幕截图Base64',
+        `contactMail` text COMMENT '联系邮件',
+        `status` varchar(64) NOT NULL DEFAULT 'open' COMMENT '状态 open|close',
+        `note` text COMMENT '备注',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `ID` (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='反馈';
+
+  # ft_data_processor_2020-06-30.sql

@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 09/06/2020 13:45:41
+ Date: 29/06/2020 14:07:25
 */
 
 SET NAMES utf8mb4;
@@ -426,6 +426,7 @@ CREATE TABLE `main_agent` (
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT 'agent 名称',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `version` varchar(32) NOT NULL DEFAULT '""' COMMENT '当前版本号',
+  `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '完整地址',
   `host` varchar(64) NOT NULL DEFAULT '""' COMMENT '主机IP, 默认为出口 IP',
   `port` int(11) NOT NULL DEFAULT '0',
   `domainName` varchar(128) NOT NULL DEFAULT ' ' COMMENT 'agent域名',
@@ -438,7 +439,6 @@ CREATE TABLE `main_agent` (
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '最后更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk` (`uuid`),
-  KEY `idx_ws_uuid` (`workspaceUUID`),
   KEY `idx_uuid` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -461,6 +461,27 @@ CREATE TABLE `main_agent_license` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for main_apm_config
+-- ----------------------------
+DROP TABLE IF EXISTS `main_apm_config`;
+CREATE TABLE `main_apm_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 apmc-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `service` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '服务名',
+  `config` json NOT NULL COMMENT 'apm配置参数',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

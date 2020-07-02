@@ -139,7 +139,7 @@ upgrade:
         KEY `k_ws_uuid` (`workspaceUUID`),
         KEY `scene_node_fk` (`sceneUUID`),
         KEY `node_parent_uuid_fk` (`parentUUID`)
-      ) ENGINE=InnoDB AUTO_INCREMENT=2753 DEFAULT CHARSET=utf8mb4;
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
       # 新增工作空间License表
       CREATE TABLE `main_workspace_license` (
@@ -156,7 +156,7 @@ upgrade:
         `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
         PRIMARY KEY (`id`) COMMENT '主键',
         UNIQUE KEY `uk_instanceId` (`instanceId`) COMMENT 'license id 做成全局唯一'
-      ) ENGINE=InnoDB AUTO_INCREMENT=187 DEFAULT CHARSET=utf8mb4;
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
       # 新增 加载标记
       ALTER TABLE `biz_node` ADD COLUMN `isLoading` tinyint(1) NULL AFTER `status`;
@@ -314,4 +314,37 @@ upgrade:
         `updateAt` int(11) NOT NULL DEFAULT '-1',
         PRIMARY KEY (`id`),
         UNIQUE KEY `uk_batchesID` (`batchesID`) COMMENT 'batchesID  做成全局唯一'
-      ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+  # 6.30 迭代
+  - seq: 12
+    config:
+      core: |-
+        # kodo 配置中的 upgradeCmd配置项中，减少 `DW_VERSION={version}`项
+        kodo:
+          upgradeCmd: 'DW_KODO=https://kodo.dataflux.cn  DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
+
+    database: |-
+      -- 新增apm配置表
+      CREATE TABLE `main_apm_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 apmc-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `service` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '服务名',
+        `config` json NOT NULL COMMENT 'apm配置参数',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 删除 main_agent 表的 workspace_uuid 索引, 并添加url字段
+      ALTER TABLE `main_agent`
+      ADD COLUMN `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '完整地址' AFTER `version`;
+
