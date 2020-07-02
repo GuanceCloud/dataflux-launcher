@@ -14,9 +14,12 @@ secret_key: {{ (other.workspace or {}).sk }}
 
 remote_host: http://kodo.forethought-kodo:9527
 
-log: /logdata/log
+log: log
 log_level: info
-gin_log: /logdata/gin.log
+gin_log: gin.log
+
+cache_cfg:
+    dir: cache
 
 # routes config
 routes_config:
