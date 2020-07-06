@@ -112,7 +112,7 @@ function rtm_tag(){
 }
 
 function start(){
-  dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.)+\d+-\d+-[a-zA-Z0-9]+"`
+  dwVersion=`curl -s https://preprod-static.cloudcare.cn/dataway/version | grep -Eo "(\d+\.)+\d+-\d+-[a-zA-Z0-9]+"`
   if [ ! -n "$dwVersion" ]; then
     echo '未获取到 DataWay 的最新版本'
     exit 0
