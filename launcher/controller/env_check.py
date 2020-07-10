@@ -9,7 +9,8 @@ from influxdb import InfluxDBClient
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 
 from launcher.utils.helper.db_helper import dbHelper
-from launcher import SERVICECONFIG, settingsMdl
+from launcher.model import version as versionMdl
+from launcher import SERVICECONFIG, settingsMdl, DOCKERIMAGES
 
 
 def __get_k8s_cluster_info():
@@ -163,7 +164,7 @@ def __mysql_ping():
     with dbHelper(params) as db:
       result.append({
           "key": dbName,
-          "status": not db.connection
+          "status": not not db.connection
         })
 
   return result
@@ -176,6 +177,10 @@ def db_setting_check():
             "redis": __redis_ping(),
             "elasticsearch": __elasticsearch_ping()
           }
+
+
+def get_current_version():
+  return {"version": versionMdl.get_current_version(), "launcher": DOCKERIMAGES["apps"]["version"]}
 
 
 def do_check():

@@ -53,6 +53,37 @@ def get_current_update_seq(mysqlInfo, dbName):
   return dictResult
 
 
+def get_current_version():
+
+  mysqlSetting = settingsMdl.mysql
+  baseInfo     = mysqlSetting.get('base') or {}
+  coreInfo     = mysqlSetting.get('core') or {}
+
+  mysqlInfo    = {
+                'host': baseInfo.get('host'),
+                'port': baseInfo.get('port'),
+                'user': coreInfo.get('user'),
+                'password': coreInfo.get('password')
+              }
+  dbName       = coreInfo.get('database')
+
+  sql = '''
+          SELECT * FROM sys_version 
+          WHERE project='core' 
+          ORDER BY id DESC LIMIT 1;
+        '''
+
+  with dbHelper(mysqlInfo) as db:
+    result = db.execute(sql, dbName = dbName)
+
+  seqs = result[0] if result and len(result) > 0 else []
+
+  if len(seqs) > 0:
+    version = seqs[0]['version']
+
+  return version
+
+
 def save_version(project, seqType, seq):
   version = DOCKERIMAGES['apps']['version']
 
