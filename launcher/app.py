@@ -52,6 +52,7 @@ def register_install_router(app):
   def check():
     checkResult = env_check.do_check()
     serviceStatus =setup.service_status()
+    dbCheckResult = env_check.db_setting_check()
 
     deploys = []
     for deploy in serviceStatus:
@@ -69,7 +70,8 @@ def register_install_router(app):
 
     result = {
                 "check": checkResult,
-                "deploy": deploys
+                "deploy": deploys,
+                "db": dbCheckResult
             }
 
     setup.init_setting()
