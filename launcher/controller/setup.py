@@ -177,6 +177,9 @@ def service_image_config():
 
       item['replicas'] = item.get('replicas', 1)
 
+      if SERVICECONFIG['debug'] and item['replicas'] != 0:
+        item['replicas'] = 1
+
   d['images'] = services
   d['storageNames'] = k8sMdl.get_storageclass()
 

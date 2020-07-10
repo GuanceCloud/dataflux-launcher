@@ -47,6 +47,9 @@ def deploy_status():
       disabled = service.get('deleted', False)
       replicas = service.get('replicas', 1)
 
+      if SERVICECONFIG['debug'] and replicas != 0:
+        replicas = 1
+
       if disabled:
         # 已经下线的服务，不做删除，只是将副本数设为0
         replicas = 0

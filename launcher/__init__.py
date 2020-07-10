@@ -99,16 +99,45 @@ CACHEDATA = {}
 
 settingsMdl = None
 
+
+
+def __json_override(s, d):
+    if not s:
+        return d
+
+    for k in s.keys():
+        if k not in d:
+            d[k] = s[k]
+        elif isinstance(s[k], (tuple, list)):
+            d[k] = s[k]
+        elif s[k] is None:
+            d[k] = s[k]
+        elif isinstance(s[k], dict):
+            json_override(s[k], d[k])
+        else:
+            d[k] = s[k]
+
+    return d
+
+
 def __init_config():
   global SERVICECONFIG
 
   base_path = os.path.dirname(os.path.abspath(__file__))
   with open(base_path + "/../config/config.yaml") as f:
-    SERVICECONFIG  = yaml.safe_load(f)
+    _config  = yaml.safe_load(f)
 
-  tmpDir = SERVICECONFIG['tmpDir']
+  tmpDir = _config['tmpDir']
   if not os.path.exists(tmpDir):
     os.mkdir(tmpDir)
+
+  if os.path.exists(base_path + "/../config/settings.yaml"):
+    with open(base_path + "/../config/settings.yaml") as f:
+      _settings  = yaml.safe_load(f)
+
+      __json_override(_settings, _config)
+
+  SERVICECONFIG = _config
 
 
 def __init_docker_image():
