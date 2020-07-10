@@ -80,7 +80,7 @@ def __redis_ping():
   except:
     pingStatus = False
 
-  return {"key": params['host'], "status": pingStatus}
+  return {"key": "{}:{}".format(params['host'],  params['port']), "status": pingStatus}
 
 
 def __influxdb_ping():
@@ -108,7 +108,7 @@ def __influxdb_ping():
       pingError = True
 
     result.append({
-        "key": dbInfo['host'],
+        "key": "{}:{}".format(dbInfo['host'],  dbInfo['port']),
         "status": not pingError
       })
 
@@ -141,7 +141,7 @@ def __elasticsearch_ping():
   except:
     pingStatus = False
 
-  return {"key": params['host'], "status": pingStatus}
+  return {"key": "{}:{}".format(params['host'],  params['port']), "status": pingStatus}
 
 
 def __mysql_ping():

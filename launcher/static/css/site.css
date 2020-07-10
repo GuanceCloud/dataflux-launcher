@@ -136,6 +136,10 @@ footer{
   animation:r0 1.5s linear infinite;
 }
 
+.service-status .icon-fail {
+  color: #e21313;
+}
+
 .step-list{
   list-style: none;
   padding-left: 0;
