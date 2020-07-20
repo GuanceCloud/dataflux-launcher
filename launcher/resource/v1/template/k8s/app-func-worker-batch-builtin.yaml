@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: deployment-func-func-worker-batch-buildin
-  name: func-worker-batch-buildin
+    app: deployment-func-func-worker-batch-builtin
+  name: func-worker-batch-builtin
   namespace: func
 spec:
   replicas: {{ config.replicas }}
   selector:
     matchLabels:
-      app: deployment-func-func-worker-batch-buildin
+      app: deployment-func-func-worker-batch-builtin
   template:
     metadata:
       labels:
-        app: deployment-func-func-worker-batch-buildin
+        app: deployment-func-func-worker-batch-builtin
     spec:
       affinity:
         podAntiAffinity:
@@ -24,7 +24,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - deployment-func-func-worker-batch-buildin
+                  - deployment-func-func-worker-batch-builtin
               topologyKey: kubernetes.io/hostname
             weight: 100
       containers:
@@ -36,7 +36,7 @@ spec:
           value: /func-worker-config.yaml
         image: {{ config.fullImagePath }}
         imagePullPolicy: IfNotPresent
-        name: func-worker-batch-buildin
+        name: func-worker-batch-builtin
         resources: {}
         volumeMounts:
         - mountPath: /func-worker-config.yaml
@@ -59,7 +59,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: func-worker-batch-buildin
+  name: func-worker-batch-builtin
   namespace: func
 spec:
   ports:
@@ -68,5 +68,5 @@ spec:
     protocol: TCP
     targetPort: 42
   selector:
-    app: deployment-func-func-worker-batch-buildin
+    app: deployment-func-func-worker-batch-builtin
   type: ClusterIP

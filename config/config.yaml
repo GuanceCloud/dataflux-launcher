@@ -271,8 +271,8 @@ services:
       image: func-worker
       replicas: 4
 
-    - key: func-worker-batch-buildin
-      name: 函数计算 Worker Batch Buildin
+    - key: func-worker-batch-builtin
+      name: 函数计算 Worker Batch builtin
       image: func-worker
       replicas: 4
 
@@ -301,7 +301,7 @@ services:
       - func-worker-crontab
       - func-worker-utils
       - func-worker-batch
-      - func-worker-batch-buildin
+      - func-worker-batch-builtin
       template: func-worker-config.yaml
 
   - namespace: middleware
