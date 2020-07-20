@@ -24,13 +24,13 @@ spec:
           name: 9528tcp01
           protocol: TCP
         volumeMounts:
-        - mountPath: /usr/local/cloudcare/DataFlux/dataway/dataway.yaml
+        - mountPath: /usr/local/cloudcare/dataflux/dataway/dataway.yaml
           name: dataway-config
           subPath: config.yaml
-        - mountPath: /usr/local/cloudcare/DataFlux/dataway/license
+        - mountPath: /usr/local/cloudcare/dataflux/dataway/license
           name: dataway-license
           subPath: license
-        - mountPath: /usr/local/cloudcare/DataFlux/dataway/cache
+        - mountPath: /usr/local/cloudcare/dataflux/dataway/cache
           name: dataway-cache
         - mountPath: /logdata
           name: dataway-logs
