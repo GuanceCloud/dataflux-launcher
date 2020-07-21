@@ -1,10 +1,10 @@
 -- -------------------------------------------------------------
--- TablePlus 3.3.0(300)
+-- TablePlus 3.6.2(322)
 --
 -- https://tableplus.com/
 --
 -- Database: message_desk
--- Generation Time: 2020-04-01 22:49:59.4910
+-- Generation Time: 2020-07-17 01:47:23.0640
 -- -------------------------------------------------------------
 
 
@@ -17,6 +17,19 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+DROP TABLE IF EXISTS `biz_main_mail_black_list`;
+CREATE TABLE `biz_main_mail_black_list` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `address` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '邮箱地址',
+  `reason` text COMMENT '列入黑名单理由',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  UNIQUE KEY `address` (`address`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件黑名单';
 
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_double_call`;
 CREATE TABLE `biz_main_task_result_alidayu_double_call` (
@@ -283,6 +296,7 @@ CREATE TABLE `biz_main_task_result_mail` (
   `origin` varchar(128) DEFAULT NULL,
   `accountId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '帐号Id',
   `teamId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '团队ID',
+  `sender` varchar(64) DEFAULT NULL COMMENT '发送源Key',
   `to` text COMMENT '收件人',
   `cc` text COMMENT '抄送',
   `bcc` text COMMENT '密送',
@@ -300,7 +314,8 @@ CREATE TABLE `biz_main_task_result_mail` (
   UNIQUE KEY `ID` (`id`),
   KEY `task` (`task`),
   KEY `origin` (`origin`),
-  KEY `accountId` (`accountId`)
+  KEY `accountId` (`accountId`),
+  KEY `sender` (`sender`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件任务结果';
 
 DROP TABLE IF EXISTS `biz_main_task_result_old_sms`;

@@ -59,6 +59,9 @@ class dbHelper(object):
 
 
   def execute(self, ddl, dbName = None, params = None):
+    if not self._connection:
+      raise Exception("数据库连接异常")
+
     if dbName is not None:
       self._connection.select_db(dbName)
 

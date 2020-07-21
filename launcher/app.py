@@ -52,6 +52,7 @@ def register_install_router(app):
   def check():
     checkResult = env_check.do_check()
     serviceStatus =setup.service_status()
+    
     dbCheckResult = env_check.db_setting_check()
     appVersion = env_check.get_current_version()
 

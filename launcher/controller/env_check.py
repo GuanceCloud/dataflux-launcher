@@ -62,6 +62,9 @@ def __get_storageclass():
 
 def __redis_ping():
   redisSettings = settingsMdl.redis
+
+  if 'host' not in redisSettings:
+    return None
   
   params = {
 
@@ -86,7 +89,10 @@ def __redis_ping():
 
 def __influxdb_ping():
   influxdbSettings = settingsMdl.influxdb
-  result = []
+  result = []  
+
+  if not influxdbSettings[0]['host']:
+    return None
 
   for item in influxdbSettings:
     dbInfo = {
@@ -119,6 +125,9 @@ def __influxdb_ping():
 def __elasticsearch_ping():
   esSettings = settingsMdl.elasticsearch
 
+  if 'host' not in esSettings:
+    return None
+
   params = {  
     "host": esSettings['host'],
     "port": int(esSettings['port']),
@@ -147,6 +156,9 @@ def __elasticsearch_ping():
 
 def __mysql_ping():
   mysqlSettings = settingsMdl.mysql
+
+  if 'base' not in mysqlSettings:
+    return None
 
   params = {
       "host": mysqlSettings['base']['host'],

@@ -77,12 +77,12 @@ echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
 echo "  version: testing" >> ${workDir}/${imageYaml}
 echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
-echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
-echo "    nginx: basis:nginx_1.13.7" >> ${workDir}/${imageYaml}
+echo "    nsq: basis/nsq:v1.2.0" >> ${workDir}/${imageYaml}
+echo "    nginx: basis/nginx:1.13.7" >> ${workDir}/${imageYaml}
 echo "    kapacitor: basis/kapacitor:1.5.4" >> ${workDir}/${imageYaml}
 
 # 最新 DataWay 镜像版本
-echo "    internal-dataway: dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
+echo "    internal-dataway: dataway/dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core" "cloudcare-forethought/cloudcare-forethought-backend"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo" "kodo/kodo"

@@ -280,3 +280,81 @@ upgradeInfo:
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='反馈';
 
   # ft_data_processor_2020-06-30.sql
+
+  - seq: 11
+    database: |-
+      -- 官方脚本库自动备份
+      CREATE TABLE `biz_main_official_script_lib_backup` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+        `scriptSetId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '脚本集ID',
+        `scriptSetTitle` varchar(256) DEFAULT NULL COMMENT '脚本集标题',
+        `scriptSetDescription` text COMMENT '脚本集描述',
+        `scriptSetRefName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '脚本集引用名',
+        `scriptId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '脚本ID',
+        `scriptTitle` varchar(256) DEFAULT NULL COMMENT '脚本标题',
+        `scriptDescription` text COMMENT '脚本描述',
+        `scriptRefName` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '脚本引用名',
+        `scriptPublishVersion` bigint(20) NOT NULL DEFAULT '0' COMMENT '脚本发布版本',
+        `scriptType` varchar(64) NOT NULL DEFAULT 'python' COMMENT '脚本类型 python|javascript',
+        `scriptCode_cache` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT '脚本代码（缓存字段）',
+        `scriptCodeMD5_cache` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '脚本代码MD5（缓存字段）',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `ID` (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='官方脚本库备份';
+
+      -- 操作记录
+      CREATE TABLE `biz_main_operation_record` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+        `userId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户ID',
+        `username` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户名',
+        `clientId` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '客户端ID',
+        `traceId` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '跟踪ID',
+        `reqMethod` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求方法',
+        `reqRoute` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '请求路由',
+        `reqQueryJSON` json DEFAULT NULL COMMENT '请求Query JSON',
+        `reqParamsJSON` json DEFAULT NULL COMMENT '请求Params JSON',
+        `reqBodyJSON` json DEFAULT NULL COMMENT '请求体JSON',
+        `respStatusCode` int(3) unsigned DEFAULT NULL COMMENT '响应状态码',
+        `respBodyJSON` json DEFAULT NULL COMMENT '响应体JSON',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        KEY `USER_ID` (`userId`),
+        KEY `USERNAME` (`username`),
+        KEY `CLIENT_ID` (`clientId`),
+        KEY `TRACE_ID` (`traceId`),
+        KEY `REQ_METHOD` (`reqMethod`),
+        KEY `REQ_ROUTE` (`reqRoute`),
+        KEY `CREATE_TIME` (`createTime`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作记录';
+
+      -- 扩充text字段为longtext
+      ALTER TABLE biz_main_batch_task_info
+        MODIFY COLUMN `logMessageTEXT` longtext COMMENT '日志信息TEXT',
+        MODIFY COLUMN `einfoTEXT` longtext COMMENT '错误信息TEXT';
+
+      ALTER TABLE biz_main_crontab_task_info
+        MODIFY COLUMN `logMessageTEXT` longtext COMMENT '日志信息TEXT',
+        MODIFY COLUMN `einfoTEXT` longtext COMMENT '错误信息TEXT';
+
+      ALTER TABLE biz_main_env_variable
+        MODIFY COLUMN `valueTEXT` longtext NOT NULL COMMENT '值';
+
+      ALTER TABLE biz_main_feedback
+        MODIFY COLUMN `descriptionTEXT` longtext COMMENT '描述TEXT',
+        MODIFY COLUMN `locationHrefTEXT` longtext COMMENT '浏览器location.href内容TEXT';
+
+      ALTER TABLE biz_main_script_failure
+        MODIFY COLUMN `einfoTEXT` longtext COMMENT '错误信息';
+
+      ALTER TABLE biz_main_script_log
+        MODIFY COLUMN `messageTEXT` longtext COMMENT '日志信息TEXT';
+
+      ALTER TABLE biz_main_task_result_data_processor
+        MODIFY COLUMN `einfoTEXT` longtext COMMENT '错误信息TEXT';
+
+  # ft_data_processor_2020-07-16.sql

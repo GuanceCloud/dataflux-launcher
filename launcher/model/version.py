@@ -54,8 +54,11 @@ def get_current_update_seq(mysqlInfo, dbName):
 
 
 def get_current_version():
-
   mysqlSetting = settingsMdl.mysql
+
+  if 'base' not in mysqlSetting:
+    return None
+
   baseInfo     = mysqlSetting.get('base') or {}
   coreInfo     = mysqlSetting.get('core') or {}
 
@@ -67,19 +70,23 @@ def get_current_version():
               }
   dbName       = coreInfo.get('database')
 
+  version = ''
   sql = '''
           SELECT * FROM sys_version 
           WHERE project='core' 
           ORDER BY id DESC LIMIT 1;
         '''
 
-  with dbHelper(mysqlInfo) as db:
-    result = db.execute(sql, dbName = dbName)
+  try:
+    with dbHelper(mysqlInfo) as db:
+      result = db.execute(sql, dbName = dbName)
 
-  seqs = result[0] if result and len(result) > 0 else []
+    seqs = result[0] if result and len(result) > 0 else []
 
-  if len(seqs) > 0:
-    version = seqs[0]['version']
+    if len(seqs) > 0:
+      version = seqs[0]['version']
+  except:
+    version = None
 
   return version
 

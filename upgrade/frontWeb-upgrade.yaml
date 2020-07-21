@@ -5,4 +5,9 @@ upgradeInfo:
         // 新增的配置 key
         // 静态资源访问域名
         staticFileUrl: 'https://static-res.demo-domain.cn'
-    
+  - seq: 1
+    config:
+      frontWeb: |-
+        // 新增的配置 key
+        // dataKit安装包地址
+        staticDatakit: 'https://static.dataflux.cn'

@@ -348,3 +348,21 @@ upgrade:
       ALTER TABLE `main_agent`
       ADD COLUMN `url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '完整地址' AFTER `version`;
 
+
+  # 7.16 迭代
+  - seq: 13
+    config:
+      core: |-
+        # 默认系统工作空间设置
+        SystemWorkspaceSet:
+          uuid: wksp_system
+
+    database: |-
+      -- 为规则类型`type`新增一个类型值`aggs`
+      ALTER TABLE `biz_rule`
+      MODIFY COLUMN `type` enum('trigger','baseline','aggs') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'trigger' AFTER `workspaceUUID`;
+
+      -- 为视图添加额外拓展字段
+      ALTER TABLE `biz_dashboard` ADD COLUMN `extend` json NULL COMMENT '额外拓展字段' AFTER `type`;
+      -- 刷视图数据
+      UPDATE biz_dashboard set extend='{}' WHERE `status`=0
