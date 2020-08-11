@@ -358,3 +358,10 @@ upgradeInfo:
         MODIFY COLUMN `einfoTEXT` longtext COMMENT '错误信息TEXT';
 
   # ft_data_processor_2020-07-16.sql
+
+  - seq: 12
+    database: |-
+      -- 清空操作记录数据
+      TRUNCATE biz_main_operation_record;
+
+  # ft_data_processor_2020-08-04.sql

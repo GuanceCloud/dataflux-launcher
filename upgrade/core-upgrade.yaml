@@ -366,3 +366,17 @@ upgrade:
       ALTER TABLE `biz_dashboard` ADD COLUMN `extend` json NULL COMMENT '额外拓展字段' AFTER `type`;
       -- 刷视图数据
       UPDATE biz_dashboard set extend='{}' WHERE `status`=0
+
+  # 8.4 迭代
+  - seq: 14
+    config:
+      core: |-
+        # 工单系统配置
+        TicketServer:
+          use_https: true
+          port: 443
+          host: "ticket-api.cloudcare.cn"
+          ak_id: "dataflux-core" # 本系统在工单系统中的名字
+          ak_secret: "xxxxxx"   # 本系统在工单系统中对应的安全密匙
+          timeout: 30
+
