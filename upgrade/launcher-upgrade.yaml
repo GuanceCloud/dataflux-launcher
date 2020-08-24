@@ -16,3 +16,17 @@ upgradeInfo:
       ```shell
       curl http://inner.forethought-core:5000/api/v1/inner/es/init -H "Content-Type:application/json" -X POST
       ```
+
+  - seq: 2
+    config: |-
+      升级完成后，执行以下命令刷 ES 索引，禁用日期格式字符串自动转换成日期类型，执行前替换 Elasticsearch host、user、password：
+
+      ```shell
+      curl -XPOST "http://es-cn-stxxxx.elasticsearch.aliyuncs.com:9200/wksp_*/_mapping" -u user:password -H 'Content-Type: application/json' -d'{ "date_detection": false }'
+      ```
+
+      在升级完成，并全部服务启动之后，进入 launcher 容器，执行以下命令，重新初始化 ES 模板：
+
+      ```shell
+      curl http://inner.forethought-core:5000/api/v1/inner/es/init -H "Content-Type:application/json" -X POST
+      ```
