@@ -380,3 +380,9 @@ upgrade:
           ak_secret: "xxxxxx"   # 本系统在工单系统中对应的安全密匙
           timeout: 30
 
+  # 8.20 迭代
+  - seq: 15
+    database: |-
+      -- 场景新增好图标字段, 并默认初始化为 空字典
+      ALTER TABLE `biz_scene` ADD COLUMN `iconSet` json COMMENT '图标设置' AFTER `workspaceUUID`;
+      UPDATE biz_scene SET iconSet='{}';

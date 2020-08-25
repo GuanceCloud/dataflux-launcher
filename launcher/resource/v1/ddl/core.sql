@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 15/07/2020 15:59:07
+ Date: 19/08/2020 17:26:55
 */
 
 SET NAMES utf8mb4;
@@ -238,6 +238,7 @@ CREATE TABLE `biz_scene` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 scene-',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '场景名称',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `iconSet` json DEFAULT NULL COMMENT '图标设置',
   `describe` text NOT NULL COMMENT '场景的描述信息',
   `measurementLimit` json NOT NULL COMMENT '指标集限制',
   `filter` json NOT NULL COMMENT '过滤条件',

@@ -57,3 +57,18 @@ update:
 
               # clickhouse cluster name 
               cluster_name: "default"
+
+    # 2020/8/10
+    - seq: 4
+      config:
+        kodo: |-
+
+          #【新增】配置项
+          es:
+
+            # es host  http:ip:port
+            host: "http://127.0.0.1:14092"
+            # es user name
+            user: "elastic"
+            # es user password
+            password: "changeme"

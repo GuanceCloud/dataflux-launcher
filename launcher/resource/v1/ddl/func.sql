@@ -1,10 +1,10 @@
 -- -------------------------------------------------------------
--- TablePlus 3.7.0(330)
+-- TablePlus 3.7.1(332)
 --
 -- https://tableplus.com/
 --
--- Database: dataflux_func
--- Generation Time: 2020-08-06 19:41:56.0470
+-- Database: ft_data_processor
+-- Generation Time: 2020-08-25 11:09:24.9300
 -- -------------------------------------------------------------
 
 
@@ -165,6 +165,23 @@ CREATE TABLE `biz_main_env_variable` (
   UNIQUE KEY `ID` (`id`),
   UNIQUE KEY `BIZ` (`refName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='环境变量';
+
+DROP TABLE IF EXISTS `biz_main_feedback`;
+CREATE TABLE `biz_main_feedback` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `descriptionTEXT` longtext COMMENT '描述TEXT',
+  `locationHrefTEXT` longtext COMMENT '浏览器location.href内容TEXT',
+  `vuexStateJSON` json DEFAULT NULL COMMENT 'vuex state内容JSON',
+  `screenshotBase64` longtext COMMENT '屏幕截图Base64',
+  `contactMail` text COMMENT '联系邮件',
+  `status` varchar(64) NOT NULL DEFAULT 'open' COMMENT '状态 open|close',
+  `note` text COMMENT '备注',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='反馈';
 
 DROP TABLE IF EXISTS `biz_main_func`;
 CREATE TABLE `biz_main_func` (
@@ -409,6 +426,17 @@ CREATE TABLE `biz_main_task_result_data_processor` (
   KEY `ORIGIN` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='FTDataProcessor 任务结果';
 
+DROP TABLE IF EXISTS `biz_rel_func_df_workspace`;
+CREATE TABLE `biz_rel_func_df_workspace` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `funcId` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '函数ID',
+  `dfWorkspaceUUID` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'DataFlux 工作空间 UUID',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `BIZ` (`funcId`,`dfWorkspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='函数-DataFlux工作空间关联';
+
 DROP TABLE IF EXISTS `biz_rel_script_running_info`;
 CREATE TABLE `biz_rel_script_running_info` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -442,6 +470,55 @@ CREATE TABLE `wat_main_access_key` (
   `webhookURL` text,
   `webhookEvents` text,
   `allowWebhookEcho` tinyint(1) NOT NULL DEFAULT '0',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `ORGANIZATION_ID` (`organizationId`),
+  KEY `USER_ID` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `wat_main_file`;
+CREATE TABLE `wat_main_file` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `organizationId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `userId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `originalFileName` text,
+  `md5Sum` char(32) DEFAULT NULL,
+  `byteSize` int(11) DEFAULT NULL,
+  `note` text,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `ORGANIZATION_ID` (`organizationId`),
+  KEY `USER_ID` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `wat_main_organization`;
+CREATE TABLE `wat_main_organization` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `uniqueId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(256) NOT NULL,
+  `markers` text,
+  `isDisabled` tinyint(1) NOT NULL DEFAULT '0',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  UNIQUE KEY `UNIQUE_ID` (`uniqueId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `wat_main_post`;
+CREATE TABLE `wat_main_post` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `organizationId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `userId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `content` text,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
@@ -502,6 +579,21 @@ CREATE TABLE `wat_main_user` (
   UNIQUE KEY `USERNAME` (`username`),
   KEY `ORGANIZATION_ID` (`organizationId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `wat_ref_tag`;
+CREATE TABLE `wat_ref_tag` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `entityId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `entityName` varchar(64) NOT NULL,
+  `tagK` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `tagV` text,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `TAG` (`entityId`,`tagK`),
+  KEY `ENTITY_ID` (`entityId`),
+  KEY `TAG_K` (`tagK`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `biz_main_data_source` (`seq`, `id`, `title`, `description`, `refName`, `type`, `configJSON`, `isBuiltin`, `createTime`, `updateTime`) VALUES
 ('1', 'dsrc-demo_influxdb', '示例InfluxDB', '一个用于演示的InfluxDB', 'demo_influxdb', 'influxdb', '{\"host\": \"127.0.0.1\", \"port\": 8086, \"user\": null, \"charset\": null, \"database\": \"demo\", \"password\": null}', '0', '2019-12-09 15:30:11', '2020-02-26 00:57:15'),
@@ -579,6 +671,9 @@ INSERT INTO `biz_main_script` (`seq`, `id`, `title`, `description`, `scriptSetId
 INSERT INTO `biz_main_script_set` (`seq`, `id`, `title`, `description`, `refName`, `type`, `createTime`, `updateTime`) VALUES
 ('1', 'sset-demo', '示例脚本集', '主要包含了一些用于展示DataFlux.f(x) 功能的脚本，可以删除', 'demo', 'user', '2019-12-09 15:15:05', '2020-02-26 00:59:55'),
 ('2', 'sset-ft_lib', '场景支持', '场景支持脚本集', 'ft_lib', 'official', '2020-08-03 01:05:22', '2020-08-03 01:07:37');
+
+INSERT INTO `wat_main_organization` (`seq`, `id`, `uniqueId`, `name`, `markers`, `isDisabled`, `createTime`, `updateTime`) VALUES
+('1', 'o-sys', 'system', 'System Organization', NULL, '0', '2017-07-28 18:08:03', '2018-05-24 00:47:06');
 
 INSERT INTO `wat_main_system_config` (`seq`, `id`, `value`, `createTime`, `updateTime`) VALUES
 ('2', 'officialScript.installed.version', 'STOCK-19700101_080000', '2020-07-09 14:23:22', '2020-07-09 14:23:22');
