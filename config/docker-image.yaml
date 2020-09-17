@@ -5,16 +5,16 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:v1.0.1-478-g0844d04
-    core: 1.9.47:core-20afd1c4-1598351336
-    kodo: 1.9.47:kodo-4f3e018-1598351336
-    front-webclient: 1.9.47:front-webclient-f3bdc16f-1598351336
-    management-webclient: 1.9.47:management-webclient-1fe1b73-1598351336
-    message-desk: 1.9.47:message-desk-227be83-1598351336
-    message-desk-worker: 1.9.47:message-desk-worker-783f3cb-1598351336
-    func: 1.9.47:func-356017d-1598351336
-    func-worker: 1.9.47:func-worker-bf2df0d-1598351336
-    trigger: 1.9.47:trigger-d9c7b6c-1598351336
-    utils-server: 1.9.47:utils-server-44e10b9-1598351336
-    data-warehouse: 1.9.47:data-warehouse-3bc7389-1598351336
-  version: 1.9.47
+    internal-dataway: dataway:v1.0.1-491-g4eebaf7
+    core: 1.9.48:core-5d5c50e9-1600314708
+    kodo: 1.9.48:kodo-ed0f068-1600314708
+    front-webclient: 1.9.48:front-webclient-ff2bfc10-1600314708
+    management-webclient: 1.9.48:management-webclient-1fe1b73-1600314708
+    message-desk: 1.9.48:message-desk-227be83-1600314708
+    message-desk-worker: 1.9.48:message-desk-worker-783f3cb-1600314708
+    func: 1.9.48:func-356017d-1600314708
+    func-worker: 1.9.48:func-worker-bf2df0d-1600314708
+    trigger: 1.9.48:trigger-d9c7b6c-1600314708
+    utils-server: 1.9.48:utils-server-44e10b9-1600314708
+    data-warehouse: 1.9.48:data-warehouse-545291f-1600314708
+  version: 1.9.48
