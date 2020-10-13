@@ -6,7 +6,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -15,7 +15,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
@@ -30,7 +30,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -39,7 +39,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
@@ -54,7 +54,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -62,7 +62,7 @@ spec:
           servicePort: 80
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
@@ -77,7 +77,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.console }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -86,7 +86,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.console }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
@@ -101,7 +101,7 @@ metadata:
   namespace: forethought-webclient
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.management }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -110,7 +110,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.management }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
@@ -125,7 +125,7 @@ metadata:
   namespace: func
 spec:
   rules:
-  - host: {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -134,7 +134,7 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{'deploy-' if __common__.debug}}{{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
 status:
   loadBalancer: {}
