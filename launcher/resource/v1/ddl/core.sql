@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 08/09/2020 14:18:57
+ Date: 14/10/2020 18:12:29
 */
 
 SET NAMES utf8mb4;
@@ -183,10 +183,14 @@ CREATE TABLE `biz_object_class_cfg` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 objc-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '视图UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类名',
   `alias` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类别名',
+  `retentionPeriod` varchar(32) NOT NULL DEFAULT '' COMMENT '闲置时间-超过此时间之后会删除对象',
   `publicSet` json NOT NULL COMMENT '对象分类列表的公共和默认设置',
   `colSets` json NOT NULL COMMENT '对象分类列表的字段设置列表',
+  `tags` json DEFAULT NULL COMMENT '当前分类的 tags列表',
+  `fields` json DEFAULT NULL COMMENT '当前分类的fields列表',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -304,14 +308,15 @@ CREATE TABLE `biz_share_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for biz_template
+-- Table structure for biz_sys_template
 -- ----------------------------
-DROP TABLE IF EXISTS `biz_template`;
-CREATE TABLE `biz_template` (
+DROP TABLE IF EXISTS `biz_sys_template`;
+CREATE TABLE `biz_sys_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
-  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID tpl-',
-  `owner` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID/SYS',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID systpl-',
+  `owner` varchar(48) NOT NULL DEFAULT '' COMMENT '所属目标类型',
+  `code` varchar(48) NOT NULL DEFAULT '' COMMENT '命名',
+  `note` text NOT NULL COMMENT '备注说明',
   `content` json NOT NULL COMMENT '模版内容',
   `extend` json DEFAULT NULL COMMENT '额外扩展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -336,7 +341,7 @@ CREATE TABLE `biz_variable` (
   `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '视图全局唯一 ID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '变量显示名',
   `code` varchar(128) NOT NULL DEFAULT '' COMMENT '变量名',
-  `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE') NOT NULL COMMENT '类型',
+  `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE','TAG','FIELD') NOT NULL COMMENT '类型',
   `datasource` varchar(48) NOT NULL COMMENT '数据源类型',
   `definition` json DEFAULT NULL COMMENT '解说，原content内容',
   `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
@@ -529,6 +534,19 @@ CREATE TABLE `main_ck_datasync` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for main_config
+-- ----------------------------
+DROP TABLE IF EXISTS `main_config`;
+CREATE TABLE `main_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `keyCode` varchar(48) NOT NULL COMMENT '配置项唯一Code',
+  `description` text NOT NULL COMMENT '描述信息',
+  `value` json NOT NULL COMMENT '配置数据',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`keyCode`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

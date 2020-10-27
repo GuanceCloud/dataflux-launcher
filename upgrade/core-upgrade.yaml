@@ -411,3 +411,65 @@ upgrade:
         KEY `k_ws_uuid` (`workspaceUUID`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+  # 9.17 迭代
+  - seq: 17
+    database: |-
+      -- 新增 对象分类配置表
+      ALTER TABLE `biz_object_class_cfg`
+      ADD COLUMN `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '视图UUID' AFTER `workspaceUUID`;
+
+      -- 删除掉 原来的模版表
+      DROP TABLE IF EXISTS `biz_template`;
+
+      -- 创建系统模版表, 存储各类配置信息
+      CREATE TABLE `biz_sys_template` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID systpl-',
+        `owner` varchar(48) NOT NULL DEFAULT '' COMMENT '所属目标类型',
+        `code` varchar(48) NOT NULL DEFAULT '' COMMENT '命名',
+        `note` text NOT NULL COMMENT '备注说明',
+        `content` json NOT NULL COMMENT '模版内容',
+        `extend` json DEFAULT NULL COMMENT '额外扩展字段',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `template_owner_fk` (`owner`) USING BTREE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 历史数据迁移更新
+      UPDATE biz_variable set datasource='ftinfluxdb' WHERE datasource='ftinflxdb' and status=0 and datasource !="";
+      UPDATE biz_variable set datasource='custom' WHERE type='CUSTOM_LIST' and status=0;
+      ALTER TABLE `biz_variable` MODIFY COLUMN `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE','TAG','FIELD') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '类型' AFTER `code`;
+
+
+  # 10.15 迭代
+  - seq: 18
+    database: |-
+      -- 创建系统配置表 用来存储可变动的配置
+      DROP TABLE IF EXISTS `main_config`;
+      CREATE TABLE `main_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `keyCode` varchar(48) NOT NULL COMMENT '配置项唯一Code',
+        `description` text NOT NULL COMMENT '描述信息',
+        `value` json NOT NULL COMMENT '配置数据',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`keyCode`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 对象分类配置表新增 tags/fields
+      ALTER TABLE `biz_object_class_cfg`
+      ADD COLUMN `tags` json NULL COMMENT '当前分类的 tags列表' AFTER `colSets`,
+      ADD COLUMN `fields` json NULL COMMENT '当前分类的fields列表' AFTER `tags`,
+      ADD COLUMN `retentionPeriod` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '闲置时间-超过此时间之后会删除对象' AFTER `alias`;
+
+      -- 为历史数据设置 tags/fields 的默认值
+      UPDATE biz_object_class_cfg set tags='[]' ,fields='[]';
+
+      -- 插入默认的内置对象分类列表
+      INSERT INTO `main_config`(`id`, `keyCode`, `description`, `value`) VALUES (1, 'BuiltInObjectClass', '内置对象分类列表', '[\"Servers\"]');
+
