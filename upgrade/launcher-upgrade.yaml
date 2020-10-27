@@ -30,3 +30,17 @@ upgradeInfo:
       ```shell
       curl http://inner.forethought-core:5000/api/v1/inner/es/init -H "Content-Type:application/json" -X POST
       ```
+
+  - seq: 3
+    config: |-
+      进入集群 launcher 容器，执行以下命令，更新概览图指标卡标题：
+
+      ```shell
+      curl -H "Content-Type:application/json" -X POST 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data?script_name=fix_singlestat_chart_name'
+      ```
+
+      执行以下命令，更新 ES 索引模板：
+
+      ```shell
+      curl -H "Content-Type:application/json" -X POST 'http://inner.forethought-core:5000/api/v1/inner/es/init'
+      ```
