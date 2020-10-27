@@ -236,6 +236,13 @@ var setup = (function () {
     });
   };
 
+  app.prototype.tls_status_change = function(obj){
+    var isChecked = $(obj).is(":checked");
+
+    $("#certificatePrivateKey").attr("disabled", !isChecked);
+    $("#certificateContent").attr("disabled", !isChecked);
+  };
+
   app.prototype.other_config = function(){
     var that = this;
     var data = {
@@ -256,7 +263,8 @@ var setup = (function () {
 
     data.tls = {
       "certificatePrivateKey": $('#certificatePrivateKey').val(),
-      "certificateContent": $('#certificateContent').val()
+      "certificateContent": $('#certificateContent').val(),
+      "tlsEnabled": $('#ckbTlsEnabled').is(":checked")
     }
 
     data.nodeInternalIP = $('#iptNodeIps').val();

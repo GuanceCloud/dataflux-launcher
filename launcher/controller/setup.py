@@ -80,8 +80,13 @@ def certificate_create():
 
   certificate = dict(
               privateKey = tlsSetting['certificatePrivateKey'],
-              content = tlsSetting['certificateContent']
+              content = tlsSetting['certificateContent'],
+              enabled = tlsSetting['tlsEnabled']
           )
+
+  if not certificate["privateKey"] or not certificate["content"]:
+    return True
+
   domain = settingsMdl.domain.get('domain')
 
   tmpPath = SERVICECONFIG['tmpDir']

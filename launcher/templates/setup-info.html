@@ -192,6 +192,16 @@
           <div class="high-block well-certificate">
             <h4>TLS 证书</h4>
             <div class="form-group">
+              <label for="iptUserName" class="col-sm-2 control-label">证书启用:</label>
+              <div class="col-sm-5">
+                {% if pageData.other.tls.tlsEnabled %}
+                <p class="form-control-static monospaced text-success">已启用</p>
+                {% else %}
+                <p class="form-control-static monospaced text-danger">未启用</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">证书:</label>
               <div class="col-sm-5">
                 <p class="form-control-static monospaced">{{ pageData.other.tls.certificateContent }}</p>
@@ -210,7 +220,7 @@
           </div>
         </div>
 
-      </div>
+    </div>
 </div>
 
 {% endblock %}

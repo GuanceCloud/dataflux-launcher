@@ -8,7 +8,7 @@ ftDataProcessor:
   # FT集群内部专用访问域名
   innerAPIBaseURL: http://func-inner.func:8088
   # FT集群外部使用域名
-  publicAPIBaseURL: https://{{ domain.subDomain.function }}.{{ domain.domain }}
+  publicAPIBaseURL: {{ "https" if other.tls.tlsEnabled else "http"}}://{{ domain.subDomain.function }}.{{ domain.domain }}
 
 mode: prod
 deployName: 生产环境（内部）
@@ -21,7 +21,7 @@ logger:
   level: WARNING
 
 webServer:
-  baseURL : https://{{ domain.subDomain.function }}.{{ domain.domain }}
+  baseURL : {{ "https" if other.tls.tlsEnabled else "http"}}://{{ domain.subDomain.function }}.{{ domain.domain }}
   bind    : 0.0.0.0
   port    : 8088
   

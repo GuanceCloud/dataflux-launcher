@@ -98,17 +98,25 @@
       </div>
 
       <div class="high-block">
-        <h4>TLS 证书（只支持 PEM 格式的证书）</h4>
+        <h4>
+          <label class="checkbox-inline" style="font-weight: bold;">
+            {% if pageData.other.tls.tlsEnabled %}
+            <input type="checkbox" id="ckbTlsEnabled" onchange="setup.tls_status_change(this)" checked="checked"> 启用 TLS 证书（只支持 PEM 格式的证书）
+            {% else %}
+            <input type="checkbox" id="ckbTlsEnabled" onchange="setup.tls_status_change(this)" > 启用 TLS 证书（只支持 PEM 格式的证书）
+            {% endif %}
+          </label>
+        </h4>
         <div class="form-group">
           <div class="col-sm-6">私钥:</div>
           <div class="col-sm-6">证书:</div>
         </div>
         <div class="form-group certificate-text">
           <div class="col-sm-6">
-            <textarea id="certificatePrivateKey" class="monospaced" required name="certificatePrivateKey" placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头">{{ pageData.other.tls.certificatePrivateKey }}</textarea>
+            <textarea id="certificatePrivateKey" {{ "disabled" if not pageData.other.tls.tlsEnabled }} class="monospaced" required name="certificatePrivateKey" placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头">{{ pageData.other.tls.certificatePrivateKey }}</textarea>
           </div>
           <div class="col-sm-6">
-            <textarea id="certificateContent" class="monospaced" required name="certificateContent" laceholder="输入证书，以-----BEGIN CERTIFICATE-----开头">{{ pageData.other.tls.certificateContent }}</textarea>
+            <textarea id="certificateContent" {{ "disabled" if not pageData.other.tls.tlsEnabled }} class="monospaced" required name="certificateContent" laceholder="输入证书，以-----BEGIN CERTIFICATE-----开头">{{ pageData.other.tls.certificateContent }}</textarea>
           </div>
         </div>
       </div>

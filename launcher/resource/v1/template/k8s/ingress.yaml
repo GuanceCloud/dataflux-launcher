@@ -13,10 +13,12 @@ spec:
           serviceName: front-backend
           servicePort: 5000
         path: /
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
 
@@ -37,10 +39,12 @@ spec:
           serviceName: management-backend
           servicePort: 5000
         path: /
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
 
@@ -60,10 +64,12 @@ spec:
       - backend:
           serviceName: static-resource-nginx
           servicePort: 80
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
 
@@ -84,10 +90,12 @@ spec:
           serviceName: front-webclient
           servicePort: 80
         path: /
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
 
@@ -108,10 +116,12 @@ spec:
           serviceName: management-webclient
           servicePort: 80
         path: /
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
 
@@ -132,9 +142,11 @@ spec:
           serviceName: func
           servicePort: 8088
         path: /
+  {% if config.other.tls.tlsEnabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
+  {% endif %}
 status:
   loadBalancer: {}
