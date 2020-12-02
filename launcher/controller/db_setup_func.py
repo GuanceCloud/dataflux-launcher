@@ -56,16 +56,12 @@ def _secret_password(salt, secret):
 
 def database_account_create():
   sql = '''
-        TRUNCATE TABLE `wat_main_organization`;
         TRUNCATE TABLE `wat_main_user`;
-
-        INSERT INTO `wat_main_organization` (`id`, `uniqueId`, `name`, `markers`)
-        VALUES ('o-sys','system','System Organization',NULL);
     '''
 
   userSql =  '''
-        INSERT INTO `wat_main_user` (`id`, `organizationId`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`)
-        VALUES (%s,'o-sys','admin',%s,'系统管理员',NULL,NULL,'sa','*');
+        INSERT INTO `wat_main_user` (`id`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`)
+        VALUES (%s, 'admin', %s, '系统管理员', NULL, NULL, 'sa', '*', 0);
     '''
 
   mysqlSetting = settingsMdl.mysql

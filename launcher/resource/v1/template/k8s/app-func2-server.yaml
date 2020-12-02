@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-func2-server
+  name: server
+  namespace: func2
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-func2-server
+  template:
+    metadata:
+      labels:
+        app: deployment-func2-server
+    spec:
+      containers:
+      - args:
+        - ./run-server.sh
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: server
+        ports:
+        - containerPort: 8088
+          name: 8088tcp80882
+          protocol: TCP
+        resources: {}
+        tty: true
+        volumeMounts:
+        - mountPath: /data/user-config.yaml
+          name: user-config
+          subPath: user-config.yaml
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: user-config
+          optional: false
+        name: user-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: func2
+spec:
+  ports:
+  - name: 8088tcp80882
+    port: 8088
+    protocol: TCP
+    targetPort: 8088
+  selector:
+    app: deployment-func2-server
+  type: ClusterIP

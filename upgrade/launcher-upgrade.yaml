@@ -33,6 +33,12 @@ upgradeInfo:
 
   - seq: 3
     config: |-
+      升级前，在右上角的配置 -> 其他 -> tls 节点下面增加：tlsEnabled: true，启用 TLS 的配置项，默认为不启用。
+      ```
+        tls:
+          tlsEnabled: true
+      ```
+
       升级完成后，进入集群 launcher 容器，依次执行以下两条终端命令：
 
       执行以下命令，更新概览图指标卡标题：

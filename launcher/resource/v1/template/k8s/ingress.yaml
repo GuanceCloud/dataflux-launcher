@@ -135,11 +135,37 @@ metadata:
   namespace: func
 spec:
   rules:
-  - host: {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+  - host: func-removed.{{ config.domain.domain }}
     http:
       paths:
       - backend:
           serviceName: func
+          servicePort: 8088
+        path: /
+  {% if config.other.tls.tlsEnabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: server
+  namespace: func2
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: server
           servicePort: 8088
         path: /
   {% if config.other.tls.tlsEnabled %}

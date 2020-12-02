@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-func2-worker-7
+  name: worker-7
+  namespace: func2
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-func2-worker-7
+  template:
+    metadata:
+      labels:
+        app: deployment-func2-worker-7
+    spec:
+      containers:
+      - args:
+        - ./run-worker-by-queue.sh
+        - "7"
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: IfNotPresent
+        name: worker-7
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/user-config.yaml
+          name: user-config
+          subPath: user-config.yaml
+        - mountPath: /data/requirements.txt
+          name: requirements-config
+          subPath: requirements.txt
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: user-config
+          optional: false
+        name: user-config
+      - configMap:
+          defaultMode: 292
+          name: requirements-config
+          optional: false
+        name: requirements-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-7
+  namespace: func2
+spec:
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-func2-worker-7
+  type: ClusterIP

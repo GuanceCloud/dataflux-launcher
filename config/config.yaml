@@ -8,6 +8,7 @@ namespaces:
   - forethought-webclient
   - forethought-kodo
   - func
+  - func2
   - middleware
   - utils
 
@@ -228,22 +229,22 @@ services:
     - key: func
       name: 函数计算
       image: func
-      replicas: 2
+      replicas: 0
 
     - key: func-inner
       name: 函数计算 Inner
       image: func
-      replicas: 2
+      replicas: 0
 
     - key: func-worker-beat
       name: 函数计算 Worker Beat
       image: func-worker
-      replicas: 1
+      replicas: 0
 
     - key: func-worker-debugger
       name: 函数计算 Worker Debugger
       image: func-worker
-      replicas: 2
+      replicas: 0
 
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
@@ -254,27 +255,27 @@ services:
     - key: func-worker-rpc
       name: 函数计算 Worker RPC
       image: func-worker
-      replicas: 4
+      replicas: 0
 
     - key: func-worker-crontab
       name: 函数计算 Worker Crontab
       image: func-worker
-      replicas: 4
+      replicas: 0
 
     - key: func-worker-utils
       name: 函数计算 Worker Utils
       image: func-worker
-      replicas: 4
+      replicas: 0
 
     - key: func-worker-batch
       name: 函数计算 Worker Batch
       image: func-worker
-      replicas: 4
+      replicas: 0
 
     - key: func-worker-batch-builtin
       name: 函数计算 Worker Batch builtin
       image: func-worker
-      replicas: 4
+      replicas: 0
 
     configmaps:
     - key: func
@@ -303,6 +304,68 @@ services:
       - func-worker-batch
       - func-worker-batch-builtin
       template: func-worker-config.yaml
+
+  - namespace: func2
+    services:
+    - key: func2-server
+      name: 函数计算
+      image: dataflux-func
+      replicas: 2
+
+    - key: func2-server-inner
+      name: 函数计算 Inner
+      image: dataflux-func
+      replicas: 2
+
+    - key: func2-worker-beat
+      name: 任务队列定时器
+      image: dataflux-func
+      replicas: 1
+
+    - key: func2-worker-0
+      name: 0 号任务队列
+      image: dataflux-func
+      replicas: 2
+
+    - key: func2-worker-1-6
+      name: 1-6 号任务队列
+      image: dataflux-func
+      replicas: 5
+
+    - key: func2-worker-7
+      name: 7 号任务队列
+      image: dataflux-func
+      replicas: 2
+
+    - key: func2-worker-8-9
+      name: 8-9 号任务队列
+      image: dataflux-func
+      replicas: 2
+
+    configmaps:
+    - key: func2Config
+      mapname: user-config
+      mapkey: user-config.yaml
+      services:
+      - func-server
+      - func-server-inner
+      - func-worker-beat
+      - func-worker-0
+      - func-worker-1-6
+      - func-worker-7
+      - func-worker-8-9
+      template: func2-user-config.yaml
+
+    - key: func2Requirements
+      mapname: requirements-config
+      mapkey:  requirements.txt
+      services:
+      - func-worker-beat
+      - func-worker-0
+      - func-worker-1-6
+      - func-worker-7
+      - func-worker-8-9
+      template: func2-requirements.txt
 
   - namespace: middleware
     services:
@@ -525,22 +588,35 @@ updates:
         mapName: kodo-x
         mapKey: config.yaml
 
-  - namespace: func
-    project: func
+  # - namespace: func
+  #   project: func
+  #   noDatabase: False
+  #   dataKey: data
+  #   config:
+  #     - key: func
+  #       mapName: func-config
+  #       mapKey: config.yaml
+
+  #     - key: funcInner
+  #       mapName: func-inner-config
+  #       mapKey: config.yaml
+
+  #     - key: funcWorker
+  #       mapName: func-worker-config
+  #       mapKey: config.yaml
+
+  - namespace: func2
+    project: dataflux-func
     noDatabase: False
     dataKey: data
     config:
-      - key: func
-        mapName: func-config
-        mapKey: config.yaml
+      - key: func2Config
+        mapName: user-config
+        mapKey: user-config.yaml
 
-      - key: funcInner
-        mapName: func-inner-config
-        mapKey: config.yaml
-
-      - key: funcWorker
-        mapName: func-worker-config
-        mapKey: config.yaml
+      - key: func2Requirements
+        mapName: requirements-config
+        mapKey: requirements.txt
 
   - namespace: middleware
     project: messageDesk
@@ -552,7 +628,7 @@ updates:
         mapKey: config.yaml
 
       - key: messageDeskWorker
-        mapName: message-desk
+        mapName: message-desk-worker
         mapKey: config.yaml
 
   - namespace: utils

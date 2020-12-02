@@ -1,0 +1,36 @@
+SECRET: {{ other.func.secret }}
+LOG_LEVEL: WARNING
+LOG_FILE_PATH: /tmp/dataflux-func.log
+LOG_FILE_FORMAT: text
+WEB_BASE_URL: {{ "https" if other.tls.tlsEnabled else "http"}}://{{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+WEB_BIND: 0.0.0.0
+WEB_PORT: 8088
+
+MYSQL_HOST: {{mysql.base.host}}
+MYSQL_PORT: {{mysql.base.port}}
+MYSQL_USER: {{mysql.func.user}}
+MYSQL_PASSWORD: {{mysql.func.password}}
+MYSQL_DATABASE: {{mysql.func.database}}
+
+REDIS_HOST: {{redis.host}}
+REDIS_PORT: {{redis.port}}
+REDIS_DATABASE: 4
+REDIS_PASSWORD: {{redis.password}}
+
+MODE: prod
+
+_DISABLE_SETUP: false
+
+CUSTOM_DF_STUDIO_INNER_API_BASE_URL: http://inner.forethought-core:5000
+
+CUSTOM_BUILTIN_DF_DATAWAY_HOST: dataway.utils
+CUSTOM_BUILTIN_DF_DATAWAY_PORT: 9528
+
+CUSTOM_BUILTIN_NSQ_HOST: nsqlookupd.middleware
+CUSTOM_BUILTIN_NSQ_PORT: 4161
+
+CUSTOM_MESSAGE_DESK_HOST: message-desk.middleware
+CUSTOM_MESSAGE_DESK_PORT: 8088
+CUSTOM_MESSAGE_DESK_AK_ID: 
+CUSTOM_MESSAGE_DESK_AK_SECRET: 
+CUSTOM_MESSAGE_DESK_USE_HTTPS: false
