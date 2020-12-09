@@ -1,20 +1,19 @@
 apps:
-  registry: pubrepo.jiagouyun.com
-  image_dir: dataflux-prev/
+  registry: registry.jiagouyun.com
+  version: testing
+  image_dir: ''
   images:
-    nsq: basis:nsq_1.2.0
-    nginx: basis:nginx_1.13.7
-    kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:v1.0.1-490-g445f739
-    core: 1.10.49.3:core-64f2ef5f
-    kodo: 1.10.49.3:kodo-36c62d2
-    front-webclient: 1.10.49.3:front-webclient-6656629c
-    management-webclient: 1.10.49.3:management-webclient-dd9da29
-    message-desk: 1.10.49.3:message-desk-227be83
-    message-desk-worker: 1.10.49.3:message-desk-worker-783f3cb
-    func: 1.10.49.3:func-c2f4e3b
-    func-worker: 1.10.49.3:func-worker-9f2d7e6
-    trigger: 1.10.49.3:trigger-d9c7b6c
-    utils-server: 1.10.49.3:utils-server-44e10b9
-    data-warehouse: 1.10.49.3:data-warehouse-5861338
-  version: 1.10.49.3
+    nsq: basis/nsq:v1.2.0
+    nginx: basis/nginx:1.13.7
+    kapacitor: basis/kapacitor:1.5.4
+    internal-dataway: dataway/dataway:v1.0.1-505-gb4a6d6d
+    core: cloudcare-forethought/cloudcare-forethought-backend:pre_20201126_10
+    kodo: kodo/kodo:pre_20201208_01
+    front-webclient: cloudcare-front/cloudcare-forethought-webclient:pre_20201126_05
+    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:pre_20201126_02
+    message-desk: middlewares/message-desk:pre_20200717_02
+    message-desk-worker: middlewares/message-desk-worker:pre_20200717_01
+    dataflux-func: middlewares/dataflux-func:pre_20201126_01
+    trigger: cloudcare-forethought/cloudcare-forethought-trigger:pre_20200318_01
+    utils-server: cloudcare-forethought/utils-server:pre_20200316_01
+    data-warehouse: ft-data-warehouse/ft-data-warehouse:pre_20200610_01

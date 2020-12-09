@@ -473,3 +473,90 @@ upgrade:
       -- 插入默认的内置对象分类列表
       INSERT INTO `main_config`(`id`, `keyCode`, `description`, `value`) VALUES (1, 'BuiltInObjectClass', '内置对象分类列表', '[\"Servers\"]');
 
+
+  # 11.19 迭代
+  - seq: 19
+    config:
+      core: |-
+        # 工单系统配置
+        billingServerSet:
+          isOpen: true
+
+    database: |-
+
+      -- 新增的 对象关系图表
+      CREATE TABLE `biz_object_relation_graph` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 objrg-前缀',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `jsonContent` json NOT NULL COMMENT '关系数据JSON内容',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 工作空间表新增 账单状态字段，
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `durationSet` json NULL COMMENT '数据保留时长设置' AFTER `enablePublicDataway`,
+      ADD COLUMN `versionType` enum('free','pay','unlimited') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版' AFTER `durationSet`,
+      ADD COLUMN `billingState` enum('free','unlimited','normal','arrearage','expired') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT '帐户费用状态' AFTER `versionType`;
+
+      -- 新增账单计费配置信息
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', '计量单价配置  priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式', '{\"equation\": {\"ts\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"job\": \"math.ceil((count - discountQuantity)/priceQuantity)*price if count > discountQuantity else 0\", \"tracing\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"logging_keyevent\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\"}, \"priceSet\": {\"ts\": {\"14d\": {\"price\": 1, \"priceQuantity\": 100}, \"30d\": {\"price\": 1.2, \"priceQuantity\": 100}, \"180d\": {\"price\": 1.8, \"priceQuantity\": 100}}, \"job\": {\"price\": 0.04, \"priceQuantity\": 1000}, \"tracing\": {\"7d\": {\"price\": 0.3, \"priceQuantity\": 1000000}, \"14d\": {\"price\": 0.5, \"priceQuantity\": 1000000}, \"30d\": {\"price\": 1, \"priceQuantity\": 1000000}}, \"logging_keyevent\": {\"14d\": {\"price\": 0.35, \"priceQuantity\": 1000000}, \"30d\": {\"price\": 0.65, \"priceQuantity\": 1000000}, \"180d\": {\"price\": 1.2, \"priceQuantity\": 1000000}}}, \"discountQuantitySet\": {\"ts\": 0, \"job\": 1000, \"datakit\": 0, \"tracing\": 0, \"logging_keyevent\": 0}}');
+
+      -- 增加 免费用户额度限制
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimit', '免费额度', '{\"ts\": 500, \"job\": 1000, \"datakit\": 5, \"tracing\": 1000000, \"logging_keyevent\": 1000000}');
+
+
+      -- 原有的非免费版变更为 付费版
+      update main_workspace set versionType="free", billingState="free" where status=0 and versionInfo ->> "$.version" = "free";
+      update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "BASIC";
+      update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "TEAM";
+      update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "ADVANCED";
+      update main_workspace set versionType="unlimited", billingState="normal" where status=0 and versionInfo ->> "$.version" = "unlimited";
+
+
+      -- 初始化 durationSet 数据
+      -- 更新 rp
+      update main_workspace set durationSet=JSON_OBJECT("rp", "1d") where `status` = 0 and rpName='rp0';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "7d") where `status` = 0 and rpName='rp1';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "30d") where `status` = 0 and rpName='rp2';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "90d") where `status` = 0 and rpName='rp3';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "90d") where `status` = 0 and rpName='rp_2160h';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "180d") where `status` = 0 and rpName='rp4';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "365d") where `status` = 0 and rpName='rp5';
+      update main_workspace set durationSet=JSON_OBJECT("rp", "1095d") where `status` = 0 and rpName='rp6';
+
+      -- 更新 logging 的 rp
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "1d") where `status` = 0 and esRP ->> "$.logging" ="es_rp0";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "7d") where `status` = 0 and esRP ->> "$.logging" ="es_rp1";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "14d") where `status` = 0 and esRP ->> "$.logging" ="es_rp2";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "30d") where `status` = 0 and esRP ->> "$.logging" ="es_rp3";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "90d") where `status` = 0 and esRP ->> "$.logging" ="es_rp4";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "180d") where `status` = 0 and esRP ->> "$.logging" ="es_rp5";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "365d") where `status` = 0 and esRP ->> "$.logging" ="es_rp6";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.logging", "1095d") where `status` = 0 and esRP ->> "$.logging" ="es_rp7";
+
+      -- 更新 keyevent 的 rp
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "1d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp0";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "7d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp1";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "14d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp2";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "30d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp3";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "90d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp4";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "180d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp5";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "365d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp6";
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.keyevent", "1095d") where `status` = 0 and esRP ->> "$.keyevent" ="es_rp7";
+
+     
+      -- 更新 tracing 的 rp
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.tracing", "7d") where `status` = 0;
+
+      -- 对象分类配置中的 tags/fields 需要清空
+      update biz_object_class_cfg set tags='[]', fields='[]', extend='{}';
+

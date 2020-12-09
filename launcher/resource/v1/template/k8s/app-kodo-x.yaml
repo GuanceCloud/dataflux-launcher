@@ -17,8 +17,9 @@ spec:
     spec:
       containers:
       - args:
-        - sh
-        - /kodo/run.sh
+        - /kodo/kodox
+        - -cfg
+        - /kodo/config/config.yaml
         image: {{ config.fullImagePath }} 
         imagePullPolicy: IfNotPresent
         name: kodo-x

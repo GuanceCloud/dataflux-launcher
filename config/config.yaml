@@ -230,21 +230,25 @@ services:
       name: 函数计算
       image: func
       replicas: 0
+      deleted: True
 
     - key: func-inner
       name: 函数计算 Inner
       image: func
       replicas: 0
+      deleted: True
 
     - key: func-worker-beat
       name: 函数计算 Worker Beat
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-debugger
       name: 函数计算 Worker Debugger
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-rpc-crontab
       name: 函数计算 Worker RPC
@@ -256,26 +260,31 @@ services:
       name: 函数计算 Worker RPC
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-crontab
       name: 函数计算 Worker Crontab
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-utils
       name: 函数计算 Worker Utils
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-batch
       name: 函数计算 Worker Batch
       image: func-worker
       replicas: 0
+      deleted: True
 
     - key: func-worker-batch-builtin
       name: 函数计算 Worker Batch builtin
       image: func-worker
       replicas: 0
+      deleted: True
 
     configmaps:
     - key: func
@@ -307,37 +316,37 @@ services:
 
   - namespace: func2
     services:
-    - key: func2-server
+    - key: server
       name: 函数计算
       image: dataflux-func
       replicas: 2
 
-    - key: func2-server-inner
+    - key: server-inner
       name: 函数计算 Inner
       image: dataflux-func
       replicas: 2
 
-    - key: func2-worker-beat
+    - key: worker-beat
       name: 任务队列定时器
       image: dataflux-func
       replicas: 1
 
-    - key: func2-worker-0
+    - key: worker-0
       name: 0 号任务队列
       image: dataflux-func
       replicas: 2
 
-    - key: func2-worker-1-6
+    - key: worker-1-6
       name: 1-6 号任务队列
       image: dataflux-func
       replicas: 5
 
-    - key: func2-worker-7
+    - key: worker-7
       name: 7 号任务队列
       image: dataflux-func
       replicas: 2
 
-    - key: func2-worker-8-9
+    - key: worker-8-9
       name: 8-9 号任务队列
       image: dataflux-func
       replicas: 2
@@ -347,24 +356,24 @@ services:
       mapname: user-config
       mapkey: user-config.yaml
       services:
-      - func-server
-      - func-server-inner
-      - func-worker-beat
-      - func-worker-0
-      - func-worker-1-6
-      - func-worker-7
-      - func-worker-8-9
+      - server
+      - server-inner
+      - worker-beat
+      - worker-0
+      - worker-1-6
+      - worker-7
+      - worker-8-9
       template: func2-user-config.yaml
 
     - key: func2Requirements
       mapname: requirements-config
       mapkey:  requirements.txt
       services:
-      - func-worker-beat
-      - func-worker-0
-      - func-worker-1-6
-      - func-worker-7
-      - func-worker-8-9
+      - worker-beat
+      - worker-0
+      - worker-1-6
+      - worker-7
+      - worker-8-9
       template: func2-requirements.txt
 
   - namespace: middleware

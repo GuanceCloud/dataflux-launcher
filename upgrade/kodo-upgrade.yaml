@@ -72,3 +72,13 @@ update:
             user: "elastic"
             # es user password
             password: "changeme"
+
+    # 2020/11/9
+    - seq: 5
+      config:
+        kodo: |-
+
+          #【更新】配置项
+          global:
+            #新增子项 系统工作空间dbuuid 配置
+            sys_db_uuid: "ifdb_xxxx"

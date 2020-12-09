@@ -6,6 +6,7 @@ kubectl delete configmaps message-desk message-desk-worker -n middleware --force
 kubectl delete configmaps func-config func-inner-config func-worker-config  -n func --force --grace-period=0
 kubectl delete configmaps trigger-conf -n forethought-inner-app --force --grace-period=0
 kubectl delete configmaps dataway-config dataway-license data-warehouse-config -n utils --force --grace-period=0
+kubectl delete configmaps requirements-config user-config -n func2 --force --grace-period=0
 
 
 # 清理 deployment
@@ -16,6 +17,7 @@ kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd 
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete deployments utils-server internal-dataway  data-warehouse -n utils --force --grace-period=0
+kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 service
 kubectl delete services front-backend inner core-worker core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend websocket -n forethought-core --force --grace-period=0
@@ -25,11 +27,13 @@ kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsq
 kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete services trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete services utils-server internal-dataway data-warehouse -n utils --force --grace-period=0
+kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 ingress
 kubectl delete ingress front-backend management-backend static-resource-nginx integration-nginx websocket -n forethought-core --force --grace-period=0
 kubectl delete ingress front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete ingress func -n func --force --grace-period=0
+kubectl delete ingress server -n func2 --force --grace-period=0
 
 # 清理 PVC
 kubectl delete PersistentVolumeClaim ft-sysconfig core-worker-logs core-worker-beat-logs front-backend-logs inner-logs management-backend-logs integration-scanner-logs -n forethought-core --force --grace-period=0
@@ -46,6 +50,7 @@ kubectl delete secret registry-key -n forethought-webclient --force --grace-peri
 kubectl delete secret registry-key -n middleware --force --grace-period=0
 kubectl delete secret registry-key -n func --force --grace-period=0
 kubectl delete secret registry-key -n utils --force --grace-period=0
+kubectl delete secret registry-key -n func2 --force --grace-period=0
 
 # 清理 namespace
 # kubectl delete namespaces forethought-core forethought-kodo forethought-inner-app forethought-webclient func --force --grace-period=0

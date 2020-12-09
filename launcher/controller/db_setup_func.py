@@ -39,7 +39,7 @@ def database_ddl():
   database_create_db()
 
   with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("launcher/resource/v1/ddl/func.sql"), 'r') as f:
+    with open(os.path.abspath("launcher/resource/v1/ddl/dataflux-func.sql"), 'r') as f:
       ddl = f.read()
       db.execute(ddl, dbName = dbInfo['database'])
 
