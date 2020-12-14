@@ -531,6 +531,9 @@ influxDB:
   - rpName: rp1
     duration: 168   # 7d
 
+  - rpName: rp1.1
+    duration: 336   # 14d
+
   - rpName: rp2
     duration: 720   # 30d
 

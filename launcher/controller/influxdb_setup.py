@@ -104,6 +104,25 @@ def influxdb_add(dbs):
 #   return True
 
 
+def _init_influxdb_internal_db(influxDBInfo, roUser, wrUser):
+  client = InfluxDBClient(**influxDBInfo)
+
+  params = {
+    "db": "_internal",
+    "ro_user": roUser['username'],
+    "rw_user": wrUser['username']
+  }
+
+  querySQL = '''
+    GRANT READ ON {db} TO {ro_user};
+    GRANT READ ON {db} TO {rw_user};
+  '''.format(**params)
+
+  client.query(querySQL)
+
+  return True
+
+
 def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, roUser, wrUser):
   client = InfluxDBClient(**influxDBInfo)
   rps = SERVICECONFIG['influxDB']['replication']
@@ -160,6 +179,9 @@ def _init_influxdb(instanceUUID, instance):
   # if userDB:
   #   dbNames.append(userDB)
 
+  # 初始化 _internal 数据库的读写用户权限都是只读
+  _init_influxdb_internal_db(influxDBInfo, instance['ro'], instance['wr'])
+
   dbUUIDs = {}
 
   for dbName in dbNames:
@@ -191,17 +213,17 @@ def _init_system_workspace(sysDBUUID):
     token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
     wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
     bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
-    versionInfo     = '{"rp": "rp5", "name": "无限版", "version": "unlimited", "ruleCount": -1, "maxTsCount": -1, "ruleActivePeriod": -1, "alarmHistoryPeriod": "rp2"}'
+    durationSet     = '{"rp": "90d", "logging": "14d", "tracing": "14d", "keyevent": "14d"}'
 
     params  = (
                   token,
                   sysDBUUID,
                   wsDashboardUUID,
-                  versionInfo,
+                  durationSet,
                   bindInfo
               )
     wsSQL   = '''
-              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `versionInfo`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
+              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `durationSet`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
               VALUES ('wksp_system', '系统工作空间', %s, '{}', -1, %s, %s, '', NULL, %s, %s, 'rp2', UNIX_TIMESTAMP());
             '''
     db.execute(wsSQL, dbName = dbInfo['database'], params = params)

@@ -19,6 +19,7 @@ global:
     stats_on: 256
     listen: ":9527"
     workers: 8
+    sys_db_uuid: internal_system
 
 influxdb:
     read_timeout: 30
