@@ -81,7 +81,7 @@ def certificate_create():
   certificate = dict(
               privateKey = tlsSetting['certificatePrivateKey'],
               content = tlsSetting['certificateContent'],
-              enabled = tlsSetting['tlsEnabled']
+              disabled = tlsSetting['tlsDisabled']
           )
 
   if not certificate["privateKey"] or not certificate["content"]:

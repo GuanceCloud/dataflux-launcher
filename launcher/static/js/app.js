@@ -264,7 +264,7 @@ var setup = (function () {
     data.tls = {
       "certificatePrivateKey": $('#certificatePrivateKey').val(),
       "certificateContent": $('#certificateContent').val(),
-      "tlsEnabled": $('#ckbTlsEnabled').is(":checked")
+      "tlsDisabled": ! $('#ckbTlsEnabled').is(":checked")
     }
 
     data.nodeInternalIP = $('#iptNodeIps').val();

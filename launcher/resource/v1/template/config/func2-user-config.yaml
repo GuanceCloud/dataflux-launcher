@@ -2,7 +2,7 @@ SECRET: {{ other.func.secret }}
 LOG_LEVEL: WARNING
 LOG_FILE_PATH: /tmp/dataflux-func.log
 LOG_FILE_FORMAT: text
-WEB_BASE_URL: {{ "https" if other.tls.tlsEnabled else "http"}}://{{ domain.subDomain.function }}.{{ domain.domain }}
+WEB_BASE_URL: {{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.function }}.{{ domain.domain }}
 WEB_BIND: 0.0.0.0
 WEB_PORT: 8088
 

@@ -194,7 +194,7 @@
             <div class="form-group">
               <label for="iptUserName" class="col-sm-2 control-label">证书启用:</label>
               <div class="col-sm-5">
-                {% if pageData.other.tls.tlsEnabled %}
+                {% if not pageData.other.tls.tlsDisabled %}
                 <p class="form-control-static monospaced text-success">已启用</p>
                 {% else %}
                 <p class="form-control-static monospaced text-danger">未启用</p>

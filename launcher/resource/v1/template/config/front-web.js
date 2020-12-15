@@ -1,13 +1,13 @@
 window.DEPLOYCONFIG = {
     cookieDomain: '.{{ domain.domain }}',
-    apiUrl: '{{ "https" if other.tls.tlsEnabled else "http"}}://{{ domain.subDomain.consoleApi }}.{{ domain.domain }}',
-    wsUrl: '{{ "wss" if other.tls.tlsEnabled else "ws"}}://{{ domain.subDomain.websocket }}.{{ domain.domain }}',
+    apiUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.consoleApi }}.{{ domain.domain }}',
+    wsUrl: '{{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.websocket }}.{{ domain.domain }}',
     innerAppDisabled: 1,
-    innerAppLogin: '{{ "https" if other.tls.tlsEnabled else "http"}}://auth.{{ domain.domain }}/redirectpage/login',
-    innerAppRegister: '{{ "https" if other.tls.tlsEnabled else "http"}}://auth.{{ domain.domain }}/redirectpage/register',
-    innerAppProfile: '{{ "https" if other.tls.tlsEnabled else "http"}}://auth.{{ domain.domain }}/redirectpage/profile',
-    innerAppCreateworkspace: '{{ "https" if other.tls.tlsEnabled else "http"}}://auth.{{ domain.domain }}/redirectpage/createworkspace',
-    staticFileUrl: '{{ "https" if other.tls.tlsEnabled else "http"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
+    innerAppLogin: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/login',
+    innerAppRegister: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/register',
+    innerAppProfile: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/profile',
+    innerAppCreateworkspace: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/createworkspace',
+    staticFileUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
     staticDatakit: 'https://static.dataflux.cn',
     cloudDatawayUrl: ''
 };

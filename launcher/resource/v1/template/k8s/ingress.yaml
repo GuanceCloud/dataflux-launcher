@@ -13,7 +13,7 @@ spec:
           serviceName: front-backend
           servicePort: 5000
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
@@ -39,7 +39,7 @@ spec:
           serviceName: management-backend
           servicePort: 5000
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
@@ -64,7 +64,7 @@ spec:
       - backend:
           serviceName: static-resource-nginx
           servicePort: 80
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
@@ -90,7 +90,7 @@ spec:
           serviceName: front-webclient
           servicePort: 80
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
@@ -116,7 +116,7 @@ spec:
           serviceName: management-webclient
           servicePort: 80
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
@@ -142,7 +142,7 @@ spec:
           serviceName: func
           servicePort: 8088
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
@@ -168,7 +168,7 @@ spec:
           serviceName: server
           servicePort: 8088
         path: /
-  {% if config.other.tls.tlsEnabled %}
+  {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
     - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
