@@ -33,10 +33,10 @@ upgradeInfo:
 
   - seq: 3
     config: |-
-      升级前，在右上角的配置 -> 其他 -> tls 节点下面增加：tlsDisabled: true，启用 TLS 的配置项，默认为启用。
+      升级前，在右上角的配置 -> 其他 -> tls 节点下面增加：tlsDisabled: false，启用 TLS 的配置项，默认为启用，可以不添加此配置项。
       ```
         tls:
-          tlsDisabled: true
+          tlsDisabled: false
       ```
 
       升级完成后，进入集群 launcher 容器，依次执行以下两条终端命令：
@@ -55,25 +55,18 @@ upgradeInfo:
 
   - seq: 4
     config: |-
-      #### 此版本包含 Func 平台的大升级，需要迁移数据库，所有必须先备份好数据所有数据库
-      #### 升级到此版本，必须先升级到此版本的前一个版本： **1.9.48**，不可从更早的版本升级到此版本。
-      #### 升级本版本之前的必须步骤：
-      1. 升级到此版本，必须先升级到此版本的前一个版本： **1.9.48**，不可从更早的版本升级到此版本
-      2. 备份所有数据库，因为此版本涉及到数据迁移，数据影响较大
-      3. 进入 Launcher 容器，执行以下命令：
-        
-        1. 进入 launcher/resource/v1/ddl/ 目录：
+      * 此版本包含 Func 平台的重大升级，需要迁移数据库，所有必须先备份好数据所有数据库
+      * 升级到此版本前，必须先升级到此版本的前一个版本： **1.9.48**，不可从更早的版本升级到此版本
+      * 升级前，先进行 Func 平台数据库的手工数据迁移，进入 Launcher 容器，执行以下命令：
 
-          ```
-          cd /config/cloudcare-forethought-setup/launcher/resource/v1/ddl/
-          ```
-        2. 执行以下命令，迁移 Func 平台的数据库，注意替换命令中的参数，参数为 MySQL 数据库信息，使用 MySQL 的管理员账号密码，Database 为 Func 平台的数据库名称，一般是 df_func：
-          
-          ```
-          python migrate_1_x.py \
-              --host <Host> \
-              --port <Port> \
-              --user <User> \
-              --password <Password> \
-              --database <Database>
-            ```
+          1. 进入 launcher/resource/v1/ddl/ 目录：
+
+              ```
+              cd /config/cloudcare-forethought-setup/launcher/resource/v1/ddl/
+              ```
+
+          2. 执行以下命令，迁移 Func 平台的数据库，注意替换命令中的参数，参数为 MySQL 数据库信息，使用 MySQL 的管理员账号密码，Database 为 Func 平台的数据库名称，一般是 df_func：
+            
+              ```
+              python migrate_1_x.py --host <Host> --port <Port> --user <User> --password <Password> --database <Database>
+              ```
