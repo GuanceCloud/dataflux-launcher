@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 25/11/2020 19:14:39
+ Date: 10/12/2020 16:07:34
 */
 
 SET NAMES utf8mb4;
@@ -29,6 +29,7 @@ CREATE TABLE `biz_chart` (
   `chartGroupUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '图表分组UUID',
   `dashboardUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '所属视图UUID',
   `type` varchar(48) NOT NULL COMMENT '图表线条类型',
+  `queries` json DEFAULT NULL COMMENT '查询信息',
   `extend` json NOT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -123,6 +124,7 @@ CREATE TABLE `biz_integration` (
   `name` varchar(128) DEFAULT '' COMMENT '名称',
   `fileName` varchar(128) DEFAULT '' COMMENT '文件名 用于排序',
   `metaHash` varchar(256) DEFAULT NULL COMMENT 'meta hash值',
+  `isHidden` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏，默认隐藏',
   `meta` json DEFAULT NULL COMMENT '数据集meta信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -266,6 +268,26 @@ CREATE TABLE `biz_rule` (
   `tickInfo` json DEFAULT NULL COMMENT '提交后Kapa 返回的Tasks数据',
   `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_rum_cfg
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_rum_cfg`;
+CREATE TABLE `biz_rum_cfg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rum- 前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `jsonContent` json NOT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',

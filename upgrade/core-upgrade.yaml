@@ -560,3 +560,74 @@ upgrade:
       -- 对象分类配置中的 tags/fields 需要清空
       update biz_object_class_cfg set tags='[]', fields='[]', extend='{}';
 
+  # 12.10 迭代
+  - seq: 20
+
+    database: |-
+      -- 创建 RUM配置表
+      CREATE TABLE `biz_rum_cfg` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rum- 前缀',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `jsonContent` json NOT NULL COMMENT '额外拓展字段',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 工作空间新增cliToken 字段
+      ALTER TABLE `main_workspace` ADD COLUMN `cliToken` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '命令行Token验证' AFTER `token`;
+      -- 集成表新增字段用来控制集成的展示与隐藏
+      ALTER TABLE `biz_integration` ADD COLUMN `isHidden` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否隐藏，默认隐藏' AFTER `metaHash`;
+      -- 图表新增queries 字段
+      ALTER TABLE `biz_chart` ADD COLUMN `queries` json NULL COMMENT '查询信息' AFTER `type`;
+
+      -- 清理部分已删除的工作空间数据
+      UPDATE biz_dashboard set `status`=3 WHERE workspaceUUID in (select uuid from main_workspace WHERE `status`=3) and `status` != 3;
+      UPDATE biz_chart_group set `status`=3 WHERE workspaceUUID in (select uuid from main_workspace WHERE `status`=3) and `status` != 3;
+      UPDATE biz_chart set `status`=3 WHERE workspaceUUID in (select uuid from main_workspace WHERE `status`=3) and `status` != 3;
+      UPDATE biz_query set `status`=3 WHERE workspaceUUID in (select uuid from main_workspace WHERE `status`=3) and `status` != 3;
+      UPDATE biz_chart set `status`=3 WHERE chartGroupUUID in (select uuid from biz_chart_group WHERE `status`=3) and `status` != 3;
+      UPDATE biz_query set `status`=3 WHERE chartUUID in (select uuid from biz_chart WHERE `status`=3) and `status` != 3;
+
+      -- 更新 main_config 标中 账单计费价格信息
+      UPDATE `main_config` SET `value` = '{\"equation\": {\"ts\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"job\": \"math.ceil((count - discountQuantity)/priceQuantity)*price if count > discountQuantity else 0\", \"rum\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"tracing\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"logging_keyevent\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\"}, \"priceSet\": {\"ts\": {\"14d\": {\"price\": 1, \"priceQuantity\": 100}, \"30d\": {\"price\": 1.2, \"priceQuantity\": 100}, \"180d\": {\"price\": 1.8, \"priceQuantity\": 100}}, \"job\": {\"price\": 0.04, \"priceQuantity\": 1000}, \"rum\": {\"7d\": {\"price\": 0.3, \"priceQuantity\": 1000000}, \"14d\": {\"price\": 0.5, \"priceQuantity\": 1000000}, \"30d\": {\"price\": 1, \"priceQuantity\": 1000000}}, \"tracing\": {\"7d\": {\"price\": 0.3, \"priceQuantity\": 1000000}, \"14d\": {\"price\": 0.5, \"priceQuantity\": 1000000}, \"30d\": {\"price\": 1, \"priceQuantity\": 1000000}}, \"logging_keyevent\": {\"14d\": {\"price\": 0.35, \"priceQuantity\": 1000000}, \"30d\": {\"price\": 0.65, \"priceQuantity\": 1000000}, \"180d\": {\"price\": 1.2, \"priceQuantity\": 1000000}}}, \"discountQuantitySet\": {\"ts\": 0, \"job\": 1000, \"rum\": 0, \"datakit\": 0, \"tracing\": 0, \"logging_keyevent\": 0}}' WHERE `keyCode` = 'MeteringUnitPriceConfig';
+
+      -- 初始化各个工作空间的 rum rp 数据
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.rum", "7d") where `status` = 0;
+
+
+  # 12.22 迭代
+  - seq: 21
+
+    database: |-
+      -- 创建 datakit online 信息表
+      CREATE TABLE `main_datakit_online` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dkol-',
+        `name` varchar(128) DEFAULT '' COMMENT 'datakit name',
+        `hostName` varchar(128) DEFAULT NULL COMMENT 'host name',
+        `ip` varchar(24) DEFAULT NULL COMMENT 'ip 地址',
+        `token` varchar(64) NOT NULL COMMENT '采集数据token',
+        `dkUUID` varchar(48) NOT NULL COMMENT 'datakit uuid',
+        `version` varchar(48) DEFAULT '' COMMENT 'datakit version',
+        `os` varchar(48) DEFAULT '' COMMENT 'os',
+        `arch` varchar(48) DEFAULT '' COMMENT 'arch',
+        `inputInfo` json DEFAULT NULL COMMENT 'input 相关信息',
+        `lastOnline` int(11) DEFAULT NULL COMMENT '最后一次online时间',
+        `lastHeartbeat` int(11) DEFAULT NULL COMMENT '最后一次心跳时间',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        KEY `k_dkuuid` (`dkUUID`) USING BTREE
+      ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;

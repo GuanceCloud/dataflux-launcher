@@ -6,11 +6,11 @@ apps:
     nsq: basis/nsq:v1.2.0
     nginx: basis/nginx:1.13.7
     kapacitor: basis/kapacitor:1.5.4
-    internal-dataway: dataway/dataway:v1.0.1-505-gb4a6d6d
-    core: cloudcare-forethought/cloudcare-forethought-backend:pre_20201126_10
-    kodo: kodo/kodo:pre_20201208_01
-    front-webclient: cloudcare-front/cloudcare-forethought-webclient:pre_20201126_05
-    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:pre_20201126_02
+    internal-dataway: dataway/dataway:v1.0.1-518-gd0e23fb
+    core: cloudcare-forethought/cloudcare-forethought-backend:pre_20201224_01
+    kodo: kodo/kodo:pre_20201224_01
+    front-webclient: cloudcare-front/cloudcare-forethought-webclient:pre_20201221_01
+    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:pre_20201215_01
     message-desk: middlewares/message-desk:pre_20200717_02
     message-desk-worker: middlewares/message-desk-worker:pre_20200717_01
     dataflux-func: middlewares/dataflux-func:pre_20201126_01

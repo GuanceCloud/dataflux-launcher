@@ -428,6 +428,8 @@ def database_update(project):
   dbName       = appMySQLInfo.get('database')
 
   versionMdl.sqldump(mysql, dbName)
+  print(mysql)
+  print(dbName)
   errorSeq = versionMdl.excute_update_sql(mysql, dbName, sqls)
 
   if errorSeq == -1:
