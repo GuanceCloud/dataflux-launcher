@@ -50,7 +50,17 @@
                 <div class="col-sm-12 service-status">
 
                   {% if pageData.db.mysql %}
-                    {% for item in pageData.db.mysql %}
+                    <span>
+                      {% if pageData.db.mysql.server.status %}
+                      <i class="icon-success"></i>
+                      {% else %}
+                      <i class="icon-fail"></i>
+                      {% endif %}
+                    </span>
+                    <span>{{ pageData.db.mysql.server.host }}:{{ pageData.db.mysql.server.port }}</span>
+                    <br />
+                    <br />
+                    {% for item in pageData.db.mysql.dbs %}
                       <span>
                         {% if item.status %}
                         <i class="icon-success"></i>

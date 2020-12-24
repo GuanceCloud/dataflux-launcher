@@ -166,15 +166,27 @@ def __mysql_ping():
   }
 
   dbs = ['core', 'func', 'messageDesk']
+  result = {
+          "dbs": [], 
+          "server": {
+              "host": params['host'],
+              "port": params['port'],
+              "status": False
+            }
+          }
 
-  result = []
+  params['user'] = mysqlSettings['base']['user']
+  params['password'] = mysqlSettings['base']['password']
+
+  with dbHelper(params) as db:
+      result['server']['status'] = not not db.connection
 
   for dbName in dbs:
     params['user'] = mysqlSettings[dbName]['user']
     params['password'] = mysqlSettings[dbName]['password']
 
     with dbHelper(params) as db:
-      result.append({
+      result['dbs'].append({
           "key": dbName,
           "status": not not db.connection
         })

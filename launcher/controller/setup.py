@@ -63,6 +63,16 @@ def config_template():
     for configmap in ns['configmaps']:
       content = jinjia2_render('template/config/{}'.format(configmap['template']), settingsMdl.toJson)
 
+      hasRef = False
+      for service in configmap['services']:
+        hasRef = tmpServiceDict[service]['replicas'] > 0
+
+        if hasRef:
+          break
+
+      if not hasRef:
+        continue
+
       cm = {
         'key': configmap['key'],
         'content': content,
@@ -76,38 +86,41 @@ def config_template():
 
 
 def certificate_create():
-  tlsSetting = settingsMdl.other.get('tls')
-
-  certificate = dict(
-              privateKey = tlsSetting['certificatePrivateKey'],
-              content = tlsSetting['certificateContent'],
-              disabled = tlsSetting['tlsDisabled']
-          )
-
-  if not certificate["privateKey"] or not certificate["content"]:
-    return True
-
-  domain = settingsMdl.domain.get('domain')
-
-  tmpPath = SERVICECONFIG['tmpDir']
-  certFile = '{}/tls.cert'.format(tmpPath)
-  certKeyFile = '{}/tls.key'.format(tmpPath)
-
-  if not os.path.exists(tmpPath):
-    os.mkdir(tmpPath)
-
-  with open(os.path.abspath(certFile), 'w') as f:
-    f.write(certificate['content'])
-
-  with open(os.path.abspath(certKeyFile), 'w') as f:
-    f.write(certificate['privateKey'])
-
   k8sMdl.apply_namespace()
+  k8sMdl.certificate_create_all_namespace()
 
-  namespaces = SERVICECONFIG['namespaces']
-  for ns in namespaces:
-    cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+  # tlsSetting = settingsMdl.other.get('tls')
+  #
+  # certificate = dict(
+  #             privateKey = tlsSetting['certificatePrivateKey'],
+  #             content = tlsSetting['certificateContent'],
+  #             disabled = tlsSetting['tlsDisabled']
+  #         )
+  #
+  # if not certificate["privateKey"] or not certificate["content"]:
+  #   return True
+  #
+  # domain = settingsMdl.domain.get('domain')
+  #
+  # tmpPath = SERVICECONFIG['tmpDir']
+  # certFile = '{}/tls.cert'.format(tmpPath)
+  # certKeyFile = '{}/tls.key'.format(tmpPath)
+  #
+  # if not os.path.exists(tmpPath):
+  #   os.mkdir(tmpPath)
+  #
+  # with open(os.path.abspath(certFile), 'w') as f:
+  #   f.write(certificate['content'])
+  #
+  # with open(os.path.abspath(certKeyFile), 'w') as f:
+  #   f.write(certificate['privateKey'])
+  #
+  # k8sMdl.apply_namespace()
+  #
+  # namespaces = SERVICECONFIG['namespaces']
+  # for ns in namespaces:
+  #   cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
+  #   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   return True
 

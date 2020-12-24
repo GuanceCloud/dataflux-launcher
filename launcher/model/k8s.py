@@ -284,3 +284,78 @@ def registry_secret_create(namespace, server, username, password):
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   return True
+
+
+# 创建 TLS 证书
+def certificate_create(namespace):
+  tlsSetting = settingsMdl.other.get('tls')
+
+  certificate = dict(
+              privateKey = tlsSetting['certificatePrivateKey'],
+              content = tlsSetting['certificateContent'],
+              disabled = tlsSetting['tlsDisabled']
+          )
+
+  if not certificate["privateKey"] or not certificate["content"]:
+    return True
+
+  domain = settingsMdl.domain.get('domain')
+  certificate = settingsMdl.other.get('tls')
+
+  tmpPath = SERVICECONFIG['tmpDir']
+  certFile = '{}/tls.cert'.format(tmpPath)
+  certKeyFile = '{}/tls.key'.format(tmpPath)
+
+  if not os.path.exists(tmpPath):
+    os.mkdir(tmpPath)
+
+  with open(os.path.abspath(certFile), 'w') as f:
+    f.write(certificate['content'])
+
+  with open(os.path.abspath(certKeyFile), 'w') as f:
+    f.write(certificate['privateKey'])
+
+  cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, namespace)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
+
+
+# 创建 TLS 证书
+def certificate_create_all_namespace():
+  tlsSetting = settingsMdl.other.get('tls')
+
+  certificate = dict(
+              privateKey = tlsSetting['certificatePrivateKey'],
+              content = tlsSetting['certificateContent'],
+              disabled = tlsSetting['tlsDisabled']
+          )
+
+  if not certificate["privateKey"] or not certificate["content"]:
+    return True
+
+  domain = settingsMdl.domain.get('domain')
+
+  tmpPath = SERVICECONFIG['tmpDir']
+  certFile = '{}/tls.cert'.format(tmpPath)
+  certKeyFile = '{}/tls.key'.format(tmpPath)
+
+  if not os.path.exists(tmpPath):
+    os.mkdir(tmpPath)
+
+  with open(os.path.abspath(certFile), 'w') as f:
+    f.write(certificate['content'])
+
+  with open(os.path.abspath(certKeyFile), 'w') as f:
+    f.write(certificate['privateKey'])
+
+  # apply_namespace()
+
+  namespaces = SERVICECONFIG['namespaces']
+  for ns in namespaces:
+    cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  return True
+
