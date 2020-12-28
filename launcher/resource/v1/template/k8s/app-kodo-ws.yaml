@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-ws
+  name: kodo-ws
+  namespace: forethought-kodo
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-ws
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-ws
+    spec:
+      containers:
+      - args:
+        - /kodo/kodows
+        - -cfg
+        - /kodo/config/config.yaml
+        image: {{ config.fullImagePath }} 
+        imagePullPolicy: IfNotPresent
+        name: kodo-ws
+        ports:
+        - containerPort: 9537
+          name: 9537tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /kodo/config/config.yaml
+          name: kodo-ws
+          subPath: config.yaml
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: kodo-ws
+          optional: false
+        name: kodo-ws
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kodo-ws
+  namespace: forethought-kodo
+spec:
+  ports:
+  - name: 9537tcp02
+    port: 9537
+    protocol: TCP
+    targetPort: 9537
+  selector:
+    app: deployment-forethought-kodo-kodo-ws
+  type: ClusterIP

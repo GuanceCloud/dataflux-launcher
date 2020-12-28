@@ -188,6 +188,11 @@ services:
       image: nginx
       replicas: 3
 
+    - key: kodo-ws
+      name: Kodo Websocket
+      image: kodo
+      replicas: 1
+
     configmaps:
     - key: kodo
       mapname: kodo
@@ -216,6 +221,13 @@ services:
       services:
       - kodo-nginx
       template: kodo-nginx.conf
+
+    - key: kodoWS
+      mapname: kodo-ws
+      mapkey: config.yaml
+      services:
+      - kodo-ws
+      template: kodo-ws.yaml
 
     pvcs:
     - name: kodo-logs
@@ -598,6 +610,10 @@ updates:
 
       - key: kodoX
         mapName: kodo-x
+        mapKey: config.yaml
+
+      - key: kodoWS
+        mapName: kodo-ws
         mapKey: config.yaml
 
   # - namespace: func

@@ -1,0 +1,27 @@
+database:
+    db_dialect: mysql
+    connection: {{mysql.core.user}}:{{mysql.core.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.core.database}}
+
+redis:
+    host: {{redis.host}}:{{redis.port}}
+    password: {{redis.password}}
+    db:  0
+
+log:
+    log_file: /logdata/log
+    level: info
+    json_format: false
+    disable_long_file_name: false
+    gin_log_file: /logdata/gin.log
+
+global:
+    enable_inner_api: true
+    stats_on: 256
+    listen: ":9527"
+    workers: 16
+    dataway: "http://dataway.utils:9528"
+
+ws_server:
+  path : "/v1/ws/datakit"
+  bind : "0.0.0.0:9537"
+  time_out: "30s"

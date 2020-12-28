@@ -211,20 +211,22 @@ def _init_system_workspace(sysDBUUID):
 
   with dbHelper(mysqlInfo) as db:
     token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
+    cliToken        = "wkcli_" + shortuuid.ShortUUID().random(length = 24)
     wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
     bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
     durationSet     = '{"rp": "90d", "logging": "14d", "tracing": "14d", "keyevent": "14d"}'
 
     params  = (
                   token,
+                  cliToken,
                   sysDBUUID,
                   wsDashboardUUID,
                   durationSet,
                   bindInfo
               )
     wsSQL   = '''
-              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `durationSet`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
-              VALUES ('wksp_system', '系统工作空间', %s, '{}', -1, %s, %s, '', NULL, %s, %s, 'rp2', UNIX_TIMESTAMP());
+              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `cliToken`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `durationSet`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
+              VALUES ('wksp_system', '系统工作空间', %s, %s, '{}', -1, %s, %s, '', NULL, %s, %s, 'rp2', UNIX_TIMESTAMP());
             '''
     db.execute(wsSQL, dbName = dbInfo['database'], params = params)
 
