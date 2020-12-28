@@ -9,7 +9,7 @@ from launcher import settingsMdl, SERVICECONFIG
 def database_create_db():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('func')
+  dbInfo = mysqlSetting.get('dataflux-func')
 
   SQL = '''
         SET SQL_MODE = 'NO_AUTO_CREATE_USER';
@@ -34,7 +34,7 @@ def database_ddl():
     "password": shortuuid.ShortUUID().random(length=12)
   }
 
-  settingsMdl.mysql = {'func': dbInfo}
+  settingsMdl.mysql = {'dataflux-func': dbInfo}
 
   database_create_db()
 
@@ -66,7 +66,7 @@ def database_account_create():
 
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('func')
+  dbInfo = mysqlSetting.get('dataflux-func')
 
   otherSetting = settingsMdl.other
 
