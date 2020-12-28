@@ -291,9 +291,9 @@ def certificate_create(namespace):
   tlsSetting = settingsMdl.other.get('tls')
 
   certificate = dict(
-              privateKey = tlsSetting['certificatePrivateKey'],
-              content = tlsSetting['certificateContent'],
-              disabled = tlsSetting['tlsDisabled']
+              privateKey = tlsSetting.get('certificatePrivateKey', ''),
+              content = tlsSetting.get('certificateContent', ''),
+              disabled = tlsSetting.get('tlsDisabled', False)
           )
 
   if not certificate["privateKey"] or not certificate["content"]:
@@ -318,7 +318,6 @@ def certificate_create(namespace):
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   return True
-
 
 
 # 创建 TLS 证书

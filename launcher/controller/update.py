@@ -138,7 +138,6 @@ def deploy_check():
   for ns in deployStatus:
     namespaceName = ns['namespace']
     ns['isNew'] = (namespaceName not in k8sNamespaces)
-    print(ns['namespace'], ' : ', ns['isNew'])
 
     for deploy in ns['services']:
       newImagePath = '{}/{}/{}'.format(apps.get('registry', ''), imageDir, defaultImage.get(deploy['imageKey'], ''))
@@ -189,7 +188,6 @@ def deploy_update():
   # 1、创建新的 namespace
   k8sMdl.apply_namespace()
 
-  print(">>>>>>: ", deployStatus)
   # 2、新的命名空间:
   #    创建 registry key
   #    创建证书
@@ -430,8 +428,6 @@ def database_update(project):
   dbName       = appMySQLInfo.get('database')
 
   versionMdl.sqldump(mysql, dbName)
-  print(mysql)
-  print(dbName)
   errorSeq = versionMdl.excute_update_sql(mysql, dbName, sqls)
 
   if errorSeq == -1:

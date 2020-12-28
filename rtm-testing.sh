@@ -13,8 +13,8 @@ function copy_upgrade(){
   if [ $project = "core" ]; then
     cp upgrade/upgrade.yaml ${workDir}/upgrade/core-upgrade.yaml
     cp db/core_latest.sql ${workDir}/launcher/resource/v1/ddl/core.sql
-  elif [ $project = "trigger" ]; then
-    cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
+  # elif [ $project = "trigger" ]; then
+  #   cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
   elif [ $project = "kodo" ]; then
     cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
   elif [ $project = "dataflux-func" ]; then
@@ -97,7 +97,7 @@ rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.gi
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/dataflux-func.git"  "dataflux-func" "middlewares/dataflux-func"
 
-rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger" "cloudcare-forethought/cloudcare-forethought-trigger"
+# rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger" "cloudcare-forethought/cloudcare-forethought-trigger"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server" "cloudcare-forethought/utils-server"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse" "ft-data-warehouse/ft-data-warehouse"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher" "cloudcare-forethought/cloudcare-forethought-setup"
