@@ -114,8 +114,48 @@ update:
             # 【新增】子项，系统工作空间 UUID，默认是 wksp_system
             sys_ws_uuid: "wksp_system"
 
-        kodox: |-
+        kodoX: |-
           #【更新】配置项
           func:
             host: "http://server-inner.func2:8088"
             enable: true
+
+        kodoNginx: |-
+          # 新增了一个 upstream，一个 location，其他无变化
+
+          upstream kodo {
+            server kodo:9527;
+            ip_hash;
+          }
+
+          # 新增的  upstream
+          upstream kodo_ws {
+             server kodo-ws:9537;
+             ip_hash;
+          }
+
+          server {
+            listen 80;
+            server_name # 注意替换成目标 server name;
+           
+            location / {
+              proxy_pass http://kodo;
+              proxy_set_header Host $http_host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+            }
+
+            # 新增的 location
+            location /v1/ws/datakit {
+                proxy_pass http://kodo_ws;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Host $host;
+            }
+          }
