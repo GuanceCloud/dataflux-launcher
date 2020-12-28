@@ -9,5 +9,9 @@ window.DEPLOYCONFIG = {
     innerAppCreateworkspace: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/createworkspace',
     staticFileUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
     staticDatakit: 'https://static.dataflux.cn',
-    cloudDatawayUrl: ''
+    cloudDatawayUrl: '',
+    rumEnable: 0,
+    rumDatakitUrl: "",
+    rumApplicationId: "",
+    rumJsUrl: "https://static.dataflux.cn/js-sdk/dataflux-rum.js"
 };

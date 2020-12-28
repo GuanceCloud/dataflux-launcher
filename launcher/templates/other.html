@@ -101,9 +101,9 @@
         <h4>
           <label class="checkbox-inline" style="font-weight: bold;">
             {% if pageData.other.tls.tlsDisabled %}
-            <input type="checkbox" id="ckbTlsEnabled" onchange="setup.tls_status_change(this)" checked="checked"> 启用 TLS 证书（只支持 PEM 格式的证书）
-            {% else %}
             <input type="checkbox" id="ckbTlsEnabled" onchange="setup.tls_status_change(this)" > 启用 TLS 证书（只支持 PEM 格式的证书）
+            {% else %}
+            <input type="checkbox" id="ckbTlsEnabled" onchange="setup.tls_status_change(this)" checked="checked"> 启用 TLS 证书（只支持 PEM 格式的证书）
             {% endif %}
           </label>
         </h4>
