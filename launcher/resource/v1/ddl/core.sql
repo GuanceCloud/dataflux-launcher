@@ -879,6 +879,34 @@ CREATE TABLE `main_workspace_license` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for main_datakit_online
+-- ----------------------------
+DROP TABLE IF EXISTS `main_datakit_online`;
+CREATE TABLE `main_datakit_online` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dkol-',
+  `name` varchar(128) DEFAULT '' COMMENT 'datakit name',
+  `hostName` varchar(128) DEFAULT NULL COMMENT 'host name',
+  `ip` varchar(24) DEFAULT NULL COMMENT 'ip 地址',
+  `token` varchar(64) NOT NULL COMMENT '采集数据token',
+  `dkUUID` varchar(48) NOT NULL COMMENT 'datakit uuid',
+  `version` varchar(48) DEFAULT '' COMMENT 'datakit version',
+  `os` varchar(48) DEFAULT '' COMMENT 'os',
+  `arch` varchar(48) DEFAULT '' COMMENT 'arch',
+  `inputInfo` json DEFAULT NULL COMMENT 'input 相关信息',
+  `lastOnline` int(11) DEFAULT NULL COMMENT '最后一次online时间',
+  `lastHeartbeat` int(11) DEFAULT NULL COMMENT '最后一次心跳时间',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `k_dkuuid` (`dkUUID`) USING BTREE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for sys_version
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_version`;
