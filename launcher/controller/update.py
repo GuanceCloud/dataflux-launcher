@@ -138,6 +138,7 @@ def deploy_check():
   for ns in deployStatus:
     namespaceName = ns['namespace']
     ns['isNew'] = (namespaceName not in k8sNamespaces)
+    print(ns['namespace'], ' : ', ns['isNew'])
 
     for deploy in ns['services']:
       newImagePath = '{}/{}/{}'.format(apps.get('registry', ''), imageDir, defaultImage.get(deploy['imageKey'], ''))
@@ -188,14 +189,15 @@ def deploy_update():
   # 1、创建新的 namespace
   k8sMdl.apply_namespace()
 
+  print(">>>>>>: ", deployStatus)
   # 2、新的命名空间:
   #    创建 registry key
   #    创建证书
   for ns in deployStatus:
-    isNew = ns['isNew']
-    if isNew:
-      k8sMdl.registry_secret_create(ns['namespace'], **settingsMdl.registry)
-      k8sMdl.certificate_create(ns['namespace'])
+    # isNew = ns['isNew']
+    # if isNew:
+    k8sMdl.registry_secret_create(ns['namespace'], **settingsMdl.registry)
+    k8sMdl.certificate_create(ns['namespace'])
 
   # 3、创建新的 PVC
   storageClassName  = settingsMdl.other.get('storageClassName', '')

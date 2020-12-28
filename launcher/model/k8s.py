@@ -300,7 +300,6 @@ def certificate_create(namespace):
     return True
 
   domain = settingsMdl.domain.get('domain')
-  certificate = settingsMdl.other.get('tls')
 
   tmpPath = SERVICECONFIG['tmpDir']
   certFile = '{}/tls.cert'.format(tmpPath)

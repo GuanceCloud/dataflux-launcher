@@ -38,9 +38,6 @@ spec:
         name: kodo-nginx
         ports:
         - containerPort: 80
-          name: 80tcp4432
-          protocol: TCP
-        - containerPort: 80
           name: 80tcp802
           protocol: TCP
         volumeMounts:

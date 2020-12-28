@@ -51,9 +51,9 @@ function copy_upgrade(){
     cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
   elif [ $project = "kodo" ]; then
     cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
-  elif [ $project = "func" ]; then
-    cp upgrade-info.yaml ${workDir}/upgrade/func-upgrade.yaml
-    cp db/ft_data_processor_latest.sql ${workDir}/launcher/resource/v1/ddl/func.sql
+  elif [ $project = "dataflux-func" ]; then
+    cp upgrade-info.yaml ${workDir}/upgrade/dataflux-func-upgrade.yaml
+    cp db/dataflux_func_latest.sql ${workDir}/launcher/resource/v1/ddl/dataflux-func.sql
   elif [ $project = "message-desk" ]; then
     cp upgrade-info.yaml ${workDir}/upgrade/messageDesk-upgrade.yaml
     cp db/message_desk_latest.sql ${workDir}/launcher/resource/v1/ddl/message-desk.sql
@@ -137,8 +137,10 @@ function start(){
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.git" "message-desk-worker"
 
-  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor.git" "func"
-  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor-worker.git" "func-worker"
+  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor.git" "func"
+  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor-worker.git" "func-worker"
+  
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/dataflux-func.git"  "dataflux-func"
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server"
