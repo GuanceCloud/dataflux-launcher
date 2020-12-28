@@ -165,7 +165,7 @@ def __mysql_ping():
       "port": int(mysqlSettings['base']['port'])
   }
 
-  dbs = ['core', 'func', 'messageDesk']
+  dbs = ['core', 'dataflux-func', 'messageDesk']
   result = {
           "dbs": [], 
           "server": {
@@ -182,14 +182,28 @@ def __mysql_ping():
       result['server']['status'] = not not db.connection
 
   for dbName in dbs:
-    params['user'] = mysqlSettings[dbName]['user']
-    params['password'] = mysqlSettings[dbName]['password']
+    dbSetting = mysqlSettings.get(dbName)
 
-    with dbHelper(params) as db:
+    if not dbSetting:
       result['dbs'].append({
           "key": dbName,
-          "status": not not db.connection
+          "status": False
         })
+    else:
+      params['user'] = dbSetting.get('user')
+      params['password'] = dbSetting.get('password')
+
+      try:
+        with dbHelper(params) as db:
+          result['dbs'].append({
+              "key": dbName,
+              "status": not not db.connection
+            })
+      except:
+        result['dbs'].append({
+            "key": dbName,
+            "status": False
+          })
 
   return result
 
