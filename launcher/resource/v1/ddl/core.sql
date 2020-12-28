@@ -806,6 +806,7 @@ CREATE TABLE `main_workspace` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 wksp_',
   `name` varchar(128) NOT NULL COMMENT '命名',
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
+  `cliToken` varchar(64) NOT NULL DEFAULT '' COMMENT '命令行Token验证',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
   `isOpenWarehouse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启数据仓库',
   `dataRestriction` json DEFAULT NULL COMMENT '数据权限',
