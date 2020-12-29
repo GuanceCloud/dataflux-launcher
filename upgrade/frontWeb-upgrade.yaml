@@ -11,3 +11,13 @@ upgradeInfo:
         // 新增的配置 key
         // dataKit安装包地址
         staticDatakit: 'https://static.dataflux.cn'
+  - seq: 2
+    config:
+      frontWeb: |-
+        // RUM 的相关配置，添加时注意 JSON 格式，添加时去掉注释
+
+        rumEnable: 0,           // 是否开启 RUM，1 表示开启，如果不开启，以下的配置值可以为空
+        rumDatakitUrl: "",      // RUM DataKit 的地址
+        rumApplicationId: "",   // RUM Application Id
+        rumJsUrl: "/dataflux-rum.js"  // rum sdk js 地址，默认在项目目录中
+
