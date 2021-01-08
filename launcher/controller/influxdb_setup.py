@@ -180,7 +180,7 @@ def _init_influxdb(instanceUUID, instance):
   #   dbNames.append(userDB)
 
   # 初始化 _internal 数据库的读写用户权限都是只读
-  _init_influxdb_internal_db(influxDBInfo, instance['ro'], instance['wr'])
+  # _init_influxdb_internal_db(influxDBInfo, instance['ro'], instance['wr'])
 
   dbUUIDs = {}
 
