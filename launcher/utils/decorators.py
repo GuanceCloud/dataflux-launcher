@@ -17,7 +17,7 @@ def upgrade_install(func):
 
     # 已经有了 deploy，不是全新安装，强制跳转到升级部署页面
     if len(deploys['items']) > 0:
-      return redirect(url_for("up_index"))
+      return redirect(url_for("check"))
 
     return func(*args, **kwargs)
   return wrapper

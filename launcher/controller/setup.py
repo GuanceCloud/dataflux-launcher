@@ -61,11 +61,12 @@ def config_template():
     tmpServiceDict = {item['key']: item for item in ns['services']}
 
     for configmap in ns['configmaps']:
-      content = jinjia2_render('template/config/{}'.format(configmap['template']), settingsMdl.toJson)
-
       hasRef = False
       for service in configmap['services']:
-        hasRef = tmpServiceDict[service]['replicas'] > 0
+        enabled = not tmpServiceDict[service].get('deleted', False)
+        replicas = tmpServiceDict[service]['replicas']
+
+        hasRef = enabled and replicas > 0
 
         if hasRef:
           break
@@ -73,6 +74,8 @@ def config_template():
       if not hasRef:
         continue
 
+      print(configmap)
+      content = jinjia2_render('template/config/{}'.format(configmap['template']), settingsMdl.toJson)
       cm = {
         'key': configmap['key'],
         'content': content,

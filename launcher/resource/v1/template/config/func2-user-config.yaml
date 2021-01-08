@@ -8,7 +8,7 @@ WEB_PORT: 8088
 
 MYSQL_HOST: {{mysql.base.host}}
 MYSQL_PORT: {{mysql.base.port}}
-MYSQL_USER: {{mysql.func.user}}
+MYSQL_USER: {{mysql['dataflux-func'].user}}
 MYSQL_PASSWORD: {{mysql['dataflux-func'].password}}
 MYSQL_DATABASE: {{mysql['dataflux-func'].database}}
 
