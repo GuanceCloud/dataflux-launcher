@@ -9,13 +9,13 @@ collect_second: 60
 bind: "0.0.0.0:9528"
 
 # 初始安装是默认工作空间的 ak、sk
-access_key: {{ (other.workspace or {}).ak }}
-secret_key: {{ (other.workspace or {}).sk }}
+access_key: ""
+secret_key: ""
 
 remote_host: http://kodo.forethought-kodo:9527
 
 log: log
-log_level: info
+log_level: warning
 gin_log: gin.log
 
 cache_cfg:

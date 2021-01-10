@@ -357,6 +357,18 @@ def elasticsearch_init():
   return { "status_code": resp.status_code }
 
 
+def workspace_init():
+  headers = {"Content-Type": "application/json"}
+
+  data = {
+    "name": "系统工作空间",
+    "token": settingsMdl.other.workspace.token
+  }
+  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/system/init", data, headers = headers)
+
+  return { "status_code": resp.status_code }
+
+
 def init_setting():
   settingsMdl.other = {
     "core": {

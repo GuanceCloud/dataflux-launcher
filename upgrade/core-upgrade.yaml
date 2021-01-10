@@ -602,7 +602,6 @@ upgrade:
       -- 初始化各个工作空间的 rum rp 数据
       update main_workspace set durationSet=JSON_SET(durationSet, "$.rum", "7d") where `status` = 0;
 
-
   # 12.22 迭代
   - seq: 21
 
@@ -631,3 +630,49 @@ upgrade:
         PRIMARY KEY (`id`),
         KEY `k_dkuuid` (`dkUUID`) USING BTREE
       ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+  # 12.29 迭代
+  - seq: 22
+
+    database: |-
+      -- 视图表新增绑定类型
+      ALTER TABLE `biz_dashboard` ADD COLUMN `ownerType` enum('node','inner','object_class','workspace','account','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' AFTER `type`;
+
+      -- 在视图上添加 image 字段用于存储 base64image
+      ALTER TABLE `biz_dashboard` ADD COLUMN `image` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '视图的缩略图' AFTER `name`;
+
+      -- 在视图变量中添加排序字段 seq
+      ALTER TABLE `biz_variable` ADD COLUMN `seq` int(4) NOT NULL DEFAULT 0 COMMENT '变量排序' AFTER `dashboardUUID`;
+
+      -- 以上更新表
+      -- 以下更新数据
+
+      -- 更新视图拥有者的类型-对象分类配置视图
+      UPDATE biz_dashboard set ownerType='inner' WHERE status=0 and uuid in (select dashboardUUID from biz_object_class_cfg WHERE status=0 and dashboardUUID <>"");
+      -- 更新节点视图的拥有者类型
+      UPDATE biz_dashboard set ownerType='node' WHERE status=0 and uuid in (select dashboardUUID from biz_node WHERE status=0 and dashboardUUID <>"");
+      UPDATE biz_dashboard set ownerType='node' WHERE status=0 and uuid in (select subDashboardUUID from biz_node WHERE status=0 and subDashboardUUID <>"");
+
+
+      -- 更新视图拥有者-工作空间视图
+      UPDATE biz_dashboard set ownerType='workspace' WHERE status=0 and uuid in (select dashboardUUID from main_workspace WHERE status=0 and dashboardUUID <>"");
+
+      -- 更新视图拥有者-账号视图
+      UPDATE biz_dashboard set ownerType='account' WHERE status=0 and uuid in (select dashboardUUID from main_account_workspace WHERE status=0 and dashboardUUID <>"");
+
+      -- 历史数据中的 __tags/.keyword 替换为空
+      -- 更新【图表】中的 __tags/.keyword 涉及 queries/extend
+      update biz_chart set queries=REPLACE(REPLACE(queries, ".keyword", ""), "__tags.", "") where (queries like "%__tags.%" or queries like "%.keyword%");
+      update biz_chart set extend=REPLACE(REPLACE(extend, ".keyword", ""), "__tags.", "") where (extend like "%__tags.%" or extend like "%.keyword%");
+
+      -- 更新【触发规则】中的 __tags/.keyword 涉及 jsonScript/extend 字段
+      update biz_rule set jsonScript=REPLACE(REPLACE(jsonScript, ".keyword", ""), "__tags.", "") where (jsonScript like '%__tags.%' or jsonScript like '%.keyword%');
+      update biz_rule set extend=REPLACE(REPLACE(extend, ".keyword", ""), "__tags.", "") where (extend like '%__tags.%' or extend like '%.keyword%');
+
+      -- 更新【视图】中的 __tags./.keyword  涉及 extend 字段
+      update biz_dashboard set extend=REPLACE(REPLACE(extend, ".keyword", ""), "__tags.", "") where (extend like '%__tags.%' or extend like '%.keyword%');
+
+      -- 更新【集成包】中的 __tags./.keyword  涉及 meta 字段
+      update biz_integration set meta=REPLACE(REPLACE(meta, ".keyword", ""), "__tags.", "") where (meta like '%__tags.%' or meta like '%.keyword%');
+
+

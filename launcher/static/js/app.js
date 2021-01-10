@@ -448,7 +448,15 @@ var setup = (function () {
         });
 
         // 全新安装时，需要初始化 ES 的 RP，升级安装时需要进入 Launcher 容器，手工执行 ES 初始化的接口
-        if(mode == 'install'){
+        if(mode == 'install'){         
+          that.post('workspace/init').then(function(d){
+            if(d.content.status_code != 200){
+              alert("初始化系统工作空间失败，刷新页面重试。");
+            }
+          }).fail(function(d){
+            alert("初始化系统工作空间失败，刷新页面重试。");
+          });
+
           that.post('elasticsearch/init').then(function(d){
             if(d.content.status_code != 200){
               alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");

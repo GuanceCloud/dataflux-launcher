@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 10/12/2020 16:07:34
+ Date: 29/12/2020 15:12:15
 */
 
 SET NAMES utf8mb4;
@@ -73,10 +73,12 @@ CREATE TABLE `biz_dashboard` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dsbd-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL COMMENT '视图名字',
+  `image` mediumtext NOT NULL COMMENT '视图的缩略图',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `chartPos` json NOT NULL COMMENT 'charts 位置信息[{chartUUID:xxx,pos:xxx}]',
   `chartGroupPos` json NOT NULL COMMENT 'chartGroup 位置信息[chartGroupUUIDs]',
   `type` varchar(48) NOT NULL DEFAULT 'CUSTOM' COMMENT '视图类型：仪表板视图',
+  `ownerType` enum('node','inner','object_class','workspace','account','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -381,6 +383,7 @@ CREATE TABLE `biz_variable` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID,varl-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '视图全局唯一 ID',
+  `seq` int(4) NOT NULL DEFAULT '0' COMMENT '变量排序',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '变量显示名',
   `code` varchar(128) NOT NULL DEFAULT '' COMMENT '变量名',
   `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE','TAG','FIELD') NOT NULL COMMENT '类型',
@@ -590,6 +593,34 @@ CREATE TABLE `main_config` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`keyCode`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for main_datakit_online
+-- ----------------------------
+DROP TABLE IF EXISTS `main_datakit_online`;
+CREATE TABLE `main_datakit_online` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dkol-',
+  `name` varchar(128) DEFAULT '' COMMENT 'datakit name',
+  `hostName` varchar(128) DEFAULT NULL COMMENT 'host name',
+  `ip` varchar(24) DEFAULT NULL COMMENT 'ip 地址',
+  `token` varchar(64) NOT NULL COMMENT '采集数据token',
+  `dkUUID` varchar(48) NOT NULL COMMENT 'datakit uuid',
+  `version` varchar(48) DEFAULT '' COMMENT 'datakit version',
+  `os` varchar(48) DEFAULT '' COMMENT 'os',
+  `arch` varchar(48) DEFAULT '' COMMENT 'arch',
+  `inputInfo` json DEFAULT NULL COMMENT 'input 相关信息',
+  `lastOnline` int(11) DEFAULT NULL COMMENT '最后一次online时间',
+  `lastHeartbeat` int(11) DEFAULT NULL COMMENT '最后一次心跳时间',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `k_dkuuid` (`dkUUID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for main_influx_cq
@@ -877,34 +908,6 @@ CREATE TABLE `main_workspace_license` (
   PRIMARY KEY (`id`) COMMENT '主键',
   UNIQUE KEY `uk_instanceId` (`instanceId`) COMMENT 'license id 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Table structure for main_datakit_online
--- ----------------------------
-DROP TABLE IF EXISTS `main_datakit_online`;
-CREATE TABLE `main_datakit_online` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
-  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dkol-',
-  `name` varchar(128) DEFAULT '' COMMENT 'datakit name',
-  `hostName` varchar(128) DEFAULT NULL COMMENT 'host name',
-  `ip` varchar(24) DEFAULT NULL COMMENT 'ip 地址',
-  `token` varchar(64) NOT NULL COMMENT '采集数据token',
-  `dkUUID` varchar(48) NOT NULL COMMENT 'datakit uuid',
-  `version` varchar(48) DEFAULT '' COMMENT 'datakit version',
-  `os` varchar(48) DEFAULT '' COMMENT 'os',
-  `arch` varchar(48) DEFAULT '' COMMENT 'arch',
-  `inputInfo` json DEFAULT NULL COMMENT 'input 相关信息',
-  `lastOnline` int(11) DEFAULT NULL COMMENT '最后一次online时间',
-  `lastHeartbeat` int(11) DEFAULT NULL COMMENT '最后一次心跳时间',
-  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
-  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
-  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
-  `createAt` int(11) NOT NULL DEFAULT '-1',
-  `deleteAt` int(11) NOT NULL DEFAULT '-1',
-  `updateAt` int(11) NOT NULL DEFAULT '-1',
-  PRIMARY KEY (`id`),
-  KEY `k_dkuuid` (`dkUUID`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for sys_version

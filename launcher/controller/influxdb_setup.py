@@ -159,116 +159,116 @@ def _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, roUser, wrUser):
   return True
 
 
-def _init_influxdb(instanceUUID, instance):
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
+# def _init_influxdb(instanceUUID, instance):
+#   mysqlSetting = settingsMdl.mysql
+#   mysqlInfo = mysqlSetting.get('base')
+#   dbInfo = mysqlSetting.get('core')
 
-  influxDBInfo = {
-    "host": instance.get('host'),
-    "port": int(instance.get('port')),
-    "username": instance.get('username'),
-    "password": instance.get('password'),
-    "ssl": instance.get('ssl')
-  }
+#   influxDBInfo = {
+#     "host": instance.get('host'),
+#     "port": int(instance.get('port')),
+#     "username": instance.get('username'),
+#     "password": instance.get('password'),
+#     "ssl": instance.get('ssl')
+#   }
 
-  defaultRP = instance.get('defaultRP')
-  dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]
+#   defaultRP = instance.get('defaultRP')
+#   dbNames = [item for item in SERVICECONFIG['influxDB']['databases']]
 
-  # userDB = instance.get('dbName', '').strip()
-  # if userDB:
-  #   dbNames.append(userDB)
+#   # userDB = instance.get('dbName', '').strip()
+#   # if userDB:
+#   #   dbNames.append(userDB)
 
-  # 初始化 _internal 数据库的读写用户权限都是只读
-  # _init_influxdb_internal_db(influxDBInfo, instance['ro'], instance['wr'])
+#   # 初始化 _internal 数据库的读写用户权限都是只读
+#   # _init_influxdb_internal_db(influxDBInfo, instance['ro'], instance['wr'])
 
-  dbUUIDs = {}
+#   dbUUIDs = {}
 
-  for dbName in dbNames:
-    _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, instance['ro'], instance['wr'])
+#   for dbName in dbNames:
+#     _init_influxdb_create_db(influxDBInfo, defaultRP, dbName, instance['ro'], instance['wr'])
 
-    with dbHelper(mysqlInfo) as dbClient:
-      db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
-      params = (
-          db_uuid,
-          dbName,
-          instanceUUID,
-          defaultRP
-      )
+#     with dbHelper(mysqlInfo) as dbClient:
+#       db_uuid = "ifdb_" + shortuuid.ShortUUID().random(length = 24)
+#       params = (
+#           db_uuid,
+#           dbName,
+#           instanceUUID,
+#           defaultRP
+#       )
 
-      sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `cqrp`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 'autogen', 0, UNIX_TIMESTAMP());"
-      dbClient.execute(sql, dbName = dbInfo['database'], params = params)
+#       sql = "INSERT INTO `main_influx_db` (`uuid`, `db`, `influxInstanceUUID`, `influxRpName`, `cqrp`, `status`, `createAt`) VALUES (%s, %s, %s, %s, 'autogen', 0, UNIX_TIMESTAMP());"
+#       dbClient.execute(sql, dbName = dbInfo['database'], params = params)
 
-      dbUUIDs[dbName] = db_uuid
+#       dbUUIDs[dbName] = db_uuid
 
-  return dbUUIDs
+#   return dbUUIDs
 
 
-def _init_system_workspace(sysDBUUID):
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
+# def _init_system_workspace(sysDBUUID):
+#   mysqlSetting = settingsMdl.mysql
+#   mysqlInfo = mysqlSetting.get('base')
+#   dbInfo = mysqlSetting.get('core')
 
-  with dbHelper(mysqlInfo) as db:
-    token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
-    cliToken        = "wkcli_" + shortuuid.ShortUUID().random(length = 24)
-    wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
-    bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
-    durationSet     = '{"rp": "90d", "logging": "14d", "tracing": "14d", "keyevent": "14d"}'
+#   with dbHelper(mysqlInfo) as db:
+#     token           = "tokn_" + shortuuid.ShortUUID().random(length = 24)
+#     cliToken        = "wkcli_" + shortuuid.ShortUUID().random(length = 24)
+#     wsDashboardUUID = "dsbd_" + shortuuid.ShortUUID().random(length = 24)
+#     bindInfo        = '{"dataway": {"sceneUUID": "ft-dataway"}, "dashboard": {"uuid": "' + wsDashboardUUID + '"} }'
+#     durationSet     = '{"rp": "90d", "logging": "14d", "tracing": "14d", "keyevent": "14d"}'
 
-    params  = (
-                  token,
-                  cliToken,
-                  sysDBUUID,
-                  wsDashboardUUID,
-                  durationSet,
-                  bindInfo
-              )
-    wsSQL   = '''
-              INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `cliToken`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `durationSet`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
-              VALUES ('wksp_system', '系统工作空间', %s, %s, '{}', -1, %s, %s, '', NULL, %s, %s, 'rp2', UNIX_TIMESTAMP());
-            '''
-    db.execute(wsSQL, dbName = dbInfo['database'], params = params)
+#     params  = (
+#                   token,
+#                   cliToken,
+#                   sysDBUUID,
+#                   wsDashboardUUID,
+#                   durationSet,
+#                   bindInfo
+#               )
+#     wsSQL   = '''
+#               INSERT INTO `main_workspace` (`uuid`, `name`, `token`, `cliToken`, `dataRestriction`, `maxTsCount`, `dbUUID`, `dashboardUUID`, `exterId`, `desc`, `durationSet`, `bindInfo`, `alarmHistoryPeriod`, `createAt`) 
+#               VALUES ('wksp_system', '系统工作空间', %s, %s, '{}', -1, %s, %s, '', NULL, %s, %s, 'rp2', UNIX_TIMESTAMP());
+#             '''
+#     db.execute(wsSQL, dbName = dbInfo['database'], params = params)
 
-    params = (wsDashboardUUID, )
-    wsDashboard = '''
-              INSERT INTO `biz_dashboard` (`uuid`, `workspaceUUID`, `name`, `status`, `chartPos`, `chartGroupPos`, `type`, `creator`, `updator`, `createAt`) 
-              VALUES (%s, 'wksp_system', '工作空间概览', 0, '[]', '[]', 'CUSTOM', '', '', UNIX_TIMESTAMP());
-            '''
-    db.execute(wsDashboard, dbName = dbInfo['database'], params = params)
+#     params = (wsDashboardUUID, )
+#     wsDashboard = '''
+#               INSERT INTO `biz_dashboard` (`uuid`, `workspaceUUID`, `name`, `status`, `chartPos`, `chartGroupPos`, `type`, `creator`, `updator`, `createAt`) 
+#               VALUES (%s, 'wksp_system', '工作空间概览', 0, '[]', '[]', 'CUSTOM', '', '', UNIX_TIMESTAMP());
+#             '''
+#     db.execute(wsDashboard, dbName = dbInfo['database'], params = params)
 
-    # 工作空间 AK
-    akSQL  = '''
-              INSERT INTO `main_workspace_accesskey` (`uuid`, `ak`, `sk`, `workspaceUUID`, `creator`, `updator`, `status`, `createAt`) 
-              VALUES (%s, %s, %s, 'wksp_system', '', '', 0, UNIX_TIMESTAMP());
-             '''
-    ak     = shortuuid.ShortUUID().random(length = 16)
-    sk     = shortuuid.ShortUUID().random(length = 32)
-    params = (
-              "wsak_" + shortuuid.ShortUUID().random(length = 24),
-              ak,
-              sk
-            )
-    db.execute(akSQL, dbName = dbInfo['database'], params = params)
+#     # 工作空间 AK
+#     akSQL  = '''
+#               INSERT INTO `main_workspace_accesskey` (`uuid`, `ak`, `sk`, `workspaceUUID`, `creator`, `updator`, `status`, `createAt`) 
+#               VALUES (%s, %s, %s, 'wksp_system', '', '', 0, UNIX_TIMESTAMP());
+#              '''
+#     ak     = shortuuid.ShortUUID().random(length = 16)
+#     sk     = shortuuid.ShortUUID().random(length = 32)
+#     params = (
+#               "wsak_" + shortuuid.ShortUUID().random(length = 24),
+#               ak,
+#               sk
+#             )
+#     db.execute(akSQL, dbName = dbInfo['database'], params = params)
 
-    # 内置 DataWay
-    datawayVersion = DOCKERIMAGES['apps']['images']['internal-dataway'][9:]
-    params = (datawayVersion, )
-    dwSQL  = '''
-              INSERT INTO `main_agent` (`uuid`, `name`, `creator`, `version`, `host`, `port`, `domainName`, `workspaceUUID`, `status`, `updator`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)
-              VALUES ('agnt_internal_dataway_1', '内置 DataWay', '', %s, '', 0, '', 'wksp_system', 0, '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());
-              '''
-    db.execute(dwSQL, dbName = dbInfo['database'], params = params)
+#     # 内置 DataWay
+#     datawayVersion = DOCKERIMAGES['apps']['images']['internal-dataway'][9:]
+#     params = (datawayVersion, )
+#     dwSQL  = '''
+#               INSERT INTO `main_agent` (`uuid`, `name`, `creator`, `version`, `host`, `port`, `domainName`, `workspaceUUID`, `status`, `updator`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)
+#               VALUES ('agnt_internal_dataway_1', '内置 DataWay', '', %s, '', 0, '', 'wksp_system', 0, '', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());
+#               '''
+#     db.execute(dwSQL, dbName = dbInfo['database'], params = params)
 
-    settingsMdl.other = {
-      "workspace": {
-        "token": token,
-        "ak": ak,
-        "sk": sk
-      }
-    }
+#     settingsMdl.other = {
+#       "workspace": {
+#         "token": token,
+#         "ak": ak,
+#         "sk": sk
+#       }
+#     }
 
-    return True
+#     return True
 
 def _init_influx_user(instance, roUser, wrUser):
   influxDBInfo = {
@@ -381,10 +381,24 @@ def init_influxdb_all():
   for idx, instance in enumerate(instances):
     instanceUUID = _init_db_instance(instance)
 
-    # 创建系统工作空间
-    if idx == 0:
-      dbUUIDs = _init_influxdb(instanceUUID, instance)
-      _init_system_workspace(dbUUIDs['internal_system'])
+    ###
+    # 系统工作空间初始化不在安装程序内完成，
+    # 安装完成后，调用 core inner 接口完成初始化工作
+    ###
+
+    # # 创建系统工作空间
+    # if idx == 0:
+    #   dbUUIDs = _init_influxdb(instanceUUID, instance)
+    #   _init_system_workspace(dbUUIDs['internal_system'])
+
+
+  settingsMdl.other = {
+    "workspace": {
+      "token": "tokn_" + shortuuid.ShortUUID().random(length = 24),
+      "ak": "",
+      "sk": ""
+    }
+  }
 
   return True
 

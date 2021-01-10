@@ -137,6 +137,11 @@ def save_version():
   return  response_jsonify(setup.save_version())
 
 
+@setup_bp.route("/workspace/init", methods=["POST"])
+def workspace_init():
+  return  response_jsonify(setup.workspace_init())
+
+
 @setup_bp.route("/elasticsearch/init", methods=["POST"])
 def elasticsearch_init():
   return  response_jsonify(setup.elasticsearch_init())
