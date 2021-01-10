@@ -361,8 +361,10 @@ def workspace_init():
   headers = {"Content-Type": "application/json"}
 
   data = {
-    "name": "系统工作空间",
-    "token": settingsMdl.other["workspace"]["token"]
+    "workspaceSet": {
+      "name": "系统工作空间",
+      "token": settingsMdl.other["workspace"]["token"]
+    }
   }
   resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/system/init", data, headers = headers)
 
