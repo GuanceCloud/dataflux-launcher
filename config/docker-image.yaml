@@ -1,18 +1,18 @@
 apps:
-  registry: registry.jiagouyun.com
-  version: testing
-  image_dir: ''
+  registry: pubrepo.jiagouyun.com
+  image_dir: dataflux-prev/
   images:
-    nsq: basis/nsq:v1.2.0
-    nginx: basis/nginx:1.13.7
-    kapacitor: basis/kapacitor:1.5.4
-    internal-dataway: dataway/dataway:v1.0.1-519-g86522fe
-    core: cloudcare-forethought/cloudcare-forethought-backend:pre_20201229_03
-    kodo: kodo/kodo:pre_20201229_03
-    front-webclient: cloudcare-front/cloudcare-forethought-webclient:pre_20201230_03
-    management-webclient: cloudcare-front/cloudcare-forethought-webmanage:pre_20201215_01
-    message-desk: middlewares/message-desk:pre_20200717_02
-    message-desk-worker: middlewares/message-desk-worker:pre_20200717_01
-    dataflux-func: middlewares/dataflux-func:pre_20210108_01
-    utils-server: cloudcare-forethought/utils-server:pre_20200316_01
-    data-warehouse: ft-data-warehouse/ft-data-warehouse:pre_20200610_01
+    nsq: basis:nsq_1.2.0
+    nginx: basis:nginx_1.13.7
+    kapacitor: basis:kapacitor_1.5.4
+    internal-dataway: dataway:v1.0.1-519-g86522fe
+    core: 1.12.51.1:core-dc39a1a1
+    kodo: 1.12.51.1:kodo-e8dae192
+    front-webclient: 1.12.51.1:front-webclient-ad3023e3
+    management-webclient: 1.12.51.1:management-webclient-77dab29
+    message-desk: 1.12.51.1:message-desk-227be83
+    message-desk-worker: 1.12.51.1:message-desk-worker-783f3cb
+    dataflux-func: 1.12.51.1:dataflux-func-57b73b4
+    utils-server: 1.12.51.1:utils-server-44e10b9
+    data-warehouse: 1.12.51.1:data-warehouse-5861338
+  version: 1.12.51.1
