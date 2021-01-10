@@ -366,7 +366,7 @@ def workspace_init():
       "token": settingsMdl.other["workspace"]["token"]
     }
   }
-  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/system/init", data, headers = headers)
+  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/system/init", json = data, headers = headers)
 
   return { "status_code": resp.status_code }
 
