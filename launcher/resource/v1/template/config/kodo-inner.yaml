@@ -48,5 +48,11 @@ ck:
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
 
+es:
+    host: {{'https' if elasticsearch.ssl else 'http'}}://{{elasticsearch.host}}:{{elasticsearch.port}}
+    user: {{elasticsearch.user}}
+    password: {{elasticsearch.password}}
+    enable: true
+
 nsq:
     lookupd: http://nsqlookupd.middleware:4161
