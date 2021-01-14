@@ -1,7 +1,6 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: front-backend
   namespace: forethought-core
 spec:
@@ -27,7 +26,8 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50M"
   name: management-backend
   namespace: forethought-core
 spec:
@@ -53,7 +53,6 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: static-resource-nginx
   namespace: forethought-core
 spec:
@@ -78,7 +77,6 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: front-webclient
   namespace: forethought-webclient
 spec:
@@ -104,7 +102,6 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: management-webclient
   namespace: forethought-webclient
 spec:
@@ -130,7 +127,6 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: func
   namespace: func
 spec:
@@ -156,7 +152,6 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  generation: 1
   name: server
   namespace: func2
 spec:
