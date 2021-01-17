@@ -99,8 +99,8 @@ upgradeInfo:
           AND origin = 'API'
 
     config: |-
-      * 注意：此版本升级，将调整 ES 数据的结构，**需要清理历史 ES 数据**
-      * 版本升级完成后，进入 inner.forethought-core 容器依次执行以下三个接口：
+      * 注意：此版本升级，将调整 ES 数据的结构，**需要清理所有的 ES 数据**，包括 日志、事件、链路、RUM 等数据。
+      * 版本升级完成后，进入 inner.forethought-core 或者 launcher 容器依次执行以下三个接口：
 
         1. 重新初始化 ES 模板
 
