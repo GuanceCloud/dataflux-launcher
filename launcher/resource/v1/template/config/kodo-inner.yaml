@@ -18,7 +18,9 @@ global:
     enable_inner_api: true
     stats_on: 256
     listen: ":9527"
-    workers: 0
+    workers: 16
+    dataway: "http://internal-dataway.utils:9528"
+    sys_ws_uuid: "wksp_system"
 
 influxdb:
     read_timeout: 30

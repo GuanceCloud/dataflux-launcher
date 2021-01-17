@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 29/12/2020 15:12:15
+ Date: 13/01/2021 18:41:08
 */
 
 SET NAMES utf8mb4;
@@ -88,6 +88,20 @@ CREATE TABLE `biz_dashboard` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_dashboard_binding_relationship
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_dashboard_binding_relationship`;
+CREATE TABLE `biz_dashboard_binding_relationship` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `targetType` varchar(48) NOT NULL COMMENT '目标类型',
+  `targetUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  PRIMARY KEY (`id`),
+  KEY `k_dash_rel_uuid` (`workspaceUUID`,`targetType`,`targetUUID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -846,7 +860,7 @@ CREATE TABLE `main_workspace` (
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `desc` text,
   `versionInfo` json DEFAULT NULL COMMENT '版本信息',
-  `bindInfo` json NOT NULL COMMENT '绑定到当前工作空间的信息',
+  `bindInfo` json DEFAULT NULL COMMENT '绑定到当前工作空间的信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `rpName` varchar(48) NOT NULL DEFAULT '' COMMENT 'db rp',
   `alarmHistoryPeriod` varchar(48) NOT NULL DEFAULT '' COMMENT '告警历史保留时长',

@@ -159,3 +159,13 @@ update:
                 proxy_set_header Host $host;
             }
           }
+      
+    #2021/01/12      
+    - seq: 7
+      config:
+        kodoInner: |-
+
+          #【更新】配置项
+          global:
+            # 【新增】子项，系统工作空间 UUID，默认是 wksp_system
+            sys_ws_uuid: "wksp_system"

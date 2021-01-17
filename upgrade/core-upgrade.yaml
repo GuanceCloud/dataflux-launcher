@@ -676,3 +676,52 @@ upgrade:
       update biz_integration set meta=REPLACE(REPLACE(meta, ".keyword", ""), "__tags.", "") where (meta like '%__tags.%' or meta like '%.keyword%');
 
 
+
+
+
+  # 2021.01.14 迭代
+  - seq: 23
+
+    database: |-
+      -- 新建视图绑定关系表
+      CREATE TABLE `biz_dashboard_binding_relationship` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `targetType` varchar(48) NOT NULL COMMENT '目标类型',
+        `targetUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        PRIMARY KEY (`id`),
+        KEY `k_dash_rel_uuid` (`workspaceUUID`,`targetType`,`targetUUID`) USING BTREE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 解除工作空间 无效字段`bindInfo`的必填限制
+      ALTER TABLE `main_workspace` MODIFY COLUMN `bindInfo` json NULL COMMENT '绑定到当前工作空间的信息' AFTER `versionInfo`;
+
+      -- 视图变量新增 是否隐藏字段
+      ALTER TABLE `biz_variable` ADD COLUMN `hide` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否隐藏' AFTER `content`;
+
+
+      -- 以上更新表
+      -- 以下更新数据
+
+      -- 变更RUM的类型字段值 将微信小程序 wechat_applet 变更为 miniapp
+      update biz_rum_cfg set jsonContent=JSON_SET(jsonContent, "$.type", "miniapp") where jsonContent ->> "$.type" ="wechat_applet";
+
+      -- 更新【视图】中的字段 Key1 => Key2   涉及 extend 字段
+      update biz_dashboard set extend=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(extend, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where `type`<> "KEYEVENT" and  status<>3 and extend not like "%keyevent%" and (extend like "%\__status%"  or extend like "%\__source%"  or extend like "%\__serviceName%"  or extend like "%\__parentID%"  or extend like "%\__operationName%"  or extend like "%\__spanID%"  or extend like "%\__traceID%"  or extend like "%\__spanType%"  or extend like "%\__endpoint%"  or extend like "%\__content%"  or extend like "%\__duration%"  or extend like "%\__isError%"  or extend like "%\__name%"  or extend like "%\__class%"  or extend like "%\__timestampMs%" ) ;
+
+
+      -- 更新【图表】中的字段  Key1 => Key2 涉及 queries/extend
+      update biz_chart set queries=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(queries, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where `type`<>"alarm" and  status<>3 and queries not like "%keyevent%" and (queries like "%\__status%"  or queries like "%\__source%"  or queries like "%\__serviceName%"  or queries like "%\__parentID%"  or queries like "%\__operationName%"  or queries like "%\__spanID%"  or queries like "%\__traceID%"  or queries like "%\__spanType%"  or queries like "%\__endpoint%"  or queries like "%\__content%"  or queries like "%\__duration%"  or queries like "%\__isError%"  or queries like "%\__name%"  or queries like "%\__class%"  or queries like "%\__timestampMs%" ) ;
+
+      update biz_chart set extend=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(extend, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where `type`<>"alarm" and  status<>3 and extend not like "%keyevent%" and (extend like "%\__status%"  or extend like "%\__source%"  or extend like "%\__serviceName%"  or extend like "%\__parentID%"  or extend like "%\__operationName%"  or extend like "%\__spanID%"  or extend like "%\__traceID%"  or extend like "%\__spanType%"  or extend like "%\__endpoint%"  or extend like "%\__content%"  or extend like "%\__duration%"  or extend like "%\__isError%"  or extend like "%\__name%"  or extend like "%\__class%"  or extend like "%\__timestampMs%" ) ;
+
+
+      -- 更新【触发规则】中的字段 Key1 => Key2 涉及 jsonScript/extend 字段
+      update biz_rule set jsonScript=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(jsonScript, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where jsonScript ->> "$.type" <> "keyeventCheck" and  status<>3 and jsonScript not like "%keyevent%" and (jsonScript like "%\__status%"  or jsonScript like "%\__source%"  or jsonScript like "%\__serviceName%"  or jsonScript like "%\__parentID%"  or jsonScript like "%\__operationName%"  or jsonScript like "%\__spanID%"  or jsonScript like "%\__traceID%"  or jsonScript like "%\__spanType%"  or jsonScript like "%\__endpoint%"  or jsonScript like "%\__content%"  or jsonScript like "%\__duration%"  or jsonScript like "%\__isError%"  or jsonScript like "%\__name%"  or jsonScript like "%\__class%"  or jsonScript like "%\__timestampMs%" ) ;
+
+      update biz_rule set extend=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(extend, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where jsonScript ->> "$.type" <> "keyeventCheck" and  status<>3 and extend not like "%keyevent%" and (extend like "%\__status%"  or extend like "%\__source%"  or extend like "%\__serviceName%"  or extend like "%\__parentID%"  or extend like "%\__operationName%"  or extend like "%\__spanID%"  or extend like "%\__traceID%"  or extend like "%\__spanType%"  or extend like "%\__endpoint%"  or extend like "%\__content%"  or extend like "%\__duration%"  or extend like "%\__isError%"  or extend like "%\__name%"  or extend like "%\__class%"  or extend like "%\__timestampMs%" ) ;
+
+
+
+

@@ -19,7 +19,8 @@ global:
     stats_on: 256
     listen: ":9527"
     workers: 8
-    sys_db_uuid: internal_system
+    dataway: "http://internal-dataway.utils:9528"
+    sys_ws_uuid: "wksp_system"
 
 influxdb:
     read_timeout: 30
