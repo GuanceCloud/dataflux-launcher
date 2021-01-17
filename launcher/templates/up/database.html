@@ -17,7 +17,11 @@
 
         {% for item in val.sqls %}
         <div id="dvProject_{{ project }}_update_{{ item.seq }}" class="db-update-item">
-          <h5>序列：{{ item.seq }}</h5>
+          {% if item.isExtension %}
+            <h5>额外的更新，序列：{{ item.seq }}</h5>
+          {% else %}
+            <h5>序列：{{ item.seq }}</h5>
+          {% endif %}
           <pre>{{ item.content }}</pre>
         </div>
         {% endfor %}

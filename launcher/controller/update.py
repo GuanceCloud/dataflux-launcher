@@ -318,6 +318,25 @@ def list_source_and_update_configmaps():
 
 def list_update_database_sql():
   currentSeqs  = __get_current_seqs()
+  currentSeq   = currentSeqs.get(project, {}).get('database', 0)
+
+  # 部分 SQL 更新脚本，可以在 launcher upgrade 中
+  # 目前只有 dataflux-func，考虑到开源，刷数据脚本不适合放在 func 平台的 upgrade 中
+  launcherUpdateVersions  = versionMdl.list_project_versions('launcher', currentSeq)
+  extensionDatabase = {}
+
+  for item in launcherUpdateVersions:
+    dbSqls = item.get('database', {})
+
+    for key in dbSqls.keys():
+      if key not in extensions:
+        extensions[key] = []
+
+      extensions[key].append({
+          'sql': item.get('seq'),
+          'isExtension': True,
+          'content': dbSqls[key]
+        })
 
   allDbUpdates = {}
   for ups in SERVICECONFIG['updates']:
@@ -329,24 +348,23 @@ def list_update_database_sql():
     if noDatabase:
       continue
 
-    currentSeq      = currentSeqs.get(project, {}).get('database', 0)
     updateVersions  = versionMdl.list_project_versions(project, currentSeq)
-
-    upItem  = {
-                'namespace': namespace,
-                'project': project,
-                'sqls': []
-              }
+    sqls = []
 
     for upv in updateVersions:
       sql = upv.get('database')
 
       if sql:
-        upItem['sqls'].append({
+        sqls.append({
             'seq': upv.get('seq'),
             'content': sql
           })
 
+    upItem  = {
+                'namespace': namespace,
+                'project': project,
+                'sqls': sqls + extensions.get(project, [])
+              }
     allDbUpdates[project] = upItem
 
   CACHEDATA['dbUpdates'] = allDbUpdates

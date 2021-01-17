@@ -71,3 +71,55 @@ upgradeInfo:
               ```
               python migrate_1_x.py --host <Host> --port <Port> --user <User> --password <Password> --database <Database>
               ```
+
+
+  - seq: 5
+    database:
+      dataflux-func: |-
+        -- 【日志及事件检测】字段批量替换，移除 __tags
+        UPDATE biz_main_crontab_config 
+          SET funcCallKwargsJSON = REPLACE(REPLACE(funcCallKwargsJSON, ".keyword", ""), "__tags.", "") 
+        WHERE
+          (funcId = 'dataflux__check_basic.keyevent_check_v2' or funcId = 'dataflux__check_basic.log_check') AND origin = 'API';
+
+
+        -- 【日志检查】字段批量切换
+        UPDATE biz_main_crontab_config 
+          SET funcCallKwargsJSON = REPLACE(REPLACE(REPLACE(REPLACE(funcCallKwargsJSON, "__status", "status"), "__content", "message"), "__title", "title"), "__timestampMs", "date")
+        WHERE
+          funcId = 'dataflux__check_basic.log_check'
+          AND origin = 'API';
+
+
+        -- 【日志生成指标】字段批量切换
+        UPDATE biz_main_crontab_config 
+          SET funcCallKwargsJSON=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(funcCallKwargsJSON, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date")
+        WHERE
+          funcId = 'dataflux__collect.log_to_metric_generate'
+          AND origin = 'API'
+
+    config: |-
+      * 注意：此版本升级，将调整 ES 数据的结构，**需要清理历史 ES 数据**
+      * 版本升级完成后，进入 inner.forethought-core 容器依次执行以下三个接口：
+
+        1. 重新初始化 ES 模板
+
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+          ```
+        
+        2. 清理历史 ES 数据
+        
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' \
+          -H 'Content-Type: application/json' \
+          --data-binary $'{\n  "script_name": "fix_clear_saas_free_workspace_es_indexs",\n  "scriptKwargs": {"clearAll": true}\n}' \
+          --compressed
+          ```
+        
+        3. 修复视图绑定关系数据
+        
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_inner_dashboard_bind_relation",\n  "scriptKwargs": {}\n}'  --compressed
+          ```
+
