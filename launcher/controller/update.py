@@ -333,7 +333,7 @@ def list_update_database_sql():
         extensionDatabase[key] = []
 
       extensionDatabase[key].append({
-          'sql': item.get('seq'),
+          'seq': item.get('seq'),
           'isExtension': True,
           'content': dbSqls[key]
         })

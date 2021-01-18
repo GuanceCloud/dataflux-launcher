@@ -155,6 +155,7 @@ def excute_update_sql(mysqlInfo, dbName, sqls):
   seq = 0
 
   try:
+    print(sqls)
     with dbHelper(mysqlInfo) as db:
       for sql in sqls:
         seq = sql['seq']
