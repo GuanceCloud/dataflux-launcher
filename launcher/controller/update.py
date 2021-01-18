@@ -318,7 +318,7 @@ def list_source_and_update_configmaps():
 
 def list_update_database_sql():
   currentSeqs  = __get_current_seqs()
-  currentSeq   = currentSeqs.get(project, {}).get('database', 0)
+  currentSeq   = currentSeqs.get('launcher', {}).get('database', 0)
 
   # 部分 SQL 更新脚本，可以在 launcher upgrade 中
   # 目前只有 dataflux-func，考虑到开源，刷数据脚本不适合放在 func 平台的 upgrade 中
