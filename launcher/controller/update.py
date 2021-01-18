@@ -329,10 +329,10 @@ def list_update_database_sql():
     dbSqls = item.get('database', {})
 
     for key in dbSqls.keys():
-      if key not in extensions:
-        extensions[key] = []
+      if key not in extensionDatabase:
+        extensionDatabase[key] = []
 
-      extensions[key].append({
+      extensionDatabase[key].append({
           'sql': item.get('seq'),
           'isExtension': True,
           'content': dbSqls[key]
@@ -363,7 +363,7 @@ def list_update_database_sql():
     upItem  = {
                 'namespace': namespace,
                 'project': project,
-                'sqls': sqls + extensions.get(project, [])
+                'sqls': sqls + extensionDatabase.get(project, [])
               }
     allDbUpdates[project] = upItem
 
