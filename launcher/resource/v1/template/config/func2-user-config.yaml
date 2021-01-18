@@ -23,7 +23,7 @@ _DISABLE_SETUP: true
 
 CUSTOM_DF_STUDIO_INNER_API_BASE_URL: http://inner.forethought-core:5000
 
-CUSTOM_BUILTIN_DF_DATAWAY_HOST: dataway.utils
+CUSTOM_BUILTIN_DF_DATAWAY_HOST: internal-dataway.utils
 CUSTOM_BUILTIN_DF_DATAWAY_PORT: 9528
 
 CUSTOM_BUILTIN_NSQ_HOST: nsqlookupd.middleware
