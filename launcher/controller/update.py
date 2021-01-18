@@ -450,8 +450,15 @@ def database_update(project):
   errorSeq = versionMdl.excute_update_sql(mysql, dbName, sqls)
 
   if errorSeq == -1:
-    lastSql = sqls[len(sqls) - 1]
-    versionMdl.save_version(project, 'database', lastSql['seq'])
+    lastSql = None
+    for item in sqls:
+      if item.get('isExtension', False):
+        break
+
+      lastSql = item
+
+    if lastSql is not None:
+      versionMdl.save_version(project, 'database', lastSql['seq'])
 
     del CACHEDATA['dbUpdates'][project]
 
