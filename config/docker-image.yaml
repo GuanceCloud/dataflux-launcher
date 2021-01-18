@@ -7,7 +7,7 @@ apps:
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:v1.0.1-524-gbbf51bb
     core: 1.12.51.2:core-9186f80b
-    kodo: 1.12.51.2:kodo-49bb2ba8
+    kodo: 1.12.51.2:kodo-74e09f6c
     front-webclient: 1.12.51.2:front-webclient-145eb920
     management-webclient: 1.12.51.2:management-webclient-0b1aba3
     message-desk: 1.12.51.2:message-desk-227be83
