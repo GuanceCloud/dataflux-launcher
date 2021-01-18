@@ -348,6 +348,7 @@ def list_update_database_sql():
     if noDatabase:
       continue
 
+    currentSeq   = currentSeqs.get(project, {}).get('database', 0)
     updateVersions  = versionMdl.list_project_versions(project, currentSeq)
     sqls = []
 
