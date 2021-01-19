@@ -72,7 +72,6 @@ upgradeInfo:
               python migrate_1_x.py --host <Host> --port <Port> --user <User> --password <Password> --database <Database>
               ```
 
-
   - seq: 5
     database:
       dataflux-func: |-
@@ -121,5 +120,11 @@ upgradeInfo:
         
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_inner_dashboard_bind_relation",\n  "scriptKwargs": {}\n}'  --compressed
+          ```
+
+        4. 合并图表的 Queries 字段
+
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data?script_name=fix_2020_12_10' -X 'POST' -H 'Content-Type: application/json'
           ```
 
