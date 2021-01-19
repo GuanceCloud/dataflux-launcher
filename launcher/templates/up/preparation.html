@@ -5,17 +5,20 @@
 <div class="row form-body">
   <h2 class="page-heading">{{ title }}</h2>
 
+  {% if pageData | length == 0 %}
   <div class="high-block">
-    {% if pageData | length == 0 %}
     <h4>无升级前的准备工作，直接进入下一步！</h4>
-    {% endif %}
+  </div>
+  {% endif %}
 
-    {% for conf in pageData %}
+  {% for conf in pageData %}
+  <div class="high-block">
     <div class="high-block-sm">
       <h5>序列号：{{ conf.seq }}</h5>
       <div>{{ conf.config | safe }}</div>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 
   </div>
 
