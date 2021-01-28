@@ -405,6 +405,7 @@ CREATE TABLE `biz_variable` (
   `definition` json DEFAULT NULL COMMENT '解说，原content内容',
   `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
   `content` json DEFAULT NULL COMMENT '变量配置数据',
+  `hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
