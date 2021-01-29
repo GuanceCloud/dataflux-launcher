@@ -50,6 +50,10 @@ ck:
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
 
+func:
+    host: "http://server-inner.func2:8088"
+    enable: true
+
 es:
     host: {{'https' if elasticsearch.ssl else 'http'}}://{{elasticsearch.host}}:{{elasticsearch.port}}
     user: {{elasticsearch.user}}

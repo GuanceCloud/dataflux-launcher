@@ -27,6 +27,10 @@ influxdb:
     write_timeout: 30
     enable_gz: true
 
+func:
+    host: "http://server-inner.func2:8088"
+    enable: true
+
 secret:
     encrypt_key: {{ (other.core.secret or {}).encryptKey }}
 

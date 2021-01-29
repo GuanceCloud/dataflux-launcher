@@ -22,8 +22,8 @@ global:
     es_consumer: true
 
 func:
-     host: "http://func-inner.func:8088"
-     enable: true
+    host: "http://server-inner.func2:8088"
+    enable: true
 
 influxdb:
     read_timeout: 30
