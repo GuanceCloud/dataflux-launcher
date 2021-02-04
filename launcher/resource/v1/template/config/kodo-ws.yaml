@@ -19,7 +19,7 @@ global:
     stats_on: 256
     listen: ":9527"
     workers: 16
-    dataway: "http://dataway.utils:9528"
+    dataway: "http://internal-dataway.utils:9528"
 
 ws_server:
   path : "/v1/ws/datakit"
