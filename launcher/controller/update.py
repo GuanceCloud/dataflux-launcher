@@ -84,6 +84,19 @@ def new_configmap_check():
     for cm in ns['configmaps']:
       mapname = cm['mapname']
       mapkey  = cm['mapkey']
+      services   = cm['services']
+      config_unused = False
+
+      # 不再使用的服务的配置文件，跳过不作检查
+      for svr in services:
+        svr_config = tmpServiceDict.get(svr, {})
+        config_unused = svr_config.get('deleted', False) or not svr_config.get('replicas', 0)
+
+        if not config_unused:
+          break
+
+      if config_unused:
+        continue
 
       if mapname in oldMapKeys and mapkey in oldMapKeys[mapname]:
         continue
