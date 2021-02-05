@@ -99,25 +99,25 @@ upgradeInfo:
 
     config: |-
       * 注意：此版本升级，将调整 ES 数据的结构，**需要清理所有的 ES 数据**，包括 日志、事件、链路、RUM 等数据。
-      * 版本升级完成后，进入 inner.forethought-core 或者 launcher 容器依次执行以下三个接口：
+      * 版本升级完成后，进入 launcher 容器依次执行以下三个接口：
 
         1. 重新初始化 ES 模板
 
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
           ```
-        
+
         2. 清理历史 ES 数据
-        
+
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' \
           -H 'Content-Type: application/json' \
           --data-binary $'{\n  "script_name": "fix_clear_saas_free_workspace_es_indexs",\n  "scriptKwargs": {"clearAll": true}\n}' \
           --compressed
           ```
-        
+
         3. 修复视图绑定关系数据
-        
+
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_inner_dashboard_bind_relation",\n  "scriptKwargs": {}\n}'  --compressed
           ```
@@ -128,3 +128,18 @@ upgradeInfo:
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_2020_12_10",\n  "scriptKwargs": {}\n}'  --compressed
           ```
 
+  - seq: 6
+    database:
+      dataflux-func: |-
+        DELETE FROM biz_main_batch WHERE origin = 'API';
+        TRUNCATE biz_main_batch_task_info;
+        DELETE FROM biz_main_crontab_config WHERE origin = 'API';
+        TRUNCATE biz_main_crontab_task_info;
+    config: |-
+      * 升级完成并全部启动成功后，进入 launcher 容器以下接口：
+
+        1. 重新初始化 ES 模板
+
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+          ```
