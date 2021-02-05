@@ -85,7 +85,7 @@ def new_configmap_check():
       mapname = cm['mapname']
       mapkey  = cm['mapkey']
 
-      if mapname in oldMaps and mapkey in oldMapKeys[mapname]:
+      if mapname in oldMapKeys and mapkey in oldMapKeys[mapname]:
         continue
 
       content = jinjia2_render('template/config/{}'.format(cm['template']), settingsMdl.toJson)
