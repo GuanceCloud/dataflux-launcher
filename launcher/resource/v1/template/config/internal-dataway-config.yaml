@@ -1,5 +1,4 @@
 # dataway oerating parameters
-
 uuid: agnt_internal_dataway_1
 
 # 初始安装是默认工作空间的 token
@@ -20,7 +19,7 @@ log_level: warning
 gin_log: gin.log
 
 cache_cfg:
-    dir: cache
+  dir: cache
 
 # routes config
 routes_config:
