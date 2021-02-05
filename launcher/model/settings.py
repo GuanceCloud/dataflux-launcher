@@ -82,8 +82,8 @@ class Settings(object):
   def mysql(self, value):
     self.__dict_merge('mysql', value)
 
-    if 'mysql' in self.toJson and 'func' in self.toJson['mysql']:
-      del self.toJson['mysql']['func']
+    # if 'mysql' in self.toJson and 'func' in self.toJson['mysql']:
+    #   del self.toJson['mysql']['func']
 
     self.__save()
 
