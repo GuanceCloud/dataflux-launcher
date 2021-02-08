@@ -723,5 +723,52 @@ upgrade:
       update biz_rule set extend=REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(extend, "__status", "status"), "__source", "source"), "__serviceName", "service"), "__parentID", "parent_id"), "__operationName", "operation"), "__spanID", "span_id"), "__traceID", "trace_id"), "__spanType", "span_type"), "__endpoint", "endpoint"), "__content", "message"), "__duration", "duration"), "__isError", "status"), "__name", "name"), "__class", "class"), "__timestampMs", "date") where jsonScript ->> "$.type" <> "keyeventCheck" and  status<>3 and extend not like "%keyevent%" and (extend like "%\__status%"  or extend like "%\__source%"  or extend like "%\__serviceName%"  or extend like "%\__parentID%"  or extend like "%\__operationName%"  or extend like "%\__spanID%"  or extend like "%\__traceID%"  or extend like "%\__spanType%"  or extend like "%\__endpoint%"  or extend like "%\__content%"  or extend like "%\__duration%"  or extend like "%\__isError%"  or extend like "%\__name%"  or extend like "%\__class%"  or extend like "%\__timestampMs%" ) ;
 
 
+  # 2021.02.02 迭代
+  - seq: 24
+    config:
+      core: |-
+        kodo:
+          # 在installCmd/upgradeCmd 命令原有的基础上插入 `DW_KODO_WS=wss://kodo.dataflux.cn`
+          installCmd: 'DW_KODO=https://kodo.dataflux.cn  DW_KODO_WS=wss://kodo.dataflux.cn  DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl http://zhuyun-static-files-testing.oss-cn-hangzhou.aliyuncs.com/dataway/install.sh)"'
+          upgradeCmd: 'DW_KODO=https://kodo.dataflux.cn  DW_KODO_WS=wss://kodo.dataflux.cn DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl http://zhuyun-static-files-testing.oss-cn-hangzhou.aliyuncs.com/dataway/install.sh)"'
+
+
+    database: |-
+      -- 新建监视器表
+      CREATE TABLE `biz_monitor` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `type` enum('custom','inner') NOT NULL DEFAULT 'custom',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
+        `config` json DEFAULT NULL COMMENT '其他设置',
+        `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 规则表新增【监视器UUID】字段
+      ALTER TABLE `biz_rule` ADD COLUMN `monitorUUID` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '监视器UUID' AFTER `kapaUUID`;
+
+      -- 废弃并清理 image 字段（执行此操作前需要先清理 image 字段的数据）
+      -- 清理图表中的 image 字段数据
+      update biz_dashboard set image="";
+      ALTER TABLE `biz_dashboard` MODIFY COLUMN `image` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '视图的缩略图-废弃' AFTER `name`;
+
+
+      -- 以上更新表
+      -- 以下更新数据
+
+      -- 删除旧的触发规则
+      DELETE FROM biz_rule where type='baseline';
+      update biz_rule set status=3 where type='aggs' and status=0;
+      update biz_rule set status=2 where type='trigger' and status=0;
 
 

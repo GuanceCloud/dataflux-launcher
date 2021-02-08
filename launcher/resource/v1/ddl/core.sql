@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 13/01/2021 18:41:08
+ Date: 02/02/2021 17:54:45
 */
 
 SET NAMES utf8mb4;
@@ -73,7 +73,7 @@ CREATE TABLE `biz_dashboard` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dsbd-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL COMMENT '视图名字',
-  `image` mediumtext NOT NULL COMMENT '视图的缩略图',
+  `image` varchar(128) NOT NULL DEFAULT '' COMMENT '视图的缩略图-废弃',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `chartPos` json NOT NULL COMMENT 'charts 位置信息[{chartUUID:xxx,pos:xxx}]',
   `chartGroupPos` json NOT NULL COMMENT 'chartGroup 位置信息[chartGroupUUIDs]',
@@ -150,6 +150,29 @@ CREATE TABLE `biz_integration` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_monitor
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_monitor`;
+CREATE TABLE `biz_monitor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `type` enum('custom','inner') NOT NULL DEFAULT 'custom',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
+  `config` json DEFAULT NULL COMMENT '其他设置',
+  `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -280,6 +303,7 @@ CREATE TABLE `biz_rule` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `type` enum('trigger','baseline','aggs') NOT NULL DEFAULT 'trigger',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
+  `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
   `tickInfo` json DEFAULT NULL COMMENT '提交后Kapa 返回的Tasks数据',
   `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
