@@ -71,7 +71,7 @@ def database_account_create():
   otherSetting = settingsMdl.other
 
   with dbHelper(mysqlInfo) as db:
-    userId = "u-" + shortuuid.ShortUUID().random(length = 24)
+    userId = "u-admin"
     secret = otherSetting.get('func', {}).get('secret')
     password = _secret_password(userId, secret)
 
