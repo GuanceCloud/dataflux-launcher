@@ -1,6 +1,6 @@
 # encoding=utf-8
 
-import os, re
+import os, re, subprocess
 import json, yaml
 
 from launcher.utils import utils
@@ -24,18 +24,21 @@ class Settings(object):
 
   def __save(self):
     settingsYaml = yaml.dump(self._settingJson, default_flow_style=False)
+    cipheredSetting = encrypt.cipher_by_aes(settingsYaml, _SETTING_ENCRYPT_KEY)
 
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    dirPath = base_path + "/../../persistent-data"
+    self.__save_to_configmap(str(cipheredSetting, encoding="utf-8"))
 
-    if not os.path.exists(dirPath):
-      os.mkdir(dirPath)
+    # base_path = os.path.dirname(os.path.abspath(__file__))
+    # dirPath = base_path + "/../../persistent-data"
 
-    path = dirPath + "/settings.yaml"
-    with open(path, 'w') as f:
-      cipheredSetting = encrypt.cipher_by_aes(settingsYaml, _SETTING_ENCRYPT_KEY)
-      f.write(str(cipheredSetting, encoding="utf-8"))
-      f.close()
+    # if not os.path.exists(dirPath):
+    #   os.mkdir(dirPath)
+
+    # path = dirPath + "/settings.yaml"
+    # with open(path, 'w') as f:
+    #   cipheredSetting = encrypt.cipher_by_aes(settingsYaml, _SETTING_ENCRYPT_KEY)
+    #   f.write(str(cipheredSetting, encoding="utf-8"))
+    #   f.close()
 
     return True
 
@@ -50,8 +53,62 @@ class Settings(object):
     return self._settingJson[key]
 
 
-  def load(self):
-    settingJson = None
+  def __save_to_configmap(self, content):
+    # print('__save: ', content)
+    from launcher.utils.template import jinjia2_render
+
+    tmpDir  = "/tmp"
+    tmpPath = tmpDir + "/configmap.yaml"
+
+    item = dict(
+              namespace = "launcher",
+              key       = "key",
+              mapname   = "setting-yaml",
+              mapkey    = "setting.yaml",
+              content   = content
+            )
+
+    configmap = jinjia2_render('template/k8s/configmap.yaml', {"config": [item]})
+
+    if not os.path.exists(tmpDir):
+      os.mkdir(tmpDir)
+
+    try:
+      with open(os.path.abspath(tmpPath), 'w') as f:
+        f.write(configmap)
+
+      cmd = "kubectl apply  -f {}".format(tmpPath)
+      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    except Exception as e:
+      print(e)
+      return False
+
+    return True
+
+
+
+  def __load_from_configmap(self):
+    cmd = 'kubectl get configmap setting-yaml -n launcher -o json'
+    result = None
+
+    try:
+      p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+      output, err = p.communicate()
+
+      data = json.loads(output).get('data') or {}
+
+      result = yaml.safe_load(data.get('setting.yaml', ''))
+
+    except:
+      result = None
+
+    # print('__load: ', result)
+    return result
+
+
+  def __load_from_nas(self):
+    result = None
     base_path = os.path.dirname(os.path.abspath(__file__))
     path = base_path + "/../../persistent-data/settings.yaml"
 
@@ -59,7 +116,15 @@ class Settings(object):
       return {}
 
     with open(path) as f:
-        settingJson = yaml.safe_load(f)
+        result = yaml.safe_load(f)
+
+    return result
+
+
+  def load(self):
+    # 原存储在 nas 中的配置信息，改成存储到 configmap 中
+    # 因为 nas 可能配置归档，配置信息也会被归档。
+    settingJson = self.__load_from_configmap() or self.__load_from_nas()
 
     # 兼容旧的未加密情况
     if isinstance(settingJson, str):

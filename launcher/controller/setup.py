@@ -74,7 +74,6 @@ def config_template():
       if not hasRef:
         continue
 
-      print(configmap)
       content = jinjia2_render('template/config/{}'.format(configmap['template']), settingsMdl.toJson)
       cm = {
         'key': configmap['key'],
