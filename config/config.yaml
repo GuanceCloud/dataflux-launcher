@@ -39,7 +39,7 @@ services:
     - key: core-worker
       name: Worker
       image: core
-      replicas: 3
+      replicas: 2
 
     - key: core-worker-beat
       name: Worker Beat
