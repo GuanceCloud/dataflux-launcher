@@ -26,6 +26,10 @@ spec:
         - mountPath: /data/user-config.yaml
           name: user-config
           subPath: user-config.yaml
+        - mountPath: /data/resources
+          name: func-resources
+        - mountPath: /data/extra-python-packages
+          name: func-packages
       dnsPolicy: ClusterFirst
       imagePullSecrets:
       - name: registry-key
@@ -37,6 +41,12 @@ spec:
           name: user-config
           optional: false
         name: user-config
+      - name: func-resources
+        persistentVolumeClaim:
+          claimName: func-resources
+      - name: func-packages
+        persistentVolumeClaim:
+          claimName: func-packages
 
 ---
 

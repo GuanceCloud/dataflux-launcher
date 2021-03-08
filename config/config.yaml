@@ -388,6 +388,13 @@ services:
       - worker-8-9
       template: func2-requirements.txt
 
+    pvcs:
+    - name: func-resources
+      storage: 30Gi
+
+    - name: func-packages
+      storage: 5Gi
+
   - namespace: middleware
     services:
     - key: message-desk
