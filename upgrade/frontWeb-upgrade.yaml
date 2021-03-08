@@ -21,3 +21,10 @@ upgradeInfo:
         rumApplicationId: "",   // RUM Application Id
         rumJsUrl: "/dataflux-rum.js"  // rum sdk js 地址，默认在项目目录中
 
+  - seq: 3
+    config:
+      frontWeb: |-
+        // 帮助链接 的相关配置
+
+        showHelp: 1,           // 是否开启 帮助链接，1 表示开启 0 表示关闭
+

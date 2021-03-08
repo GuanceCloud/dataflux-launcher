@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 02/02/2021 17:54:45
+ Date: 03/03/2021 10:30:51
 */
 
 SET NAMES utf8mb4;
@@ -184,12 +184,12 @@ CREATE TABLE `biz_node` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 node- 前缀',
   `name` varchar(128) NOT NULL COMMENT '命名',
   `iconSet` json DEFAULT NULL COMMENT '图标设置',
-  `measurementLimit` json NOT NULL COMMENT '指标集限制',
+  `measurementLimit` json DEFAULT NULL COMMENT '指标集限制',
   `filter` json DEFAULT NULL COMMENT '过滤条件',
-  `isInheritance` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否继承',
+  `isInheritance` tinyint(1) DEFAULT '1' COMMENT '是否继承',
   `subTagKeyMeasurements` json DEFAULT NULL COMMENT '衍生节点标签指标集',
-  `subTagKeys` json NOT NULL COMMENT '子节点 tag 键值',
-  `bindTagValues` json NOT NULL COMMENT '绑定虚拟节点值',
+  `subTagKeys` json DEFAULT NULL COMMENT '子节点 tag 键值',
+  `bindTagValues` json DEFAULT NULL COMMENT '绑定虚拟节点值',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `sceneUUID` varchar(48) NOT NULL COMMENT '场景 uuid',
   `parentUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '父节点 uuid',
@@ -199,8 +199,8 @@ CREATE TABLE `biz_node` (
   `subDashboardUUID` varchar(48) NOT NULL DEFAULT '',
   `exclude` json NOT NULL COMMENT '排除项',
   `subIconSet` json DEFAULT NULL COMMENT '子节点的图标信息',
-  `subIsInheritance` tinyint(1) NOT NULL DEFAULT '1' COMMENT '子节点是否继承父节点过滤条件',
-  `bindInfo` json NOT NULL COMMENT '节点绑定信息',
+  `subIsInheritance` tinyint(1) DEFAULT '1' COMMENT '子节点是否继承父节点过滤条件',
+  `bindInfo` json DEFAULT NULL COMMENT '节点绑定信息',
   `path` json NOT NULL COMMENT '路径列表',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `isLoading` tinyint(1) DEFAULT NULL,
@@ -214,6 +214,28 @@ CREATE TABLE `biz_node` (
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `scene_node_fk` (`sceneUUID`),
   KEY `node_dashboard_fk` (`dashboardUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_notify_object
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_notify_object`;
+CREATE TABLE `biz_notify_object` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
+  `type` enum('dingTalkRobot','HTTPRequest') NOT NULL DEFAULT 'dingTalkRobot',
+  `optSet` json DEFAULT NULL COMMENT '操作设置',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -350,8 +372,8 @@ CREATE TABLE `biz_scene` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `iconSet` json DEFAULT NULL COMMENT '图标设置',
   `describe` text NOT NULL COMMENT '场景的描述信息',
-  `measurementLimit` json NOT NULL COMMENT '指标集限制',
-  `filter` json NOT NULL COMMENT '过滤条件',
+  `measurementLimit` json DEFAULT NULL COMMENT '指标集限制',
+  `filter` json DEFAULT NULL COMMENT '过滤条件',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
