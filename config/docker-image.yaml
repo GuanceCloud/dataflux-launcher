@@ -12,7 +12,7 @@ apps:
     management-webclient: 1.14.55:management-webclient-0b1aba3-1615463674
     message-desk: 1.14.55:message-desk-db3eeaa-1615463674
     message-desk-worker: 1.14.55:message-desk-worker-e07ab90-1615463674
-    dataflux-func: 1.14.55:dataflux-func-827f922-1615463674
+    dataflux-func: 1.14.55:dataflux-func-827f922-1615513472
     utils-server: 1.14.55:utils-server-9f852f3-1615463674
     data-warehouse: 1.14.55:data-warehouse-545291f-1615463674
   version: 1.14.55

@@ -10,8 +10,10 @@ window.DEPLOYCONFIG = {
     staticFileUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
     staticDatakit: 'https://static.dataflux.cn',
     cloudDatawayUrl: '',
+    showHelp: 1,
     rumEnable: 0,
     rumDatakitUrl: "",
     rumApplicationId: "",
-    rumJsUrl: "https://static.dataflux.cn/js-sdk/dataflux-rum.js"
+    rumJsUrl: "https://static.dataflux.cn/js-sdk/dataflux-rum.js",
+    rumDataEnv: 'prod'
 };
