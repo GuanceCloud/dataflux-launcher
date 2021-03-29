@@ -143,3 +143,21 @@ upgradeInfo:
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
           ```
+
+
+  - seq: 7
+    database:
+    config: |-
+      * 升级完成并全部启动成功后，进入 launcher 容器以下接口：
+
+        1. 重新初始化 ES 模板
+
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json' --compressed
+          ```
+
+        2. 清理对象索引
+
+          ```
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -X 'POST'  -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_clear_object_es_indexs"}' --compressed
+          ```
