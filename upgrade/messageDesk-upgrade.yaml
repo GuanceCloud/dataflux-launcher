@@ -48,3 +48,27 @@ upgradeInfo:
         UNIQUE KEY `ID` (`id`),
         UNIQUE KEY `address` (`address`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件黑名单';
+
+  - seq: 2
+    database: |-
+      -- 添加企业微信支持
+      CREATE TABLE `biz_main_task_result_wechat_robot` (
+        `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+        `task` varchar(128) NOT NULL DEFAULT '',
+        `origin` varchar(128) DEFAULT NULL,
+        `startTime` int(11) DEFAULT NULL COMMENT '任务开始时间(秒级UNIX时间戳)',
+        `endTime` int(11) DEFAULT NULL COMMENT '任务结束时间(秒级UNIX时间戳)',
+        `msgType` varchar(15) DEFAULT NULL COMMENT '消息类型',
+        `argsJSON` text COMMENT '列表参数JSON',
+        `kwargsJSON` text COMMENT '字典参数JSON',
+        `retvalJSON` text COMMENT '执行结果JSON',
+        `status` varchar(64) DEFAULT '' COMMENT '任务状态: SUCCESS|FAILURE',
+        `einfoTEXT` text COMMENT '错误信息TEXT',
+        `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (`seq`),
+        UNIQUE KEY `ID` (`id`),
+        KEY `task` (`task`),
+        KEY `origin` (`origin`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='企业微信机器人任务结果';

@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 08/03/2021 19:38:20
+ Date: 24/03/2021 17:54:30
 */
 
 SET NAMES utf8mb4;
@@ -91,20 +91,6 @@ CREATE TABLE `biz_dashboard` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Table structure for biz_dashboard_binding_relationship
--- ----------------------------
-DROP TABLE IF EXISTS `biz_dashboard_binding_relationship`;
-CREATE TABLE `biz_dashboard_binding_relationship` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
-  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `targetType` varchar(48) NOT NULL COMMENT '目标类型',
-  `targetUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  PRIMARY KEY (`id`),
-  KEY `k_dash_rel_uuid` (`workspaceUUID`,`targetType`,`targetUUID`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
 -- Table structure for biz_decorate_node
 -- ----------------------------
 DROP TABLE IF EXISTS `biz_decorate_node`;
@@ -126,6 +112,24 @@ CREATE TABLE `biz_decorate_node` (
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `scene_node_fk` (`sceneUUID`),
   KEY `node_parent_uuid_fk` (`parentUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_entity_relationship
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_entity_relationship`;
+CREATE TABLE `biz_entity_relationship` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `sourceType` varchar(48) NOT NULL DEFAULT '' COMMENT '源类型',
+  `sourceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '源标记ID',
+  `targetType` varchar(48) NOT NULL DEFAULT '' COMMENT '目标类型',
+  `targetUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `extend` json NOT NULL COMMENT '额外数据',
+  PRIMARY KEY (`id`),
+  KEY `k_wksp_uuid` (`workspaceUUID`) USING BTREE,
+  KEY `k_source_uuid` (`sourceUUID`) USING BTREE,
+  KEY `k_target_uuid` (`targetUUID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -164,6 +168,28 @@ CREATE TABLE `biz_monitor` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
   `config` json DEFAULT NULL COMMENT '其他设置',
   `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_mute
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_mute`;
+CREATE TABLE `biz_mute` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID mute- 前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `tags` json DEFAULT NULL COMMENT '目标的tags',
+  `start` int(11) NOT NULL DEFAULT '-1',
+  `end` int(11) NOT NULL DEFAULT '-1',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -225,7 +251,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -323,7 +349,7 @@ CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('trigger','baseline','aggs') NOT NULL DEFAULT 'trigger',
+  `type` enum('trigger','baseline','aggs','cloud_correlation_switch') NOT NULL DEFAULT 'trigger',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
@@ -830,7 +856,7 @@ CREATE TABLE `main_key_config` (
   `workspaceUUID` varchar(48) NOT NULL COMMENT '工作空间uuid',
   `keyCode` varchar(48) NOT NULL COMMENT '配置项唯一Code',
   `description` text NOT NULL COMMENT '描述信息',
-  `value` json NOT NULL COMMENT '配置数据',
+  `value` text NOT NULL COMMENT '配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `createAt` int(11) NOT NULL DEFAULT '-1',
   `deleteAt` int(11) NOT NULL DEFAULT '-1',
