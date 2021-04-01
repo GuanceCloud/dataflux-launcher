@@ -17,7 +17,7 @@ RUN echo "deb http://mirrors.aliyun.com/debian stretch main contrib non-free" > 
 RUN apt-get update && apt-get install -y apt-transport-https
 RUN curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | apt-key add - 
 RUN echo "deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main" >> /etc/apt/sources.list.d/kubernetes.list
-RUN apt-get update && apt-get install -y kubectl && apt-get install -y mysql-client
+RUN apt-get update && apt-get install -y kubectl && apt-get install -y mysql-client && apt-get install -y telnet
 
 
 WORKDIR /config/cloudcare-forethought-setup
