@@ -146,7 +146,6 @@ upgradeInfo:
 
 
   - seq: 7
-    database:
     config: |-
       * 升级完成并全部启动成功后，进入 launcher 容器以下接口：
 
