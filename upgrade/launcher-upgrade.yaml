@@ -145,6 +145,7 @@ upgradeInfo:
           ```
 
 
+  # 2021-03-25
   - seq: 7
     config: |-
       * 升级完成并全部启动成功后，进入 launcher 容器以下接口：
@@ -160,3 +161,13 @@ upgradeInfo:
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -X 'POST'  -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_clear_object_es_indexs"}' --compressed
           ```
+
+
+  # 2021-04-07
+  - seq: 8
+    config: |-
+      * 升级完成并全部启动成功后，进入 launcher 容器以下接口：
+
+        1. 更新异常检查器
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_update_checkers"}' --compressed
+
