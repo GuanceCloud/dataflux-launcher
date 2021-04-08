@@ -169,5 +169,8 @@ upgradeInfo:
       * 升级完成并全部启动成功后，进入 launcher 容器执行以下接口：
 
         1. 更新异常检查器
+
+        ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_update_checkers"}' --compressed
+        ```
 
