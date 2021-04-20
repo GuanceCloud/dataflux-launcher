@@ -884,3 +884,63 @@ upgrade:
 
       -- 同步更新历史数据
       update biz_dashboard set mapping="[]" WHERE status != 3;
+
+  # 2021.04.14 迭代
+  - seq: 28
+    config:
+      core: |-
+        # CloudCare 系统配置
+        CloudCareServer:
+          use_https: false
+          port: 80
+          host: "testing-zc-portal.cloudflux.cn"
+          ak_id: "ak-xxxxx"
+          ak_secret: "xxxxxxx"
+          timeout: 30
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
+
+        # 云拨测服务
+        DialingServer:
+          use_https: false
+          host: dflux-dialtesting.utils
+          port: 9538
+          timeout: 10
+          ak_id:
+          ak_secret:
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
+
+    database: |-
+
+      -- 云拨测任务
+      CREATE TABLE `biz_dialing_tasks` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, dial-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `type` enum('http','tcp','dns') NOT NULL DEFAULT 'http',
+        `regions` json NOT NULL,
+        `task` json NOT NULL COMMENT '任务数据',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 通知对象新增邮件组
+      ALTER TABLE `biz_notify_object`
+      MODIFY COLUMN `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'dingTalkRobot' AFTER `name`;
+
+      -- 调整监视器类型
+      ALTER TABLE `biz_monitor`
+      MODIFY COLUMN `type` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'custom' AFTER `workspaceUUID`;
+
+      -- 插入 限制信息
+      INSERT INTO `df_core`.`main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 500, \"job\": 5000, \"logs\": 2000000}');
+
+      -- 更新计费配置
+      UPDATE `main_config` SET `description` = 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', `value` = '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"priceQuantity\": 10000, \"count_equation\": \"count\", \"discountQuantity\": 10000}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"priceQuantity\": 1, \"count_equation\": \"int(count + math.ceil((ts_count - count*discountQuantity)/discountQuantity)) if (ts_count / (1 if count == 0 else count)) > discountQuantity else count\", \"discountQuantity\": 500}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}}' WHERE `keyCode` = 'MeteringUnitPriceConfig';
+

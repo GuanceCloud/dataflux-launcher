@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# 版本号： 3024
+# 版本号： 3028
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # 主机: ubuntu16-dev-big.vm (MySQL 5.7.27-0ubuntu0.16.04.1)
 # 数据库: dataflux_func
-# 生成时间: 2021-03-12 05:07:42 +0000
+# 生成时间: 2021-04-15 09:27:11 +0000
 # ************************************************************
 
 
@@ -206,6 +206,25 @@ CREATE TABLE `biz_main_env_variable` (
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='环境变量';
+
+
+
+# 转储表 biz_main_file_service
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_main_file_service`;
+
+CREATE TABLE `biz_main_file_service` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `root` text COMMENT '根目录',
+  `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
+  `note` text COMMENT '备注',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件服务';
 
 
 

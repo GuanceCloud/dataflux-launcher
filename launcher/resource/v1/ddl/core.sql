@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 06/04/2021 16:36:36
+ Date: 15/04/2021 14:31:51
 */
 
 SET NAMES utf8mb4;
@@ -116,6 +116,28 @@ CREATE TABLE `biz_decorate_node` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for biz_dialing_tasks
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_dialing_tasks`;
+CREATE TABLE `biz_dialing_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, dial-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `type` enum('http','tcp','dns') NOT NULL DEFAULT 'http',
+  `regions` json NOT NULL,
+  `task` json NOT NULL COMMENT '任务数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for biz_entity_relationship
 -- ----------------------------
 DROP TABLE IF EXISTS `biz_entity_relationship`;
@@ -165,7 +187,7 @@ CREATE TABLE `biz_monitor` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('custom','inner') NOT NULL DEFAULT 'custom',
+  `type` varchar(48) NOT NULL DEFAULT 'custom',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
   `config` json DEFAULT NULL COMMENT '其他设置',
   `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
@@ -252,7 +274,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
