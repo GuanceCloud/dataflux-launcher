@@ -112,20 +112,20 @@ upgradeInfo:
           ```
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' \
           -H 'Content-Type: application/json' \
-          --data-binary $'{\n  "script_name": "fix_clear_saas_free_workspace_es_indexs",\n  "scriptKwargs": {"clearAll": true}\n}' \
+          --data-binary '{"script_name": "fix_clear_saas_free_workspace_es_indexs","scriptKwargs": {"clearAll": true}}' \
           --compressed
           ```
 
         3. 修复视图绑定关系数据
 
           ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_inner_dashboard_bind_relation",\n  "scriptKwargs": {}\n}'  --compressed
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary '{"script_name": "fix_inner_dashboard_bind_relation","scriptKwargs": {}}'  --compressed
           ```
 
         4. 合并图表的 Queries 字段
 
           ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary $'{\n  "script_name": "fix_2020_12_10",\n  "scriptKwargs": {}\n}'  --compressed
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json'  --data-binary '{"script_name": "fix_2020_12_10","scriptKwargs": {}}'  --compressed
           ```
 
   - seq: 6
@@ -159,7 +159,7 @@ upgradeInfo:
         2. 清理对象索引
 
           ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -X 'POST'  -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_clear_object_es_indexs"}' --compressed
+          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -X 'POST'  -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_clear_object_es_indexs"}' --compressed
           ```
 
 
@@ -171,6 +171,19 @@ upgradeInfo:
         1. 更新异常检查器
 
         ```
-        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{\n  "script_name": "fix_update_checkers"}' --compressed
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_checkers"}' --compressed
+        ```
+
+
+
+  # 2021-04-15
+  - seq: 9
+    config: |-
+      * 升级完成并全部启动成功后，进入 launcher 容器执行以下接口：
+
+        1. 刷新所有 ES 模版, 新增了 2个月的数据保留时长
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
         ```
 
