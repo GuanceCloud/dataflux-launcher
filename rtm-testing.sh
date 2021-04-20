@@ -62,7 +62,7 @@ function rtm_tag(){
 }
 
 # (?<="version"\s*:\s*")[\d\w\.\-]+(?=\")
-dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.)+\d+-\d+-[a-zA-Z0-9]+"`
+dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.){2}\d+"`
 
 if [ ! -n "$dwVersion" ]; then
   echo '未获取到 DataWay 的最新版本'

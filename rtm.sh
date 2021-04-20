@@ -106,7 +106,7 @@ function rtm_tag(){
 
 function start(){
   # (?<="version"\s*:\s*")[\d\w\.\-]+(?=\")
-  dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.)+\d+-\d+-[a-zA-Z0-9]+"`
+  dwVersion=`curl -s http://static.dataflux.cn/dataway/version | grep -Eo "(\d+\.){2}\d+"`
 
   if [ ! -n "$dwVersion" ]; then
     echo '未获取到 DataWay 的最新版本'
@@ -127,7 +127,7 @@ function start(){
   echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本
-  echo "    internal-dataway: dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
+  echo "    internal-dataway: dataway:${dwVersion}" >> ${workDir}/${imageYaml}
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
