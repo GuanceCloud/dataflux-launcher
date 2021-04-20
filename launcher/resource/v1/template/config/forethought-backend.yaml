@@ -92,3 +92,33 @@ staticResource:
 
 share_set:
   share_url: {{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.consoleApi }}.{{ domain.domain }}/api/v1/auth-token/{share_code}/login?isAuth={is_auth}&?code={code}
+
+# CloudCare 系统配置
+# 部署版本暂时不使用此配置，可以不作修改
+CloudCareServer:
+  use_https: true
+  port: 443
+  host: "www.cloudflux.cn"
+  ak_id: ""
+  ak_secret: ""
+  timeout: 30
+
+# 云拨测服务
+DialingServer:
+  # 拨测服务中心的地址配置
+  # 此处不需要修改
+  use_https: true
+  host: dflux-dial.dataflux.cn
+  port: 443
+  timeout: 10
+
+  # 此处需要向产品侧索取拨测服务的 AK
+  # 每个部署版本一组 AK 信息
+  ak_id: ""
+  ak_secret: ""
+  
+  # 每个部署的版本有不同的 DataWay 地址
+  # 用于将拨测数据打入到相应部署版本工作空间内
+  # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
+  open_dataway_url: "http://openway.cloudcare.cn?token={}"
+

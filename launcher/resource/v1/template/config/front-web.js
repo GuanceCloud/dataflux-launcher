@@ -15,5 +15,8 @@ window.DEPLOYCONFIG = {
     rumDatakitUrl: "",
     rumApplicationId: "",
     rumJsUrl: "https://static.dataflux.cn/js-sdk/dataflux-rum.js",
-    rumDataEnv: 'prod'
+    rumDataEnv: 'prod',
+    shrineApiUrl: '',
+    upgradeUrl: '',
+    rechargeUrl: ''
 };
