@@ -3,7 +3,6 @@ upgradeInfo:
     config:
       frontWeb: |-
         // 新增的配置 key
-        // 静态资源访问域名
         staticFileUrl: 'https://static-res.demo-domain.cn'
   - seq: 1
     config:
@@ -35,13 +34,13 @@ upgradeInfo:
         // local(开发环境), common（日常环境）, gray（灰度环境）, pre（预发环境）, prod（生产环境）
         rumDataEnv: 'prod'
 
-   - seq: 5
+  - seq: 5
     config:
       frontWeb: |-
-        
+
         shrineApiUrl: '',  // 新增cc付费升级页面跳转url
-        upgradeUrl: ''  // 新增升级敏捷版跳转链接
-        rechargeUrl: '' // 新增敏捷版充值跳转链接
+        upgradeUrl: '',  // 新增升级敏捷版跳转链接
+        rechargeUrl: '', // 新增敏捷版充值跳转链接
         
        
 
