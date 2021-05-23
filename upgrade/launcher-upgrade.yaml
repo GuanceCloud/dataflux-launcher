@@ -190,48 +190,55 @@ upgradeInfo:
   # 2021-05-10
   - seq: 10
     config: |-
-      * 升级完成并全部启动成功后，进入 launcher 容器执行以下接口：
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
 
-        1. 执行 es_init 操作 刷新所有模版, 本次新增了 backup_log 和 security 类型数据索引
+      1、 执行 es_init 操作 刷新所有模版, 本次新增了 backup_log 和 security 类型数据索引
 
-          ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
-          ```
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+        ```
 
-        2. 清理现有工作空间中的 云关联开关
+      2、 清理现有工作空间中的 云关联开关
 
-          ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_clear_cloud_correlation_switch"}'
-          ```
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_clear_cloud_correlation_switch"}'
+        ```
 
-        3. 手工立即同步一次集成包
+      3、 手工立即同步一次集成包
 
-          ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_integration"}'
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_integration"}'
           ```
 
 
   # 2021-05-20
   - seq: 11
     config: |-
-      * 升级完成并全部启动成功后，进入 launcher 容器执行以下接口：
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
 
-        1. 更新拨测任务地域：
+      1、 更新拨测任务地域：
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_dialing_regions"}'
+        ```
+
+      2、 手工导入 geo 数据到数据库，在 launcher 容器执行以下脚本导入数据到 MySQL:
+
+        * 连接到数据库实例
 
           ```
-          curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_dialing_regions"}'
-          ```
-
-        2. 手工导入 geo 数据到数据库，在 launcher 容器执行以下脚本导入数据到 MySQL:
-
-          ```
-          -- 连接到数据库实例
           mysql -h <host> -P <port> -u <user> -p<password>
+          ```
 
-          -- 切换到 df_core 数据库
+        * 切换到 df_core 数据库
+
+          ```
           use df_core;
+          ```
 
-          -- 执行 geo 数据导入
+        * 执行 geo 数据导入
+
+          ```
           source /config/cloudcare-forethought-setup/launcher/resource/v1/ddl/geo.sql
           ```
 

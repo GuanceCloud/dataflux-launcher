@@ -9,7 +9,10 @@
   <div class="high-block">
     <h4>无升级前的准备工作，直接进入下一步！</h4>
   </div>
-  {% endif %}
+
+  {% else %}
+  
+  <div class="text-success">注：如果有升级完成后需要手工执行的步骤，建议保留此页面，复制一个 Tab 页面，再继续下一步。</div>
 
   {% for conf in pageData %}
   <div class="high-block">
@@ -20,6 +23,7 @@
   </div>
   {% endfor %}
 
+  {% endif %}
 </div>
 
 <div class="row form-body">
