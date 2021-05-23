@@ -890,33 +890,24 @@ upgrade:
     config:
       core: |-
         # CloudCare 系统配置
-        # 部署版本暂时不使用此配置，可以不作修改
         CloudCareServer:
-          use_https: true
-          port: 443
-          host: "www.cloudflux.cn"
-          ak_id: ""
-          ak_secret: ""
+          use_https: false
+          port: 80
+          host: "testing-zc-portal.cloudflux.cn"
+          ak_id: "ak-xxxxx"
+          ak_secret: "xxxxxxx"
           timeout: 30
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
         # 云拨测服务
         DialingServer:
-          # 拨测服务中心的地址配置
-          # 此处不需要修改
-          use_https: true
-          host: dflux-dial.dataflux.cn
-          port: 443
+          use_https: false
+          host: dflux-dialtesting.utils
+          port: 9538
           timeout: 10
-
-          # 此处需要向产品侧索取拨测服务的 AK
-          # 每个部署版本一组 AK 信息
-          ak_id: ""
-          ak_secret: ""
-          
-          # 每个部署的版本有不同的 DataWay 地址
-          # 用于将拨测数据打入到相应部署版本工作空间内
-          # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
-          open_dataway_url: "http://openway.cloudcare.cn?token={}"
+          ak_id:
+          ak_secret:
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
     database: |-
 
@@ -953,3 +944,57 @@ upgrade:
       -- 更新计费配置
       UPDATE `main_config` SET `description` = 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', `value` = '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"priceQuantity\": 10000, \"count_equation\": \"count\", \"discountQuantity\": 10000}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"priceQuantity\": 1, \"count_equation\": \"int(count + math.ceil((ts_count - count*discountQuantity)/discountQuantity)) if (ts_count / (1 if count == 0 else count)) > discountQuantity else count\", \"discountQuantity\": 500}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price if count > discountQuantity else 0\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}}' WHERE `keyCode` = 'MeteringUnitPriceConfig';
 
+
+  # 2021.05.07 迭代
+  - seq: 29
+    database: |-
+
+      -- 新增 日志备份的规则类型
+      ALTER TABLE `biz_rule`
+      MODIFY COLUMN `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'trigger' AFTER `workspaceUUID`;
+
+      -- 更新 security 的 rp, 默认180d
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.security", "180d") where `status` = 0;
+      -- 更新 backup_log 的 rp, 默认 180d
+      update main_workspace set durationSet=JSON_SET(durationSet, "$.backup_log", "180d") where `status` = 0;
+
+      -- 更新账单计费规则, 新增了 备份日志的账单规则
+      UPDATE `main_config` SET `description` = 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', `value` = '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 10000, \"count_equation\": \"count\", \"discountQuantity\": 10000}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"priceQuantity\": 1, \"count_equation\": \"int(count + math.ceil((ts_count - count*discountQuantity)/discountQuantity)) if (ts_count / (1 if count == 0 else count)) > discountQuantity else count\", \"discountQuantity\": 500}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}}' WHERE `keyCode` = 'MeteringUnitPriceConfig';
+
+      -- 批量更新数据保留时长，将365d变更为360d; 无需刷新influx 和ES
+      update main_workspace set durationSet=REPLACE(durationSet, "365d", "360d") where `status`=0;
+
+
+  # 2021.05.20 迭代
+  - seq: 30
+    database: |-
+
+      -- 新增 查询快照
+      CREATE TABLE `biz_snapshots` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，前缀snapshot',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
+        `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+        `content` json NOT NULL COMMENT '用户自定义配置数据',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `acnt_wksp_fk` (`workspaceUUID`,`accountUUID`) USING BTREE
+      ) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4;
+
+      -- 创建全球区域表
+      CREATE TABLE `biz_geo` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `country` varchar(128) NOT NULL DEFAULT '' COMMENT '国家',
+        `province` varchar(128) NOT NULL DEFAULT '' COMMENT '省份',
+        `city` varchar(128) NOT NULL DEFAULT '' COMMENT '城市',
+        PRIMARY KEY (`id`),
+        KEY `k_country` (`country`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

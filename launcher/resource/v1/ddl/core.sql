@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 15/04/2021 14:31:51
+ Date: 07/05/2021 16:49:57
 */
 
 SET NAMES utf8mb4;
@@ -372,7 +372,7 @@ CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('trigger','baseline','aggs','cloud_correlation_switch') NOT NULL DEFAULT 'trigger',
+  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup') NOT NULL DEFAULT 'trigger',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',

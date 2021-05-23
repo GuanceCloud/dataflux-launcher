@@ -41,6 +41,11 @@ upgradeInfo:
         shrineApiUrl: '',  // 新增cc付费升级页面跳转url
         upgradeUrl: '',  // 新增升级敏捷版跳转链接
         rechargeUrl: '', // 新增敏捷版充值跳转链接
-        
+
+  - seq: 6
+    config:
+      frontWeb: |-
+
+        rumTrackInteractions: 1,  // 允许 RUM 收集 action 数据
        
 
