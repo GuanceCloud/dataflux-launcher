@@ -222,9 +222,9 @@ upgradeInfo:
           curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_dialing_regions"}'
           ```
 
-        2. 手工导入 geo 数据到数据库，在 launcher 容器执行以下脚本导入数据到 MySQL
+        2. 手工导入 geo 数据到数据库，在 launcher 容器执行以下脚本导入数据到 MySQL:
 
-          ```sql
+          ```
           -- 连接到数据库实例
           mysql -h <host> -P <port> -u <user> -p<password>
 
