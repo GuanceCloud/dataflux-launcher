@@ -370,6 +370,18 @@ def workspace_init():
   return { "status_code": resp.status_code }
 
 
+def sync_integration():
+  headers = {"Content-Type": "application/json"}
+
+  data = {
+    "script_name": "fix_update_integration"
+  }
+
+  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data", json = data, headers = headers)
+
+  return { "status_code": resp.status_code }
+
+
 def init_setting():
   settingsMdl.other = {
     "core": {

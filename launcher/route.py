@@ -122,6 +122,13 @@ def setting_save():
   return  response_jsonify(setting.setting_save(data))
 
 
+@setup_bp.route("/setting/sync_integration", methods=["post"])
+def sync_integration():
+  data = request.json
+
+  return  response_jsonify(setup.sync_integration())
+
+
 @setup_bp.route("/service/status", methods=["GET"])
 def service_status():
   return  response_jsonify(setup.service_status())

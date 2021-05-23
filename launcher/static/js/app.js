@@ -708,5 +708,11 @@ var setup = (function () {
     }
   };
 
+  app.prototype.sync_integration = function(){
+    this.post('setting/sync_integration').done(function(d){
+
+    });
+  };
+
   return new app();
 })();

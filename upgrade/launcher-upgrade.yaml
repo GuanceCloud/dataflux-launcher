@@ -208,7 +208,7 @@ upgradeInfo:
 
         ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_integration"}'
-          ```
+        ```
 
 
   # 2021-05-20
