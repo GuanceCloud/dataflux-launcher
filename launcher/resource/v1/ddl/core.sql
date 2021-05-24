@@ -3,15 +3,15 @@
 
  Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50729
+ Source Server Version : 50732
  Source Host           : 127.0.0.1:3306
  Source Schema         : ft-new
 
  Target Server Type    : MySQL
- Target Server Version : 50729
+ Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 07/05/2021 16:49:57
+ Date: 24/05/2021 09:50:40
 */
 
 SET NAMES utf8mb4;
@@ -153,6 +153,19 @@ CREATE TABLE `biz_entity_relationship` (
   KEY `k_wksp_uuid` (`workspaceUUID`) USING BTREE,
   KEY `k_source_uuid` (`sourceUUID`) USING BTREE,
   KEY `k_target_uuid` (`targetUUID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_geo
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_geo`;
+CREATE TABLE `biz_geo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `country` varchar(128) NOT NULL DEFAULT '' COMMENT '国家',
+  `province` varchar(128) NOT NULL DEFAULT '' COMMENT '省份',
+  `city` varchar(128) NOT NULL DEFAULT '' COMMENT '城市',
+  PRIMARY KEY (`id`),
+  KEY `k_country` (`country`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
@@ -459,6 +472,29 @@ CREATE TABLE `biz_share_config` (
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_share_code` (`shareCode`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_snapshots
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_snapshots`;
+CREATE TABLE `biz_snapshots` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，前缀snapshot',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
+  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+  `content` json NOT NULL COMMENT '用户自定义配置数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `acnt_wksp_fk` (`workspaceUUID`,`accountUUID`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for biz_sys_template
