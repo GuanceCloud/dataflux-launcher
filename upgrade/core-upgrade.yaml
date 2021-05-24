@@ -890,24 +890,33 @@ upgrade:
     config:
       core: |-
         # CloudCare 系统配置
+        # 部署版本暂时不使用此配置，可以不作修改
         CloudCareServer:
-          use_https: false
-          port: 80
-          host: "testing-zc-portal.cloudflux.cn"
-          ak_id: "ak-xxxxx"
-          ak_secret: "xxxxxxx"
+          use_https: true
+          port: 443
+          host: "www.cloudflux.cn"
+          ak_id: ""
+          ak_secret: ""
           timeout: 30
-          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
         # 云拨测服务
         DialingServer:
-          use_https: false
-          host: dflux-dialtesting.utils
-          port: 9538
+          # 拨测服务中心的地址配置
+          # 此处不需要修改
+          use_https: true
+          host: dflux-dial.dataflux.cn
+          port: 443
           timeout: 10
-          ak_id:
-          ak_secret:
-          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
+
+          # 此处需要向产品侧索取拨测服务的 AK
+          # 每个部署版本一组 AK 信息
+          ak_id: ""
+          ak_secret: ""
+          
+          # 每个部署的版本有不同的 DataWay 地址
+          # 用于将拨测数据打入到相应部署版本工作空间内
+          # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
+          open_dataway_url: "http://openway.cloudcare.cn?token={}"
 
     database: |-
 
@@ -963,6 +972,9 @@ upgrade:
 
       -- 批量更新数据保留时长，将365d变更为360d; 无需刷新influx 和ES
       update main_workspace set durationSet=REPLACE(durationSet, "365d", "360d") where `status`=0;
+
+      -- 插入价格计费信息
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 10000, \"count_equation\": \"count\", \"discountQuantity\": 10000}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"priceQuantity\": 1, \"count_equation\": \"int(count + math.ceil((ts_count - count*discountQuantity)/discountQuantity)) if (ts_count / (1 if count == 0 else count)) > discountQuantity else count\", \"discountQuantity\": 500}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"priceQuantity\": 1000000, \"count_equation\": \"count\", \"discountQuantity\": 1000000}}');
 
 
   # 2021.05.20 迭代
