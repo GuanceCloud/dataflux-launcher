@@ -890,33 +890,24 @@ upgrade:
     config:
       core: |-
         # CloudCare 系统配置
-        # 部署版本暂时不使用此配置，可以不作修改
         CloudCareServer:
-          use_https: true
-          port: 443
-          host: "www.cloudflux.cn"
-          ak_id: ""
-          ak_secret: ""
+          use_https: false
+          port: 80
+          host: "testing-zc-portal.cloudflux.cn"
+          ak_id: "ak-xxxxx"
+          ak_secret: "xxxxxxx"
           timeout: 30
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
         # 云拨测服务
         DialingServer:
-          # 拨测服务中心的地址配置
-          # 此处不需要修改
-          use_https: true
-          host: dflux-dial.dataflux.cn
-          port: 443
+          use_https: false
+          host: dflux-dialtesting.utils
+          port: 9538
           timeout: 10
-
-          # 此处需要向产品侧索取拨测服务的 AK
-          # 每个部署版本一组 AK 信息
-          ak_id: ""
-          ak_secret: ""
-          
-          # 每个部署的版本有不同的 DataWay 地址
-          # 用于将拨测数据打入到相应部署版本工作空间内
-          # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
-          open_dataway_url: "http://openway.cloudcare.cn?token={}"
+          ak_id:
+          ak_secret:
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
     database: |-
 
@@ -1010,3 +1001,71 @@ upgrade:
         PRIMARY KEY (`id`),
         KEY `k_country` (`country`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+  # 2021.06.03 迭代
+  - seq: 31
+    database: |-
+
+      -- 新增 账号设备表，用于记录用户移动端登录过的设备信息
+      CREATE TABLE `biz_account_device` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `accountId` varchar(64) NOT NULL DEFAULT '' COMMENT 'account id',
+        `deviceId` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备ID',
+        `deviceVersion` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备版本',
+        `deviceOS` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备系统',
+        `deviceOSVersion` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备系统系统版本',
+        `registrationId` varchar(48) NOT NULL DEFAULT '' COMMENT '推送系统内的ID',
+        `loginTime` int(11) NOT NULL DEFAULT '-1' COMMENT '登录时间',
+        `heartBeat` int(11) NOT NULL DEFAULT '-1' COMMENT '最后心跳时间',
+        `inUse` int(1) NOT NULL DEFAULT '0' COMMENT '使用状态',
+        `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+        `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+        PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
+        KEY `uk_acnt` (`accountId`) USING BTREE COMMENT '全局唯一',
+        KEY `uk_device` (`deviceId`) USING BTREE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新增登录历史记录
+      CREATE TABLE `biz_account_login_history` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'login-前缀',
+        `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
+        `platform` varchar(48) NOT NULL DEFAULT '' COMMENT '登录平台',
+        `loginTime` int(11) NOT NULL DEFAULT '-1' COMMENT '记录登录时间',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        KEY `accountUUID_fk` (`accountUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 云拨测任务新增`headless`类型
+      ALTER TABLE `biz_dialing_tasks`
+      MODIFY COLUMN `type` enum('http','tcp','dns','browser') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'http' AFTER `workspaceUUID`;
+
+      -- 历史日志生成指标规则补全 interval 字段
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 60) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "1m";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 300) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "5m";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 900) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "15m";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 1800) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "30m";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 3600) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "1h";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 43200) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "12h";
+
+      update biz_rule set jsonScript=JSON_SET(jsonScript, "$.interval", 86400) WHERE status <>3 and type="aggs" and jsonScript ->> "$.every" = "24h";
+
+
+      -- 更新计费价格公式
+      UPDATE `main_config` SET `description` = 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', `value` = '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"countEquation\": \"int(math.ceil((ts_count)/500)+count ) if (ts_count / (count or 1)) > 500 else count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"(count + keyevent_count + security_count - datakit_count * 1000000) if count + keyevent_count + security_count > datakit_count * 1000000 else 0\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}' WHERE `keyCode` = 'MeteringUnitPriceConfig';
+
+      -- 更新使用量限制信息
+      UPDATE `main_config` SET `description` = '免费额度', `value` = '{\"ts\": 500, \"job\": 5000, \"rum\": 100, \"logs\": 2000000, \"trace\": 10000}' WHERE `keyCode` = 'FreeLimitV2';
