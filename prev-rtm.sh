@@ -132,7 +132,7 @@ function start(){
   echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本
-  echo "    internal-dataway: dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
+  echo "    internal-dataway: dataway:${dwVersion}" >> ${workDir}/${imageYaml}
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
@@ -160,7 +160,7 @@ function start(){
   git commit -m 'auto commit: 预览版 release'
   git push
 
-  sh release.sh -p
+  sh release.sh -r
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-setup.git" "launcher"
 } 
