@@ -99,8 +99,8 @@ CloudCareServer:
   use_https: true
   port: 443
   host: "www.cloudflux.cn"
-  ak_id: ""
-  ak_secret: ""
+  ak_id: "{{ other.cc.ak }}"
+  ak_secret: "{{ other.cc.sk }}"
   timeout: 30
 
 # 云拨测服务
@@ -114,8 +114,8 @@ DialingServer:
 
   # 此处需要向产品侧索取拨测服务的 AK
   # 每个部署版本一组 AK 信息
-  ak_id: ""
-  ak_secret: ""
+  ak_id: "{{ other.dial.ak }}"
+  ak_secret: "{{ other.dial.sk }}"
   
   # 每个部署的版本有不同的 DataWay 地址
   # 用于将拨测数据打入到相应部署版本工作空间内
