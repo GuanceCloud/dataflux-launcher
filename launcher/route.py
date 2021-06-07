@@ -37,6 +37,13 @@ def database_setup():
   return response_jsonify(True)
 
 
+@setup_bp.route("/aksk/save", methods=["POST"])
+def aksk_save():
+  data = request.json
+
+  return response_jsonify(setup.aksk_save(data))
+
+
 @setup_bp.route("/other/config", methods=["POST"])
 def other_config():
   data = request.json
@@ -61,7 +68,7 @@ def elasticsearch_ping():
   args = request.json
 
   return  response_jsonify(elasticsearch_setup.elasticsearch_ping(args))
-  
+
 
 @setup_bp.route("/influxdb/ping", methods=["POST"])
 def influxdb_ping():

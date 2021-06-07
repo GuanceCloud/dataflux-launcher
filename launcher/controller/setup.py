@@ -30,6 +30,15 @@ def readme():
   return ""
 
 
+def aksk_save(params):
+  settingsMdl.other = {
+    'cc': params.get('cc', {}),
+    'dial': params.get('dial', {}),
+  }
+
+  return True
+
+
 def other_config(params):
   settingsMdl.domain = {
     'domain': params.get('domain', ''),

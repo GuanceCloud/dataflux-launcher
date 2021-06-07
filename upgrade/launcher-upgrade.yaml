@@ -243,3 +243,25 @@ upgradeInfo:
           ```
 
 
+  # 2021-06-07
+  - seq: 12
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、更新现有聚合规则：
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_aggs_to_metric"}'
+        ```
+
+      2、版本更新现有用户的登录次数：
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_init_loginnum"}'
+        ```
+
+      3、更新现有【免费版/付费版】工作空间的RP设置：
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_rp_2021_06_03"}'
+        ```

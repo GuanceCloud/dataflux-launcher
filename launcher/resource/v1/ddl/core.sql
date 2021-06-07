@@ -11,11 +11,54 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 24/05/2021 09:50:40
+ Date: 04/06/2021 17:59:29
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for biz_account_device
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_account_device`;
+CREATE TABLE `biz_account_device` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `accountId` varchar(64) NOT NULL DEFAULT '' COMMENT 'account id',
+  `deviceId` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备ID',
+  `deviceVersion` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备版本',
+  `deviceOS` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备系统',
+  `deviceOSVersion` varchar(256) NOT NULL DEFAULT '' COMMENT '登录设备系统系统版本',
+  `registrationId` varchar(48) NOT NULL DEFAULT '' COMMENT '推送系统内的ID',
+  `loginTime` int(11) NOT NULL DEFAULT '-1' COMMENT '登录时间',
+  `heartBeat` int(11) NOT NULL DEFAULT '-1' COMMENT '最后心跳时间',
+  `inUse` int(1) NOT NULL DEFAULT '0' COMMENT '使用状态',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+  PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
+  KEY `uk_acnt` (`accountId`) USING BTREE COMMENT '全局唯一',
+  KEY `uk_device` (`deviceId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_account_login_history
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_account_login_history`;
+CREATE TABLE `biz_account_login_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'login-前缀',
+  `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
+  `platform` varchar(48) NOT NULL DEFAULT '' COMMENT '登录平台',
+  `loginTime` int(11) NOT NULL DEFAULT '-1' COMMENT '记录登录时间',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `accountUUID_fk` (`accountUUID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for biz_chart
@@ -123,7 +166,7 @@ CREATE TABLE `biz_dialing_tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, dial-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('http','tcp','dns') NOT NULL DEFAULT 'http',
+  `type` enum('http','tcp','dns','browser') NOT NULL DEFAULT 'http',
   `regions` json NOT NULL,
   `task` json NOT NULL COMMENT '任务数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -346,6 +389,19 @@ CREATE TABLE `biz_object_relation_graph` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_post_cc_history
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_post_cc_history`;
+CREATE TABLE `biz_post_cc_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `date` varchar(256) NOT NULL DEFAULT '' COMMENT '上传日期',
+  `detail` json DEFAULT NULL COMMENT '上传详情',
+  `status` varchar(48) NOT NULL DEFAULT 'success' COMMENT '上传状态',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  PRIMARY KEY (`id`) COMMENT '主键'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

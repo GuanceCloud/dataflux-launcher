@@ -99,6 +99,12 @@ def register_install_router(app):
     if 'manager' not in data['other']:
       data['other']['manager'] = {}
 
+    if 'cc' not in data['other']:
+      data['other']['cc'] = {}
+
+    if 'dial' not in data['other']:
+      data['other']['dial'] = {}
+
     if 'tls' not in data['other']:
       data['other']['tls'] = {}
 
@@ -132,6 +138,14 @@ def register_install_router(app):
     return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
+  @app.route("/install/aksk")
+  def aksk():
+    ccAK = settingsMdl.other.get('cc', {})
+    dialAK = settingsMdl.other.get('dial', {})
+
+    return render("aksk.html", {"title": "AK 配置", "pageData": {"cc": ccAK, "dial": dialAK}, "steps": STEPS_COMMON + STEPS_INSTALL})
+
+
   @app.route("/install/setup/info")
   def setup_info():
     return render("setup-info.html", {"title": "安装信息", "pageData": settingsMdl, "steps": STEPS_COMMON + STEPS_INSTALL})
@@ -141,6 +155,7 @@ def register_install_router(app):
   def config_review():
     config = setup.config_template()
 
+    # print('```>> ', config)
     return render("config-review.html", {"title": "应用配置文件", "pageData": config, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 

@@ -213,7 +213,7 @@ var setup = (function () {
         }
 
         if (next && !hasError){
-          that.go("/install/other");
+          that.go("/install/aksk");
         }
       }else{
         alert("InfluxDB 连接失败");
@@ -241,6 +241,33 @@ var setup = (function () {
 
     $("#certificatePrivateKey").attr("disabled", !isChecked);
     $("#certificateContent").attr("disabled", !isChecked);
+  };
+
+  app.prototype.aksk_save = function(){
+    var that = this;
+    var data = {
+      "cc":{
+        "ak": $("#iptCCAK").val(),
+        "sk": $("#iptCCSK").val()
+      },
+      "dial":{
+        "ak": $("#iptDialAK").val(),
+        "sk": $("#iptDialSK").val(),
+        "dataway_url": $("#iptDialDataWay").val(),
+      },
+    };
+
+    $("#validateForm").validate();
+    isValid = $('#validateForm').valid();
+
+    if (!isValid)
+      return false;
+
+    this.post("aksk/save", data).done(function(d){
+      if (d.content){
+        that.go("/install/other");
+      }
+    });
   };
 
   app.prototype.other_config = function(){

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row form-body">
+    <form id="validateForm" class="form-horizontal" onsubmit="return false;">
+      <h2 class="page-heading">{{ title }}</h2>
+
+      <div class="high-block">
+        <h4>CloudCare 会员 AK/SK</h4>
+        <div class="form-group">
+          <label for="iptCCAK" class="col-sm-2 control-label">AK:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptCCAK" name="ccAK" required value="{{ pageData.cc.ak }}" placeholder="CloudCare 会员 AK">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptCCSK" class="col-sm-2 control-label">SK:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptCCSK" name="ccSK" required value="{{ pageData.cc.sk }}" placeholder="CLoudCare 会员 SK">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+      </div>
+
+      <div class="high-block">
+        <h4>拨测服务 AK/SK</h4>
+        <div class="form-group">
+          <label for="iptDialAK" class="col-sm-2 control-label">AK:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptDialAK" name="dialAK" required value="{{ pageData.dial.ak }}" placeholder="拨测服务 AK">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptDialSK" class="col-sm-2 control-label">SK:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptDialSK" name="dialSK" required value="{{ pageData.dial.sk }}" placeholder="拨测服务 SK">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptDialDataWay" class="col-sm-2 control-label">数据网关地址:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required value="{{ pageData.dial.dataway_url }}" placeholder="数据网关地址，示例: http(s)://dataway.dataflux.cn">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label">&nbsp;</label>
+        <div class="col-sm-10">
+            <button class="btn btn-primary" onclick="setup.aksk_save()">
+              下一步
+            </button>
+            <a class="btn btn-default" href="/install/influxdb">上一步</a>
+        </div>
+      </div>
+    </form>
+</div>
+
+{% endblock %}

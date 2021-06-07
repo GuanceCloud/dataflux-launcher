@@ -169,3 +169,21 @@ update:
           global:
             # 【新增】子项，系统工作空间 UUID，默认是 wksp_system
             sys_ws_uuid: "wksp_system"
+
+
+    #2021/06/03
+    - seq: 8
+      config:
+        kodo: |-
+          cc:
+            # ak, sk
+            ak: ""
+            sk: ""
+            # 过期时间，超过该时间客户不可查询
+            syncBillExpired: "7d"
+            # CC api对应的host
+            syncBillHost: "https://admin-portal.cloudcare.cn"
+            # 上传计费的时间点,24小时方式
+            postTime: "01:00"
+
+          
