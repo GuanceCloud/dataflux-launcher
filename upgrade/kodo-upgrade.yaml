@@ -176,18 +176,14 @@ update:
       config:
         kodo: |-
           cc:
-            # 是否支持上传计费信息, 默认支持上传
-            unSupport: false
             # ak, sk
             ak: ""
             sk: ""
             # 过期时间，超过该时间客户不可查询
             syncBillExpired: "7d"
             # CC api对应的host
-            syncBillHost: ""
-            # 是否为敏捷版, 默认是专业或者独占版
-            isSaas: true
+            syncBillHost: "https://admin-portal.cloudcare.cn"
             # 上传计费的时间点,24小时方式
-            postTime: "02:00"
+            postTime: "01:00"
 
           
