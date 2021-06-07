@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 01/06/2021 15:42:41
+ Date: 04/06/2021 17:59:29
 */
 
 SET NAMES utf8mb4;
@@ -389,6 +389,19 @@ CREATE TABLE `biz_object_relation_graph` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for biz_post_cc_history
+-- ----------------------------
+DROP TABLE IF EXISTS `biz_post_cc_history`;
+CREATE TABLE `biz_post_cc_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `date` varchar(256) NOT NULL DEFAULT '' COMMENT '上传日期',
+  `detail` json DEFAULT NULL COMMENT '上传详情',
+  `status` varchar(48) NOT NULL DEFAULT 'success' COMMENT '上传状态',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  PRIMARY KEY (`id`) COMMENT '主键'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

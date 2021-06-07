@@ -1044,6 +1044,16 @@ upgrade:
         KEY `accountUUID_fk` (`accountUUID`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+      -- 新增 kodo上报使用量给cc的请求历史表
+      CREATE TABLE `biz_post_cc_history` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `date` varchar(256) NOT NULL DEFAULT '' COMMENT '上传日期',
+        `detail` json DEFAULT NULL COMMENT '上传详情',
+        `status` varchar(48) NOT NULL DEFAULT 'success' COMMENT '上传状态',
+        `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+        PRIMARY KEY (`id`) COMMENT '主键'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
       -- 云拨测任务新增`headless`类型
       ALTER TABLE `biz_dialing_tasks`
       MODIFY COLUMN `type` enum('http','tcp','dns','browser') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'http' AFTER `workspaceUUID`;
