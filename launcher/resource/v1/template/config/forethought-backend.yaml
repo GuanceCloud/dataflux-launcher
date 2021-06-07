@@ -98,7 +98,7 @@ share_set:
 CloudCareServer:
   use_https: true
   port: 443
-  host: "www.cloudflux.cn"
+  host: "admin-portal.cloudcare.cn"
   ak_id: "{{ other.cc.ak }}"
   ak_secret: "{{ other.cc.sk }}"
   timeout: 30
@@ -120,5 +120,5 @@ DialingServer:
   # 每个部署的版本有不同的 DataWay 地址
   # 用于将拨测数据打入到相应部署版本工作空间内
   # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
-  open_dataway_url: "http://openway.cloudcare.cn?token={}"
+  open_dataway_url: "{{ other.dial.dataway_url }}?token={}"
 

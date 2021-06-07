@@ -33,7 +33,7 @@ def readme():
 def aksk_save(params):
   settingsMdl.other = {
     'cc': params.get('cc', {}),
-    'dail': params.get('dail', {}),
+    'dial': params.get('dial', {}),
   }
 
   return True

@@ -155,7 +155,7 @@ def register_install_router(app):
   def config_review():
     config = setup.config_template()
 
-    print('```>> ', config)
+    # print('```>> ', config)
     return render("config-review.html", {"title": "应用配置文件", "pageData": config, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 

@@ -252,7 +252,8 @@ var setup = (function () {
       },
       "dial":{
         "ak": $("#iptDialAK").val(),
-        "sk": $("#iptDialSK").val()
+        "sk": $("#iptDialSK").val(),
+        "dataway_url": $("#iptDialDataWay").val(),
       },
     };
 
