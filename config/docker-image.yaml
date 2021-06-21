@@ -6,9 +6,9 @@ apps:
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:1.0.5
-    core: 1.20.63:core-cc567a1be-1624272456
+    core: 1.20.63:core-c9e1c7bf-1624272456
     kodo: 1.20.63:kodo-b291b224-1624272456
-    front-webclient: 1.20.63:front-webclient-c9054a6af-1624272456
+    front-webclient: 1.20.63:front-webclient-cc567a1be-1624272456
     management-webclient: 1.20.63:management-webclient-9e492e6-1624272456
     message-desk: 1.20.63:message-desk-667df71-1624272456
     message-desk-worker: 1.20.63:message-desk-worker-a956370-1624272456
