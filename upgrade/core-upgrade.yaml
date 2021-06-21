@@ -890,33 +890,24 @@ upgrade:
     config:
       core: |-
         # CloudCare 系统配置
-        # 部署版本暂时不使用此配置，可以不作修改
         CloudCareServer:
-          use_https: true
-          port: 443
-          host: "www.cloudflux.cn"
-          ak_id: ""
-          ak_secret: ""
+          use_https: false
+          port: 80
+          host: "testing-zc-portal.cloudflux.cn"
+          ak_id: "ak-xxxxx"
+          ak_secret: "xxxxxxx"
           timeout: 30
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
         # 云拨测服务
         DialingServer:
-          # 拨测服务中心的地址配置
-          # 此处不需要修改
-          use_https: true
-          host: dflux-dial.dataflux.cn
-          port: 443
+          use_https: false
+          host: dflux-dialtesting.utils
+          port: 9538
           timeout: 10
-
-          # 此处需要向产品侧索取拨测服务的 AK
-          # 每个部署版本一组 AK 信息
-          ak_id: ""
-          ak_secret: ""
-          
-          # 每个部署的版本有不同的 DataWay 地址
-          # 用于将拨测数据打入到相应部署版本工作空间内
-          # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
-          open_dataway_url: "http://openway.cloudcare.cn?token={}"
+          ak_id:
+          ak_secret:
+          open_dataway_url: http://testing-openway.cloudcare.cn?token={}
 
     database: |-
 
@@ -1088,3 +1079,89 @@ upgrade:
 
       -- 更新使用量限制信息
       UPDATE `main_config` SET `description` = '免费额度', `value` = '{\"ts\": 500, \"job\": 5000, \"rum\": 100, \"logs\": 2000000, \"trace\": 10000}' WHERE `keyCode` = 'FreeLimitV2';
+
+
+  # 2021.06.17 迭代
+  - seq: 32
+    database: |-
+
+      -- 新增 指标类型快照
+      ALTER TABLE biz_snapshots MODIFY COLUMN `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'logging' NOT NULL COMMENT '快照类型';
+
+      -- 视图表新增 `iconSet` 字段用于记录视图的图表信息
+      ALTER TABLE `biz_dashboard`
+      ADD COLUMN `iconSet` json NOT NULL COMMENT '视图缩略图信息' AFTER `image`;
+
+      -- 调整分享配置表
+      ALTER TABLE `biz_share_config`
+      DROP COLUMN `shareCode`,
+      ADD COLUMN `content` json NOT NULL COMMENT '分享对象的快照内容' AFTER `meta`,
+      DROP INDEX `k_share_code`;
+
+      -- 新加了biz_data_blacklist_rule表
+      CREATE TABLE `biz_data_blacklist_rule` (
+      	`id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+      	`uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, bkrul-',
+      	`workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+      	`type` enum('logging') NOT NULL DEFAULT 'logging' COMMENT '数据源类型',
+      	`source` varchar(64) NOT NULL DEFAULT '' COMMENT '数据来源',
+      	`filters` json NOT NULL COMMENT '过滤条件列表',
+      	`conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
+      	`status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+      	`creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+      	`updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+      	`createAt` int(11) NOT NULL DEFAULT '-1',
+      	`deleteAt` int(11) NOT NULL DEFAULT '-1',
+      	`updateAt` int(11) NOT NULL DEFAULT '-1',
+      	PRIMARY KEY (`id`),
+      	UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+      	KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+      -- 新加了biz_email表
+      CREATE TABLE `biz_email` (
+      	`id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+      	`uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, 前缀是email_',
+      	`workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+      	`type` enum('almost','already') NOT NULL DEFAULT 'almost' COMMENT '邮件类型',
+      	`temName` varchar(64) NOT NULL DEFAULT '' COMMENT '邮件模版名',
+      	`info` json NOT NULL COMMENT '邮件参数',
+      	`content` text NOT NULL COMMENT '邮件内容',
+      	`status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+      	`creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+      	`updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+      	`createAt` int(11) NOT NULL DEFAULT '-1',
+      	`deleteAt` int(11) NOT NULL DEFAULT '-1',
+      	`updateAt` int(11) NOT NULL DEFAULT '-1',
+      	PRIMARY KEY (`id`),
+      	UNIQUE KEY `email_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+      	KEY `e_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 注意，此处需要先删除分享数据之后，才能更新`AUTO_INCREMENT`
+      DELETE FROM biz_share_config;
+      -- 重设 AUTO_INCREMENT
+      ALTER TABLE `biz_share_config` AUTO_INCREMENT = 0;
+
+      -- 初始化现有视图的`iconSet`字段数据
+      update biz_dashboard set iconSet='{}' WHERE `status`=0;
+
+      -- 清理场景已删除，但内部节点未删除的数据1
+      UPDATE biz_node set status=3 where status=0 and sceneUUID in (select uuid from biz_scene where `status`=3);
+      -- 清理节点已删除，但是关联视图未删除的数据2
+      UPDATE biz_dashboard set status=3 WHERE status=0 and uuid in (SELECT dashboardUUID as uuid from biz_node WHERE status=3);
+      -- 清理视图已删除，但关联的视图变量未删除的数据3
+      UPDATE biz_variable set status=3 WHERE status=0 and dashboardUUID in (SELECT uuid from biz_dashboard WHERE status=3);
+      -- 清理视图已删除，但关联的图表未删除的数据4
+      UPDATE biz_chart set status=3 WHERE status=0 and dashboardUUID in (SELECT uuid from biz_dashboard WHERE status=3);
+
+      -- 插入免费版工作空间使用量统计配置
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeMeteringUnitConfig', '免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count + keyevent_count + security_count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 免费额度限制配置
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 500, \"job\": 5000, \"rum\": 100, \"logs\": 2000000, \"trace\": 10000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 付费版工作空间使用量和计费统计公式
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"countEquation\": \"int(math.ceil((ts_count)/500)+count ) if (ts_count / (count or 1)) > 500 else count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"(count + keyevent_count + security_count - datakit_count * 1000000) if count + keyevent_count + security_count > datakit_count * 1000000 else 0\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+

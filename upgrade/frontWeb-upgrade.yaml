@@ -47,5 +47,13 @@ upgradeInfo:
       frontWeb: |-
 
         rumTrackInteractions: 1,  // 允许 RUM 收集 action 数据
+
+  - seq: 7
+    config:
+      frontWeb: |-
+
+        logsEnable: 0,           // 是否开启 Logs 表示开启，如果不开启，以下的配置值可以为空
+        logsDatakitUrl: "",      // Logs DataKit 的地址
+        logsJsUrl: "", // logs sdk js 地址
        
 
