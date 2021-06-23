@@ -12,7 +12,7 @@ apps:
     management-webclient: 1.20.64:management-webclient-9e492e6-1624359048
     message-desk: 1.20.64:message-desk-667df71-1624359048
     message-desk-worker: 1.20.64:message-desk-worker-a956370-1624359048
-    dataflux-func: 1.20.64:dataflux-func-6b76c07-1624359048
+    dataflux-func: 1.20.64:dataflux-func-890ea6a-1624359048
     utils-server: 1.20.64:utils-server-9f852f3-1624359048
     data-warehouse: 1.20.64:data-warehouse-545291f-1624359048
   version: 1.20.64
