@@ -755,7 +755,6 @@ var setup = (function () {
       }).done(function(){
         that.config_item_checked_all();
       });
-    }
     }else{
       alert("标红的配置项有格式错误，请修改后再试！");
     }
