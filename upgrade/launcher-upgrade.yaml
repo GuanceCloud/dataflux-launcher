@@ -273,7 +273,7 @@ upgradeInfo:
       1、刷新 Elasticsearch 中的事件模板：
 
         ```
-        curl 'http://inner.forthought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+        curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
         ```
 
       2、事件的数据字段变更，将旧数据迁移并转换为新结构，并删除老数据索引：
