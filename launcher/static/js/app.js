@@ -433,16 +433,14 @@ var setup = (function () {
     });
 
     if (!hasErr){
-      // this.post("configmap/create", maps).then(function(d){
-      //   that.go("/install/service/config");
-      // }).done(function(){
-      //   that.config_item_checked_all();
-      // });
+      this.post("configmap/create", maps).then(function(d){
+        that.go("/install/service/config");
+      }).done(function(){
+        that.config_item_checked_all();
+      });
     }else{
       alert("标红的配置项有格式错误，请修改后再试！");
     }
-
-    this.config_item_checked_all();
   };
 
 
@@ -730,21 +728,37 @@ var setup = (function () {
   app.prototype.new_configmap_create = function(){
     var that = this;
     var maps = {};
+    var hasErr = false;
 
     $('#btnConfigmapCreate').attr("disabled","disabled");
 
     $('.config-review textarea').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
+      var mapFormat = me.data('format');
 
-      maps[key] = me.val();
+      var val = me.val();
+      var formatErr = !that.config_format(val, mapFormat);
+
+      me.parents('.config-item-group').removeClass('error');
+      if (!formatErr){
+        maps[key] = val;
+      }else{
+        me.parents('.config-item-group').addClass('error');
+        hasErr = true;
+      }
     });
 
-    this.post("up/configmap/create", maps).then(function(d){
-      that.go("/up/configmap");
-    }).done(function(){
-      that.config_item_checked_all();
-    });
+    if(!hasErr){
+      this.post("up/configmap/create", maps).then(function(d){
+        that.go("/up/configmap");
+      }).done(function(){
+        that.config_item_checked_all();
+      });
+    }
+    }else{
+      alert("标红的配置项有格式错误，请修改后再试！");
+    }
   };
 
   app.prototype.open_setting = function(key, title){   

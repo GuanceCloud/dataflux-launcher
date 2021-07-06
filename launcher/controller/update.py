@@ -85,6 +85,8 @@ def new_configmap_check():
       mapname = cm['mapname']
       mapkey  = cm['mapkey']
       services   = cm['services']
+      mapFormat  = cm.get('format', '')
+
       config_unused = False
 
       # 不再使用的服务的配置文件，跳过不作检查
@@ -106,7 +108,8 @@ def new_configmap_check():
       cm = {
         'key': cm['key'],
         'content': content,
-        'services': [tmpServiceDict[item]['name'] for item in cm['services']]
+        'services': [tmpServiceDict[item]['name'] for item in cm['services']],
+        'format': mapFormat
       }
       configmaps['configmaps'].append(cm)
 
