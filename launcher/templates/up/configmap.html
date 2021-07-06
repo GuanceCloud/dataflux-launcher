@@ -11,52 +11,54 @@
     <div class="panel-group configAccordion" role="tablist" aria-multiselectable="true">
       <div class="panel panel-default config-review">
         {% for conf in ns.configmaps %}
-        <div class="panel-heading" role="tab">
-          <h4 class="panel-title">
-            {% if conf.updates | length > 0 %}
-              <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
-                <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" checked="checked"/>&nbsp;升级配置
-              </label>
-            {% else %}
-              <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
-                <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" />&nbsp;升级配置
-              </label>
-            {% endif %}
-
-            <i class="icon-right"></i>
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
-              {{ conf.key }}（
-              {% for serviceName in conf.services %}
-                {{ serviceName }}{{ '、' if not loop.last }}
-              {% endfor %}）
-            </a>
-
-            {% if conf.updates | length > 0 %}
-            <span class="text-danger">配置有更新!!!</span>
-            {% endif %}
-          </h4>
-        </div>
-        <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'checked-edit' if conf.updates | length > 0  }}" role="tabpanel">
-          <div class="panel-body">
-            <div class="config-update-left">
-
-              {% if conf.updates | length == 0 %}
-              <div class="high-block-sm">
-                <h5># 无配置更新，但也可以在右侧修改配置</h5>
-              </div>
+        <div class="config-item-group">
+          <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+              {% if conf.updates | length > 0 %}
+                <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
+                  <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" checked="checked"/>&nbsp;升级配置
+                </label>
+              {% else %}
+                <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会升级此配置项">
+                  <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" />&nbsp;升级配置
+                </label>
               {% endif %}
 
-              {% for up in conf.updates %}
-              <div class="high-block-sm">
-                <h5># 版本：{{ up.seq }}</h5>
-                <pre>{{ up.content }}</pre>
-              </div>
-              {% endfor %}
+              <i class="icon-right"></i>
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
+                {{ conf.key }}（
+                {% for serviceName in conf.services %}
+                  {{ serviceName }}{{ '、' if not loop.last }}
+                {% endfor %}）
+              </a>
 
-            </div>
-            <div class="config-update-right">
-              <div class="disable-layer"></div>
-              <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>
+              {% if conf.updates | length > 0 %}
+              <span class="text-danger">配置有更新!!!</span>
+              {% endif %}
+            </h4>
+          </div>
+          <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'checked-edit' if conf.updates | length > 0  }}" role="tabpanel">
+            <div class="panel-body">
+              <div class="config-update-left">
+
+                {% if conf.updates | length == 0 %}
+                <div class="high-block-sm">
+                  <h5># 无配置更新，但也可以在右侧修改配置</h5>
+                </div>
+                {% endif %}
+
+                {% for up in conf.updates %}
+                <div class="high-block-sm">
+                  <h5># 版本：{{ up.seq }}</h5>
+                  <pre>{{ up.content }}</pre>
+                </div>
+                {% endfor %}
+
+              </div>
+              <div class="config-update-right">
+                <div class="disable-layer"></div>
+                <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" data-format="{{ conf.format }}" onchange="setup.format_validate(this)" class="text-left monospaced">{{ conf.content }}</textarea>
+              </div>
             </div>
           </div>
         </div>

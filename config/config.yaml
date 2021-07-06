@@ -67,6 +67,7 @@ services:
     - key: core
       mapname: core
       mapkey: config.yaml
+      format: yaml
       services:
       - management-backend
       - inner
@@ -121,6 +122,7 @@ services:
     - key: innerAppTrigger
       mapname: trigger-conf
       mapkey: config.yaml
+      format: yaml
       services:
       - trigger
       template: inner-app-trigger-config.yaml
@@ -141,6 +143,7 @@ services:
     - key: frontWeb
       mapname: front-web-config
       mapkey: config.js
+      format: js
       services:
       - front-webclient
       template: front-web.js
@@ -155,6 +158,7 @@ services:
     - key: managementWeb
       mapname: management-web-config
       mapkey: config.json
+      format: json
       services:
       - management-webclient
       template: management-web.json
@@ -197,6 +201,7 @@ services:
     - key: kodo
       mapname: kodo
       mapkey: config.yaml
+      format: yaml
       services:
       - kodo
       template: kodo.yaml
@@ -204,6 +209,7 @@ services:
     - key: kodoInner
       mapname: kodo-inner
       mapkey: config.yaml
+      format: yaml
       services:
       - kodo-inner
       template: kodo-inner.yaml
@@ -211,6 +217,7 @@ services:
     - key: kodoX
       mapname: kodo-x
       mapkey: config.yaml
+      format: yaml
       services:
       - kodo-x
       template: kodo-x.yaml
@@ -225,6 +232,7 @@ services:
     - key: kodoWS
       mapname: kodo-ws
       mapkey: config.yaml
+      format: yaml
       services:
       - kodo-ws
       template: kodo-ws.yaml
@@ -302,6 +310,7 @@ services:
     - key: func
       mapname: func-config
       mapkey: config.yaml
+      format: yaml
       services:
       - func
       template: func-config.yaml
@@ -309,6 +318,7 @@ services:
     - key: funcInner
       mapname: func-inner-config
       mapkey: config.yaml
+      format: yaml
       services:
       - func-inner
       template: func-inner-config.yaml
@@ -316,6 +326,7 @@ services:
     - key: funcWorker
       mapname: func-worker-config
       mapkey: config.yaml
+      format: yaml
       services:
       - func-worker-beat
       - func-worker-debugger
@@ -367,6 +378,7 @@ services:
     - key: func2Config
       mapname: user-config
       mapkey: user-config.yaml
+      format: yaml
       services:
       - server
       - server-inner
@@ -448,6 +460,7 @@ services:
     - key: messageDeskApi
       mapname: message-desk
       mapkey: config.yaml
+      format: yaml
       services:
       - message-desk
       template: message-desk-api.yaml
@@ -455,6 +468,7 @@ services:
     - key: messageDeskWorker
       mapname: message-desk-worker
       mapkey: config.yaml
+      format: yaml
       services:
       - message-desk-worker
       template: message-desk-worker.yaml
@@ -502,6 +516,7 @@ services:
     - key: internalDataWay
       mapname: dataway-config
       mapkey: config.yaml
+      format: yaml
       services:
       - internal-dataway
       template: internal-dataway-config.yaml
@@ -516,6 +531,7 @@ services:
     - key: dataWarehouseConfig
       mapname: data-warehouse-config
       mapkey: config.yaml
+      format: yaml
       services:
       - data-warehouse
       template: data-warehouse-config.yaml
@@ -588,6 +604,7 @@ updates:
       - key: core
         mapName: core
         mapKey: config.yaml
+        format: yaml
 
   - namespace: forethought-webclient
     project: frontWeb
@@ -597,6 +614,11 @@ updates:
       - key: frontWeb
         mapName: front-web-config
         mapKey: config.js
+        format: js
+      - key: managementWeb
+        mapName: management-web-config
+        mapKey: config.json
+        format: json
 
   - namespace: forethought-kodo
     project: kodo
@@ -606,10 +628,12 @@ updates:
       - key: kodo
         mapName: kodo
         mapKey: config.yaml
+        format: yaml
 
       - key: kodoInner
         mapName: kodo-inner
         mapKey: config.yaml
+        format: yaml
 
       - key: kodoNginx
         mapName: kodo-nginx
@@ -618,10 +642,12 @@ updates:
       - key: kodoX
         mapName: kodo-x
         mapKey: config.yaml
+        format: yaml
 
       - key: kodoWS
         mapName: kodo-ws
         mapKey: config.yaml
+        format: yaml
 
   # - namespace: func
   #   project: func
@@ -648,6 +674,7 @@ updates:
       - key: func2Config
         mapName: user-config
         mapKey: user-config.yaml
+        format: yaml
 
       - key: func2Requirements
         mapName: requirements-config
@@ -661,10 +688,12 @@ updates:
       - key: messageDeskApi
         mapName: message-desk
         mapKey: config.yaml
+        format: yaml
 
       - key: messageDeskWorker
         mapName: message-desk-worker
         mapKey: config.yaml
+        format: yaml
 
   - namespace: utils
     project: dataWarehouse
@@ -674,8 +703,10 @@ updates:
       - key: dataWarehouseConfig
         mapName: data-warehouse-config
         mapKey: config.yaml
+        format: yaml
 
       - key: internalDataWay
         mapName: dataway-config
         mapKey: config.yaml
+        format: yaml
 

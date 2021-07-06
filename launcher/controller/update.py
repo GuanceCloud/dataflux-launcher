@@ -297,9 +297,10 @@ def list_source_and_update_configmaps():
     updateVersions  = versionMdl.list_project_versions(project['project'], seq)
 
     for item in project['config']:
-      mapName = item['mapName']
-      mapKey  = item['mapKey']
-      key     = item['key']
+      mapName     = item['mapName']
+      mapKey      = item['mapKey']
+      key         = item['key']
+      mapFormat   = item.get('format', '')
 
       thisKeyUpdateConfig =[]
       for upv in updateVersions:
@@ -318,6 +319,7 @@ def list_source_and_update_configmaps():
         'key': key,
         'mapName': mapName,
         'mapKey': mapKey,
+        'format': mapFormat,
         'content': configmapData[mapKey],
         'updates': thisKeyUpdateConfig
       }

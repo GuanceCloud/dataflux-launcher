@@ -87,7 +87,8 @@ def config_template():
       cm = {
         'key': configmap['key'],
         'content': content,
-        'services': [tmpServiceDict[item]['name'] for item in configmap['services']]
+        'services': [tmpServiceDict[item]['name'] for item in configmap['services']],
+        'format': configmap.get('format', '')
       }
       configmaps['configmaps'].append(cm)
 

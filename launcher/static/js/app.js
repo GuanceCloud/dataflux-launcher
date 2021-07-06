@@ -45,7 +45,33 @@ var setup = (function () {
     this.post = function(url, data, headers){
       return _send(url, "POST", JSON.stringify(data || ""), headers)
     };
-  }
+
+    this.config_format = function(val, format){
+      var success = true;
+
+      if (format == 'yaml'){
+        try {
+          dict = jsyaml.safeLoad(val);
+        } catch (err) {
+          success = false;
+        }
+      }else if(format == 'json'){
+        try{
+          JSON.parse(val);
+        } catch(err){
+          success = false;
+        }
+      }else if(format == 'js'){
+        try{
+          eval(val);
+        } catch(err){
+          success = false;
+        }
+      }
+
+      return success;
+    }
+  };
 
   app.prototype.setting_init = function(){
     var that = this;
@@ -364,27 +390,59 @@ var setup = (function () {
 
 
   app.prototype.config_item_checked_all = function(){
-    $('#btnConfigmapCreate').attr("disabled", $('.config-review :checkbox:not(:checked)').length != 0);
+    $('#btnConfigmapCreate').attr("disabled", !$('#chk_config :checkbox').is(':checked'));
+  };
+
+  app.prototype.format_validate = function(obj){
+    var that = this;
+    var me = $(obj);
+    var mapFormat = me.data('format');
+
+    var val = me.val();
+    var formatErr = !that.config_format(val, mapFormat);
+
+    me.parents('.config-item-group').removeClass('error');
+    if (formatErr){
+      me.parents('.config-item-group').addClass('error');
+    }
+
+    return !formatErr;
   };
 
   app.prototype.configmap_create = function(){
     var that = this;
     var maps = {};
+    var hasErr = false;
 
     $('#btnConfigmapCreate').attr("disabled","disabled");
-
     $('.config-review textarea').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
+      var mapFormat = me.data('format');
 
-      maps[key] = me.val();
+      var val = me.val();
+      var formatErr = !that.config_format(val, mapFormat);
+
+      me.parents('.config-item-group').removeClass('error');
+      if (!formatErr){
+        maps[key] = val;
+      }else{
+        me.parents('.config-item-group').addClass('error');
+        hasErr = true;
+      }
     });
 
-    this.post("configmap/create", maps).then(function(d){
-      that.go("/install/service/config");
-    }).done(function(){
-      that.config_item_checked_all();
-    });
+    if (!hasErr){
+      // this.post("configmap/create", maps).then(function(d){
+      //   that.go("/install/service/config");
+      // }).done(function(){
+      //   that.config_item_checked_all();
+      // });
+    }else{
+      alert("标红的配置项有格式错误，请修改后再试！");
+    }
+
+    this.config_item_checked_all();
   };
 
 
@@ -578,34 +636,51 @@ var setup = (function () {
     });
   };
 
-
   app.prototype.configmap_update = function(){
     var that = this;
     var maps = {};
+    var hasErr = false;
 
     $('#btnConfigmapUpdate').attr("disabled", true);
     $('.config-review textarea').each(function(idx, item){
       var me = $(item);
       var key = me.data('key');
+      var mapFormat = me.data('format');
 
-      // 只更新勾选了 “升级配置” 的配置项
-      if ($('#chk' + key).is(":checked")){
-        maps[key] = me.val();
+      var val = me.val();
+      var formatErr = !that.config_format(val, mapFormat);
+
+      me.parents('.config-item-group').removeClass('error');
+
+      if (!formatErr){
+        // 只更新勾选了 “升级配置” 的配置项
+        if ($('#chk' + key).is(":checked")){
+          maps[key] = val;
+        }
+      }else{
+        me.parents('.config-item-group').addClass('error');
+        hasErr = true;
       }
 
     });
 
-    if (Object.keys(maps).length == 0){
-      alert("未勾选需要升级的配置项。");
+    if (!hasErr){ 
+      if (Object.keys(maps).length == 0){
+        alert("未勾选需要升级的配置项。");
 
-      return;
+        return;
+      }
+
+      this.post("up/configmap/update", maps).then(function(d){
+        that.go("/up/database");
+      }).done(function(){
+
+      });
+    }else{
+      alert("标红的配置项有格式错误，请修改后再试！");
     }
 
-    this.post("up/configmap/update", maps).then(function(d){
-      that.go("/up/database");
-    }).done(function(){
-
-    });
+    this.up_config_check_edit();
   };
 
 

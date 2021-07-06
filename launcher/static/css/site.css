@@ -275,6 +275,14 @@ footer{
   background-color: #fff;
 }
 
+.config-review .config-item-group.error .panel-title a{
+  color: red;
+}
+
+.config-review .config-item-group.error textarea{
+  border: 1px dotted red;
+}
+
 @keyframes r0 {
   0% {
     transform:rotate(0deg);

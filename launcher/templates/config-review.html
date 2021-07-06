@@ -6,29 +6,31 @@
 
   {% for ns in pageData %}
     {% if ns.configmaps | length > 0 %}
-    <div class="high-block">
+    <div class="high-block config-review">
       <h5>命名空间：{{ ns.namespace }}</h5>
       <div class="panel-group" id="configAccordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default config-review">
+        <div class="panel panel-default">
           {% for conf in ns.configmaps %}
-          <div class="panel-heading" role="tab">
-            <label class="pull-right" onclick="setup.config_item_checked_all()">
-              <input type="checkbox" />
-              已检查
-            </label>
-            <h4 class="panel-title">
-              <i class="icon-right"></i>
-              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
-                {{ conf.key }}（
-                {% for serviceName in conf.services %}
-                  {{ serviceName }}{{ '、' if not loop.last }}
-                {% endfor %}）
-              </a>
-            </h4>
-          </div>
-          <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
-            <div class="panel-body">
-              <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" class="text-left monospaced">{{ conf.content }}</textarea>
+          <div class="config-item-group">
+            <div class="panel-heading" role="tab">
+              {# <label class="pull-right" onclick="setup.config_item_checked_all()"> #}
+              {#   <input type="checkbox" /> #}
+              {#   已检查 #}
+              {# </label> #}
+              <h4 class="panel-title">
+                <i class="icon-right"></i>
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
+                  {{ conf.key }}（
+                  {% for serviceName in conf.services %}
+                    {{ serviceName }}{{ '、' if not loop.last }}
+                  {% endfor %}）
+                </a>
+              </h4>
+            </div>
+            <div id="collapse{{ conf.key }}" class="panel-collapse collapse" role="tabpanel">
+              <div class="panel-body">
+                <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" data-format="{{ conf.format }}" onchange="setup.format_validate(this)" class="text-left monospaced">{{ conf.content }}</textarea>
+              </div>
             </div>
           </div>
           {% endfor %}
@@ -41,7 +43,11 @@
 
 <div class="row form-body">
   <div class="text-right">
-    <button id="btnConfigmapCreate" {{ "disabled" if not __common__.debug }} class="btn btn-danger" onclick="setup.configmap_create()">检查完毕，生成配置！</button>
+    <label id="chk_config" onclick="setup.config_item_checked_all()">
+      <input type="checkbox" />
+      已检查全部配置信息
+    </label>
+    <button id="btnConfigmapCreate" {{ "disabled" if not __common__.debug }} class="btn btn-danger" onclick="setup.configmap_create()">生成配置</button>
   </div>
 </div>
 
