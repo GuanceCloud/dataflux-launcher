@@ -1,24 +1,30 @@
--- -------------------------------------------------------------
--- TablePlus 3.6.2(322)
---
--- https://tableplus.com/
---
--- Database: message_desk
--- Generation Time: 2020-07-17 01:47:23.0640
--- -------------------------------------------------------------
+# ************************************************************
+# Sequel Ace SQL dump
+# 版本号： 3034
+#
+# https://sequel-ace.com/
+# https://github.com/Sequel-Ace/Sequel-Ace
+#
+# 主机: ubuntu20-dev.vm (MySQL 5.7.34)
+# 数据库: message_desk
+# 生成时间: 2021-06-23 09:45:41 +0000
+# ************************************************************
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+SET NAMES utf8mb4;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40101 SET @OLD_SQL_MODE='NO_AUTO_VALUE_ON_ZERO', SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
+# 转储表 biz_main_mail_black_list
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_mail_black_list`;
+
 CREATE TABLE `biz_main_mail_black_list` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -31,7 +37,13 @@ CREATE TABLE `biz_main_mail_black_list` (
   UNIQUE KEY `address` (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件黑名单';
 
+
+
+# 转储表 biz_main_task_result_alidayu_double_call
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_double_call`;
+
 CREATE TABLE `biz_main_task_result_alidayu_double_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -59,7 +71,13 @@ CREATE TABLE `biz_main_task_result_alidayu_double_call` (
   KEY `accountId` (`toAccountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于多方通话任务结果';
 
+
+
+# 转储表 biz_main_task_result_alidayu_sms
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_sms`;
+
 CREATE TABLE `biz_main_task_result_alidayu_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -87,7 +105,13 @@ CREATE TABLE `biz_main_task_result_alidayu_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于短信任务结果';
 
+
+
+# 转储表 biz_main_task_result_alidayu_tts_call
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_alidayu_tts_call`;
+
 CREATE TABLE `biz_main_task_result_alidayu_tts_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -114,7 +138,13 @@ CREATE TABLE `biz_main_task_result_alidayu_tts_call` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里大于TTS语音任务结果';
 
+
+
+# 转储表 biz_main_task_result_aliyun_click_to_dial
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_click_to_dial`;
+
 CREATE TABLE `biz_main_task_result_aliyun_click_to_dial` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -144,7 +174,13 @@ CREATE TABLE `biz_main_task_result_aliyun_click_to_dial` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云点击拨号任务结果';
 
+
+
+# 转储表 biz_main_task_result_aliyun_sms
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_sms`;
+
 CREATE TABLE `biz_main_task_result_aliyun_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -172,7 +208,13 @@ CREATE TABLE `biz_main_task_result_aliyun_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云通讯短信任务结果';
 
+
+
+# 转储表 biz_main_task_result_aliyun_tts_call
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_aliyun_tts_call`;
+
 CREATE TABLE `biz_main_task_result_aliyun_tts_call` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -200,7 +242,13 @@ CREATE TABLE `biz_main_task_result_aliyun_tts_call` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='阿里云通讯TTS语音任务结果';
 
+
+
+# 转储表 biz_main_task_result_ding_talk_robot
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_ding_talk_robot`;
+
 CREATE TABLE `biz_main_task_result_ding_talk_robot` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -222,7 +270,41 @@ CREATE TABLE `biz_main_task_result_ding_talk_robot` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钉钉机器人任务结果';
 
+
+
+# 转储表 biz_main_task_result_feishu_robot
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_main_task_result_feishu_robot`;
+
+CREATE TABLE `biz_main_task_result_feishu_robot` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `task` varchar(128) NOT NULL DEFAULT '',
+  `origin` varchar(128) DEFAULT NULL,
+  `startTime` int(11) DEFAULT NULL COMMENT '任务开始时间(秒级UNIX时间戳)',
+  `endTime` int(11) DEFAULT NULL COMMENT '任务结束时间(秒级UNIX时间戳)',
+  `msgType` varchar(15) DEFAULT NULL COMMENT '消息类型',
+  `argsJSON` text COMMENT '列表参数JSON',
+  `kwargsJSON` text COMMENT '字典参数JSON',
+  `retvalJSON` text COMMENT '执行结果JSON',
+  `status` varchar(64) DEFAULT '' COMMENT '任务状态: SUCCESS|FAILURE',
+  `einfoTEXT` text COMMENT '错误信息TEXT',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `task` (`task`),
+  KEY `origin` (`origin`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='飞书机器人任务结果';
+
+
+
+# 转储表 biz_main_task_result_http_request
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_http_request`;
+
 CREATE TABLE `biz_main_task_result_http_request` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -248,7 +330,13 @@ CREATE TABLE `biz_main_task_result_http_request` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='HTTP请求任务结果';
 
+
+
+# 转储表 biz_main_task_result_jiguang
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_jiguang`;
+
 CREATE TABLE `biz_main_task_result_jiguang` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -288,7 +376,13 @@ CREATE TABLE `biz_main_task_result_jiguang` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='极光推送任务结果';
 
+
+
+# 转储表 biz_main_task_result_mail
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_mail`;
+
 CREATE TABLE `biz_main_task_result_mail` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -318,7 +412,13 @@ CREATE TABLE `biz_main_task_result_mail` (
   KEY `sender` (`sender`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='邮件任务结果';
 
+
+
+# 转储表 biz_main_task_result_old_sms
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `biz_main_task_result_old_sms`;
+
 CREATE TABLE `biz_main_task_result_old_sms` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -344,7 +444,41 @@ CREATE TABLE `biz_main_task_result_old_sms` (
   KEY `accountId` (`accountId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='旧平台短信任务结果';
 
+
+
+# 转储表 biz_main_task_result_wechat_robot
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_main_task_result_wechat_robot`;
+
+CREATE TABLE `biz_main_task_result_wechat_robot` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `task` varchar(128) NOT NULL DEFAULT '',
+  `origin` varchar(128) DEFAULT NULL,
+  `startTime` int(11) DEFAULT NULL COMMENT '任务开始时间(秒级UNIX时间戳)',
+  `endTime` int(11) DEFAULT NULL COMMENT '任务结束时间(秒级UNIX时间戳)',
+  `msgType` varchar(15) DEFAULT NULL COMMENT '消息类型',
+  `argsJSON` text COMMENT '列表参数JSON',
+  `kwargsJSON` text COMMENT '字典参数JSON',
+  `retvalJSON` text COMMENT '执行结果JSON',
+  `status` varchar(64) DEFAULT '' COMMENT '任务状态: SUCCESS|FAILURE',
+  `einfoTEXT` text COMMENT '错误信息TEXT',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `task` (`task`),
+  KEY `origin` (`origin`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='企业微信机器人任务结果';
+
+
+
+# 转储表 wat_main_access_key
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_access_key`;
+
 CREATE TABLE `wat_main_access_key` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -363,7 +497,13 @@ CREATE TABLE `wat_main_access_key` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# 转储表 wat_main_file
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_file`;
+
 CREATE TABLE `wat_main_file` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -381,7 +521,13 @@ CREATE TABLE `wat_main_file` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# 转储表 wat_main_organization
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_organization`;
+
 CREATE TABLE `wat_main_organization` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -394,9 +540,24 @@ CREATE TABLE `wat_main_organization` (
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`),
   UNIQUE KEY `UNIQUE_ID` (`uniqueId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `wat_main_organization` WRITE;
+/*!40000 ALTER TABLE `wat_main_organization` DISABLE KEYS */;
+
+INSERT INTO `wat_main_organization` (`seq`, `id`, `uniqueId`, `name`, `markers`, `isDisabled`, `createTime`, `updateTime`)
+VALUES
+	(1,X'6F2D737973',X'73797374656D','System Organization',NULL,0,'2017-07-28 18:08:03','2018-05-24 00:47:06');
+
+/*!40000 ALTER TABLE `wat_main_organization` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# 转储表 wat_main_post
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `wat_main_post`;
+
 CREATE TABLE `wat_main_post` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -412,7 +573,13 @@ CREATE TABLE `wat_main_post` (
   KEY `USER_ID` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# 转储表 wat_main_system_config
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_system_config`;
+
 CREATE TABLE `wat_main_system_config` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -423,7 +590,13 @@ CREATE TABLE `wat_main_system_config` (
   UNIQUE KEY `ID` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# 转储表 wat_main_task_result_example
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_task_result_example`;
+
 CREATE TABLE `wat_main_task_result_example` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -444,7 +617,13 @@ CREATE TABLE `wat_main_task_result_example` (
   KEY `origin` (`origin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
+# 转储表 wat_main_user
+# ------------------------------------------------------------
+
 DROP TABLE IF EXISTS `wat_main_user`;
+
 CREATE TABLE `wat_main_user` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -463,9 +642,24 @@ CREATE TABLE `wat_main_user` (
   UNIQUE KEY `ID` (`id`),
   UNIQUE KEY `USERNAME` (`username`),
   KEY `ORGANIZATION_ID` (`organizationId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+LOCK TABLES `wat_main_user` WRITE;
+/*!40000 ALTER TABLE `wat_main_user` DISABLE KEYS */;
+
+INSERT INTO `wat_main_user` (`seq`, `id`, `organizationId`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`)
+VALUES
+	(1,X'752D61646D696E',X'6F2D737973','admin','03449cf93ebd8f67f652f9a82b2148380b2597eedd777963245472be3311e75f3ae516244b6d7648b9b044e2523c2840bdf86a852037db7e58e9b216539b2d21','系统管理员',NULL,NULL,'sa','*',0,'2017-07-28 18:08:03','2019-02-25 03:19:24');
+
+/*!40000 ALTER TABLE `wat_main_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# 转储表 wat_ref_tag
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `wat_ref_tag`;
+
 CREATE TABLE `wat_ref_tag` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `entityId` char(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -480,18 +674,12 @@ CREATE TABLE `wat_ref_tag` (
   KEY `TAG_K` (`tagK`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `wat_main_organization` (`seq`, `id`, `uniqueId`, `name`, `markers`, `isDisabled`, `createTime`, `updateTime`) VALUES
-('1', 'o-sys', 'system', 'System Organization', NULL, '0', '2017-07-28 18:08:03', '2018-05-24 00:47:06');
-
-INSERT INTO `wat_main_user` (`seq`, `id`, `organizationId`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`) VALUES
-('1', 'u-admin', 'o-sys', 'admin', '03449cf93ebd8f67f652f9a82b2148380b2597eedd777963245472be3311e75f3ae516244b6d7648b9b044e2523c2840bdf86a852037db7e58e9b216539b2d21', '系统管理员', NULL, NULL, 'sa', '*', '0', '2017-07-28 18:08:03', '2019-02-25 03:19:24');
 
 
 
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 17/06/2021 16:49:01
+ Date: 30/06/2021 11:36:19
 */
 
 SET NAMES utf8mb4;
@@ -377,7 +377,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -398,14 +398,11 @@ CREATE TABLE `biz_object_class_cfg` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 objc-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '视图UUID',
+  `sourceType` enum('object','custom_object') NOT NULL DEFAULT 'custom_object' COMMENT '数据源来源类型',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类名',
   `alias` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类别名',
-  `retentionPeriod` varchar(32) NOT NULL DEFAULT '' COMMENT '闲置时间-超过此时间之后会删除对象',
-  `publicSet` json NOT NULL COMMENT '对象分类列表的公共和默认设置',
-  `colSets` json NOT NULL COMMENT '对象分类列表的字段设置列表',
-  `tags` json DEFAULT NULL COMMENT '当前分类的 tags列表',
-  `fields` json DEFAULT NULL COMMENT '当前分类的fields列表',
+  `dashboardBindSet` json DEFAULT NULL COMMENT '视图绑定设置列表',
+  `fields` json DEFAULT NULL COMMENT '属性配置列表',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -840,7 +837,7 @@ CREATE TABLE `main_config` (
   `value` json NOT NULL COMMENT '配置数据',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`keyCode`) COMMENT 'UUID 做成全局唯一'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for main_datakit_online
