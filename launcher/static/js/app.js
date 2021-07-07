@@ -500,7 +500,7 @@ var setup = (function () {
             total = total + 1;
 
             jqI.removeClass('icon-success service-pendding');
-            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
+            if(!item.fullImagePath || item.replicas != item.availableReplicas || item.unavailableReplicas != 0){
               jqI.addClass('service-pendding');
 
               hasPendding = true;
@@ -571,7 +571,7 @@ var setup = (function () {
           jqNewI.removeClass('text-warning glyphicon glyphicon-ban-circle icon-success service-pendding');
 
           if(item.newImagePath == item.fullImagePath){
-            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
+            if(!item.fullImagePath || item.replicas != item.availableReplicas || item.unavailableReplicas != 0 ){
               jqNewI.addClass('service-pendding');
               jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
 

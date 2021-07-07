@@ -32,6 +32,7 @@ def deploy_status():
       status['key'] = key
       status['replicas'] = item['status'].get('replicas', 0)
       status['availableReplicas'] = item['status'].get('availableReplicas', 0)
+      status['unavailableReplicas'] = item['status'].get('unavailableReplicas', 0)
 
       tempStatus[key] = status
 
@@ -68,6 +69,7 @@ def deploy_status():
                   'imageKey': service['image'],
                   'replicas': replicas,
                   'availableReplicas': 0,
+                  'unavailableReplicas': 0,
                   'disabled': disabled
               })
 
