@@ -6,13 +6,13 @@ apps:
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:1.0.5-rc3
-    core: 1.22.66.1:core-6e1c4c30
-    kodo: 1.22.66.1:kodo-c1afd63f
-    front-webclient: 1.22.66.1:front-webclient-51d2da2f7
-    management-webclient: 1.22.66.1:management-webclient-d866c9b
-    message-desk: 1.22.66.1:message-desk-a8aa5c3
-    message-desk-worker: 1.22.66.1:message-desk-worker-8142aa5
-    dataflux-func: 1.22.66.1:dataflux-func-3c21c63
-    utils-server: 1.22.66.1:utils-server-9f852f3
-    data-warehouse: 1.22.66.1:data-warehouse-17c4178
-  version: 1.22.66.1
+    core: 1.22.66.2:core-6e1c4c30
+    kodo: 1.22.66.2:kodo-c1afd63f
+    front-webclient: 1.22.66.2:front-webclient-eabffee03
+    management-webclient: 1.22.66.2:management-webclient-d866c9b
+    message-desk: 1.22.66.2:message-desk-a8aa5c3
+    message-desk-worker: 1.22.66.2:message-desk-worker-8142aa5
+    dataflux-func: 1.22.66.2:dataflux-func-3c21c63
+    utils-server: 1.22.66.2:utils-server-9f852f3
+    data-warehouse: 1.22.66.2:data-warehouse-17c4178
+  version: 1.22.66.2
