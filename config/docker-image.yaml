@@ -12,7 +12,7 @@ apps:
     management-webclient: 1.22.66:management-webclient-d866c9b-1626711130
     message-desk: 1.22.66:message-desk-a8aa5c3-1626711130
     message-desk-worker: 1.22.66:message-desk-worker-8142aa5-1626711130
-    dataflux-func: 1.22.66:dataflux-func-3c21c63-1626711130
+    dataflux-func: 1.22.66:dataflux-func-7ef8e43-1626711130
     utils-server: 1.22.66:utils-server-9f852f3-1626711130
     data-warehouse: 1.22.66:data-warehouse-545291f-1626711130
   version: 1.22.66
