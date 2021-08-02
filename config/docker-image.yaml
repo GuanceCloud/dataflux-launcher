@@ -1,18 +1,18 @@
 apps:
   registry: pubrepo.jiagouyun.com
-  image_dir: dataflux/
+  image_dir: dataflux-prev/
   images:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:1.0.5-rc3
-    core: 1.22.66:core-6e1c4c30-1626711130
-    kodo: 1.22.66:kodo-c1afd63f-1626711130
-    front-webclient: 1.22.66:front-webclient-23a204bdc-1626711130
-    management-webclient: 1.22.66:management-webclient-d866c9b-1626711130
-    message-desk: 1.22.66:message-desk-a8aa5c3-1626711130
-    message-desk-worker: 1.22.66:message-desk-worker-8142aa5-1626711130
-    dataflux-func: 1.22.66:dataflux-func-7ef8e43-1626711130
-    utils-server: 1.22.66:utils-server-9f852f3-1626711130
-    data-warehouse: 1.22.66:data-warehouse-545291f-1626711130
-  version: 1.22.66
+    core: 1.23.67.1:core-896ce01a
+    kodo: 1.23.67.1:kodo-3ed7a83f
+    front-webclient: 1.23.67.1:front-webclient-b754c2c5d
+    management-webclient: 1.23.67.1:management-webclient-633519a
+    message-desk: 1.23.67.1:message-desk-a8aa5c3
+    message-desk-worker: 1.23.67.1:message-desk-worker-8142aa5
+    dataflux-func: 1.23.67.1:dataflux-func-8fdd1dc
+    utils-server: 1.23.67.1:utils-server-9f852f3
+    data-warehouse: 1.23.67.1:data-warehouse-17c4178
+  version: 1.23.67.1

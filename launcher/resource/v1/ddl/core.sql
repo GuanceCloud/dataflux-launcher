@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 30/06/2021 11:36:19
+ Date: 28/07/2021 09:57:06
 */
 
 SET NAMES utf8mb4;
@@ -58,7 +58,7 @@ CREATE TABLE `biz_account_login_history` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   KEY `accountUUID_fk` (`accountUUID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for biz_chart
@@ -212,7 +212,7 @@ CREATE TABLE `biz_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, 前缀是email_',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('almost','already') NOT NULL DEFAULT 'almost' COMMENT '邮件类型',
+  `type` enum('almost','already','invitation') NOT NULL DEFAULT 'almost' COMMENT '邮件类型',
   `temName` varchar(64) NOT NULL DEFAULT '' COMMENT '邮件模版名',
   `info` json NOT NULL COMMENT '邮件参数',
   `content` text NOT NULL COMMENT '邮件内容',
@@ -377,7 +377,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -593,7 +593,7 @@ CREATE TABLE `biz_snapshots` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `acnt_wksp_fk` (`workspaceUUID`,`accountUUID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for biz_sys_template
@@ -837,7 +837,7 @@ CREATE TABLE `main_config` (
   `value` json NOT NULL COMMENT '配置数据',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`keyCode`) COMMENT 'UUID 做成全局唯一'
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for main_datakit_online
@@ -1171,6 +1171,26 @@ CREATE TABLE `main_workspace_license` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT '主键',
   UNIQUE KEY `uk_instanceId` (`instanceId`) COMMENT 'license id 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for main_workspace_token
+-- ----------------------------
+DROP TABLE IF EXISTS `main_workspace_token`;
+CREATE TABLE `main_workspace_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '采集数据token 唯一标识 tokn-',
+  `expirationAt` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间',
+  `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `uk_wksp` (`workspaceUUID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------

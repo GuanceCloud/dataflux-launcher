@@ -999,7 +999,7 @@ upgrade:
         PRIMARY KEY (`id`),
         UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
         KEY `acnt_wksp_fk` (`workspaceUUID`,`accountUUID`) USING BTREE
-      ) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4;
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
       -- 创建全球区域表
       CREATE TABLE `biz_geo` (
@@ -1200,6 +1200,44 @@ upgrade:
 
       -- 添加内置对象分类名配置
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('BuiltInObjectClass', '内置对象分类列表', '[\"host_processes\", \"docker_containers\", \"kubelet_pod\", \"HOST\", \"kubelet_pod\"]')  ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+
+  # 2021.07.29 迭代
+  - seq: 34
+    database: |-
+
+      -- 新建【工作空间Token表】
+      CREATE TABLE `main_workspace_token` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '采集数据token 唯一标识 tokn-',
+        `expirationAt` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间',
+        `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
+        `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+        `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `uk_wksp` (`workspaceUUID`) USING BTREE
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 通知对象新增 短信通知类型
+      ALTER TABLE `biz_notify_object`
+      MODIFY COLUMN `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'dingTalkRobot' AFTER `name`;
+
+      -- 新增invitation邮件类型
+      ALTER TABLE biz_email MODIFY COLUMN `type` enum('almost','already','invitation') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'almost' NOT NULL COMMENT '邮件类型';
+
+      -- 历史工作空间的Token刷入到新表中
+      Insert into main_workspace_token(uuid, expirationAt, workspaceUUID, creator, updator, status, createAt, updateAt, deleteAt) select token as uuid, -1 as expirationAt, uuid as workspaceUUID, creator, updator, status, createAt, updateAt, deleteAt from main_workspace;
+
+      -- 新增工作空间使用量统计公式
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('UsageStatisticalFormula', '工作空间使用量统计公式（非计费公式）', '{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count + math.ceil(max(0, ts_count - count * 500) / 500)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 更细计算公式
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"sms\": {\"price\": 0.1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"countEquation\": \"count + math.ceil(max(0, ts_count - count * 500) / 500)\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, sum([count, keyevent_count, security_count]) - datakit_count * 1000000)\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}')  ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
 
 
