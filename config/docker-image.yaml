@@ -8,7 +8,7 @@ apps:
     internal-dataway: dataway:1.0.5-rc3
     core: 1.23.67:core-896ce01a-1627890436
     kodo: 1.23.67:kodo-3ed7a83f-1627890436
-    front-webclient: 1.23.67:front-webclient-57eb409ca-1627890436
+    front-webclient: 1.23.67:front-webclient-f7067c8e5-1627890436
     management-webclient: 1.23.67:management-webclient-633519a-1627890436
     message-desk: 1.23.67:message-desk-a8aa5c3-1627890436
     message-desk-worker: 1.23.67:message-desk-worker-8142aa5-1627890436
