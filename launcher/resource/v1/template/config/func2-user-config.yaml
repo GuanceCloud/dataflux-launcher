@@ -20,6 +20,7 @@ REDIS_PASSWORD: {{redis.password}}
 MODE: prod
 
 _DISABLE_SETUP: true
+_DISABLE_DB_AUTO_BACKUP: true
 
 CUSTOM_DF_STUDIO_INNER_API_BASE_URL: http://inner.forethought-core:5000
 
