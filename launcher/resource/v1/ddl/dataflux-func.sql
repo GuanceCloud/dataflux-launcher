@@ -7,7 +7,7 @@
 #
 # 主机: ubuntu20-dev.vm (MySQL 5.7.34)
 # 数据库: dataflux_func
-# 生成时间: 2021-07-19 18:30:37 +0000
+# 生成时间: 2021-08-10 16:12:32 +0000
 # ************************************************************
 
 
@@ -443,7 +443,8 @@ CREATE TABLE `biz_main_script_recover_point` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'manual' COMMENT '类型 import|manual',
-  `tableDumpJSON` json NOT NULL COMMENT '表备份数据JSON',
+  `tableDumpJSON` json DEFAULT NULL COMMENT '表备份数据JSON',
+  `exportData` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin COMMENT '脚本库导出数据',
   `note` text COMMENT '备注',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

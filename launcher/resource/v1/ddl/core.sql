@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 28/07/2021 09:57:06
+ Date: 12/08/2021 10:15:02
 */
 
 SET NAMES utf8mb4;
@@ -582,7 +582,7 @@ CREATE TABLE `biz_snapshots` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
   `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
-  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -593,7 +593,7 @@ CREATE TABLE `biz_snapshots` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `acnt_wksp_fk` (`workspaceUUID`,`accountUUID`) USING BTREE
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for biz_sys_template
@@ -724,6 +724,8 @@ CREATE TABLE `main_account_workspace` (
   `accountUUID` varchar(48) NOT NULL COMMENT '帐户唯一ID',
   `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '视图UUID-与用户绑定',
+  `role` enum('wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户在当前工作空间的角色',
+  `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',

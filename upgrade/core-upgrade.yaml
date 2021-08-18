@@ -1243,5 +1243,25 @@ upgrade:
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('BuiltInObjectClass', '内置对象分类列表', '[\"host_processes\", \"docker_containers\", \"kubelet_pod\", \"HOST\", \"kubernetes_pods\", \"kubernetes_services\", \"kubernetes_deployments\"]') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
 
+  # 2021.08.12 迭代
+  - seq: 35
+    database: |-
+
+      -- 快照支持 other 类型
+      ALTER TABLE `biz_snapshots`
+      MODIFY COLUMN `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'logging' COMMENT '快照类型' AFTER `name`;
+
+      -- 更新计费公式
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 10000)\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 100)\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"sms\": {\"price\": 0.1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"count*price\", \"countEquation\": \"count + math.ceil(max(0, ts_count - count * 500) / 500)\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, sum([count, keyevent_count, security_count]) - datakit_count * 1000000)\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 1000000)\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}')  ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 添加账号角色
+      ALTER TABLE `main_account_workspace`
+      ADD COLUMN `role` enum('wsAdmin','general','readOnly','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户在当前工作空间的角色' AFTER `dashboardUUID`,
+      ADD COLUMN `allSceneVisible` int(1) NOT NULL DEFAULT 0 COMMENT '可见所有场景' AFTER `role`;
+
+      -- 所有工作空间管理员设置角色
+      update main_account_workspace set role='wsAdmin' where isAdmin=1 and `status`=0;
+
+
 
 
