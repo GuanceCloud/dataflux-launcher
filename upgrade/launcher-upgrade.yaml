@@ -281,3 +281,15 @@ upgradeInfo:
         ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_reindex"}'
         ```
+
+  # 2021-08-12
+  - seq: 14
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+    1、更新所有账号的角色：
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_account_role"}'
+        ```
+
