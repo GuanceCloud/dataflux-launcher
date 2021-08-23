@@ -90,7 +90,7 @@ function rtm_tag(){
   }
 
   # 最后的 release tag
-  lastReleaseTag=$(git tag --list | grep -E '^release_' | sort -V | tail -1)
+  lastReleaseTag=$(git tag --list | grep -E '^pre_' | sort -V | tail -1)
   [[ ${#lastReleaseTag} == 0 ]] && return
   git checkout $lastReleaseTag
 
