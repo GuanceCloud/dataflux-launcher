@@ -11,13 +11,9 @@ buildProd:
     - /^release[\/-_]?.*$/
     - /^pre[\/-_]?.*$/
   script:
-    - docker build -t $REPOSITORY:$CI_COMMIT_REF_NAME .
-    - docker tag $REPOSITORY:$CI_COMMIT_REF_NAME registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME
-    - docker tag $REPOSITORY:$CI_COMMIT_REF_NAME registry.jiagouyun.com/$REPOSITORY:prod
-    - docker push registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME
-    - docker push registry.jiagouyun.com/$REPOSITORY:prod
+    - docker buildx build --platform linux/arm64,linux/amd64 -t registry.jiagouyun.com/$REPOSITORY:$CI_COMMIT_REF_NAME . --push
   tags:
-    - cloudcare
+    - cloudcare-multiarch 
 
 buildTesting:
   stage: build
@@ -39,11 +35,10 @@ buildRTM:
     - VDIR=${V[0]}.${V[1]}.${V[2]}
     - REPO=dataflux/$VDIR
     - TAG=${PROJECT}-${V[3]}-${V[4]}
-    - docker build -t $REPO:$TAG .
-    - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
-    - docker push pubrepo.jiagouyun.com/$REPO:$TAG
+
+    - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
   tags:
-    - cloudcare
+    - cloudcare-multiarch 
 
 buildRTMPrev:
   stage: build
@@ -54,8 +49,7 @@ buildRTMPrev:
     - VDIR=${V[0]}.${V[1]}.${V[2]}.${V[3]}
     - REPO=dataflux-prev/$VDIR
     - TAG=${PROJECT}-${V[4]}
-    - docker build -t $REPO:$TAG .
-    - docker tag $REPO:$TAG pubrepo.jiagouyun.com/$REPO:$TAG
-    - docker push pubrepo.jiagouyun.com/$REPO:$TAG
+
+    - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
   tags:
-    - cloudcare
+    - cloudcare-multiarch 
