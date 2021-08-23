@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y kubectl && apt-get install -y mysql-cli
 RUN \
     dpkgArch="$(dpkg --print-architecture)"; \
     awscliv2Url=""; \
-
+    \
     case "$dpkgArch" in \
         arm64) \
             awscliv2Url="https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip"; \
@@ -31,11 +31,11 @@ RUN \
             awscliv2Url="https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"; \
             ;; \
     esac; \
-
+    \
     curl "$awscliv2Url" -o "awscliv2.zip"; \
     unzip awscliv2.zip; \
     ./aws/install; \
-
+    \
     rm -rf ./aws; \
     rm awscliv2.zip;
 
