@@ -512,7 +512,8 @@ services:
     - key: data-warehouse
       name: 数据仓库管理
       image: data-warehouse
-      replicas: 0
+      replicas: 1
+      deleted: True
 
     configmaps: 
     - key: internalDataWay
