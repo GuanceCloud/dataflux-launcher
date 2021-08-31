@@ -6,7 +6,7 @@ apps:
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:1.0.6-rc0
-    core: 1.25.69:core-651d8a97-1630405251
+    core: 1.25.69:core-d811a791-1630405251
     kodo: 1.25.69:kodo-72802710-1630405251
     front-webclient: 1.25.69:front-webclient-864728061-1630405251
     management-webclient: 1.25.69:management-webclient-4b452b8-1630405251
