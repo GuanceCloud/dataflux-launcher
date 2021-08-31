@@ -5,14 +5,14 @@ apps:
     nsq: basis:nsq_1.2.0
     nginx: basis:nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
-    internal-dataway: dataway:1.0.5-rc4
-    core: 1.24.69.1:core-731d105b
-    kodo: 1.24.69.1:kodo-9fead1a2
-    front-webclient: 1.24.69.1:front-webclient-44b44e970
-    management-webclient: 1.24.69.1:management-webclient-1b571e2
-    message-desk: 1.24.69.1:message-desk-a8aa5c3
-    message-desk-worker: 1.24.69.1:message-desk-worker-8142aa5
-    dataflux-func: 1.24.69.1:dataflux-func-9c891cc
-    utils-server: 1.24.69.1:utils-server-48799ca
-    data-warehouse: 1.24.69.1:data-warehouse-5861338
-  version: 1.24.69.1
+    internal-dataway: dataway:1.0.6-rc0
+    core: 1.25.69.1:core-651d8a97
+    kodo: 1.25.69.1:kodo-72802710
+    front-webclient: 1.25.69.1:front-webclient-92deef7f6
+    management-webclient: 1.25.69.1:management-webclient-4b452b8
+    message-desk: 1.25.69.1:message-desk-a8aa5c3
+    message-desk-worker: 1.25.69.1:message-desk-worker-8142aa5
+    dataflux-func: 1.25.69.1:dataflux-func-20dd9c1
+    utils-server: 1.25.69.1:utils-server-9f852f3
+    data-warehouse: 1.25.69.1:data-warehouse-17c4178
+  version: 1.25.69.1

@@ -1263,5 +1263,18 @@ upgrade:
       update main_account_workspace set role='wsAdmin' where isAdmin=1 and `status`=0;
 
 
+  # 2021.08.26 迭代
+  - seq: 36
+    database: |-
 
+      -- biz_share_config表中添加shortUrl属性
+      ALTER TABLE biz_share_config ADD shortUrl varchar(128) NULL COMMENT '短链接';
+
+      -- 更新系统内置的对象分类列表
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('BuiltInObjectClass', '内置对象分类列表', '[\"host_processes\", \"docker_containers\", \"kubelet_pod\", \"HOST\", \"kubernetes_pods\", \"kubernetes_services\", \"kubernetes_deployments\", \"kubernetes_clusters\", \"kubernetes_nodes\", \"kubernetes_replica_sets\"]') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+    config:
+      core: |-
+        kodo:
+          datakitVersionUrl: "https://static.dataflux.cn/datakit/version"
 

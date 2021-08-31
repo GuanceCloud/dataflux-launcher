@@ -11,7 +11,7 @@
  Target Server Version : 50732
  File Encoding         : 65001
 
- Date: 12/08/2021 10:15:02
+ Date: 25/08/2021 13:43:27
 */
 
 SET NAMES utf8mb4;
@@ -567,6 +567,7 @@ CREATE TABLE `biz_share_config` (
   `createAt` int(11) NOT NULL DEFAULT '-1',
   `deleteAt` int(11) NOT NULL DEFAULT '-1',
   `updateAt` int(11) NOT NULL DEFAULT '-1',
+  `shortUrl` varchar(128) DEFAULT NULL COMMENT '短链接',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
