@@ -41,7 +41,25 @@ class Settings(object):
     #   f.close()
 
     return True
-
+  #
+  #
+  # def __default_deploy_replicas():
+  #   result = {}
+  #
+  #   for ns in SERVICECONFIG['services']:
+  #     nsName = ns['namespace']
+  #     result[nsName] = {}
+  #
+  #     for service in ns['services']:
+  #       serviceKey = service['key']
+  #       serviceDisabled = service.get('deleted', False)
+  #       serviceReplicas = service.get('replicas', 0)
+  #
+  #       if not serviceDisabled:
+  #         result[nsName][serviceKey] = {'replicas': serviceReplicas}
+  #
+  #   return result 
+  #
 
   def __dict_merge(self, key, value):
     if key not in self._settingJson:
@@ -221,3 +239,14 @@ class Settings(object):
     self.__dict_merge('registry', value)
     self.__save()
 
+
+  @property
+  def deploy_replicas(self):
+    return  self._settingJson.get('deploy_replicas') or {}
+
+
+  @deploy_replicas.setter
+  def deploy_replicas(self, value):
+    self.__dict_merge('deploy_replicas', value)
+
+    self.__save()
