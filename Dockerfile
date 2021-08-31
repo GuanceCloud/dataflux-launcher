@@ -41,7 +41,7 @@ RUN \
 
 WORKDIR /config/cloudcare-forethought-setup
 ADD ./requirements.txt /config/cloudcare-forethought-setup/
-RUN pip install --upgrade pip && pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /config/cloudcare-forethought-setup/requirements.txt
+RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip && pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /config/cloudcare-forethought-setup/requirements.txt
 
 ADD . /config/cloudcare-forethought-setup/
 
