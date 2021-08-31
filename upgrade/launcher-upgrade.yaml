@@ -293,3 +293,19 @@ upgradeInfo:
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_account_role"}'
         ```
 
+  # 2021-08-26
+  - seq: 14
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、修复日志备份规则的参数问题
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_logbackup_rule"}'
+        ```
+
+      2、更新 ES 索引模板，链路的 message 不做全文索引
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+        ```

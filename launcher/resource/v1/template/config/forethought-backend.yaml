@@ -28,6 +28,7 @@ kodo:
   installCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
   upgradeCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
   versionUrl: "https://static.dataflux.cn/dataway/version"
+  datakitVersionUrl: "https://static.dataflux.cn/datakit/version"
 
 # 报警机器人
 robot:
