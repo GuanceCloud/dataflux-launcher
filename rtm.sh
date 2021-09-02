@@ -123,8 +123,8 @@ function start(){
   echo "  registry: pubrepo.jiagouyun.com" >> ${workDir}/${imageYaml}
   echo "  image_dir: dataflux/" >> ${workDir}/${imageYaml}
   echo "  images:" >> ${workDir}/${imageYaml}
-  echo "    nsq: basis:nsq_1.2.0" >> ${workDir}/${imageYaml}
-  echo "    nginx: basis:nginx_1.13.7" >> ${workDir}/${imageYaml}
+  echo "    nsq: basis:multiarch_nsq_1.2.1" >> ${workDir}/${imageYaml}
+  echo "    nginx: basis:multiarch_nginx_1.13.7" >> ${workDir}/${imageYaml}
   echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本

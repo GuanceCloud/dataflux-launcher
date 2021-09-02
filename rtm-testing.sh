@@ -78,8 +78,8 @@ echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
 echo "  version: testing" >> ${workDir}/${imageYaml}
 echo "  image_dir: ''" >> ${workDir}/${imageYaml}
 echo "  images:" >> ${workDir}/${imageYaml}
-echo "    nsq: basis/nsq:v1.2.0" >> ${workDir}/${imageYaml}
-echo "    nginx: basis/nginx:1.13.7" >> ${workDir}/${imageYaml}
+echo "    nsq: basis:multiarch_nsq_1.2.1" >> ${workDir}/${imageYaml}
+echo "    nginx: basis:multiarch_nginx_1.13.7" >> ${workDir}/${imageYaml}
 echo "    kapacitor: basis/kapacitor:1.5.4" >> ${workDir}/${imageYaml}
 
 # 最新 DataWay 镜像版本
