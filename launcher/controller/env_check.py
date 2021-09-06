@@ -70,7 +70,8 @@ def __redis_ping():
 
             "host": redisSettings['host'],
             "password": redisSettings['password'],
-            "port": redisSettings['port']
+            "port": redisSettings['port'],
+            "ssl": redisSettings.get('ssl', False)
           }
 
   params['port'] = int(params['port'])

@@ -7,13 +7,14 @@ from launcher import settingsMdl
 
 def redis_ping(params):
   params['port'] = int(params['port'])
+  params["ssl"] = params.get('ssl', False)
 
   strictRedis = redis.StrictRedis(**params)
 
   pingStatus = False
 
   try:
-    pingStatus =strictRedis.ping()
+    pingStatus = strictRedis.ping()
   except:
     pass
 

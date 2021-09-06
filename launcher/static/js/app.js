@@ -127,6 +127,7 @@ var setup = (function () {
     var params = {
       "host": $("#iptRedisHost").val(),
       "port": $("#iptRedisPort").val(),
+      "ssl": $("#ckbRedisSSL").is(":checked"),
       "password": $("#iptRedisPassword").val()
     }
 

@@ -11,6 +11,13 @@
           <div class="col-sm-5">
             <!-- 172.16.0.20 -->
             <input type="text" class="form-control" id="iptRedisHost" name="iptRedisHost" required value="{{ pageData.host }}" placeholder="Redis 地址">
+            <label class="checkbox-inline">
+              {% if pageData.ssl %}
+              <input type="checkbox" id="ckbRedisSSL" checked="checked"> SSL
+              {% else %}
+              <input type="checkbox" id="ckbRedisSSL"> SSL
+              {% endif %}
+            </label>
           </div>
           <div class="col-sm-5 error"></div>
         </div>
