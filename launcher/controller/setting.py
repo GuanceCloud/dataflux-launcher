@@ -28,8 +28,8 @@ def setting_deploy_replicas():
 def setting_get(key):
   settingJson = getattr(settingsMdl, key)
 
-  if key == 'deploy_replicas':
-    replicasSetting = setting_deploy_replicas()
+  # if key == 'deploy_replicas':
+  #   replicasSetting = setting_deploy_replicas()
 
   settingsYaml = yaml.dump(settingJson, default_flow_style=False)
 
