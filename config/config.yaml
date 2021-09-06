@@ -413,11 +413,14 @@ services:
       name: 消息中心 API
       image: message-desk
       replicas: 1
+      deleted: True
+      
 
     - key: message-desk-worker
       name: 消息中心 Worker
       image: message-desk-worker
       replicas: 1
+      deleted: True
 
     - key: nsqadmin
       name: NSQ Admin
