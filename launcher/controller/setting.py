@@ -22,7 +22,7 @@ def setting_deploy_replicas():
       if not serviceDisabled:
         result[nsName][serviceKey] = {'replicas': serviceReplicas}
 
-  print(result)
+  # print(result)
   return result 
 
 def setting_get(key):
