@@ -24,7 +24,7 @@
               <span id="img_path_{{ item.key }}">
                 {{ item.fullImagePath }}
               </span>
-              {% if not item.fullImagePath or item.replicas > item.availableReplicas %}
+              {% if not item.fullImagePath or item.replicas != item.availableReplicas %}
               <i class="service-pendding"></i>
               {% elif item.replicas == item.availableReplicas %}
               <i class="icon-success"></i>
