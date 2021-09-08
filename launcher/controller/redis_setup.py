@@ -7,7 +7,7 @@ from launcher import settingsMdl
 
 def redis_ping(params):
   params['port'] = int(params['port'])
-  params["ssl"] = params.get('ssl', False)
+  params["ssl"] = (params.get('ssl', "false") == 'true')
 
   strictRedis = redis.StrictRedis(**params)
 
