@@ -20,6 +20,12 @@ def register_install_router(app):
     path = request.path
     isPrev = True
 
+    # # ddtrace 解包
+    # import msgpack
+    # d = request.data
+    # if d != b'':
+    #   print(">>> ", msgpack.unpackb(d))
+
     steps = None
     if path.startswith("/install"):
       steps = STEPS_COMMON + STEPS_INSTALL
@@ -45,6 +51,8 @@ def register_install_router(app):
   def index():
     readme = setup.readme()
 
+    # import requests
+    # requests.get('http://127.0.0.1:5006/')
     return render("index.html", {"title": "使用协议", "pageData": readme, "steps": STEPS_COMMON + [{'name': '......'}]})
 
 
