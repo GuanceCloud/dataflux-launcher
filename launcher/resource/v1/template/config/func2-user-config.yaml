@@ -16,6 +16,7 @@ REDIS_HOST: {{redis.host}}
 REDIS_PORT: {{redis.port}}
 REDIS_DATABASE: 4
 REDIS_PASSWORD: {{redis.password}}
+REDIS_USE_TLS : false
 
 MODE: prod
 
