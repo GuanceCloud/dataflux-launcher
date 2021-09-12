@@ -186,4 +186,17 @@ update:
             # 上传计费的时间点,24小时方式
             postTime: "01:00"
 
+    #2021/09/08      
+    - seq: 9
+      config:
+        kodoInner: |-
+
+          #【更新】配置项
+          redis:
+            # 【新增】子项，tls，bool类型, 默认是  false
+            tls: false
+
+
+
+
           
