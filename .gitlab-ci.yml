@@ -20,7 +20,7 @@ buildTesting:
   only:
     - dev
   script:
-    - docker buildx build --platform linux/arm64,linux/amd64 -t registry.jiagouyun.com/$REPOSITORY:$testing . --push
+    - docker buildx build --platform linux/arm64,linux/amd64 -t registry.jiagouyun.com/$REPOSITORY:testing . --push
   tags:
     - cloudcare-multiarch 
 
