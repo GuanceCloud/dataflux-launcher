@@ -20,11 +20,9 @@ buildTesting:
   only:
     - dev
   script:
-    - docker build -t $REPOSITORY:testing .
-    - docker tag $REPOSITORY:testing registry.jiagouyun.com/$REPOSITORY:testing
-    - docker push registry.jiagouyun.com/$REPOSITORY:testing
+    - docker buildx build --platform linux/arm64,linux/amd64 -t registry.jiagouyun.com/$REPOSITORY:$testing . --push
   tags:
-    - cloudcare
+    - cloudcare-multiarch 
 
 buildRTM:
   stage: build
