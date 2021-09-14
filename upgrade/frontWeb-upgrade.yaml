@@ -56,10 +56,5 @@ upgradeInfo:
         logsDatakitUrl: "",      // Logs DataKit 的地址
         logsJsUrl: "", // logs sdk js 地址
 
-  - seq: 8
-    config:
-      frontWeb: |-
-
-        nodeFlag: '' // 升级页面节点信息
        
 
