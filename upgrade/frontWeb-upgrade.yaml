@@ -57,4 +57,9 @@ upgradeInfo:
         logsJsUrl: "", // logs sdk js 地址
 
        
+- seq: 8
+    config:
+      frontWeb: |-
+
+        integrateListJsonUrl: '',  // 集成列表json数据的url地址
 
