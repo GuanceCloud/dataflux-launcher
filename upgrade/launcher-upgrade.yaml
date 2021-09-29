@@ -320,3 +320,14 @@ upgradeInfo:
         ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_keyevent_index_template_2021_09_09"}'
         ```
+
+  # 2021-09-28
+  - seq: 17
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、刷新 ES 索引模版
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
+        ```
