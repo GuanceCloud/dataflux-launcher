@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# 版本号： 3038
+# 版本号： 3041
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # 主机: ubuntu20-dev.vm (MySQL 5.7.35)
 # 数据库: dataflux_func
-# 生成时间: 2021-09-22 01:13:02 +0000
+# 生成时间: 2021-10-13 17:05:09 +0000
 # ************************************************************
 
 
@@ -37,6 +37,7 @@ CREATE TABLE `biz_main_api_auth` (
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='API认证';
+
 
 
 # 转储表 biz_main_auth_link
@@ -123,6 +124,25 @@ CREATE TABLE `biz_main_batch_task_info` (
   UNIQUE KEY `ID` (`id`),
   KEY `BATCH_ID` (`batchId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='批处理任务信息';
+
+
+
+# 转储表 biz_main_blueprint
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_main_blueprint`;
+
+CREATE TABLE `biz_main_blueprint` (
+  `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `title` varchar(256) DEFAULT NULL COMMENT '标题',
+  `canvasJSON` json NOT NULL COMMENT '画布JSON',
+  `isDeployed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已部署',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `ID` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='蓝图';
 
 
 
