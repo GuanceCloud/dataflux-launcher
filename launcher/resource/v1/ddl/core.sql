@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 172.16.2.203 (MySQL 5.7.33-log)
-# Database: df_core
-# Generation Time: 2021-09-28 11:30:04 +0000
+# Host: 127.0.0.1 (MySQL 5.7.32)
+# Database: ft-new
+# Generation Time: 2021-10-21 08:01:37 +0000
 # ************************************************************
 
 
@@ -603,6 +603,31 @@ CREATE TABLE `biz_rum_cfg` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rum- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `jsonContent` json NOT NULL COMMENT '额外拓展字段',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_rum_trace
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_rum_trace`;
+
+CREATE TABLE `biz_rum_trace` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rtrace-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '追踪名称',
+  `tags` json NOT NULL COMMENT '标签',
+  `appId` varchar(64) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
