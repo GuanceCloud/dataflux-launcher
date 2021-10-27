@@ -196,6 +196,8 @@ def service_image_config():
   d = {
     "imageRegistry": apps.get('registry', ''),
     "imageDir": imageDir,
+    "storageClassName": settingsMdl.other.get("storageClassName"),
+    "imagePullPolicy": settingsMdl.other.get("imagePullPolicy", "IfNotPresent"),
     "images": []
   }
 
@@ -274,6 +276,7 @@ def service_create(data):
 
   imageDir = data.get('imageDir') or ''
   storageClassName = data.get('storageClassName') or ''
+  imagePullPolicy = data.get('imagePullPolicy') or ''
   images = data.get('images', {})
 
   registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
@@ -296,7 +299,8 @@ def service_create(data):
   }
 
   settingsMdl.other = {
-    "storageClassName": storageClassName
+    "storageClassName": storageClassName,
+    "imagePullPolicy": imagePullPolicy
   }
 
   _registry_secret_create(settingsMdl.registry)
@@ -310,7 +314,7 @@ def service_create(data):
     if val.get('replicas', 1) == 0:
       continue
 
-    serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val})
+    serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val, "settings": {"imagePullPolicy": imagePullPolicy}})
     path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 
     with open(path, 'w') as f:

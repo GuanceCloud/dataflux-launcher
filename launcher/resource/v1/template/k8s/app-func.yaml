@@ -20,7 +20,7 @@ spec:
         - name: FT_DATA_PROCESSOR_CONFIG
           value: /func-config.yaml
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: func
         ports:
         - containerPort: 8088

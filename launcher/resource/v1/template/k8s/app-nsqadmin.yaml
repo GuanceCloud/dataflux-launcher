@@ -25,7 +25,7 @@ spec:
         - /nsqadmin
         - --lookupd-http-address=nsqlookupd:4161
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: nsqadmin
         ports:
         - containerPort: 4171

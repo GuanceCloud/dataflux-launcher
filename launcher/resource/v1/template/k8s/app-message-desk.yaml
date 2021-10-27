@@ -20,7 +20,7 @@ spec:
         - name: MESSAGE_DESK_CONFIG
           value: /message-desk-config.yaml
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: message-desk
         ports:
         - containerPort: 8088

@@ -21,7 +21,7 @@ spec:
         - -cfg
         - /kodo/config/config.yaml
         image: {{ config.fullImagePath }} 
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: kodo-x
         ports:
         - containerPort: 9527

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: front-webclient
         ports:
         - containerPort: 80

@@ -22,7 +22,7 @@ spec:
         - -e
         - RUN_APP_CODE=inner
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: inner
         ports:
         - containerPort: 5000

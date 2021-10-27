@@ -21,7 +21,7 @@ spec:
         - --cfg
         - /ft-data-warehouse/config.yaml
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: data-warehouse
         volumeMounts:
         - mountPath: /ft-data-warehouse/config.yaml

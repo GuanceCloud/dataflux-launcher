@@ -20,7 +20,7 @@ spec:
         - name: MESSAGE_DESK_WORKER_CONFIG
           value: /message-desk-worker-config.yaml
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: message-desk-worker
         resources: {}
         volumeMounts:

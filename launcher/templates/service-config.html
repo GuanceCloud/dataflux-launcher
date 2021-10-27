@@ -18,6 +18,17 @@
             <input type="text" class="form-control" id="iptImageDir" disabled="disabled" value="{{ pageData.imageDir }}" placeholder="镜像版本目录">
           </div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">镜像拉取策略:</label>
+          <div class="col-sm-5">
+            <select id="sltImagePullPolicy" class="form-control">
+              <option value="IfNotPresent" {{ "selected" if pageData.imagePullPolicy == "IfNotPresent" }} >IfNotPresent</option>
+              <option value="Always" {{ "selected" if pageData.imagePullPolicy == "Always" }} >Always</option>
+              <option value="Never" {{ "selected" if pageData.imagePullPolicy == "Never" }} >Never</option>
+            </select>
+          </div>
+        </div>
+
         <!-- <div class="form-group">
           <label for="iptImageRegistryUser" class="col-sm-2 control-label">账号:</label>
           <div class="col-sm-5">
@@ -37,7 +48,7 @@
           <div class="col-sm-5">
             <select id="sltStorageClassName" class="form-control">
               {% for item in pageData.storageNames %}
-              <option value="{{ item }}">{{ item }}</option>
+              <option value="{{ item }}" {{ "selected" if pageData.storageClassName == item }} >{{ item }}</option>
               {% endfor %}
             </select>
           </div>

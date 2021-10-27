@@ -25,7 +25,7 @@ spec:
         - name: KODO_WORKERS
           value: "8"
         image: {{ config.fullImagePath }} 
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: kodo-inner
         ports:
         - containerPort: 9527

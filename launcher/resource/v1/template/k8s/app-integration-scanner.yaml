@@ -21,7 +21,7 @@ spec:
         - run_task.sh
         name: integration-scanner
         image: {{ config.fullImagePath }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         volumeMounts:
         - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
           name: core

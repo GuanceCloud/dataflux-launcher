@@ -22,7 +22,7 @@ spec:
         - name: DFF__IS_STREAKING
           value: "true"
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: server
         ports:
         - containerPort: 8088

@@ -28,7 +28,7 @@ spec:
         - --msg-timeout
         - 30h
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: nsqd3
         ports:
         - containerPort: 4150

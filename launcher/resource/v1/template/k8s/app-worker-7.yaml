@@ -20,7 +20,7 @@ spec:
         - ./run-worker-by-queue.sh
         - "7"
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: worker-7
         resources: {}
         volumeMounts:

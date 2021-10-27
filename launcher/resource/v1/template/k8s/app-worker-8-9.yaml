@@ -21,7 +21,7 @@ spec:
         - "8"
         - "9"
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: worker-8-9
         resources: {}
         volumeMounts:

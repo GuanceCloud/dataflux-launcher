@@ -36,7 +36,7 @@ spec:
         - name: FT_DATA_PROCESSOR_WORKER_CONFIG
           value: /func-worker-config.yaml
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: func-worker-rpc-crontab
         resources: {}
         volumeMounts:

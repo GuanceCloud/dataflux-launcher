@@ -20,7 +20,7 @@ spec:
         - python
         - ft_websocket.py
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: websocket
         ports:
         - containerPort: 8080

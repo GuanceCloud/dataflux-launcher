@@ -22,7 +22,7 @@ spec:
         - -e
         - RUN_APP_CODE=admin
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: management-backend
         ports:
         - containerPort: 5000

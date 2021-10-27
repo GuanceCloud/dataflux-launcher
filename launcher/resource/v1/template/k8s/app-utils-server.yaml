@@ -20,7 +20,7 @@ spec:
         - node
         - server.js
         image: {{ config.fullImagePath }} 
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: utils-server
         ports:
         - containerPort: 3000

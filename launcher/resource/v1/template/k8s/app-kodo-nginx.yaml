@@ -34,7 +34,7 @@ spec:
             weight: 100
       containers:
       - image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: kodo-nginx
         ports:
         - containerPort: 80

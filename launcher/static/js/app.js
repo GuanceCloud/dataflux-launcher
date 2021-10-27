@@ -471,6 +471,7 @@ var setup = (function () {
     // configs['imageRegistryUser'] = $('#iptImageRegistryUser').val();
     // configs['imageRegistryPwd'] = $('#iptImageRegistryPwd').val();
     configs['storageClassName'] = $('#sltStorageClassName').val();
+    configs['imagePullPolicy'] = $('#sltImagePullPolicy').val();
     configs['images'] = images;
 
     this.post("service/create", configs).then(function(d){

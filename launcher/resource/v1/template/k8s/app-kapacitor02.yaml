@@ -24,7 +24,7 @@ spec:
         - name: KAPACITOR_LOGGING_LEVEL
           value: INFO
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: kapacitor02
         ports:
         - containerPort: 9092

@@ -20,7 +20,7 @@ spec:
         - -e
         - RUN_APP_CODE=front
         image: {{ config.fullImagePath }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ settings.imagePullPolicy }}
         name: front-backend
         ports:
         - containerPort: 5000
