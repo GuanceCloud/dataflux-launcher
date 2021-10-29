@@ -25,10 +25,10 @@ RUN \
     \
     case "$dpkgArch" in \
         arm64) \
-            awscliv2Url="https://static.dataflux.cn/launcher/awscli-exe-linux-aarch64.zip"; \
+            awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-aarch64.zip"; \
             ;; \
         amd64) \
-            awscliv2Url="https://static.dataflux.cn/launcher/awscli-exe-linux-x86_64.zip"; \
+            awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-x86_64.zip"; \
             ;; \
     esac; \
     \

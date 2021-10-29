@@ -25,10 +25,10 @@ kodo:
   host: kodo-inner.forethought-kodo
   port: 9527
   timeout: 60
-  installCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
-  upgradeCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.dataflux.cn/dataway/install.sh)"'
-  versionUrl: "https://static.dataflux.cn/dataway/version"
-  datakitVersionUrl: "https://static.dataflux.cn/datakit/version"
+  installCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} bash -c "$(curl https://static.guance.com/dataway/install.sh)"'
+  upgradeCmd: 'DW_KODO={{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_KODO_WS={{ "ws" if other.tls.tlsDisabled else "wss"}}://{{ domain.subDomain.kodo }}.{{ domain.domain }} DW_TOKEN={token}  DW_UUID={agent_uuid} DW_AK={ak}  DW_SK={sk} DW_UPGRADE=1  bash -c "$(curl https://static.guance.com/dataway/install.sh)"'
+  versionUrl: "https://static.guance.com/dataway/version"
+  datakitVersionUrl: "https://static.guance.com/datakit/version"
 
 # 报警机器人
 robot:
@@ -109,7 +109,7 @@ DialingServer:
   # 拨测服务中心的地址配置
   # 此处不需要修改
   use_https: true
-  host: dflux-dial.dataflux.cn
+  host: dflux-dial.guance.com
   port: 443
   timeout: 10
 
