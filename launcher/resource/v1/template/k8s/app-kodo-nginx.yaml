@@ -66,15 +66,12 @@ metadata:
   namespace: forethought-kodo
 spec:
   externalTrafficPolicy: Local
-  healthCheckNodePort: 32343
   ports:
   - name: 80tcp4432
-    nodePort: 32561
     port: 443
     protocol: TCP
     targetPort: 80
   - name: 80tcp802
-    nodePort: 31465
     port: 80
     protocol: TCP
     targetPort: 80
