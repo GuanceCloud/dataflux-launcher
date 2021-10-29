@@ -60,6 +60,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
   name: kodo-nginx
   namespace: forethought-kodo
 spec:

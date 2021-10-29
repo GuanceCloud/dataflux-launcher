@@ -17,10 +17,16 @@ spec:
     spec:
       containers:
       - args:
-        - bash
-        - run.sh
+        - gunicorn
+        - -c
+        - wsgi.py
+        - web:wsgi()
+        - --limit-request-line
+        - "0"
         - -e
         - RUN_APP_CODE=inner
+        - --timeout
+        - "300"
         image: {{ config.fullImagePath }}
         imagePullPolicy: {{ settings.imagePullPolicy }}
         name: inner
