@@ -306,7 +306,7 @@ var setup = (function () {
       },
       "domain": $("#iptDomain").val(),
       "subDomain": {},
-      "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "": "intranet"
+      "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet"
     };
 
     $('.sub-domain-group input:text').each(function(idx, item) {

@@ -96,9 +96,10 @@
 
               <span>&nbsp;&nbsp;</span>
               <label class="form-control-static">
-                {% if pageData.domain.kodoLoadBalancerType == "intranet" %}
+                {% if pageData.domain.kodoLoadBalancerType == "internet" %}
                 <input type="checkbox" id="ckbKodoLBType" /> Kodo 使用私网 LoadBalancer（与 DataWay 在同一个内网）
                 {% else %}
+                <!-- 默认为私网类型的 LoadBalancer -->
                 <input type="checkbox" id="ckbKodoLBType" checked="checked" /> Kodo 使用私网 LoadBalancer（与 DataWay 在同一个内网）
                 {% endif %}
               </label>
