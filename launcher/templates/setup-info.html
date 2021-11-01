@@ -29,8 +29,13 @@
                 <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.managementApi }}</strong>.{{ pageData.domain.domain }}</p>
                 <!-- <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.websocket }}</strong>.{{ pageData.domain.domain }}</p> -->
                 <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.function }}</strong>.{{ pageData.domain.domain }}</p>
-                <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.kodo }}</strong>.{{ pageData.domain.domain }}</p>
                 <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.staticResource }}</strong>.{{ pageData.domain.domain }}</p>
+                <p class="form-control-static"><strong class="">{{ pageData.domain.subDomain.kodo }}</strong>.{{ pageData.domain.domain }}
+
+                  {% if pageData.domain.kodoLoadBalancerType %}
+                  <strong class="text-success">【{{ "私网" if pageData.domain.kodoLoadBalancerType == "intranet" else "公网" }}】</strong>
+                  {% endif %}
+                </p>
               </div>
             </div>
             <div class="form-group">

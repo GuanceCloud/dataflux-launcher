@@ -305,10 +305,11 @@ var setup = (function () {
         "email": $("#iptUserEmail").val()
       },
       "domain": $("#iptDomain").val(),
-      "subDomain": {}
+      "subDomain": {},
+      "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "": "intranet"
     };
 
-    $('.sub-domain-group input').each(function(idx, item) {
+    $('.sub-domain-group input:text').each(function(idx, item) {
       var jqMe = $(item);
       var name = jqMe.attr('name');
 

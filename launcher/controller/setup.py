@@ -42,7 +42,8 @@ def aksk_save(params):
 def other_config(params):
   settingsMdl.domain = {
     'domain': params.get('domain', ''),
-    'subDomain': params.get('subDomain', {})
+    'subDomain': params.get('subDomain', {}),
+    'kodoLoadBalancerType': params.get('kodoLoadBalancerType', "")
   }
 
   settingsMdl.other = {

@@ -83,14 +83,25 @@
               <span class="form-control-static"></span>
               <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptFuncDomain" name="function" required value="{{ pageData.domain.subDomain.function }}" placeholder="dataflux function">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
-            <p>
-              <span class="form-control-static"></span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.domain.subDomain.kodo }}" placeholder="dataflux kodo">
-              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
+            </p>
             <p>
               <span class="form-control-static"></span>
               <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptStaticResourceDomain" name="staticResource" required value="{{ pageData.domain.subDomain.staticResource }}" placeholder="dataflux static resource">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
+            </p>
+            <p>
+              <span class="form-control-static"></span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptKodoDomain" name="kodo" required value="{{ pageData.domain.subDomain.kodo }}" placeholder="dataflux kodo">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
+
+              <span>&nbsp;&nbsp;</span>
+              <label class="form-control-static">
+                {% if pageData.domain.kodoLoadBalancerType == "intranet" %}
+                <input type="checkbox" id="ckbKodoLBType" /> Kodo 使用私网 LoadBalancer（与 DataWay 在同一个内网）
+                {% else %}
+                <input type="checkbox" id="ckbKodoLBType" checked="checked" /> Kodo 使用私网 LoadBalancer（与 DataWay 在同一个内网）
+                {% endif %}
+              </label>
             </p>
           </div>
           <div class="col-sm-5 error"></div>
