@@ -194,7 +194,7 @@ def deploy_update():
                     "fullImagePath": deploy['newImagePath']
                   }
 
-        serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": params, "settings": {"imagePullPolicy": imagePullPolicy, "domain": domainSetting}}})
+        serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": params, "settings": {"imagePullPolicy": imagePullPolicy, "domain": domainSetting}})
         path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 
         with open(path, 'w') as f:
