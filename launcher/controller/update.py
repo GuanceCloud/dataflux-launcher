@@ -178,6 +178,8 @@ def deploy_update():
   appYamls  = []
   newPvcs   = []  
   deployStatus = deploy_check()
+  imagePullPolicy = settingsMdl.other.get('imagePullPolicy', "IfNotPresent")
+  domainSetting = settingsMdl.domain
 
   for ns in deployStatus:
     for deploy in ns['services']:
@@ -192,7 +194,7 @@ def deploy_update():
                     "fullImagePath": deploy['newImagePath']
                   }
 
-        serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": params})
+        serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": params, "settings": {"imagePullPolicy": imagePullPolicy, "domain": domainSetting}}})
         path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 
         with open(path, 'w') as f:
