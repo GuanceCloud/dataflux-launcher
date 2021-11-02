@@ -315,7 +315,7 @@ def service_create(data):
     if val.get('replicas', 1) == 0:
       continue
 
-    serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val, "settings": {"imagePullPolicy": imagePullPolicy}})
+    serviceYaml = jinjia2_render("template/k8s/app-{}.yaml".format(key), {"config": val, "settings": {"imagePullPolicy": imagePullPolicy, "domain": settingsMdl.domain}})
     path = os.path.abspath(tmpDir + "/app-{}.yaml".format(key))
 
     with open(path, 'w') as f:

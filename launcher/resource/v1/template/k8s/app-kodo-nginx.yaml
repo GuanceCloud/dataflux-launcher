@@ -61,7 +61,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    {% if config.domain.kodoLoadBalancerType == "intranet" %}
+    {% if settings.domain.kodoLoadBalancerType == "intranet" %}
     service.beta.kubernetes.io/alibaba-cloud-loadbalancer-address-type: "intranet"
     {% endif %}
   name: kodo-nginx
