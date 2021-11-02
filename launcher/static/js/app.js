@@ -498,6 +498,8 @@ var setup = (function () {
         $.each(ns.services, function(idx, item) {
           var jqImgDiv = $('#img_' + item.key);
           var jqI = jqImgDiv.find('i');
+          var jqAvailableReplicas = jqImgDiv.find('available-replicas');
+          var jqRequireReplicas = jqImgDiv.find('.require-replicas');
 
           if (item.replicas > 0){
             total = total + 1;
@@ -512,6 +514,8 @@ var setup = (function () {
               jqI.addClass('icon-success');
             }
 
+            jqAvailableReplicas.text(item.availableReplicas);
+            jqRequireReplicas.text(item.replicas);
             $('#img_path_' + item.key).text(item.fullImagePath);
           }
         });

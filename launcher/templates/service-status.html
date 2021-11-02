@@ -25,11 +25,10 @@
                 {{ item.fullImagePath }}
               </span>
               {% if not item.fullImagePath or item.replicas != item.availableReplicas %}
-              (<span class="text-success">{{ item.availableReplicas }}</span>
-              <span>/</span>
-              <span class="text-warning">{{ item.replicas }}</span>)
+              (<span class="text-success available-replicas">{{ item.availableReplicas }}</span><span>/</span><span class="text-warning require-replicas">{{ item.replicas }}</span>)
               <i class="service-pendding"></i>
               {% elif item.replicas == item.availableReplicas %}
+              (<span class="text-success available-replicas">{{ item.availableReplicas }}</span><span>/</span><span class="text-warning require-replicas">{{ item.replicas }}</span>)
               <i class="icon-success"></i>
               {% endif %}
             </p>
