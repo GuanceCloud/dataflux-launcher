@@ -498,7 +498,7 @@ var setup = (function () {
         $.each(ns.services, function(idx, item) {
           var jqImgDiv = $('#img_' + item.key);
           var jqI = jqImgDiv.find('i');
-          var jqAvailableReplicas = jqImgDiv.find('available-replicas');
+          var jqAvailableReplicas = jqImgDiv.find('.available-replicas');
           var jqRequireReplicas = jqImgDiv.find('.require-replicas');
 
           if (item.replicas > 0){
