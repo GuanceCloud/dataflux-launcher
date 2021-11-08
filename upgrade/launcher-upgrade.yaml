@@ -331,3 +331,14 @@ upgradeInfo:
         ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/es/init' -X 'POST'  -H 'Content-Type: application/json'
         ```
+
+  # 2021-11-04
+  - seq: 18
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、场景改为“仪表板”，更新视图名字
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_20211104_update_dashboard"}'
+        ```
