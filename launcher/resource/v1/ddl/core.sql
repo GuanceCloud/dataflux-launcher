@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-10-21 08:01:37 +0000
+# Generation Time: 2021-11-04 11:34:58 +0000
 # ************************************************************
 
 
@@ -155,7 +155,7 @@ CREATE TABLE `biz_dashboard` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dsbd-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `name` varchar(128) NOT NULL COMMENT '视图名字',
+  `name` varchar(500) NOT NULL COMMENT '视图名字',
   `image` varchar(128) NOT NULL DEFAULT '' COMMENT '视图的缩略图-废弃',
   `iconSet` json NOT NULL COMMENT '视图缩略图信息',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -165,6 +165,7 @@ CREATE TABLE `biz_dashboard` (
   `ownerType` enum('node','inner','object_class','workspace','account','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `mapping` json NOT NULL COMMENT '视图变量的mapping',
+  `createdWay` varchar(48) NOT NULL DEFAULT 'manual',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
@@ -440,6 +441,31 @@ CREATE TABLE `biz_node` (
 
 
 
+# Dump of table biz_notes
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_notes`;
+
+CREATE TABLE `biz_notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 notes-前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(128) NOT NULL COMMENT '笔记名字',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `pos` json NOT NULL COMMENT 'charts 位置信息[]',
+  `createdWay` enum('import','template','') NOT NULL DEFAULT '' COMMENT '笔记的创建方式',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_notify_object
 # ------------------------------------------------------------
 
@@ -516,6 +542,34 @@ CREATE TABLE `biz_object_relation_graph` (
 
 
 
+# Dump of table biz_often_browse_record
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_often_browse_record`;
+
+CREATE TABLE `biz_often_browse_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `accountUUID` varchar(48) NOT NULL COMMENT '源UUID',
+  `type` varchar(48) NOT NULL COMMENT '关系类型',
+  `resourceUUID` varchar(48) NOT NULL COMMENT '目标UUID',
+  `dateNum` int(11) NOT NULL DEFAULT '0' COMMENT '日期',
+  `visitTimes` int(11) NOT NULL DEFAULT '0' COMMENT '访问次数',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `workspaceUUID_fk` (`workspaceUUID`),
+  KEY `accountUUID_fk` (`accountUUID`),
+  KEY `type_fk` (`type`),
+  KEY `resourceUUID_fk` (`resourceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_post_cc_history
 # ------------------------------------------------------------
 
@@ -564,6 +618,32 @@ CREATE TABLE `biz_query` (
 
 
 
+# Dump of table biz_resource_relationship
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_resource_relationship`;
+
+CREATE TABLE `biz_resource_relationship` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `sourceUUID` varchar(48) NOT NULL COMMENT '源UUID',
+  `type` varchar(48) NOT NULL COMMENT '关系类型',
+  `targetUUID` varchar(48) NOT NULL COMMENT '目标UUID',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  KEY `workspaceUUID_fk` (`workspaceUUID`),
+  KEY `sourceUUID_fk` (`sourceUUID`),
+  KEY `type_fk` (`type`),
+  KEY `targetUUID_fk` (`targetUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_rule
 # ------------------------------------------------------------
 
@@ -573,7 +653,7 @@ CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup') NOT NULL DEFAULT 'trigger',
+  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute') NOT NULL DEFAULT 'trigger',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',

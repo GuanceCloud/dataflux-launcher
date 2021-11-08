@@ -1329,3 +1329,89 @@ upgrade:
         UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
         KEY `k_ws_uuid` (`workspaceUUID`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+  # 2021.11.04 迭代
+  - seq: 40
+    config:
+      core: |-
+        database:
+          # 数据库链接配置中的字符集从【utf8】变更为【utf8mb4】,目的是为了支持表情符号的存储传输
+          connection: "xxxxxx/df_core?charset=utf8mb4"
+
+    database: |-
+
+      -- 新建【资源关联关系】表
+      CREATE TABLE `biz_resource_relationship` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `sourceUUID` varchar(48) NOT NULL COMMENT '源UUID',
+        `type` varchar(48) NOT NULL COMMENT '关系类型',
+        `targetUUID` varchar(48) NOT NULL COMMENT '目标UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        KEY `workspaceUUID_fk` (`workspaceUUID`),
+        KEY `sourceUUID_fk` (`sourceUUID`),
+        KEY `type_fk` (`type`),
+        KEY `targetUUID_fk` (`targetUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新建【笔记】表
+      CREATE TABLE `biz_notes` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 notes-前缀',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `name` varchar(128) NOT NULL COMMENT '笔记名字',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `pos` json NOT NULL COMMENT 'charts 位置信息[]',
+        `createdWay` enum('import','template','') NOT NULL DEFAULT '' COMMENT '笔记的创建方式',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新建【访问记录表】
+      CREATE TABLE `biz_often_browse_record` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `accountUUID` varchar(48) NOT NULL COMMENT '源UUID',
+        `type` varchar(48) NOT NULL COMMENT '关系类型',
+        `resourceUUID` varchar(48) NOT NULL COMMENT '目标UUID',
+        `dateNum` int(11) NOT NULL DEFAULT '0' COMMENT '日期',
+        `visitTimes` int(11) NOT NULL DEFAULT '0' COMMENT '访问次数',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        KEY `workspaceUUID_fk` (`workspaceUUID`),
+        KEY `accountUUID_fk` (`accountUUID`),
+        KEY `type_fk` (`type`),
+        KEY `resourceUUID_fk` (`resourceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- biz_dashbaord表新加添加方式列
+      ALTER TABLE biz_dashboard ADD createdWay varchar(48) NOT NULL DEFAULT 'manual';
+      -- 变更视图的名字字段大小
+      ALTER TABLE `biz_dashboard`
+      CHANGE COLUMN `name` `name` VARCHAR(500) NOT NULL COMMENT '视图名字' ;
+
+      -- biz_rule的type新加类型
+      ALTER TABLE biz_rule MODIFY COLUMN `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'trigger' NOT NULL;
+
+      -- 删除无效的节点
+      update biz_node set status=3 where status=0 and  `sceneUUID` in (select uuid from biz_scene where status=3);
+      -- 删除无效的节点视图
+      update biz_dashboard set status=3 where status = 0 and uuid in (select `dashboardUUID` from biz_node where status=3);
+
