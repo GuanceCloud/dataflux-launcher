@@ -7,7 +7,7 @@ hostname: "{{ domain.subDomain.console }}.{{ domain.domain }}"
 
 database:
     # 测试环境容器外使用地址
-    connection: "mysql+pymysql://{{mysql.core.user}}:{{mysql.core.password}}@{{mysql.base.host}}:{{mysql.base.port}}/{{mysql.core.database}}?charset=utf8"
+    connection: "mysql+pymysql://{{mysql.core.user}}:{{mysql.core.password}}@{{mysql.base.host}}:{{mysql.base.port}}/{{mysql.core.database}}?charset=utf8mb4"
     pool_size: 50
     max_overflow: 10
     echo: false
