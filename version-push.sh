@@ -8,8 +8,10 @@ lastRTM=$(git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+-prod" | sort -V | tail
 v=(${lastRTM//[\.-]/ })
 version=${v[0]}.${v[1]}.${v[2]}
 
+echo '{"content": {"form": {"version": "v'${version}'"} } }' 
+
 curl 'https://shrine-via-core-stone.cloudcare.cn/resources/action/dataFluxVersionUpdate@customerXAdmin' \
   -X POST \
   -H 'content-type: application/json;charset=UTF-8' \
-  --data-raw '{"content": {"version": "v'${version}'"} }' \
+  --data-raw '{"content": {"form": {"version": "v'${version}'"} } }' \
   --compressed
