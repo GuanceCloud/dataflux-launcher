@@ -10,7 +10,7 @@ redis:
 
 log:
     log_file: /logdata/log
-    level: warning
+    level: info
     json_format: false
     disable_long_file_name: false
     gin_log_file: /logdata/gin.log
