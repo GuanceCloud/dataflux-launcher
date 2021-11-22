@@ -342,3 +342,21 @@ upgradeInfo:
         ```
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_20211104_update_dashboard"}'
         ```
+
+  # 2021-11-18
+  - seq: 19
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、异常检测项的恢复周期问题修复
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_checkers"}'
+        ```
+
+      2、场景名称迁移到 tag 
+
+        ```
+        curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_2021_11_18_update_tag"}'
+        ```
+
