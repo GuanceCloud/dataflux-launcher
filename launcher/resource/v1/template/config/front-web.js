@@ -14,7 +14,7 @@ window.DEPLOYCONFIG = {
     rumEnable: 0,
     rumDatakitUrl: "",
     rumApplicationId: "",
-    rumJsUrl: "https://static.guance.com/js-sdk/dataflux-rum.js",
+    rumJsUrl: "https://static.guance.com/browser-sdk/v2/dataflux-rum.js",
     rumDataEnv: 'prod',
     shrineApiUrl: '',
     upgradeUrl: '',
