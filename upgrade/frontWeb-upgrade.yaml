@@ -55,3 +55,11 @@ upgradeInfo:
         logsEnable: 0,           // 是否开启 Logs 表示开启，如果不开启，以下的配置值可以为空
         logsDatakitUrl: "",      // Logs DataKit 的地址
         logsJsUrl: "", // logs sdk js 地址
+
+
+  - seq: 8
+    config:
+      frontWeb: |-
+
+        // 修改 rumJsUrl 配置项的值为如下（如不存在此配置项，则新增进去）：
+        rumJsUrl: "https://static.guance.com/browser-sdk/v2/dataflux-rum.js",

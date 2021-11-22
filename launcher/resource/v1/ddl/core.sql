@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-11-04 11:34:58 +0000
+# Generation Time: 2021-11-22 06:01:33 +0000
 # ************************************************************
 
 
@@ -803,6 +803,58 @@ CREATE TABLE `biz_snapshots` (
 
 
 
+# Dump of table biz_sso_setting
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_sso_setting`;
+
+CREATE TABLE `biz_sso_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '身份提供商唯一id',
+  `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类别:saml2/oauth2',
+  `idpName` varchar(256) NOT NULL DEFAULT '' COMMENT '身份提供商',
+  `remark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
+  `uploadData` text NOT NULL COMMENT '上传数据',
+  `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+  `role` enum('wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户默认角色',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  PRIMARY KEY (`id`),
+  KEY `idx_uuid` (`uuid`),
+  KEY `idx_wpuuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_sso_white_list
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_sso_white_list`;
+
+CREATE TABLE `biz_sso_white_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '唯一id',
+  `email` varchar(256) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `ssoUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'sso配置唯一id',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '空间id',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  PRIMARY KEY (`id`),
+  KEY `idx_email` (`email`),
+  KEY `idx_wpuuid` (`workspaceUUID`),
+  KEY `idx_ssouuid` (`ssoUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_sys_template
 # ------------------------------------------------------------
 
@@ -829,6 +881,29 @@ CREATE TABLE `biz_sys_template` (
 
 
 
+# Dump of table biz_tag
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_tag`;
+
+CREATE TABLE `biz_tag` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 tag-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '场景名称',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_variable
 # ------------------------------------------------------------
 
@@ -848,6 +923,31 @@ CREATE TABLE `biz_variable` (
   `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
   `content` json DEFAULT NULL COMMENT '变量配置数据',
   `hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_viewer_configuration
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_viewer_configuration`;
+
+CREATE TABLE `biz_viewer_configuration` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 viewconfig-前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `type` varchar(48) NOT NULL DEFAULT 'custom_object' COMMENT '查看器类型',
+  `config` json DEFAULT NULL COMMENT '分组标签',
+  `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -899,6 +999,7 @@ CREATE TABLE `main_account` (
   `mobile` varchar(128) NOT NULL DEFAULT '' COMMENT '手机号',
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `extend` json DEFAULT NULL COMMENT '额外信息',
+  `nameSpace` varchar(48) NOT NULL DEFAULT '' COMMENT '账号的命名空间',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',

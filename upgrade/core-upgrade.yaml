@@ -1415,3 +1415,106 @@ upgrade:
       -- 删除无效的节点视图
       update biz_dashboard set status=3 where status = 0 and uuid in (select `dashboardUUID` from biz_node where status=3);
 
+  # 2021.11.18 迭代
+  - seq: 41
+    database: |-
+
+      -- ******************* 以下公共可执行部分 *************************
+      -- 新建【仪表板标签表】
+      CREATE TABLE `biz_tag` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 tag-',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '场景名称',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+      -- 新建【查看器配置表】
+      CREATE TABLE `biz_viewer_configuration` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 viewconfig-前缀',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `type` enum('host','docker_containers', 'host_processes', 'custom_object') NOT NULL DEFAULT 'custom_object' COMMENT '查看器类型',
+        `config` json DEFAULT NULL COMMENT '分组标签',
+        `extend` json DEFAULT NULL COMMENT '额外拓展字段',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新建 【SSO配置表】
+      CREATE TABLE `biz_sso_setting` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '身份提供商唯一id',
+        `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类别:saml2/oauth2',
+        `idpName` varchar(256) NOT NULL DEFAULT '' COMMENT '身份提供商',
+        `remark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
+        `uploadData` text NOT NULL COMMENT '上传数据',
+        `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+        `role` enum('wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户默认角色',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        PRIMARY KEY (`id`),
+        KEY `idx_uuid` (`uuid`),
+        KEY `idx_wpuuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新建【sso白名单表】
+      CREATE TABLE `biz_sso_white_list` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '唯一id',
+        `email` varchar(256) NOT NULL DEFAULT '' COMMENT '邮箱',
+        `ssoUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'sso配置唯一id',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '空间id',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        PRIMARY KEY (`id`),
+        KEY `idx_email` (`email`),
+        KEY `idx_wpuuid` (`workspaceUUID`),
+        KEY `idx_ssouuid` (`ssoUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 账号表新增字段 nameSpace 表示命名空间
+      ALTER TABLE `main_account`
+      ADD COLUMN `nameSpace` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '账号的命名空间' AFTER `extend`;
+
+      -- 查看器配置表的type类型修改为varchar(48)
+      ALTER TABLE biz_viewer_configuration MODIFY COLUMN `type` VARCHAR(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'custom_object' NOT NULL COMMENT '查看器类型';
+
+
+      -- ******************* 以下PAAS版执行部分 *************************
+
+      -- 更新计费公式(此公式仅SAAS版有效，PAAS版无效)
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"ts\": {\"price\": 3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 500)\", \"priceQuantity\": 500, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 0.1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 0.5, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 更新 免费版使用量统计公式
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('FreeMeteringUnitConfig','免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"job\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count \", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"logging\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 更新使用量统计公式（非出账单）
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"ts\": {\"countEquation\": \"max(0, ts_count - count * 500)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+
+
