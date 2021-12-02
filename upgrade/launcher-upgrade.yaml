@@ -360,3 +360,10 @@ upgradeInfo:
         curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_2021_11_18_update_tag"}'
         ```
 
+  # 2021-12-02
+  - seq: 20
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+      ```
+      curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_owner_workspace_account"}'
+      ```
