@@ -97,9 +97,10 @@ share_set:
 # CloudCare 系统配置
 # 部署版本暂时不使用此配置，可以不作修改
 CloudCareServer:
+  node: aliyun
   use_https: true
   port: 443
-  host: "admin-portal.cloudcare.cn"
+  host: boss.guance.com
   ak_id: "{{ other.cc.ak }}"
   ak_secret: "{{ other.cc.sk }}"
   timeout: 30
