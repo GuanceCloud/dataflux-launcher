@@ -48,5 +48,5 @@ cc:
   ak: "{{ other.cc.ak }}"
   sk: "{{ other.cc.sk }}"
   syncBillExpired: "7d"
-  syncBillHost: "https://admin-portal.cloudcare.cn"
+  syncBillHost: "https://boss.guance.com"
   postTime: "01:00"
