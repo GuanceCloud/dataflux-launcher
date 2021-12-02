@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# 版本号： 3041
+# 版本号： 20016
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # 主机: ubuntu20-dev.vm (MySQL 5.7.35)
 # 数据库: dataflux_func
-# 生成时间: 2021-10-30 17:48:45 +0000
+# 生成时间: 2021-11-30 19:41:55 +0000
 # ************************************************************
 
 
@@ -110,6 +110,7 @@ CREATE TABLE `biz_main_batch_task_info` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `batchId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '批处理ID',
+  `rootTaskId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'ROOT' COMMENT '主任务ID',
   `funcId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '函数ID',
   `scriptPublishVersion` bigint(20) DEFAULT NULL COMMENT '脚本发布版本',
   `queueTime` timestamp NULL DEFAULT NULL COMMENT '入队时间',
@@ -122,7 +123,8 @@ CREATE TABLE `biz_main_batch_task_info` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`),
-  KEY `BATCH_ID` (`batchId`)
+  KEY `BATCH_ID` (`batchId`),
+  KEY `ROOT_TASK_ID` (`rootTaskId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='批处理任务信息';
 
 
@@ -193,6 +195,7 @@ CREATE TABLE `biz_main_crontab_task_info` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `crontabConfigId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '自动触发配置ID',
+  `rootTaskId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'ROOT' COMMENT '主任务ID',
   `funcId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '函数ID',
   `scriptPublishVersion` bigint(20) DEFAULT NULL COMMENT '脚本发布版本',
   `queueTime` timestamp NULL DEFAULT NULL COMMENT '入队时间',
@@ -205,7 +208,8 @@ CREATE TABLE `biz_main_crontab_task_info` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`),
-  KEY `CRONTAB_CONFIG_ID` (`crontabConfigId`)
+  KEY `CRONTAB_CONFIG_ID` (`crontabConfigId`),
+  KEY `ROOT_TASK_ID` (`rootTaskId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='自动触发任务信息';
 
 
@@ -223,6 +227,7 @@ CREATE TABLE `biz_main_data_source` (
   `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '类型 influxdb|mysql|redis|..',
   `configJSON` json NOT NULL COMMENT '配置JSON',
   `isBuiltin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为内建数据源',
+  `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
@@ -243,6 +248,7 @@ CREATE TABLE `biz_main_env_variable` (
   `description` text COMMENT '描述',
   `valueTEXT` longtext NOT NULL COMMENT '值',
   `autoTypeCasting` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'string' COMMENT '自动类型转换 string|integer|float|boolean|json|commaArray',
+  `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
@@ -506,6 +512,7 @@ CREATE TABLE `biz_main_script_set` (
   `description` text COMMENT '描述',
   `requirements` text COMMENT '依赖包',
   `lockedByUserId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '锁定者用户ID',
+  `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
@@ -515,9 +522,9 @@ CREATE TABLE `biz_main_script_set` (
 LOCK TABLES `biz_main_script_set` WRITE;
 /*!40000 ALTER TABLE `biz_main_script_set` DISABLE KEYS */;
 
-INSERT INTO `biz_main_script_set` (`seq`, `id`, `title`, `description`, `requirements`, `lockedByUserId`, `createTime`, `updateTime`)
+INSERT INTO `biz_main_script_set` (`seq`, `id`, `title`, `description`, `requirements`, `lockedByUserId`, `pinTime`, `createTime`, `updateTime`)
 VALUES
-	(1,X'64656D6F','示例',NULL,NULL,NULL,'2020-09-19 09:36:57','2020-09-29 13:40:21');
+	(1,X'64656D6F','示例',NULL,NULL,NULL,NULL,'2020-09-19 09:36:57','2020-09-29 13:40:21');
 
 /*!40000 ALTER TABLE `biz_main_script_set` ENABLE KEYS */;
 UNLOCK TABLES;

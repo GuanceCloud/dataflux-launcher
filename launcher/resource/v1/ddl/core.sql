@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-11-22 06:01:33 +0000
+# Generation Time: 2021-12-01 12:31:29 +0000
 # ************************************************************
 
 
@@ -162,9 +162,10 @@ CREATE TABLE `biz_dashboard` (
   `chartPos` json NOT NULL COMMENT 'charts 位置信息[{chartUUID:xxx,pos:xxx}]',
   `chartGroupPos` json NOT NULL COMMENT 'chartGroup 位置信息[chartGroupUUIDs]',
   `type` varchar(48) NOT NULL DEFAULT 'CUSTOM' COMMENT '视图类型：仪表板视图',
-  `ownerType` enum('node','inner','object_class','workspace','account','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `ownerType` enum('node','inner','object_class','workspace','account','viewer','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `mapping` json NOT NULL COMMENT '视图变量的mapping',
+  `dashboardBindSet` json DEFAULT NULL COMMENT '绑定视图设置',
   `createdWay` varchar(48) NOT NULL DEFAULT 'manual',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1049,7 +1050,7 @@ CREATE TABLE `main_account_workspace` (
   `accountUUID` varchar(48) NOT NULL COMMENT '帐户唯一ID',
   `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
   `dashboardUUID` varchar(48) DEFAULT NULL COMMENT '视图UUID-与用户绑定',
-  `role` enum('wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户在当前工作空间的角色',
+  `role` enum('owner','wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户在当前工作空间的角色',
   `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
