@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-12-01 12:31:29 +0000
+# Generation Time: 2021-12-16 02:17:07 +0000
 # ************************************************************
 
 
@@ -382,7 +382,11 @@ CREATE TABLE `biz_mute` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID mute- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `type` enum('host','checker','monitor') NOT NULL DEFAULT 'host' COMMENT '静默对象的资源类型',
   `tags` json DEFAULT NULL COMMENT '目标的tags',
+  `notifyTargets` json DEFAULT NULL COMMENT '通知对象列表',
+  `notifyMessage` text NOT NULL COMMENT '通知内容',
+  `notifyTime` int(11) NOT NULL DEFAULT '-1',
   `start` int(11) NOT NULL DEFAULT '-1',
   `end` int(11) NOT NULL DEFAULT '-1',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -905,6 +909,31 @@ CREATE TABLE `biz_tag` (
 
 
 
+# Dump of table biz_tasks
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_tasks`;
+
+CREATE TABLE `biz_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, task_',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `action` enum('ApplyAdminPermissionApproval','') NOT NULL DEFAULT '',
+  `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
+  `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_variable
 # ------------------------------------------------------------
 
@@ -1053,6 +1082,7 @@ CREATE TABLE `main_account_workspace` (
   `role` enum('owner','wsAdmin','general','readOnly','') NOT NULL DEFAULT '' COMMENT '用户在当前工作空间的角色',
   `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
+  `waitAudit` int(1) NOT NULL DEFAULT '0' COMMENT '是否等待审核',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
