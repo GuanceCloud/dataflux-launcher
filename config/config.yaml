@@ -42,7 +42,7 @@ services:
       replicas: 2
 
     - key: core-worker-correlation
-      name: Worker
+      name: Worker Correlation
       image: core
       replicas: 2
 
