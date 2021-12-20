@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-core-worker-correlation
+  name: core-worker-correlation
+  namespace: forethought-core
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-worker-correlation
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-worker-correlation
+    spec:
+      containers:
+      - args:
+        - celery
+        - -A
+        - forethought.app.app_celery
+        - worker
+        - --loglevel=info
+        - -P
+        - gevent
+        - -c
+        - "10"
+        - -Q
+        - correlation_task
+        name: core-worker-correlation
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: core
+          subPath: config.yaml
+        - mountPath: /config/cloudcare-forethought-backend/sysconfig
+          name: ft-sysconfig
+        - mountPath: /logdata
+          name: logs
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: core
+          optional: false
+        name: core
+      - name: ft-sysconfig
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+      - name: logs
+        persistentVolumeClaim:
+          claimName: core-worker-correlation-logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-worker-correlation
+  namespace: forethought-core
+spec:
+  clusterIP: None
+  ports:
+  - name: default
+    port: 42
+    protocol: TCP
+    targetPort: 42
+  selector:
+    app: deployment-forethought-core-worker-correlation
+  type: ClusterIP

@@ -41,6 +41,11 @@ services:
       image: core
       replicas: 2
 
+    - key: core-worker-correlation
+      name: Worker
+      image: core
+      replicas: 2
+
     - key: core-worker-beat
       name: Worker Beat
       image: core
@@ -73,6 +78,7 @@ services:
       - inner
       - front-backend
       - core-worker
+      - core-worker-correlation
       - core-worker-beat
       # - websocket
       template: forethought-backend.yaml
@@ -105,6 +111,9 @@ services:
       storage: 10Gi
 
     - name: core-worker-logs
+      storage: 10Gi
+
+    - name: core-worker-correlation-logs
       storage: 10Gi
 
     - name: core-worker-beat-logs
