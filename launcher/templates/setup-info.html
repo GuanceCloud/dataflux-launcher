@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <div class="high-block well-mysql">
+          <div class="high-block well-elasticsearch">
             <h4>Elasticserch 信息</h4>
             <div class="form-group">
               <label for="iptESHost" class="col-sm-2 control-label">Host:</label>
@@ -93,6 +93,18 @@
               <label for="iptESPort" class="col-sm-2 control-label">端口:</label>
               <div class="col-sm-5">
                 <p class="form-control-static">{{ pageData.elasticsearch.port }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESProvider" class="col-sm-2 control-label">Provider:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ 'OpenSearch 版本' if pageData.elasticsearch.provider == 'aws' else '官方版本' }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESVersion" class="col-sm-2 control-label">版本号:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">{{ pageData.elasticsearch.version }}</p>
               </div>
             </div>
             <div class="form-group">

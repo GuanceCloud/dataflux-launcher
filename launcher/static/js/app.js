@@ -157,7 +157,9 @@ var setup = (function () {
       "port": $("#iptESPort").val(),
       "ssl": $("#ckbElasticsearchSSL").is(":checked"),
       "user": $("#iptESUserName").val(),
-      "password": $("#iptESUserPwd").val()
+      "password": $("#iptESUserPwd").val(),
+      "provider": $("#sltESProvider").val(),
+      "version": $("#iptESVersion").val()
     }
 
     $("#validateForm").validate();
@@ -362,6 +364,14 @@ var setup = (function () {
     });
   };
 
+  app.prototype.elasticsearch_setup = function(){
+    return this.post("elasticsearch/setup").done(function(d){
+      if (d.content){
+        $('.well-elasticsearch').addClass('success');
+      }
+    });
+  };
+
   app.prototype.certificate_create = function(){
     return this.post("certificate/create").done(function(d){
       if (d.content){
@@ -379,6 +389,8 @@ var setup = (function () {
       return that.database_manager_create();
     }).then(function(){
       return that.influxdb_setup();
+    }).then(function(){
+      return that.elasticsearch_setup();
     }).then(function(){
       return that.certificate_create();
     }).then(function(d){

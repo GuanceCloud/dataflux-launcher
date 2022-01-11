@@ -28,6 +28,23 @@
           <div class="col-sm-5 error"></div>
         </div>
         <div class="form-group">
+          <label for="sltESProvider" class="col-sm-2 control-label">提供商:</label>
+          <div class="col-sm-5">
+            <select id="sltESProvider" class="form-control">
+              <option value="aliyun" {{ "selected" if pageData.provider == "aliyun" else "" }}> 官方版本（如阿里云产品 Elasticsearch）</option>
+              <option value="aws" {{ "selected" if pageData.provider == "aws" else "" }}> OpenSearch （如 AWS Opensearch）</option>
+            </select>
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
+          <label for="iptESVersion" class="col-sm-2 control-label">ES 版本号:</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptESVersion" name="iptESVersion" required value="{{ pageData.version }}" placeholder="Elasticsearch 版本号">
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+        <div class="form-group">
           <label for="iptESUserName" class="col-sm-2 control-label">账号:</label>
           <div class="col-sm-5">
             <input type="text" class="form-control" id="iptESUserName" name="iptESUserName" required value="{{ pageData.user }}" placeholder="Elasticsearch 实例账号">

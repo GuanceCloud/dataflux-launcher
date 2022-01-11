@@ -367,3 +367,28 @@ upgradeInfo:
       ```
       curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_owner_workspace_account"}'
       ```
+
+  # 2021-12-30
+  - seq: 21
+    config: |-
+      **升级前，请先检查 Elasticsearch 的配置是否正确的（此版本开始， Elasticsearch 的实例信息将配置在 MySQL 表中）：**
+      
+      ### 1. 确保以下 ES 配置的正确
+
+      ### 2. 补充完整以下两项：
+
+      * provider： 可选值 opensearch、elasticsearch
+      * version: 使用的 ES 版本
+
+      ### 3. 配置信息如下：
+      ```
+        host: 172.16.2.42
+        password: pwd-xxxxx
+        port: 31020
+        ssl: false
+        user: elastic
+        provider: opensearch
+        version: 7.10
+
+      ```
+

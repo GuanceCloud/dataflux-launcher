@@ -61,13 +61,6 @@ def redis_ping():
   args = request.args.to_dict()
 
   return  response_jsonify(redis_setup.redis_ping(args))
-  
-
-@setup_bp.route("/elasticsearch/ping", methods=["POST"])
-def elasticsearch_ping():
-  args = request.json
-
-  return  response_jsonify(elasticsearch_setup.elasticsearch_ping(args))
 
 
 @setup_bp.route("/influxdb/ping", methods=["POST"])
@@ -159,6 +152,18 @@ def workspace_init():
 @setup_bp.route("/elasticsearch/init", methods=["POST"])
 def elasticsearch_init():
   return  response_jsonify(setup.elasticsearch_init())
+  
+
+@setup_bp.route("/elasticsearch/ping", methods=["POST"])
+def elasticsearch_ping():
+  args = request.json
+
+  return  response_jsonify(elasticsearch_setup.elasticsearch_ping(args))
+
+
+@setup_bp.route("/elasticsearch/setup", methods=["POST"])
+def init_elasticsearch():
+  return  response_jsonify(elasticsearch_setup.init_elasticsearch())
 
 
 @setup_bp.route("/up/service/status", methods=["GET"])
