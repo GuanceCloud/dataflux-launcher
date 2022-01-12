@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-12-16 02:17:07 +0000
+# Generation Time: 2021-12-30 03:49:11 +0000
 # ************************************************************
 
 
@@ -175,6 +175,33 @@ CREATE TABLE `biz_dashboard` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_dashboard_bidding
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_dashboard_bidding`;
+
+CREATE TABLE `biz_dashboard_bidding` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '绑定关系uuid',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '仪表板UUID',
+  `type` varchar(128) NOT NULL COMMENT '类别：inner/integration',
+  `dashboardBidding` json DEFAULT NULL COMMENT '绑定关系json',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`),
+  KEY `idx_wsuuid` (`workspaceUUID`),
+  KEY `idx_dsuuid` (`dashboardUUID`),
+  KEY `idx_type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1245,6 +1272,34 @@ CREATE TABLE `main_datakit_online` (
 
 
 
+# Dump of table main_es_instance
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_es_instance`;
+
+CREATE TABLE `main_es_instance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 es_',
+  `host` varchar(128) NOT NULL COMMENT '源的配置信息',
+  `authorization` json NOT NULL COMMENT 'influx 登陆信息',
+  `isParticipateElection` int(1) NOT NULL DEFAULT '0' COMMENT '是否参与选举',
+  `wsCount` int(11) NOT NULL DEFAULT '0' COMMENT '关联的工作空间数量',
+  `provider` varchar(20) NOT NULL,
+  `version` varchar(48) NOT NULL,
+  `timeout` varchar(48) DEFAULT '60s' COMMENT '超时时间设置',
+  `extend` json DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table main_influx_cq
 # ------------------------------------------------------------
 
@@ -1512,6 +1567,7 @@ CREATE TABLE `main_workspace` (
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
   `cliToken` varchar(64) NOT NULL DEFAULT '' COMMENT '命令行Token验证',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
+  `esInstanceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属ES实例的UUID',
   `isOpenWarehouse` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启数据仓库',
   `dataRestriction` json DEFAULT NULL COMMENT '数据权限',
   `maxTsCount` int(11) NOT NULL DEFAULT '100' COMMENT '最大时间线',
