@@ -4,6 +4,8 @@ import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time, yaml
 
+from .auto_update_step import AutoUpdateStep
+
 from launcher.model import k8s as k8sMdl
 from launcher.model import version as versionMdl
 from launcher.utils.template import jinjia2_render
@@ -174,6 +176,9 @@ def deploy_check():
 
 
 def deploy_update():
+  autoUpdateStep = AutoUpdateStep()
+  autoUpdateStep.do_before_container_update()
+
   tmpDir    = SERVICECONFIG['tmpDir']
   appYamls  = []
   newPvcs   = []  
@@ -236,34 +241,35 @@ def deploy_update():
   return True
 
 
-def __get_current_seqs():
-  mysqlSetting = settingsMdl.mysql
-  baseInfo     = mysqlSetting.get('base') or {}
-  coreInfo     = mysqlSetting.get('core') or {}
-  mysql        = {
-                  'host': baseInfo.get('host'),
-                  'port': baseInfo.get('port'),
-                  'user': coreInfo.get('user'),
-                  'password': coreInfo.get('password')
-                }
-  dbName       = coreInfo.get('database')
-  currentSeqs  = versionMdl.get_current_update_seq(mysql, dbName)
+# def __get_current_seqs():
+#   mysqlSetting = settingsMdl.mysql
+#   baseInfo     = mysqlSetting.get('base') or {}
+#   coreInfo     = mysqlSetting.get('core') or {}
+#   mysql        = {
+#                   'host': baseInfo.get('host'),
+#                   'port': baseInfo.get('port'),
+#                   'user': coreInfo.get('user'),
+#                   'password': coreInfo.get('password')
+#                 }
+#   dbName       = coreInfo.get('database')
+#   currentSeqs  = versionMdl.get_current_update_seq(mysql, dbName)
 
-  for upProject in SERVICECONFIG['updates']:
-    projectName = upProject['project']
-    if projectName in currentSeqs:
-      continue
+#   for upProject in SERVICECONFIG['updates']:
+#     projectName = upProject['project']
+#     if projectName in currentSeqs:
+#       continue
 
-    currentSeqs[projectName] = {
-      "config": -1,
-      "database": -1
-    }
+#     currentSeqs[projectName] = {
+#       "config": -1,
+#       "database": -1
+#     }
 
-  return currentSeqs
+#   return currentSeqs
 
 
 def list_launcher_preparation():
-  currentSeqs = __get_current_seqs()
+  autoUpdateStep = AutoUpdateStep()
+  currentSeqs = autoUpdateStep.get_upgrade_seqs()
   launcherSeq = currentSeqs.get('launcher', {'config': -1})
 
   updateVersions  = versionMdl.list_project_versions('launcher', launcherSeq['config'])
@@ -288,7 +294,9 @@ def list_source_and_update_configmaps():
       }
 
   upInfo      = []
-  currentSeqs = __get_current_seqs()
+
+  autoUpdateStep = AutoUpdateStep()
+  currentSeqs = autoUpdateStep.get_upgrade_seqs()
 
   for project in updateProjects:
     namespace = project['namespace']
@@ -337,7 +345,8 @@ def list_source_and_update_configmaps():
 
 
 def list_update_database_sql():
-  currentSeqs  = __get_current_seqs()
+  autoUpdateStep = AutoUpdateStep()
+  currentSeqs = autoUpdateStep.get_upgrade_seqs()
   currentSeq   = currentSeqs.get('launcher', {}).get('database', 0)
 
   # 部分 SQL 更新脚本，可以在 launcher upgrade 中

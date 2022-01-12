@@ -370,6 +370,8 @@ upgradeInfo:
 
   # 2021-12-30
   - seq: 21
+    # func_exec 是需要自动执行的更新步骤
+    func_exec: script_1230
     config: |-
       **升级前，请先检查 Elasticsearch 的配置是否正确的（此版本开始， Elasticsearch 的实例信息将配置在 MySQL 表中）：**
       
@@ -378,9 +380,9 @@ upgradeInfo:
       ### 2. 补充完整以下两项：
 
       * provider： 可选值 opensearch、elasticsearch
-      * version: 使用的 ES 版本
+      * version: 使用的 ES 的版本号
 
-      ### 3. 配置信息如下：
+      ### 3. 配置结构信息如下：
       ```
         host: 172.16.2.42
         password: pwd-xxxxx

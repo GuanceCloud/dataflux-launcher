@@ -201,16 +201,4 @@ update:
           cc:
             # 计费平台账单同步地址变更
             syncBillHost: "https://boss.guance.com"
-
-    #2021/12/30 
-    #添加一个yaml文件，位置：image/config/config.es.yaml    
-    es:
-      host:        #删除
-      user:        #删除
-      password:    #删除
-      enable:      #删除
-      primary: 1   #添加 number_of_shards
-      replicas: 1  #添加 number_of_replicas
-    
-
           
