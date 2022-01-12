@@ -33,7 +33,7 @@ def __write_elasticsearch_instance():
       instance.get('provider'),
       instance.get('version')
     ]
-    sql = "INSERT INTO `main_es_instance` (`uuid`, `host`, `authorization`, `isParticipateElection`, `wsCount`, `provider`, `version`, `timeout`, `extend`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) VALUES (%s, %s, %s, 0, 0, %s, %s, '60s', NULL, 0, 'sys', 'sys', UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());"
+    sql = "INSERT INTO `main_es_instance` (`uuid`, `host`, `authorization`, `isParticipateElection`, `wsCount`, `provider`, `version`, `timeout`, `extend`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) VALUES (%s, %s, %s, 1, 0, %s, %s, '60s', NULL, 0, 'sys', 'sys', UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());"
 
     db.execute(sql, dbName = dbInfo['database'], params = params)
 

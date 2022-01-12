@@ -375,14 +375,12 @@ upgradeInfo:
     config: |-
       **升级前，请先检查 Elasticsearch 的配置是否正确的（此版本开始， Elasticsearch 的实例信息将配置在 MySQL 表中）：**
       
-      ### 1. 确保以下 ES 配置的正确
-
-      ### 2. 补充完整以下两项：
+      **1. 补充完整以下两项配置：**
 
       * provider： 可选值 opensearch、elasticsearch
       * version: 使用的 ES 的版本号
 
-      ### 3. 配置结构信息如下：
+      **2. 配置结构信息如下：**
       ```
         host: 172.16.2.42
         password: pwd-xxxxx
@@ -390,7 +388,9 @@ upgradeInfo:
         ssl: false
         user: elastic
         provider: opensearch
-        version: 7.10
+        version: 7.x
 
+      **3. 确保以上 ES 配置的正确**
+      
       ```
 
