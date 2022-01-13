@@ -373,12 +373,14 @@ upgradeInfo:
     # func_exec 是需要自动执行的更新步骤
     func_exec: script_1230
     config: |-
-      **升级前，请先检查 Elasticsearch 的配置是否正确的（此版本开始， Elasticsearch 的实例信息将配置在 MySQL 表中）：**
+      **升级前，请先检查 Elasticsearch 的配置信息是否正确的（此版本开始， Elasticsearch 的实例信息安装程序会自动写入到 MySQL 表中）：**
       
-      **1. 补充完整以下两项配置：**
+      **1. 在 Launcher 右上角的“设置”中，打开 Elasticsearch 的配置，补充完整以下两项配置：**
 
-      * provider： 可选值 opensearch、elasticsearch
-      * version: 使用的 ES 的版本号
+      * provider：elasticsearch // 可选值 opensearch、elasticsearch 两项，opensearch 是 Elasticsearch 开源版、elasticsearch 是 Elasticsearch 官方版）
+      * version: 7.4.2 // 使用的 ES 的版本号
+
+      具体信息，请仔细确认所用 ES 的版本
 
       **2. 配置结构信息如下：**
       ```
@@ -390,7 +392,7 @@ upgradeInfo:
         provider: opensearch
         version: 7.x
 
-      **3. 确保以上 ES 配置的正确**
+      **3. 确保以上 ES 配置信息的正确**
       
       ```
 
