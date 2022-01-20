@@ -96,18 +96,6 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="iptESProvider" class="col-sm-2 control-label">Provider:</label>
-              <div class="col-sm-5">
-                <p class="form-control-static">{{ 'OpenSearch 版本' if pageData.elasticsearch.provider == 'aws' else '官方版本' }}</p>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="iptESVersion" class="col-sm-2 control-label">版本号:</label>
-              <div class="col-sm-5">
-                <p class="form-control-static">{{ pageData.elasticsearch.version }}</p>
-              </div>
-            </div>
-            <div class="form-group">
               <label for="iptESUserName" class="col-sm-2 control-label">账号:</label>
               <div class="col-sm-5">
                 <p class="form-control-static">{{ pageData.elasticsearch.user }}</p>
@@ -117,6 +105,30 @@
               <label for="iptESUserPwd" class="col-sm-2 control-label">密码:</label>
               <div class="col-sm-5">
                 <p class="form-control-static">{{ pageData.elasticsearch.password }}</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptESProvider" class="col-sm-2 control-label">Provider:</label>
+              <div class="col-sm-5">
+
+                {% if pageData.elasticsearch.provider == 'elastic' %}
+                <p class="form-control-static">Elastic 官方原生的 ElasticSearch 版本</p>
+                {% elif pageData.elasticsearch.provider == 'opensearch'  %}
+                <p class="form-control-static">开源的 OpenSearch 版本</p>
+                {% elif pageData.elasticsearch.provider == 'aliyun'  %}
+                <p class="form-control-static">
+                  Aliyun 上的 ElasticSearch 云产品
+                  {% if pageData.elasticsearch.isOpenStore %}
+                  <span style="font-weight: bold;">（开启 OpenStore 数据节点）</span>
+
+                  <p>OpenStore 配置信息：<span style="font-weight: bold;">{{ pageData.elasticsearch.openStoreSettings }}</span></p>
+                  {% endif %}
+                </p>
+                {% elif pageData.elasticsearch.provider == 'aws'  %}
+                <p class="form-control-static">
+                  AWS 上的 OpenSearch 云产品{{ '（开启 Ultrawarm 数据节点）' if pageData.elasticsearch.isUltrawarm }}
+                </p>
+                {% endif %}
               </div>
             </div>
           </div>

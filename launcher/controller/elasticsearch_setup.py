@@ -56,15 +56,30 @@ def init_elasticsearch():
         "port": instance.get('port')
       })
 
+    provider = instance.get('provider', 'elastic')
+    if provider == 'aliyun':
+      if instance.get('isOpenStore', False):
+        provider = provider + '_openstore'
+      else:
+        provider = provider + '_elasticsearch'
+    elif provider == 'aws':
+      if instance.get('isUltrawarm', False):
+        provider = provider + '_opensearch'
+      else:
+        provider = provider + '_ultrawarm'
+
     authorization = {"admin": {"password": instance['password'], "username": instance['user'] }}
+    configJson = {'provider': provider}
+
+    if provider == 'aliyun_openstore':
+      configJson['settings'] = instance.get('openStoreSettings', {})
 
     params = [
       es_uuid,
       host,
       json.dumps(authorization),
-      instance.get('provider'),
-      instance.get('version')
+      str(configJson)
     ]
-    sql = "INSERT INTO `main_es_instance` (`uuid`, `host`, `authorization`, `isParticipateElection`, `wsCount`, `provider`, `version`, `timeout`, `extend`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) VALUES (%s, %s, %s, 1, 0, %s, %s, '60s', NULL, 0, 'sys', 'sys', UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());"
+    sql = "INSERT INTO `main_es_instance` (`uuid`, `host`, `authorization`, `configJSON`, `isParticipateElection`, `wsCount`, `provider`, `version`, `timeout`, `extend`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) VALUES (%s, %s, %s, %s, 1, 0, '', '', '60s', NULL, 0, 'sys', 'sys', UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());"
 
     db.execute(sql, dbName = dbInfo['database'], params = params)

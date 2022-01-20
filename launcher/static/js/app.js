@@ -152,14 +152,23 @@ var setup = (function () {
   // elasticsearch 连接测试
   app.prototype.elasticsearch_ping = function(next){
     var that = this;
+    var objAliyunOpenStore = $('#chkAliyunOpenStore');
+    var objAWSUltrawarm = $('#chkAWSUltrawarm');
+    var objOpenStoreSettings = $('#txtOpenStoreSettings');
+    var provider = $("#sltESProvider").val()
+
     var params = {
       "host": $("#iptESHost").val(),
       "port": $("#iptESPort").val(),
       "ssl": $("#ckbElasticsearchSSL").is(":checked"),
       "user": $("#iptESUserName").val(),
       "password": $("#iptESUserPwd").val(),
-      "provider": $("#sltESProvider").val(),
-      "version": $("#iptESVersion").val()
+      "provider": provider,
+
+      "isOpenStore": provider == 'aliyun' && objAliyunOpenStore.is(':checked'),
+      "isUltrawarm": provider == 'aws' && objAWSUltrawarm.is(':checked'),
+
+      'openStoreSettings': objOpenStoreSettings.val()
     }
 
     $("#validateForm").validate();
@@ -178,6 +187,38 @@ var setup = (function () {
         that.switch_ping_button($('#btnConnectTtest'), 'error');
       }
     });
+  };
+
+  app.prototype.elasticsearch_provider_change = function(){
+    var provider = $('#sltESProvider').val();
+    var objAliyunOpenStore = $('#chkAliyunOpenStore');
+    var objAWSUltrawarm = $('#chkAWSUltrawarm');
+
+    $('#txtOpenStoreSettings').parents('.form-group').addClass('hide');
+    objAliyunOpenStore.prop('checked', false);
+    objAWSUltrawarm.prop('checked', false);
+
+    if (provider == 'aliyun'){
+      objAliyunOpenStore.parent().removeClass('hide');
+      objAWSUltrawarm.parent().addClass('hide');
+    }else if (provider == 'aws'){
+      objAliyunOpenStore.parent().addClass('hide');
+      objAWSUltrawarm.parent().removeClass('hide');
+    }else{
+      objAliyunOpenStore.parent().addClass('hide');
+      objAWSUltrawarm.parent().addClass('hide');
+    }
+  };
+
+  app.prototype.elasticsearch_openstore_change = function(){
+    var objAliyunOpenStore = $('#chkAliyunOpenStore');
+    var checked = objAliyunOpenStore.is(':checked');
+
+    if (checked){
+      $('#txtOpenStoreSettings').parents('.form-group').removeClass('hide');
+    }else{
+      $('#txtOpenStoreSettings').parents('.form-group').addClass('hide');
+    }
   };
 
   app.prototype._get_influxdb_list = function(){

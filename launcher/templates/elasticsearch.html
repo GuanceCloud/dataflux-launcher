@@ -8,7 +8,7 @@
       <div class="high-block influxdb-list">
         <div class="form-group">
           <label for="iptESHost" class="col-sm-2 control-label">Elasticsearch Host:</label>
-          <div class="col-sm-5">
+          <div class="col-sm-7">
             <input type="text" class="form-control" id="iptESHost" name="iptESHost" required value="{{ pageData.host }}" placeholder="Elasticsearch 实例地址">
             <label class="checkbox-inline">
               {% if pageData.ssl %}
@@ -18,47 +18,60 @@
               {% endif %}
             </label>
           </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-3 error"></div>
         </div>
         <div class="form-group">
           <label for="iptESPort" class="col-sm-2 control-label">端口:</label>
-          <div class="col-sm-5">
+          <div class="col-sm-7">
             <input type="text" class="form-control" id="iptESPort" name="iptESPort" required value="{{ pageData.port }}" placeholder="Elasticsearch 实例端口">
           </div>
-          <div class="col-sm-5 error"></div>
-        </div>
-        <div class="form-group">
-          <label for="sltESProvider" class="col-sm-2 control-label">提供商:</label>
-          <div class="col-sm-5">
-            <select id="sltESProvider" class="form-control">
-              <option value="aliyun" {{ "selected" if pageData.provider == "aliyun" else "" }}> 官方版本（如阿里云产品 Elasticsearch）</option>
-              <option value="aws" {{ "selected" if pageData.provider == "aws" else "" }}> OpenSearch （如 AWS Opensearch）</option>
-            </select>
-          </div>
-          <div class="col-sm-5 error"></div>
-        </div>
-        <div class="form-group">
-          <label for="iptESVersion" class="col-sm-2 control-label">ES 版本号:</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptESVersion" name="iptESVersion" required value="{{ pageData.version }}" placeholder="Elasticsearch 版本号">
-          </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-3 error"></div>
         </div>
         <div class="form-group">
           <label for="iptESUserName" class="col-sm-2 control-label">账号:</label>
-          <div class="col-sm-5">
+          <div class="col-sm-7">
             <input type="text" class="form-control" id="iptESUserName" name="iptESUserName" required value="{{ pageData.user }}" placeholder="Elasticsearch 实例账号">
           </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-3 error"></div>
         </div>
         <div class="form-group">
           <label for="iptESUserPwd" class="col-sm-2 control-label">密码:</label>
-          <div class="col-sm-5">
+          <div class="col-sm-7">
             <input type="password" class="form-control" id="iptESUserPwd" name="iptESUserPwd" required value="{{ pageData.password }}" placeholder="Elasticsearch 实例密码">
           </div>
-          <div class="col-sm-5 error"></div>
+          <div class="col-sm-3 error"></div>
         </div>
 
+        <div class="form-group">
+          <label for="sltESProvider" class="col-sm-2 control-label">提供商:</label>
+          <div class="col-sm-4">
+            <select id="sltESProvider" class="form-control" onchange="setup.elasticsearch_provider_change()">
+              <option value="elastic" {{ "selected" if pageData.provider == "elastic" else "" }}> Elastic (Elastic 官方原生的 ElasticSearch 版本) </option>
+              <option value="opensearch" {{ "selected" if pageData.provider == "opensearch" else "" }}> OpenSearch (开源的 OpenSearch 版本)</option>
+              <option value="aliyun" {{ "selected" if pageData.provider == "aliyun" else "" }}> Aliyun (Aliyun 上的 ElasticSearch 云产品)</option>
+              <option value="aws" {{ "selected" if pageData.provider == "aws" else "" }}> AWS (AWS 上的 OpenSearch 云产品)</option>
+            </select>
+          </div>
+          <div class="col-sm-3">
+            <label class="checkbox-inline {{ 'hide' if pageData.provider != 'aliyun' or not pageData.isOpenStore }}">
+              <input id="chkAliyunOpenStore" type="checkbox" {{ 'checked' if pageData.provider == 'aliyun' and pageData.isOpenStore }} onchange="setup.elasticsearch_openstore_change()" />
+              开启 OpenStore 数据节点
+            </label>
+            <label class="checkbox-inline {{ 'hide' if pageData.provider != 'aws' or not pageData.isUltrawarm }}">
+              <input id="chkAWSUltrawarm" {{ 'checked' if pageData.provider == 'aws' and pageData.isUltrawarm }} type="checkbox" />
+              开启 Ultrawarm 数据节点
+            </label>
+          </div>
+          <div class="col-sm-3 error"></div>
+        </div>
+
+        <div class="form-group {{ 'hide' if pageData.provider != 'aliyun' or not pageData.isOpenStore }}">
+          <label class="col-sm-2 control-label">OpenStore 配置信息:</label>
+          <div class="col-sm-7">
+            <textarea id="txtOpenStoreSettings" class="form-control" rows="5" placeholder='Aliyun 开启了 OpenStore 数据节点的 ES 必须的配置(安装程序无法验证这部分信息的准确性，请自行确保这个配置信息的准确)，如：{"userID":"170xxx", "regionID":"cn-hangzhou", "instanceID":"es-cn-xxx"}'>{{ pageData.openStoreSettings }}</textarea>
+          </div>
+          <div class="col-sm-3 error"></div>
+        </div>
 
         <div class="form-group">
           <label class="col-sm-2 control-label">&nbsp;</label>
