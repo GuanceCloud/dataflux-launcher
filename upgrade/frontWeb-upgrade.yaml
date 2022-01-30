@@ -64,8 +64,9 @@ upgradeInfo:
         // 修改 rumJsUrl 配置项的值为如下（如不存在此配置项，则新增进去）：
         rumJsUrl: "https://static.guance.com/browser-sdk/v2/dataflux-rum.js",
 
-  - seq:9
+  - seq: 9
     config:
       frontWeb: |-
 
-        passPublicNetwork: "",  // pass版本是否可以访问公网, 1 表示可以  0 表示不可以, 默认为1即可以访问
+        // pass版本是否可以访问公网, 1 表示可以  0 表示不可以, 默认为1即可以访问
+        passPublicNetwork: 1,
