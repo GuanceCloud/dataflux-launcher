@@ -78,7 +78,7 @@ def init_elasticsearch():
       es_uuid,
       host,
       json.dumps(authorization),
-      str(configJson)
+      json.dumps(configJson)
     ]
     sql = "INSERT INTO `main_es_instance` (`uuid`, `host`, `authorization`, `configJSON`, `isParticipateElection`, `wsCount`, `provider`, `version`, `timeout`, `extend`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) VALUES (%s, %s, %s, %s, 1, 0, '', '', '60s', NULL, 0, 'sys', 'sys', UNIX_TIMESTAMP(), -1, UNIX_TIMESTAMP());"
 

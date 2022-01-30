@@ -125,7 +125,7 @@ services:
     - name: core-worker-beat-logs
       storage: 10Gi
 
-    - name: openapi-logs
+    - name: open-api-logs
       storage: 10Gi
 
   - namespace: forethought-inner-app
