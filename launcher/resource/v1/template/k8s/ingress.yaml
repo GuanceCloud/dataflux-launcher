@@ -81,7 +81,7 @@ metadata:
   namespace: forethought-core
 spec:
   rules:
-  - host: {{ config.domain.subDomain.openapi }}.{{ config.domain.domain }}
+  - host: {{ config.domain.subDomain.openApi }}.{{ config.domain.domain }}
     http:
       paths:
       - backend:
@@ -90,7 +90,7 @@ spec:
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
-    - {{ config.domain.subDomain.openapi }}.{{ config.domain.domain }}
+    - {{ config.domain.subDomain.openApi }}.{{ config.domain.domain }}
     secretName: {{ config.domain.domain }}
   {% endif %}
 status:
