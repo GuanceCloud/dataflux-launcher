@@ -377,7 +377,7 @@ upgradeInfo:
       **1. 在 Launcher 右上角的“设置”中，打开 Elasticsearch 的配置，补充完整以下一项配置：**
 
       ```
-      provider：elastic 
+      provider: elastic 
       ```
 
       **provider** 的可选值有 `elastic、opensearch、aliyun、aws` 四个选项，根据实际使用的 Elasticsearch 产品选择以下值，分别表示：
@@ -387,7 +387,7 @@ upgradeInfo:
       * aliyun: Aliyun 上的 Elasticsearch 云产品
       * aws: AWS 上的 OpenSearch 云产品
 
-      **2. 本次更新增加 Open API 服务，需要在 “域名” 配置信息的中 “subDomain” 下增加一个二级域名配置（openApi 二级域名以实际需要的配置，可以自行起任意二级域名名字）
+      **2. 本次更新增加 Open API 服务，需要在 “域名” 配置信息的中 “subDomain” 下增加一个二级域名配置（openApi 二级域名以实际需要的配置，可以自行起任意二级域名名字）**
 
       ```
       subDomain:
