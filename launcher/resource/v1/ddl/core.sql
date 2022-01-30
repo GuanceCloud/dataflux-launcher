@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2021-12-30 03:49:11 +0000
+# Generation Time: 2022-01-20 10:51:26 +0000
 # ************************************************************
 
 
@@ -374,6 +374,34 @@ CREATE TABLE `biz_integration` (
 
 
 
+# Dump of table biz_metric_detail
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_metric_detail`;
+
+CREATE TABLE `biz_metric_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, metr_',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `unit` varchar(255) NOT NULL DEFAULT '' COMMENT '单位',
+  `metric` varchar(512) NOT NULL DEFAULT '' COMMENT '指标集名',
+  `metricField` varchar(512) NOT NULL DEFAULT '' COMMENT '指标名',
+  `describe` text NOT NULL COMMENT '描述',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `idx_ws_uuid` (`workspaceUUID`),
+  KEY `idx_metric` (`metric`),
+  KEY `idx_metric_field` (`metricField`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_monitor
 # ------------------------------------------------------------
 
@@ -387,6 +415,7 @@ CREATE TABLE `biz_monitor` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
   `config` json DEFAULT NULL COMMENT '其他设置',
   `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
+  `score` int(11) NOT NULL DEFAULT '0' COMMENT '排序分数',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1241,6 +1270,31 @@ CREATE TABLE `main_config` (
 
 
 
+# Dump of table main_custom_config
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_custom_config`;
+
+CREATE TABLE `main_custom_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ctcf-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `keyCode` varchar(64) DEFAULT '' COMMENT '标识code',
+  `config` json NOT NULL COMMENT 'apm配置参数',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_key_code` (`keyCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table main_datakit_online
 # ------------------------------------------------------------
 
@@ -1282,6 +1336,7 @@ CREATE TABLE `main_es_instance` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 es_',
   `host` varchar(128) NOT NULL COMMENT '源的配置信息',
   `authorization` json NOT NULL COMMENT 'influx 登陆信息',
+  `configJSON` json DEFAULT NULL,
   `isParticipateElection` int(1) NOT NULL DEFAULT '0' COMMENT '是否参与选举',
   `wsCount` int(11) NOT NULL DEFAULT '0' COMMENT '关联的工作空间数量',
   `provider` varchar(20) NOT NULL,
@@ -1604,7 +1659,8 @@ DROP TABLE IF EXISTS `main_workspace_accesskey`;
 CREATE TABLE `main_workspace_accesskey` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'ak 唯一标识 wsak-',
-  `ak` varchar(32) NOT NULL DEFAULT '' COMMENT 'Access Key',
+  `name` varchar(512) NOT NULL DEFAULT '' COMMENT 'AK 名称',
+  `ak` varchar(32) DEFAULT '' COMMENT 'Access Key',
   `sk` varchar(128) NOT NULL DEFAULT '' COMMENT 'Secret Key',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1614,8 +1670,32 @@ CREATE TABLE `main_workspace_accesskey` (
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
-  UNIQUE KEY `uk_ak` (`ak`) COMMENT 'AK 做成全局唯一',
+  UNIQUE KEY `uuid_UNIQUE` (`uuid`),
   KEY `idx_ak` (`ak`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table main_workspace_grant
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_workspace_grant`;
+
+CREATE TABLE `main_workspace_grant` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'grant-',
+  `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `toWorkspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '被授予权限的工作空间 uuid',
+  `expireAt` int(11) NOT NULL COMMENT 'license 过期时间',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
+  `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+  `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+  PRIMARY KEY (`id`) COMMENT '主键',
+  UNIQUE KEY `uk_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
+  UNIQUE KEY `uk_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

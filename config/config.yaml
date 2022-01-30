@@ -51,6 +51,11 @@ services:
       image: core
       replicas: 1
 
+    - key: open-api
+      name: Open API
+      image: core
+      replicas: 2
+
     - key: websocket
       name: Websocket
       image: core
@@ -80,6 +85,7 @@ services:
       - core-worker
       - core-worker-correlation
       - core-worker-beat
+      - open-api
       # - websocket
       template: forethought-backend.yaml
 
@@ -117,6 +123,9 @@ services:
       storage: 10Gi
 
     - name: core-worker-beat-logs
+      storage: 10Gi
+
+    - name: openapi-logs
       storage: 10Gi
 
   - namespace: forethought-inner-app

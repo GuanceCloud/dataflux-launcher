@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Ace SQL dump
-# 版本号： 20016
+# 版本号： 20021
 #
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # 主机: ubuntu20-dev.vm (MySQL 5.7.35)
 # 数据库: dataflux_func
-# 生成时间: 2021-11-30 19:41:55 +0000
+# 生成时间: 2022-01-17 18:14:31 +0000
 # ************************************************************
 
 
@@ -90,6 +90,7 @@ CREATE TABLE `biz_main_batch` (
   `apiAuthId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'API认证ID',
   `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'API' COMMENT '来源 API|UI',
   `showInDoc` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在文档中显示',
+  `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
   `note` text COMMENT '备注',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -165,6 +166,7 @@ CREATE TABLE `biz_main_crontab_config` (
   `configMD5` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '配置MD5',
   `expireTime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
   `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'API' COMMENT '来源 API|UI',
+  `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已禁用',
   `note` text COMMENT '备注',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -178,9 +180,9 @@ CREATE TABLE `biz_main_crontab_config` (
 LOCK TABLES `biz_main_crontab_config` WRITE;
 /*!40000 ALTER TABLE `biz_main_crontab_config` DISABLE KEYS */;
 
-INSERT INTO `biz_main_crontab_config` (`seq`, `id`, `funcId`, `funcCallKwargsJSON`, `crontab`, `tagsJSON`, `saveResult`, `scope`, `configMD5`, `expireTime`, `origin`, `isDisabled`, `note`, `createTime`, `updateTime`)
+INSERT INTO `biz_main_crontab_config` (`seq`, `id`, `funcId`, `funcCallKwargsJSON`, `crontab`, `tagsJSON`, `saveResult`, `scope`, `configMD5`, `expireTime`, `origin`, `taskInfoLimit`, `isDisabled`, `note`, `createTime`, `updateTime`)
 VALUES
-	(1,X'63726F6E2D694C445546434D6C4D445254',X'64656D6F5F5F62617369632E706C7573','{\"x\":1,\"y\":2}',X'2A2F35202A202A202A202A','[]',0,X'474C4F42414C',NULL,NULL,X'5549',0,NULL,'2021-07-19 18:29:09','2021-07-19 18:29:09');
+	(1,X'63726F6E2D694C445546434D6C4D445254',X'64656D6F5F5F62617369632E706C7573','{\"x\":1,\"y\":2}',X'2A2F35202A202A202A202A','[]',0,X'474C4F42414C',NULL,NULL,X'5549',NULL,0,NULL,'2021-07-19 18:29:09','2021-07-19 18:29:09');
 
 /*!40000 ALTER TABLE `biz_main_crontab_config` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -368,9 +368,8 @@ upgradeInfo:
       curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_update_owner_workspace_account"}'
       ```
 
-  # 2021-12-30
-  - seq: 21
-    # func_exec 是需要自动执行的更新步骤
+  # 2022-01-20
+  - seq: 22
     func_exec: script_1230
     config: |-
       **升级前，请先检查 Elasticsearch 的配置信息是否正确的（此版本开始， Elasticsearch 的实例信息安装程序会自动写入到 MySQL 表中）：**
@@ -381,9 +380,29 @@ upgradeInfo:
       provider：elastic 
       ```
 
-      **provider** 的可选值有 `elastic、opensearch、aliyun、aws` 四个选项，分别表示：
+      **provider** 的可选值有 `elastic、opensearch、aliyun、aws` 四个选项，根据实际使用的 Elasticsearch 产品选择以下值，分别表示：
 
       * elastic: elastic 官方原版 Elasticsearch
       * opensearch: elasticsearch 的开源版
       * aliyun: Aliyun 上的 Elasticsearch 云产品
       * aws: AWS 上的 OpenSearch 云产品
+
+      **2. 本次更新增加 Open API 服务，需要在 “域名” 配置信息的中 “subDomain” 下增加一个二级域名配置（openApi 二级域名以实际需要的配置，可以自行起任意二级域名名字）
+
+      ```
+      subDomain:
+        openApi: openapi
+      ```
+
+      **升级完成后，执行以下两个脚本：**
+
+      **1. 进入 Launcher 容器，执行以下接口：**
+
+      ```
+      curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw '{"script_name": "fix_2022_01_20_create_default_monitor"}'
+      ```
+
+      **2. 进入 forethought-core namespace 下的 front-backend 容器，执行以下 Python 命令：**
+      ```
+      python -c "from forethought.tasks.sync_inner_metric_config import update_inner_metric_config; update_inner_metric_config();"
+      ```

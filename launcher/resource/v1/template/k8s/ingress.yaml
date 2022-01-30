@@ -77,6 +77,30 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  name: open-api
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.openapi }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: open-api
+          servicePort: 5000
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.openapi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
   name: front-webclient
   namespace: forethought-webclient
 spec:

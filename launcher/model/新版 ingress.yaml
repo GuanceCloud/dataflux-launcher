@@ -1,0 +1,136 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: front-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: daily-ft2x-api.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service: 
+            name: front-backend
+            port: 
+              number: 5000
+        path: /
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50M"
+  name: management-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: daily-ft2x-mgr-api.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service:
+            name: management-backend
+            port:
+              number: 5000
+        path: /
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: static-resource-nginx
+  namespace: forethought-core
+spec:
+  rules:
+  - host: daily-static-res.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service: 
+            name: static-resource-nginx
+            port: 
+              number: 80
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: front-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: daily-ft2x.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service: 
+            name: front-webclient
+            port: 
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: management-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: daily-ft2x-mgr.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service: 
+            name: management-webclient
+            port: 
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: server
+  namespace: func2
+spec:
+  rules:
+  - host: daily-ft2x-func2.cloudcare.cn
+    http:
+      paths:
+      - backend:
+          service: 
+            name: server
+            port: 
+              number: 8088
+        path: /
+        pathType: ImplementationSpecific
+
+status:
+  loadBalancer: {}

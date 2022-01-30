@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-api
+  namespace: forethought-core
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-core-open-api
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-core-open-api
+    spec:
+      containers:
+      - args:
+        - gunicorn
+        - -c
+        - wsgi.py
+        - web:wsgi()
+        - --limit-request-line
+        - "0"
+        - -e
+        - RUN_APP_CODE=openapi
+        - --timeout
+        - "600"
+        image: {{ config.fullImagePath }}
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: open-api
+        ports:
+        - containerPort: 5000
+          name: 5000tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /config/cloudcare-forethought-backend/config/config.yaml
+          name: core
+          subPath: config.yaml
+        - mountPath: /config/cloudcare-forethought-backend/sysconfig
+          name: ft-sysconfig
+        - mountPath: /logdata
+          name: logs
+        workingDir: /config/cloudcare-forethought-backend
+      imagePullSecrets:
+      - name: registry-key
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: core
+          optional: false
+        name: core
+      - name: ft-sysconfig
+        persistentVolumeClaim:
+          claimName: ft-sysconfig
+      - name: logs
+        persistentVolumeClaim:
+          claimName: open-api-logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: open-api
+  namespace: forethought-core
+spec:
+  ports:
+  - name: 5000tcp02
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: deployment-forethought-core-open-api
+  type: ClusterIP

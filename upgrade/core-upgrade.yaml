@@ -1650,3 +1650,100 @@ upgrade:
 
 
 
+  # 2022.01.20 迭代
+  - seq: 45
+    core: |-
+      # kodo metric 配置自动更新
+      KodoMetricInnerSet:
+        isOpen: true
+      
+      # 系统指标集配置文件获取地址
+      KodoInnerMetricUrl: https://static.guance.com/datakit/measurements-meta.json
+
+    database: |-
+      
+      -- 新建 工作空间级别的 自定义配置表， 例如日志配置
+      CREATE TABLE `main_custom_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ctcf-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `keyCode` varchar(64) DEFAULT '' COMMENT '标识code',
+        `config` json NOT NULL COMMENT 'apm配置参数',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_key_code` (`keyCode`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新建 自定义指标信息表 
+      CREATE TABLE `biz_metric_detail` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, metr_',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `unit` varchar(255) NOT NULL DEFAULT '' COMMENT '单位',
+        `metric` varchar(512) NOT NULL DEFAULT '' COMMENT '指标集名',
+        `metricField` varchar(512) NOT NULL DEFAULT '' COMMENT '指标名',
+        `describe` text NOT NULL COMMENT '描述',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `idx_ws_uuid` (`workspaceUUID`),
+        KEY `idx_metric` (`metric`),
+        KEY `idx_metric_field` (`metricField`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新建 工作空间授权表，目前用于授权 dql 跨工作空间查询
+      CREATE TABLE `main_workspace_grant` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'grant-',
+        `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `toWorkspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '被授予权限的工作空间 uuid',
+        `expireAt` int(11) NOT NULL COMMENT 'license 过期时间',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
+        `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
+        `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
+        PRIMARY KEY (`id`) COMMENT '主键',
+        UNIQUE KEY `uk_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
+        UNIQUE KEY `uk_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 更新 ak 表, 新增 name 字段, 并剔除无效字段的索引数据
+      ALTER TABLE `main_workspace_accesskey` 
+      ADD COLUMN `name` VARCHAR(512) NOT NULL DEFAULT '' COMMENT 'AK 名称' AFTER `uuid` ,
+      CHANGE COLUMN `ak` `ak` VARCHAR(32) NULL DEFAULT '' COMMENT 'Access Key' ,
+      ADD UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
+      DROP INDEX `uk_ak` ;
+      
+      -- 检查器分组新增排序优先级字段
+      ALTER TABLE `biz_monitor` 
+      ADD COLUMN `score` INT(11) NOT NULL DEFAULT '0' COMMENT '排序分数' AFTER `alertOpt`;
+
+      -- 在 main_es_instance 表中追加 configJSON 字段用于记录每个 ES 实例的额外配置
+      alter table `main_es_instance` add column `configJSON` json after Authorization;
+      
+      -- 清空AK表 main_workspace_accesskey; 原表数据于20年就已废弃
+      delete from main_workspace_accesskey where name="";
+      
+      -- 针对 main_es_instance 表记录, 需要配置 configJSON
+      -- 具体配置参考地址: https://gitlab.jiagouyun.com/cloudcare-tools/kodo/-/issues/202
+      -- 适用于【阿里云elasticsearch】 configJSON 值为 {"provider": "aliyun_elasticsearch"}
+      -- 适用于【阿里云openstore】 configJSON 值为 {"provider": "aliyun_openstore"}
+      -- 适用于【aws提供的opensearch】 configJSON 值为 {"provider": "aws_opensearch"}
+      -- 适用于【aws提供的utlrawarm】 configJSON 值为 {"provider": "aws_ultrawarm"}
+      
+
+
