@@ -394,7 +394,7 @@ def init_influxdb_all():
 
   settingsMdl.other = {
     "workspace": {
-      "token": "tokn_" + shortuuid.ShortUUID().random(length = 24),
+      "token": "tkn_" + shortuuid.ShortUUID().random(length = 32),
       "ak": "",
       "sk": ""
     }
