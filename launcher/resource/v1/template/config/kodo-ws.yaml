@@ -26,3 +26,7 @@ ws_server:
   path : "/v1/ws/datakit"
   bind : "0.0.0.0:9537"
   time_out: "30s"
+
+kodo:
+    remote_host: http://kodo.forethought-kodo:9527
+    time_out: "30s"
