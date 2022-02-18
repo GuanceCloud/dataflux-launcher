@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: front-backend
@@ -9,9 +9,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: front-backend
-          servicePort: 5000
+          service: 
+            name: front-backend
+            port: 
+              number: 5000
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -23,7 +26,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -36,9 +39,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: management-backend
-          servicePort: 5000
+          service: 
+            name: management-backend
+            port: 
+              number: 5000
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -50,7 +56,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: static-resource-nginx
@@ -61,8 +67,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: static-resource-nginx
-          servicePort: 80
+          service: 
+            name: static-resource-nginx
+            port: 
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -74,7 +84,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: open-api
@@ -85,8 +95,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: open-api
-          servicePort: 5000
+          service: 
+            name: open-api
+            port: 
+              number: 5000
+        path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -98,7 +112,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: front-webclient
@@ -109,9 +123,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: front-webclient
-          servicePort: 80
+          service: 
+            name: front-webclient
+            port: 
+              number: 80
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -123,7 +140,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: management-webclient
@@ -134,9 +151,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: management-webclient
-          servicePort: 80
+          service: 
+            name: management-webclient
+            port: 
+              number: 80
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -148,7 +168,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: func
@@ -159,9 +179,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: func
-          servicePort: 8088
+          service: 
+            name: func
+            port: 
+              number: 8088
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
@@ -173,7 +196,7 @@ status:
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: server
@@ -184,9 +207,12 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: server
-          servicePort: 8088
+          service: 
+            name: server
+            port: 
+              number: 8088
         path: /
+        pathType: ImplementationSpecific
   {% if not config.other.tls.tlsDisabled %}
   tls:
   - hosts:
