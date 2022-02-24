@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-01-20 10:51:26 +0000
+# Generation Time: 2022-02-21 01:56:00 +0000
 # ************************************************************
 
 
@@ -627,6 +627,31 @@ CREATE TABLE `biz_often_browse_record` (
   KEY `accountUUID_fk` (`accountUUID`),
   KEY `type_fk` (`type`),
   KEY `resourceUUID_fk` (`resourceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_pipeline
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_pipeline`;
+
+CREATE TABLE `biz_pipeline` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID，带 pl- 前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
+  `content` text NOT NULL COMMENT '原始内容',
+  `isSysTemplate` int(1) DEFAULT '0' COMMENT '是否为系统模版',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

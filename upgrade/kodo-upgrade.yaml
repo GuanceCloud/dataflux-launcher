@@ -202,3 +202,11 @@ update:
             # 计费平台账单同步地址变更
             syncBillHost: "https://boss.guance.com"
           
+    #2022/02/22     
+    - seq: 11
+      config:
+        kodoWS: |-
+          # 新增配置项
+          kodo:
+            remote_host: http://kodo.forethought-kodo:9527
+            time_out: "30s"
