@@ -528,6 +528,11 @@ services:
       image: internal-dataway
       replicas: 1
 
+    - key: datakit-pl-debug
+      name: 内转 Pipline 调试服务
+      image: datakit-pl-debug
+      replicas: 1
+
     - key: data-warehouse
       name: 数据仓库管理
       image: data-warehouse

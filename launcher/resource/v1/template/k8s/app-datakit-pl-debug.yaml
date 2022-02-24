@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-datakit-pl-debug
+  name: datakit-pl-debug
+  namespace: utils
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-datakit-pl-debug
+  template:
+    metadata:
+      labels:
+        app: deployment-datakit-pl-debug
+    spec:
+      containers:
+      - env:
+        - name: ENV_DATAWAY
+          value: dev_null
+        - name: ENV_HTTP_LISTEN
+          value: 0.0.0.0:9529
+        image: pubrepo.jiagouyun.com/datakit/datakit:1.2.7
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: datakit-pl-debug
+        ports:
+        - containerPort: 9529
+          name: 9529tcp95291
+          protocol: TCP
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: datakit-pl-debug
+  namespace: utils
+spec:
+  ports:
+  - name: 9529tcp95291
+    port: 9529
+    protocol: TCP
+    targetPort: 9529
+  selector:
+    app: deployment-datakit-pl-debug
+  type: ClusterIP
