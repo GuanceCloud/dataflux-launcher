@@ -90,6 +90,13 @@ celery:
     cron_notification:
       minute: '*/30'  
 
+# 系统 Pipeline 同步设置，如不能访问公网，可以将 isOpen 都设置为 false，关闭同步。
+syncInternalPipelineSet:
+  pull:
+    isOpen: true
+  update:
+    isOpen: true
+
 sysDatawaySet:
   defaultCfg:
     token: {{ (other.workspace or {}).token }}

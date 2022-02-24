@@ -406,3 +406,20 @@ upgradeInfo:
       ```
       python -c "from forethought.tasks.sync_inner_metric_config import update_inner_metric_config; update_inner_metric_config();"
       ```
+
+  # 2022-02-22
+  - seq: 23
+    config: |-
+      **升级完成并全部启动成功后，进入 launcher 容器执行以下接口：**
+
+      1、清理 SLO 删除之后未清理的 SLO 组合配置
+
+      ``` 
+      curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_02_22_clear_deleted_slo_rule"}'
+      ```
+
+      2、同步官方内置 Pipeline 库，如服务器不能访问公网，需要手工导入
+
+      ```
+      curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw '{"script_name": "timed_sync_pipeline_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_pipline": true}}'
+      ```
