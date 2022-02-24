@@ -21,6 +21,7 @@ spec:
           value: dev_null
         - name: ENV_HTTP_LISTEN
           value: 0.0.0.0:9529
+        # 内置用于 Pipline 调试的 DataKit，暂时先固定镜像版本
         image: pubrepo.jiagouyun.com/datakit/datakit:1.2.7
         imagePullPolicy: {{ settings.imagePullPolicy }}
         name: datakit-pl-debug
