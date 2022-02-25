@@ -1520,12 +1520,12 @@ upgrade:
 
   # 2021.12.02 迭代
   - seq: 42
-
-    core: |-
-      # 阿里云版 DF 的配置文件需要添加如下配置
-      CloudCareServer:
-        host: "boss.guance.com"
-        node: "aliyun"
+    config:
+      core: |-
+        # 阿里云版 DF 的配置文件需要添加如下配置
+        CloudCareServer:
+          host: "boss.guance.com"
+          node: "aliyun"
 
     database: |-
 
@@ -1652,10 +1652,11 @@ upgrade:
 
   # 2022.01.20 迭代
   - seq: 45
-    core: |-
-      # kodo metric 配置自动更新
-      KodoMetricInnerSet:
-        isOpen: true
+    config:
+      core: |-
+        # kodo metric 配置自动更新
+        KodoMetricInnerSet:
+          isOpen: true
 
     database: |-
       
@@ -1745,15 +1746,18 @@ upgrade:
 
   # 2022.02.22 迭代
   - seq: 46
-    core: |-
-      # 本次迭代需要执行数据修复脚本
-      
-      # 系统 Pipeline 同步设置
-      syncInternalPipelineSet:
-        pull:
-          isOpen: true
-        update:
-          isOpen: true
+    config:
+      core: |-
+        # 本次迭代需要执行数据修复脚本
+        
+        # 系统 Pipeline 同步设置
+        syncInternalPipelineSet:
+          # 从云端拉到本地
+          pull:
+            isOpen: true
+          # 从本地同步至数据库中
+          update:
+            isOpen: true
 
     database: |-
       

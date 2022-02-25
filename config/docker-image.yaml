@@ -6,13 +6,13 @@ apps:
     nginx: basis:multiarch_nginx_1.13.7
     kapacitor: basis:kapacitor_1.5.4
     internal-dataway: dataway:1.2.0
-    core: 1.35.84:core--1645770929
-    kodo: 1.35.84:kodo--1645770929
-    front-webclient: 1.35.84:front-webclient--1645770929
-    management-webclient: 1.35.84:management-webclient--1645770929
-    message-desk: 1.35.84:message-desk--1645770929
-    message-desk-worker: 1.35.84:message-desk-worker--1645770929
-    dataflux-func: 1.35.84:dataflux-func--1645770929
-    utils-server: 1.35.84:utils-server--1645770929
-    data-warehouse: 1.35.84:data-warehouse--1645770929
+    core: 1.35.84:core-ee1b9173-1645780061
+    kodo: 1.35.84:kodo-4ad16fc4-1645780061
+    front-webclient: 1.35.84:front-webclient-69474d83d-1645780061
+    management-webclient: 1.35.84:management-webclient-6e3742d-1645780061
+    message-desk: 1.35.84:message-desk-a8aa5c3-1645780061
+    message-desk-worker: 1.35.84:message-desk-worker-8142aa5-1645780061
+    dataflux-func: 1.35.84:dataflux-func-698210e-1645780061
+    utils-server: 1.35.84:utils-server-48799ca-1645780061
+    data-warehouse: 1.35.84:data-warehouse-545291f-1645780061
   version: 1.35.84
