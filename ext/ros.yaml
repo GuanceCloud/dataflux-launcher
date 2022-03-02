@@ -1,0 +1,622 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Description:
+  en: Create an ECS cloud server using a custom image when you create a new virtual proprietary network, switch, and security group base resource
+  zh-cn: 新建虚拟专有网络、交换机和安全组基础资源后，使用自定义镜像创建一台ECS云服务器
+Parameters:
+  ZoneId:
+    Type: String
+    Description:
+      zh-cn: 创建实例前，请确认可用区是否支持Redis资源的规格。
+      en: Before you create an instance, confirm that the Availability Zone supports the specifications of Redis resources.
+    AssociationProperty: ALIYUN::ECS::Instance:ZoneId
+    Label:
+      en: Zone ID
+      zh-cn: 可用区
+  VpcCidrBlock:
+    Type: String
+    Label:
+      en: VPC CIDR IPv4 Block
+      zh-cn: 专有网络IPv4网段
+    Description:
+      zh-cn: VPC的ip地址段范围，<br>您可以使用以下的ip地址段或其子网:<br><font color='green'>[10.0.0.0/8]</font><br><font color='green'>[172.16.0.0/12]</font><br><font color='green'>[192.168.0.0/16]</font>
+      en: 'The ip address range of the VPC in the CidrBlock form; <br>You can use the following ip address ranges and their subnets: <br><font color=''green''>[10.0.0.0/8]</font><br><font color=''green''>[172.16.0.0/12]</font><br><font color=''green''>[192.168.0.0/16]</font>'
+    Default: 192.168.0.0/16
+  VSwitchCidrBlock:
+    Type: String
+    Label:
+      en: VSwitch CIDR Block
+      zh-cn: 交换机子网网段
+    Description:
+      zh-cn: 必须属于VPC的子网段。
+      en: Must belong to the subnet segment of VPC.
+    Default: 192.168.1.0/24
+  ClusterName:
+    Type: String
+    Default: ack-guanceyun
+  GuanceYunDomain:
+    Type: String
+    Label:
+      en: Primary Domain
+      zh-cn: 主域名
+    Description:
+      zh-cn: 用于观测云部署的主域名。
+      en: GuanceYun Primary Domain.
+    Default: my-guance.com
+  EcsInstanceType:
+    Type: String
+    Label:
+      en: Instance Type
+      zh-cn: 实例类型
+    AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    Default: ecs.g6.large
+  SystemDiskSize:
+    Default: 40
+    Type: Number
+    Description:
+      zh-cn: 系统盘大小, 取值范围：[40, 500], 单位：GB。
+      en: 'System disk size, range of values: 40-500, units: GB.'
+    Label:
+      zh-cn: 系统盘空间
+      en: System Disk Space
+  SystemDiskCategory:
+    Type: String
+    Description:
+      en: '<font color=''blue''><b>Optional values:</b></font><br>[cloud_efficiency: <font color=''green''>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font color=''green''>SSD Cloud Disk</font>]<br>[cloud_essd: <font color=''green''>ESSD Cloud Disk</font>]<br>[cloud: <font color=''green''>Cloud Disk</font>]<br>[ephemeral_ssd: <font color=''green''>Local SSD Cloud Disk</font>]'
+      zh-cn: '<font color=''blue''><b>可选值：</b></font><br>[cloud_efficiency: <font color=''green''>高效云盘</font>]<br>[cloud_ssd: <font color=''green''>SSD云盘</font>]<br>[cloud_essd: <font color=''green''>ESSD云盘</font>]<br>[cloud: <font color=''green''>普通云盘</font>]<br>[ephemeral_ssd: <font color=''green''>本地SSD盘</font>]'
+    AllowedValues:
+      - cloud_efficiency
+      - cloud_ssd
+      - cloud
+      - cloud_essd
+      - ephemeral_ssd
+    Label:
+      en: System Disk Category
+      zh-cn: 系统盘类型
+    Default: cloud_essd
+  LoginPassword:
+    NoEcho: true
+    Type: String
+    Description:
+      en: 'Length 8-32 characters, can contain size letters, Numbers and special symbols, including:! @ # $ % ^ & * ( ) _ + - ='
+      zh-cn: 长度8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）
+    Label:
+      en: Instance Password
+      zh-cn: 实例密码
+    ConstraintDescription:
+      en: '8-32 characters, can contain size letters, Numbers and special symbols, including:! @ # $ % ^ & * ( ) _ + - ='
+      zh-cn: 8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）
+    MinLength: 8
+    MaxLength: 32
+  WorkerInstanceTypes:
+    Type: CommaDelimitedList
+    Label:
+      en: Worker Nodes Types
+      zh-cn: Worker节点规格
+    Description:
+      zh-cn: Worker节点ECS实例规格。
+      en: The worker node ECS instance specification.
+    AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    Default: ecs.g6.large
+  WorkerSystemDiskSize:
+    Type: Number
+    Description:
+      en: |-
+        Worker disk system disk size, the unit is GiB.
+        Default to 120.
+      zh-cn: |-
+        工作磁盘系统磁盘大小，单位为GiB。
+        默认为120。
+    Label:
+      en: Worker System Disk Size
+      zh-cn: Worker节点系统盘大小
+    MinValue: 1
+    Default: 120
+  NumOfNodes:
+    Type: Number
+    Description:
+      en: |-
+        Number of worker nodes. The range is [0,300].
+        Default to 3.
+      zh-cn: 工作节点数。范围为[0，300]。\n默认为3。
+    Label:
+      en: Num Of Nodes
+      zh-cn: Work 节点数量
+    MinValue: 2
+    MaxValue: 300
+    Default: 3
+  WorkerSystemDiskCategory:
+    Type: String
+    Description:
+      en: '<font color=''blue''><b>Optional values:</b></font><br>[cloud_efficiency: <font color=''green''>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font color=''green''>SSD Cloud Disk</font>]<br>[cloud_essd: <font color=''green''>ESSD Cloud Disk</font>]<br>[cloud: <font color=''green''>Cloud Disk</font>]<br>[ephemeral_ssd: <font color=''green''>Local SSD Cloud Disk</font>]'
+      zh-cn: '<font color=''blue''><b>可选值：</b></font><br>[cloud_efficiency: <font color=''green''>高效云盘</font>]<br>[cloud_ssd: <font color=''green''>SSD云盘</font>]<br>[cloud_essd: <font color=''green''>ESSD云盘</font>]<br>[cloud: <font color=''green''>普通云盘</font>]<br>[ephemeral_ssd: <font color=''green''>本地SSD盘</font>]'
+    AllowedValues:
+      - cloud
+      - cloud_efficiency
+      - cloud_ssd
+      - cloud_essd
+      - ephemeral_ssd
+    Label:
+      en: Worker System Disk Category
+      zh-cn: Worker 系统盘磁盘类型
+    Default: cloud_essd
+  DBEngine:
+    Label: DB Engine
+    Type: String
+    Default: MySQL
+  DBEngineVersion:
+    Label: DB Engine Version
+    Type: String
+    Default: '5.7'
+  DBInstanceClass:
+    Label: DB Instance Class
+    Type: String
+    Description:
+      zh-cn: 根据数据库引擎的类型和可用的区域支持选择实例规格；<br>请参见详细信息：<a href='https://help.aliyun.com/document_detail/26312.html' target='_blank'><b><font color='blue'>实例规格表</font></b></a>
+      en: 'Select the instance specification based on the type of database engine and the available area support;<br>see detail: <a href=''https://www.alibabacloud.com/help/doc-detail/26312.html'' target=''_blank''><b><font color=''blue''>Instance specification sheet</font></b></a>'
+    Default: rds.mysql.c1.large
+  DBInstanceStorage:
+    Label: Storage
+    Type: Number
+    Description:
+      zh-cn: RDS实例大小范围为20-2000，每5个增量，单位为GB
+      en: The size range of RDS instances is 20 - 2000, Incrementing in every 5, unit GB
+    MinValue: 20
+    MaxValue: 2000
+    ConstraintDescription: The size range of RDS instances is 20 - 2000, Incrementing in every 5, unit GB
+    Default: 20
+  DBAccountName:
+    Type: String
+    Label:
+      zh-cn: 帐户名称
+      en: Account Name
+    Description:
+      zh-cn: 帐户名称
+      en: Account Name
+    Default: automation
+  DBAccountPassword:
+    Type: String
+    NoEcho: true
+    Label:
+      zh-cn: 帐户密码
+      en: DB Account Password
+    Description:
+      zh-cn: |-
+        长度为8~32个字符。由大写英文字母、小写英文字母、数字、特殊字符中的任意三种组成。支持的特殊字符如下：
+        !@#$&amp;%^*()_+-= 。
+      en: |-
+        The length is 8 ~ 32 characters. It is composed of uppercase English letters, lowercase English letters, numbers and special characters. The special characters supported are as follows:
+
+        !@#$& amp;%^* ()_+-=  .
+    Default: AliEs_2019
+  RedisInstanceClass:
+    Default: redis.master.small.default
+    Type: String
+    Description:
+      zh-cn: >-
+        Redis实例规格，请参考：<a href='https://help.aliyun.com/document_detail/26350.html'
+        target='_blank'><b><font color='blue'>查看规格信息</font></b></a>
+      en: >-
+        Redis Instance specifications, please refer to：<a
+        href='https://www.alibabacloud.com/help/en/doc-detail/26350.html'
+        target='_blank'><b><font color='blue'>View specifications</font></b></a>
+    Label:
+      zh-cn: Redis实例规格
+      en: Redis Instance Type
+  RedisPassword:
+    Type: String
+    Description:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三个；<br>特殊字符包括：（）''~！@#$%^&*_-+=|{}[]:;''<>,.?/'
+      en: >-
+        The 8-30 long login password of instance, consists of the uppercase,
+        lowercase letter and number. <br> special characters
+        include（）'~！@#$%^&*_-+=|{}[]:;'<>,.?/.
+    MinLength: 8
+    Label:
+      zh-cn: Redis实例密码
+      en: Redis Instance Password
+    AllowedPattern: '[a-zA-Z0-9-\(\)\`\~\!@\#\$%\^&\*-+=\|\{\}\[\]\:\;\‘\,\.\?\/]*'
+    NoEcho: true
+    MaxLength: 30
+    ConstraintDescription:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三种；特殊字符包括：()`~!@#$%^&*_-+=|{}[]:;'' <>,.?/'
+      en: >-
+        Length 8-30, must contain upper case letters, lower case letters,
+        Numbers, special symbols three; special characters include:
+        ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/
+  InfluxDBInstanceClass:
+    Type: String
+    Default: influxdata.n1.xlarge
+    Label:
+      zh-cn: InfluxDB实例规格
+      en: InfluxDB Instance Type
+  InfluxDBAccountName:
+    Type: String
+    Default: automation
+    Label:
+      zh-cn: InfluxDB用户名
+      en: InfluxDB Account Name
+  InfluxDBAccountPassword:
+    Type: String
+    Description:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三个；<br>特殊字符包括：（）''~！@#$%^&*_-+=|{}[]:;''<>,.?/'
+      en: >-
+        The 8-30 long login password of instance, consists of the uppercase,
+        lowercase letter and number. <br> special characters
+        include（）'~！@#$%^&*_-+=|{}[]:;'<>,.?/.
+    MinLength: 8
+    Label:
+      zh-cn: InfluxDB实例密码
+      en: InfluxDB Instance Password
+    AllowedPattern: '[a-zA-Z0-9-\(\)\`\~\!@\#\$%\^&\*-+=\|\{\}\[\]\:\;\‘\,\.\?\/]*'
+    NoEcho: true
+    MaxLength: 30
+    ConstraintDescription:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三种；特殊字符包括：()`~!@#$%^&*_-+=|{}[]:;'' <>,.?/'
+      en: >-
+        Length 8-30, must contain upper case letters, lower case letters,
+        Numbers, special symbols three; special characters include:
+        ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/
+  ElasticSearchNodeInstanceType:
+    Type: String
+    Default: elasticsearch.r5.large
+    Label:
+      zh-cn: ElastichSearchNode实例规格
+      en: ElasticSearch Node Instance Type
+  ElasticSearchPassword:
+    Type: String
+    Description:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三个；<br>特殊字符包括：（）''~！@#$%^&*_-+=|{}[]:;''<>,.?/'
+      en: >-
+        The 8-30 long login password of instance, consists of the uppercase,
+        lowercase letter and number. <br> special characters
+        include（）'~！@#$%^&*_-+=|{}[]:;'<>,.?/.
+    MinLength: 8
+    Label:
+      zh-cn: ElasticSearch实例密码
+      en: ElasticSearch Instance Password
+    AllowedPattern: '[a-zA-Z0-9-\(\)\`\~\!@\#\$%\^&\*-+=\|\{\}\[\]\:\;\‘\,\.\?\/]*'
+    NoEcho: true
+    MaxLength: 30
+    ConstraintDescription:
+      zh-cn: '长度8-30，必须包含大写字母、小写字母、数字、特殊符号三种；特殊字符包括：()`~!@#$%^&*_-+=|{}[]:;'' <>,.?/'
+      en: >-
+        Length 8-30, must contain upper case letters, lower case letters,
+        Numbers, special symbols three; special characters include:
+        ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/
+Resources:
+  EcsVpc:
+    Type: ALIYUN::ECS::VPC
+    Properties:
+      CidrBlock:
+        Ref: VpcCidrBlock
+      VpcName: default-vpc
+  EcsVSwitch:
+    Type: ALIYUN::ECS::VSwitch
+    Properties:
+      VpcId:
+        Ref: EcsVpc
+      ZoneId:
+        Ref: ZoneId
+      CidrBlock:
+        Ref: VSwitchCidrBlock
+  EcsSecurityGroup:
+    Type: ALIYUN::ECS::SecurityGroup
+    Properties:
+      VpcId:
+        Ref: EcsVpc
+      SecurityGroupIngress:
+        - PortRange: '-1/-1'
+          Priority: 1
+          SourceCidrIp: 0.0.0.0/0
+          IpProtocol: all
+          NicType: intranet
+      SecurityGroupEgress:
+        - PortRange: '-1/-1'
+          Priority: 1
+          IpProtocol: all
+          DestCidrIp: 0.0.0.0/0
+          NicType: intranet
+  Database:
+    Type: ALIYUN::RDS::DBInstance
+    Properties:
+      ZoneId:
+        Ref: ZoneId
+      VPCId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      Engine:
+        Ref: DBEngine
+      EngineVersion:
+        Ref: DBEngineVersion
+      DBInstanceClass:
+        Ref: DBInstanceClass
+      DBInstanceStorage:
+        Ref: DBInstanceStorage
+      SecurityIPList:
+        Ref: VSwitchCidrBlock
+  RDSAccount:
+    DependsOn: Database
+    Type: ALIYUN::RDS::Account
+    Properties:
+      DBInstanceId:
+        Ref: Database
+      AccountType: Super
+      AccountName:
+        Ref: DBAccountName
+      AccountPassword:
+        Ref: DBAccountPassword
+  RDSParameter:
+    Type: ALIYUN::RDS::DBInstanceParameterGroup
+    Properties:
+      DBInstanceId:
+        Ref: Database
+      Parameters:
+        - Key: innodb_large_prefix
+          Value: 'ON'
+  RedisInstance:
+    Type: 'ALIYUN::REDIS::Instance'
+    Properties:
+      ZoneId:
+        Ref: ZoneId
+      VpcId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      EvictionPolicy: noeviction
+      InstanceClass:
+        Ref: RedisInstanceClass
+      Password:
+        Ref: RedisPassword
+  RedisWhitelist:
+    Type: 'ALIYUN::REDIS::Whitelist'
+    Properties:
+      SecurityIpGroupAttribute: launcher
+      SecurityIps:
+        Ref: VSwitchCidrBlock
+      InstanceId:
+        Ref: RedisInstance
+  InfluxDB:
+    Type: 'ALIYUN::TSDB::HiTSDBInstance'
+    Properties:
+      InstanceStorage: 50
+      ZoneId:
+        Ref: ZoneId
+      VPCId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      InstanceClass:
+        Ref: InfluxDBInstanceClass
+      SecurityIpList:
+        - Ref: VSwitchCidrBlock
+      PayType: PREPAY
+      Duration: 1
+  InfluxDBAccount:
+    Type: 'ALIYUN::TSDB::InfluxDBUser'
+    Properties:
+      InstanceId:
+        Ref: InfluxDB
+      UserName:
+        Ref: InfluxDBAccountName
+      Password:
+        Ref: InfluxDBAccountPassword
+      UserType: admin
+  ElasticSearch:
+    Type: 'ALIYUN::ElasticSearch::Instance'
+    Properties:
+      InstanceChargeType: PayAsYouGo
+      VSwitchId:
+        Ref: EcsVSwitch
+      Password:
+        Ref: ElasticSearchPassword
+      Version: 7.10_with_X-Pack
+      DataNode:
+        Amount: 2
+        DiskSize: 100
+        Spec:
+          Ref: ElasticSearchNodeInstanceType
+        DiskType: cloud_ssd
+  FileSystem:
+    Type: 'ALIYUN::NAS::FileSystem'
+    Properties:
+      VpcId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      StorageType: Performance
+      ProtocolType: NFS
+      ChargeType: PayAsYouGo
+  MountTarget:
+    Type: 'ALIYUN::NAS::MountTarget'
+    Properties:
+      FileSystemId:
+        Ref: FileSystem
+      VpcId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      NetworkType: Vpc
+      AccessGroupName: DEFAULT_VPC_GROUP_NAME
+  ManagedKubernetesCluster:
+    Type: ALIYUN::CS::ManagedKubernetesCluster
+    Properties:
+      VSwitchIds:
+        - Ref: EcsVSwitch
+      VpcId:
+        Ref: EcsVpc
+      WorkerInstanceTypes:
+        Ref: WorkerInstanceTypes
+      NumOfNodes:
+        Ref: NumOfNodes
+      ContainerCidr: 172.20.0.0/16
+      ServiceCidr: 172.21.0.0/20
+      WorkerSystemDiskCategory:
+        Ref: WorkerSystemDiskCategory
+      WorkerSystemDiskSize:
+        Ref: WorkerSystemDiskSize
+      LoginPassword:
+        Ref: LoginPassword
+      SnatEntry: true
+      Addons:
+        - Name: flannel
+          Config: ''
+        - Name: flexvolumn
+          Config: ''
+        - Name: nginx-ingress-controller
+          Config: '{\"IngressSlbNetworkType\":\"internet\"}'
+      Name:
+        Ref: ClusterName
+  EcsInstanceJumpBox:
+    Type: ALIYUN::ECS::InstanceGroup
+    DependsOn:
+      - ManagedKubernetesCluster
+      - MountTarget
+      - RDSParameter
+      - InfluxDB
+      - InfluxDBAccount
+      - Database
+      - ElasticSearch
+      - RedisInstance
+      - RedisWhitelist
+    Properties:
+      InstanceName: jumpbox
+      ImageId: centos_7
+      InstanceType:
+        Ref: EcsInstanceType
+      VpcId:
+        Ref: EcsVpc
+      VSwitchId:
+        Ref: EcsVSwitch
+      SecurityGroupId:
+        Ref: EcsSecurityGroup
+      AllocatePublicIP: false
+      Password:
+        Ref: LoginPassword
+      MaxAmount: 1
+      SystemDiskSize:
+        Ref: SystemDiskSize
+      InstanceChargeType: PostPaid
+      SystemDiskCategory:
+        Ref: SystemDiskCategory
+      UserData:
+        Fn::Sub:
+          - |
+            #!/bin/bash
+            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+            cp kubectl /usr/bin/
+            chmod +x /usr/bin/kubectl
+            mkdir -p ~/.kube
+            echo '${KubeConfig}' >> ~/.kube/config
+            echo '${ApplicationYaml}' > ~/application.yaml
+            curl https://computenest-test-shenzhen.oss-cn-shenzhen.aliyuncs.com/guanceyun/storage-class.yaml > ~/storage-class.yaml
+            curl https://computenest-test-shenzhen.oss-cn-shenzhen.aliyuncs.com/guanceyun/nas-controller.yaml > ~/nas-controller.yaml
+            curl https://computenest-test-shenzhen.oss-cn-shenzhen.aliyuncs.com/guanceyun/launcher-1.yaml > ~/launcher-1.yaml
+            curl https://computenest-test-shenzhen.oss-cn-shenzhen.aliyuncs.com/guanceyun/launcher-2.yaml > ~/launcher-2.yaml
+
+            # 最新的安装程序镜像地址
+            dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep -Eo "pubrepo[^\"]+[0-9]+")
+
+            sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
+            sed -i 's/{{ domain }}/mytest.com/g' ~/launcher-1.yaml
+            sed -i 's/{{ storageClassName }}/alicloud-nas/g' ~/launcher-2.yaml
+            sed -i 's/{{ launcher_image }}/'${!dockerImgPath//\//\\\/}'/g' ~/launcher-2.yaml
+
+            sleep 10
+
+            kubectl apply --kubeconfig=/root/.kube/config -f ~/nas-controller.yaml
+            kubectl apply --kubeconfig=/root/.kube/config -f ~/storage-class.yaml
+            kubectl apply --kubeconfig=/root/.kube/config -f ~/launcher-1.yaml
+            kubectl create --kubeconfig=/root/.kube/config cm k8s-config -n launcher --from-file=config.yaml=/root/.kube/config
+            kubectl apply --kubeconfig=/root/.kube/config -f ~/launcher-2.yaml
+
+          - KubeConfig:
+              Fn::GetAtt:
+              - ManagedKubernetesCluster
+              - PrivateUserKubConfig
+            MountTargetDomain:
+              Fn::GetAtt:
+                - MountTarget
+                - MountTargetDomain
+            ApplicationYaml: |
+              apiVersion: v1
+              kind: Pod
+              metadata:
+               name: nginx
+              spec:
+               containers:
+               - name: nginx
+                 image: nginx
+                 imagePullPolicy: IfNotPresent
+
+Outputs:
+  RdsConnectString:
+    Value:
+      Fn::GetAtt:
+        - Database
+        - InnerConnectionString
+  RedisConnectString:
+    Value:
+      Fn::GetAtt:
+        - RedisInstance
+        - ConnectionDomain
+  InfluxDBConnectionString:
+    Value:
+      Fn::GetAtt:
+        - InfluxDB
+        - ConnectionString
+  ElasticSearchConnectString:
+    Value:
+      Fn::GetAtt:
+        - ElasticSearch
+        - Domain
+Metadata:
+  ALIYUN::ROS::Interface:
+    ParameterGroups:
+      - Parameters:
+          - ZoneId
+          - VpcCidrBlock
+          - VSwitchCidrBlock
+          - ClusterName
+          - LoginPassword
+          - GuanceYunDomain
+        Label:
+          en: Basic Configuration
+          zh-cn: 基础配置
+      - Parameters:
+          - WorkerInstanceTypes
+          - WorkerSystemDiskCategory
+          - WorkerSystemDiskSize
+          - NumOfNodes
+        Label:
+          en: Kubernetes配置
+          zh-cn: KUBERNETES
+      - Parameters:
+          - EcsInstanceType
+          - SystemDiskSize
+          - SystemDiskCategory
+        Label:
+          en: ECS跳板机配置
+          zh-cn: ECS跳板机配置
+      - Parameters:
+          - DBEngine
+          - DBEngineVersion
+          - DBInstanceClass
+          - DBInstanceStorage
+          - DBAccountName
+          - DBAccountPassword
+      - Parameters:
+          - RedisInstanceClass
+          - RedisPassword
+        Label:
+          default: Redis
+      - Parameters:
+          - InfluxDBInstanceClass
+          - InfluxDBAccountName
+          - InfluxDBAccountPassword
+        Label:
+          default: InfluxDB
+      - Parameters:
+          - ElasticSearchNodeInstanceType
+          - ElasticSearchPassword
+
