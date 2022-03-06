@@ -61,7 +61,7 @@ buildhelm:
     - VDIR=${V[0]}.${V[1]}.${V[2]}
     - REPO=dataflux/$VDIR
     - TAG=${PROJECT}-${V[3]}-${V[4]}
-    - helm version
+    - wget https://df-storage-dev.oss-cn-hangzhou.aliyuncs.com/liwenjin/helm-v3.8.0-linux-amd64.tar.gz ; tar -xvf helm-v3.8.0-linux-amd64.tar.gz ; mv linux-amd64/helm /usr/local/bin/helm
     #- docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
   tags:
     - cloudcare-multiarch     
