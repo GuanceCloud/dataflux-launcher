@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJwdWJyZXBvLmppYWdvdXl1bi5jb20iOnsicGFzc3dvcmQiOiJKeTZnRkY2OFVIUllHWjhrNiIsInVzZXJuYW1lIjoiZnRkZXBsb3kifX19
+kind: Secret
+metadata:
+  name: registry-key
+  # namespace: {{ .Values.namespace }}
+  # annotations:
+  #   "app.kubernetes.io/managed-by": Helm
+  #   "meta.helm.sh/release-name": {{ .Values.namespace }}
+  #   "hmeta.helm.sh/release-namespace": default
+type: kubernetes.io/dockerconfigjson

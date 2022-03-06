@@ -1,0 +1,37 @@
+# Default values for launcher.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: launcher
+storageClassName: nfs-client
+
+image:
+  repository: {{repository}}
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: {{tag}}
+
+
+
+service:
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: launcher.tke.com
+      paths:
+        - path: /
+          serviceName: launcher
+          servicePort: 5000
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
