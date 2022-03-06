@@ -61,7 +61,8 @@ buildhelm:
     - VDIR=${V[0]}.${V[1]}.${V[2]}
     - REPO=dataflux/$VDIR
     - TAG=${PROJECT}-${V[3]}-${V[4]}
-    -  helm plugin list; ls -l /root/.local/share/helm/plugins
+    -  cd /root/.local/share/helm/plugins; rm -rf  plugin.yaml LICENSE bin;mkdir helm-push;tar -xvf helm-push_0.10.2_linux_amd64.tar.gz -C helm-push; helm plugin list
+; rm -f helm-push_0.10.2_linux_amd64.tar.gz
     #- docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
   tags:
     - cloudcare-multiarch     
