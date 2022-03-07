@@ -5,4 +5,8 @@ metadata:
   name: k8s-config
   # namespace: {{ .Values.namespace }}
 data:
-  config.yaml: |- {{ .Files.Get "config.yaml" | nindent 4 }}
+  config.yaml: |- {{- if (eq "config.yaml" .Values.configyaml) }}
+  {{ .Files.Get "config.yaml" | nindent 4 }}
+  {{- else }}
+  {{ .Values.configyaml | nindent 4}}
+  {{- end }}

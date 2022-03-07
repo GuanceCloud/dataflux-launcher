@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: launcher
+  name: "{{ template "launcher.fullname" . }}"
   # namespace: launcher
 spec:
   ports:

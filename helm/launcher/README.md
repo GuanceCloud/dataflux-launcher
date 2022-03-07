@@ -1,0 +1,156 @@
+# Launcher
+
+[Launcher](https://guance.com/) is an installer that installs observable software
+## TL;DR;
+
+```console
+$ helm repo add dataflux https://pubrepo.jiagouyun.com/chartrepo/dataflux-chart
+$ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
+        --set-file configyaml="/Users/buleleaf/.kube/config" \
+  --set ingress.hostname="launcher2.tke.com",persistence.storageClassName=nfs-client
+```
+
+## Introduction
+
+This chart bootstraps a [Launcher](https://guance.com/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+
+
+## Prerequisites
+
+- Kubernetes 1.12+
+- Helm 3.0-beta3+
+- PV provisioner support in the underlying infrastructure
+- ReadWriteMany volumes for deployment scaling
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```console
+$ helm install my-release <helm-repo>/Launcher -n launcher --create-namespace
+```
+
+The command deploys Launcher on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+
+> **Tip**: List all releases using `helm list -n launcher`
+
+## Uninstalling the Chart
+
+To uninstall/delete the `my-release` deployment:
+
+```console
+$ helm delete my-release -n launcher
+```
+
+The command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Parameters
+
+The following table lists the configurable parameters of the Launcher chart and their default values.
+
+| Parameter                       | Description                            | Default          |
+| ------------------------------- | -------------------------------------- | ---------------- |
+| `persistence.storageClassName ` | PVC Storage Class                      | nfs-client       |
+| `persistence.size`              | PVC Storage Request                    | 8Gi              |
+| `image.repository`              | Launcher image name                    | `nil`            |
+| `image.tag`                     | Launcher image tag                     | `{TAG_NAME}`     |
+| `image.pullPolicy`              | Image pull policy                      | `IfNotPresent`   |
+| `service.type`                  | Kubernetes Service type                | `ClusterIP`      |
+| `service.port`                  | Service HTTP port                      | `5000`           |
+| `ingress.enabled`               | Enable ingress controller resource     | `false`          |
+| `ingress.hostname`              | Default host for the ingress resource  | `Launcher.local` |
+| `ingress.annotations`           | Ingress annotations                    | `{}`             |
+| `ingress.hosts[0].name`         | Hostname to your Launcher installation | `Launcher.local` |
+| `ingress.hosts[0].path`         | Path within the url structure          | `/`              |
+| `ingress.tls[0].hosts[0]`       | TLS hosts                              | `nil`            |
+| `ingress.tls[0].secretName`     | TLS Secret (certificates)              | `nil`            |
+
+
+
+Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+
+```console
+$ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
+        --set-file configyaml="/Users/buleleaf/.kube/config" \
+  --set ingress.hostname="launcher2.tke.com",persistence.storageClassName=nfs-client
+```
+
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
+
+```console
+$ helm install my-release -f values.yaml <helm-repo>/Launcher
+```
+
+> **Tip**: You can use the default [values.yaml](values.yaml)
+
+
+### configuration config.yaml 
+Must be replaced when using launcher Yaml content to install dataflux
+```console
+$ cat ~/.kube/config > config.yaml
+$ helm install my-launcher dataflux/launcher -n launcher --create-namespace
+```
+
+### Ingress
+
+This chart provides support for ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress](https://kubeapps.com/charts/stable/nginx-ingress) or [traefik](https://kubeapps.com/charts/stable/traefik) you can utilize the ingress controller to serve your Launcher application.
+
+To enable ingress integration, please set `ingress.enabled` to `true`
+
+### Hosts
+
+Most likely you will only want to have one hostname that maps to this Launcher installation. If that's your case, the property `ingress.hostname` will set it. However, it is possible to have more than one host. To facilitate this, the `ingress.hosts` object is can be specified as an array.
+
+For each item, please indicate a `name`, `tls`, `tlsSecret`, and any `annotations` that you may want the ingress controller to know about.
+
+Indicating TLS will cause Launcher to generate HTTPS URLs, and Launcher will be connected to at port 443.  The actual secret that `tlsSecret` references do not have to be generated by this chart. However, please note that if TLS is enabled, the ingress record will not work until this secret exists.
+
+For annotations, please see [this document](https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md).
+Not all annotations are supported by all ingress controllers, but this document does a good job of indicating which annotation is supported by many popular ingress controllers.
+
+### TLS Secrets
+
+This chart will facilitate the creation of TLS secrets for use with the ingress controller, however, this is not required.  There are three common use cases:
+
+* helm generates/manages certificate secrets
+* user generates/manages certificates separately
+* an additional tool (like [kube-lego](https://kubeapps.com/charts/stable/kube-lego)) manages the secrets for the application
+
+In the first two cases, one will need a certificate and a key.  We would expect them to look like this:
+
+* certificate files should look like (and there can be more than one certificate if there is a certificate chain)
+
+```
+-----BEGIN CERTIFICATE-----
+MIID6TCCAtGgAwIBAgIJAIaCwivkeB5EMA0GCSqGSIb3DQEBCwUAMFYxCzAJBgNV
+...
+jScrvkiBO65F46KioCL9h5tDvomdU1aqpI/CBzhvZn1c0ZTf87tGQR8NK7v7
+-----END CERTIFICATE-----
+```
+* keys should look like:
+```
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvLYcyu8f3skuRyUgeeNpeDvYBCDcgq+LsWap6zbX5f8oLqp4
+...
+wrj2wDbCDCFmfqnSJ+dKI3vFLlEz44sAV8jX/kd4Y6ZTQhlLbYc=
+-----END RSA PRIVATE KEY-----
+```
+
+If you are going to use Helm to manage the certificates, please copy these values into the `certificate` and `key` values for a given `ingress.secrets` entry.
+
+If you are going to manage TLS secrets outside of Helm, please know that you can create a TLS secret (named `Launcher.local-tls` for example).
+
+Please see [this example](https://github.com/kubernetes/contrib/tree/master/ingress/controllers/nginx/examples/tls) for more information.
+
+
+
+## Persistence
+
+The Launcher image stores the Launcher data and configurations at the `/config/cloudcare-forethought-setup/persistent-data` path of the container.
+
+Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
+See the [Parameters](#parameters) section to configure the PVC or to disable persistence.
+```diff
+- persistence.storageClassName: nfs-client
++ persistence.storageClassName: nfs
+```
