@@ -70,11 +70,11 @@ buildTest:
   script:
     - CHART_PATH=`find . -maxdepth 3 -name Chart.yaml`
     - TEMP=${CHART_PATH%/*}
-    - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
+    #- docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
     - cp ${CHART_PATH%/*/*}/values.yaml ${CHART_PATH%/*}/values.yaml
     - sed -i "s,{{repository}},registry.jiagouyun.com/$REPOSITORY,g" ${CHART_PATH%/*}/values.yaml
     - sed -i "s,{{tag}},testing,g" ${CHART_PATH%/*}/values.yaml
-    - helm package ${CHART_PATH%/*} --version testing --app-version testing
+    - helm package ${CHART_PATH%/*} --version 1.0 --app-version 1.0
     - helm cm-push ${TEMP##*/}-testing.tgz launcher   
   tags:
     - cloudcare-multiarch      
