@@ -75,6 +75,6 @@ buildTest:
     - sed -i "s,{{repository}},registry.jiagouyun.com/$REPOSITORY,g" ${CHART_PATH%/*}/values.yaml
     - sed -i "s,{{tag}},testing,g" ${CHART_PATH%/*}/values.yaml
     - helm package ${CHART_PATH%/*} --version 1.0 --app-version 1.0
-    - helm cm-push ${TEMP##*/}-testing.tgz launcher   
+    - helm cm-push ${TEMP##*/}-1.0.tgz launcher   
   tags:
     - cloudcare-multiarch      
