@@ -1,6 +1,7 @@
 # Launcher
 
-[Launcher](https://guance.com/) is an installer that installs observable software
+[Launcher](https://guance.com/) 是安装可观测软件的安装器
+
 ## TL;DR;
 
 ```console
@@ -10,7 +11,7 @@ $ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
   --set ingress.hostname="launcher2.tke.com",persistence.storageClassName=nfs-client
 ```
 
-## Introduction
+## 介绍
 
 This chart bootstraps a [Launcher](https://guance.com/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
