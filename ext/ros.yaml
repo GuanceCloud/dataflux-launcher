@@ -217,7 +217,7 @@ Parameters:
         ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/
   InfluxDBInstanceClass:
     Type: String
-    Default: influxdata.n1.xlarge
+    Default: influxdata.n1.2xlarge
     Label:
       zh-cn: InfluxDB 实例规格
       en: InfluxDB Instance Type
@@ -264,7 +264,7 @@ Parameters:
     Type: String
     Default: elasticsearch.sn2ne.2xlarge
     Label:
-      zh-cn: ElastichSearchNode 实例规格
+      zh-cn: ElasticSearch 数据节点实例规格
       en: ElasticSearch Node Instance Type
   ElasticSearchPassword:
     Type: String
@@ -552,8 +552,10 @@ Resources:
             kubectl apply --kubeconfig=/root/.kube/config -f ~/nas-controller.yaml
             kubectl apply --kubeconfig=/root/.kube/config -f ~/storage-class.yaml
             kubectl apply --kubeconfig=/root/.kube/config -f ~/launcher.yaml
-            kubectl delete --kubeconfig=/root/.kube/config cm -n launcher k8s-config
+
+            kubectl delete --kubeconfig=/root/.kube/config cm k8s-config -n launcher 
             kubectl create --kubeconfig=/root/.kube/config cm k8s-config -n launcher --from-file=config.yaml=/root/.kube/config
+
 
           - KubeConfig:
               Fn::GetAtt:
