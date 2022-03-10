@@ -619,6 +619,7 @@ defaultSubdomain:
   managementApi: df-management-api
   # websocket: df-websocket
   function: df-func
+  openApi: df-openapi
   kodo: df-kodo
   staticResource: df-static-res
 
