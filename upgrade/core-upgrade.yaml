@@ -1781,3 +1781,14 @@ upgrade:
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
             
 
+  # 2022.03.10 迭代
+  - seq: 47
+    database: |-
+      
+      -- 调整 biz_pipeline 表 name 字段长度的限制，限制最大长度为1024
+      ALTER TABLE `biz_pipeline` 
+      CHANGE COLUMN `name` `name` VARCHAR(1024) NOT NULL DEFAULT '' COMMENT 'PL文件名' ;
+      
+      -- 将已禁用的监控器分组 设置为 启用状态
+      update biz_monitor set status=0 where status=2;
+
