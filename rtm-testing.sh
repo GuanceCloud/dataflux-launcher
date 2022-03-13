@@ -72,6 +72,16 @@ else
   echo "DataWay 最新版本号：$dwVersion \n"
 fi
 
+dkVersion=`curl -s https://static.guance.com/datakit/version | grep version\" | grep -Eo "(\d+\.){2}\d+(-rc\d+)?"`
+
+if [ ! -n "$dkVersion" ]; then
+  echo '未获取到 DataKit 的最新版本'
+  exit 0
+else
+  echo "DataKit 最新版本号：$dkVersion \n"
+fi
+
+
 : > ${imageYaml}
 echo "apps:" > ${workDir}/${imageYaml}
 echo "  registry: registry.jiagouyun.com" >> ${workDir}/${imageYaml}
@@ -84,6 +94,8 @@ echo "    kapacitor: basis/kapacitor:1.5.4" >> ${workDir}/${imageYaml}
 
 # 最新 DataWay 镜像版本
 echo "    internal-dataway: dataway/dataway:v${dwVersion}" >> ${workDir}/${imageYaml}
+# 最新 DataKit 镜像版本
+echo "    datakit: datakit:${dkVersion}" >> ${workDir}/${imageYaml}
 
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core" "cloudcare-forethought/cloudcare-forethought-backend"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo" "kodo/kodo"
