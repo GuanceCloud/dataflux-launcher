@@ -168,7 +168,7 @@ def init_elasticsearch():
 
 @setup_bp.route("/studio/init", methods=["POST"])
 def studio_init():
-  return  response_jsonify(elasticsearch_setup.studio_init())
+  return  response_jsonify(setup.studio_init())
 
 
 @setup_bp.route("/up/service/status", methods=["GET"])
