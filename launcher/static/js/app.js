@@ -592,7 +592,6 @@ var setup = (function () {
 
         // 全新安装时，需要初始化 ES 的 RP，升级安装时需要进入 Launcher 容器，手工执行 ES 初始化的接口
         if(mode == 'install'){   
-
           // 初始化 ES 生命周期策略、模板等配置
           that.post('elasticsearch/init').then(function(d){
             if(d.content.status_code != 200){
@@ -610,20 +609,23 @@ var setup = (function () {
           }).fail(function(d){
             alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
           });
-
-          that.post('studio/init').then(function(d){
-            if (d.content.status_code != 200){
-              alert("Studio 平台初始化失败，请刷新本页面重试。");
-            }else{
-              // 同步集成包模板到数据库
-              that.post('setting/sync_integration').done(function(d){
-
-              });
-            }
-          }).fail(function(d){
-              alert("Studio 平台初始化失败，请刷新本页面重试。");
-          });
         }
+
+        // 初始化 Studio 平台的相关配置：导入 官方 Pipeline 库、指标库、地理信息表、集成包、视图模板包
+        that.post('studio/init').then(function(d){
+          if (d.content.status_code != 200){
+            alert("Studio 平台初始化失败，请刷新本页面重试。");
+          }else{
+            // 同步集成包模板到数据库
+            that.post('setting/sync_integration').done(function(d){
+              
+            }).fail(function(d){
+              alert("集成包同步失败。")
+            });
+          }
+        }).fail(function(d){
+            alert("Studio 平台初始化失败，请刷新本页面重试。");
+        });
       }
     });
   };
