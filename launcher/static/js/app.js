@@ -616,7 +616,7 @@ var setup = (function () {
               alert("Studio 平台初始化失败，请刷新本页面重试。");
             }else{
               // 同步集成包模板到数据库
-              this.post('setting/sync_integration').done(function(d){
+              that.post('setting/sync_integration').done(function(d){
 
               });
             }
