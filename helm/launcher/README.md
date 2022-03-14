@@ -8,150 +8,98 @@
 $ helm repo add dataflux https://pubrepo.jiagouyun.com/chartrepo/dataflux-chart
 $ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
         --set-file configyaml="/Users/buleleaf/.kube/config" \
-  --set ingress.hostname="launcher2.tke.com",persistence.storageClassName=nfs-client
+  --set ingress.hostname="launcher2.tke.com",storageClassName=nfs-client
 ```
 
 ## 介绍
 
-This chart bootstraps a [Launcher](https://guance.com/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+此图表使用[Helm](https://helm.sh) package manager在[Kubernetes](http://kubernetes.io)集群上引导[Launcher](https://guance.com/)部署。
 
 
-## Prerequisites
+## 先决条件
 
 - Kubernetes 1.12+
 - Helm 3.0-beta3+
 - PV provisioner support in the underlying infrastructure
 - ReadWriteMany volumes for deployment scaling
 
-## Installing the Chart
+## 安装图表
 
-To install the chart with the release name `my-release`:
-
+要安装版本名为`my release`的图表，请执行以下操作：:
 ```console
-$ helm install my-release <helm-repo>/Launcher -n launcher --create-namespace
+$ helm repo add dataflux https://pubrepo.jiagouyun.com/chartrepo/dataflux-chart
+$ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
+        --set-file configyaml="/Users/buleleaf/.kube/config" \
+  --set ingress.hostname="launcher.my.com",storageClassName=nfs-client
 ```
 
-The command deploys Launcher on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+该命令以默认配置在Kubernetes集群上部署Launcher。[参数](#parameters)部分列出了安装期间可以配置的参数。
 
-> **Tip**: List all releases using `helm list -n launcher`
+> **Tip**: 使用列出所有版本 `helm list -n launcher`
 
-## Uninstalling the Chart
+## 卸载图表
 
-To uninstall/delete the `my-release` deployment:
+To uninstall/delete the `my-launcher` deployment:
 
 ```console
-$ helm delete my-release -n launcher
+$ helm delete my-launcher -n launcher
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+该命令将删除与图表关联的所有Kubernetes组件，并删除版本。
 
-## Parameters
+## 参数
 
-The following table lists the configurable parameters of the Launcher chart and their default values.
+下表列出了启动器图表的可配置参数及其默认值。
 
-| Parameter                       | Description                            | Default          |
-| ------------------------------- | -------------------------------------- | ---------------- |
-| `persistence.storageClassName ` | PVC Storage Class                      | nfs-client       |
-| `persistence.size`              | PVC Storage Request                    | 8Gi              |
-| `image.repository`              | Launcher image name                    | `nil`            |
-| `image.tag`                     | Launcher image tag                     | `{TAG_NAME}`     |
-| `image.pullPolicy`              | Image pull policy                      | `IfNotPresent`   |
-| `service.type`                  | Kubernetes Service type                | `ClusterIP`      |
-| `service.port`                  | Service HTTP port                      | `5000`           |
-| `ingress.enabled`               | Enable ingress controller resource     | `false`          |
-| `ingress.hostname`              | Default host for the ingress resource  | `Launcher.local` |
-| `ingress.annotations`           | Ingress annotations                    | `{}`             |
-| `ingress.hosts[0].name`         | Hostname to your Launcher installation | `Launcher.local` |
-| `ingress.hosts[0].path`         | Path within the url structure          | `/`              |
-| `ingress.tls[0].hosts[0]`       | TLS hosts                              | `nil`            |
-| `ingress.tls[0].secretName`     | TLS Secret (certificates)              | `nil`            |
+| Parameter                   | Description                            | Default             |
+| --------------------------- | -------------------------------------- | ------------------- |
+| `storageClassName `         | PVC Storage Class                      | nfs-client          |
+| `persistence.size`          | PVC Storage Request                    | 8Gi                 |
+| `image.repository`          | Launcher image name                    | `nil`               |
+| `image.tag`                 | Launcher image tag                     | `nil`               |
+| `image.pullPolicy`          | Image pull policy                      | `IfNotPresent`      |
+| `service.type`              | Kubernetes Service type                | `ClusterIP`         |
+| `service.port`              | Service HTTP port                      | `5000`              |
+| `ingress.enabled`           | Enable ingress controller resource     | `false`             |
+| `ingress.hostname`          | Default host for the ingress resource  | `launcher2.tke.com` |
+| `ingress.annotations`       | Ingress annotations                    | `{}`                |
+| `ingress.hosts[0].name`     | Hostname to your Launcher installation | `launcher2.tke.com` |
+| `ingress.hosts[0].path`     | Path within the url structure          | `/`                 |
+| `ingress.tls[0].hosts[0]`   | TLS hosts                              | `nil`               |
+| `ingress.tls[0].secretName` | TLS Secret (certificates)              | `nil`               |
 
 
 
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+使用--set key=value[,key=value]参数指定每个参数以进行helm安装。例如
 
 ```console
 $ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
         --set-file configyaml="/Users/buleleaf/.kube/config" \
-  --set ingress.hostname="launcher2.tke.com",persistence.storageClassName=nfs-client
+  --set ingress.hostname="launcher.my.com",storageClassName=nfs-client
 ```
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
+或者，可以在安装图表时提供指定上述参数值的YAML文件。例如
 
 ```console
 $ helm install my-release -f values.yaml <helm-repo>/Launcher
 ```
 
-> **Tip**: You can use the default [values.yaml](values.yaml)
+> **Tip**: 可以使用默认值[values.yaml](values.yaml)
 
 
-### configuration config.yaml 
-Must be replaced when using launcher Yaml content to install dataflux
+### 配置 config.yaml 
+使用launcher Yaml content安装dataflux时必须更换
 ```console
+$ helm pull dataflux/launcher --tar
+$ cd launcher
 $ cat ~/.kube/config > config.yaml
 $ helm install my-launcher dataflux/launcher -n launcher --create-namespace
 ```
 
-### Ingress
-
-This chart provides support for ingress resources. If you have an ingress controller installed on your cluster, such as [nginx-ingress](https://kubeapps.com/charts/stable/nginx-ingress) or [traefik](https://kubeapps.com/charts/stable/traefik) you can utilize the ingress controller to serve your Launcher application.
-
-To enable ingress integration, please set `ingress.enabled` to `true`
-
-### Hosts
-
-Most likely you will only want to have one hostname that maps to this Launcher installation. If that's your case, the property `ingress.hostname` will set it. However, it is possible to have more than one host. To facilitate this, the `ingress.hosts` object is can be specified as an array.
-
-For each item, please indicate a `name`, `tls`, `tlsSecret`, and any `annotations` that you may want the ingress controller to know about.
-
-Indicating TLS will cause Launcher to generate HTTPS URLs, and Launcher will be connected to at port 443.  The actual secret that `tlsSecret` references do not have to be generated by this chart. However, please note that if TLS is enabled, the ingress record will not work until this secret exists.
-
-For annotations, please see [this document](https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md).
-Not all annotations are supported by all ingress controllers, but this document does a good job of indicating which annotation is supported by many popular ingress controllers.
-
-### TLS Secrets
-
-This chart will facilitate the creation of TLS secrets for use with the ingress controller, however, this is not required.  There are three common use cases:
-
-* helm generates/manages certificate secrets
-* user generates/manages certificates separately
-* an additional tool (like [kube-lego](https://kubeapps.com/charts/stable/kube-lego)) manages the secrets for the application
-
-In the first two cases, one will need a certificate and a key.  We would expect them to look like this:
-
-* certificate files should look like (and there can be more than one certificate if there is a certificate chain)
+或者使用`--set-file` 命令指定路径
 
 ```
------BEGIN CERTIFICATE-----
-MIID6TCCAtGgAwIBAgIJAIaCwivkeB5EMA0GCSqGSIb3DQEBCwUAMFYxCzAJBgNV
-...
-jScrvkiBO65F46KioCL9h5tDvomdU1aqpI/CBzhvZn1c0ZTf87tGQR8NK7v7
------END CERTIFICATE-----
-```
-* keys should look like:
-```
------BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAvLYcyu8f3skuRyUgeeNpeDvYBCDcgq+LsWap6zbX5f8oLqp4
-...
-wrj2wDbCDCFmfqnSJ+dKI3vFLlEz44sAV8jX/kd4Y6ZTQhlLbYc=
------END RSA PRIVATE KEY-----
+$ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
+        --set-file configyaml="/Users/buleleaf/.kube/config" 
 ```
 
-If you are going to use Helm to manage the certificates, please copy these values into the `certificate` and `key` values for a given `ingress.secrets` entry.
-
-If you are going to manage TLS secrets outside of Helm, please know that you can create a TLS secret (named `Launcher.local-tls` for example).
-
-Please see [this example](https://github.com/kubernetes/contrib/tree/master/ingress/controllers/nginx/examples/tls) for more information.
-
-
-
-## Persistence
-
-The Launcher image stores the Launcher data and configurations at the `/config/cloudcare-forethought-setup/persistent-data` path of the container.
-
-Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
-See the [Parameters](#parameters) section to configure the PVC or to disable persistence.
-```diff
-- persistence.storageClassName: nfs-client
-+ persistence.storageClassName: nfs
-```

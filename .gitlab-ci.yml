@@ -40,7 +40,7 @@ buildRTM:
     - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
     
     - cp ${CHART_PATH%/*/*}/values.yaml ${CHART_PATH%/*}/values.yaml
-    - sed -i "s,{{repository}},$REPO,g" ${CHART_PATH%/*}/values.yaml
+    - sed -i "s,{{repository}},pubrepo.jiagouyun.com/$REPO,g" ${CHART_PATH%/*}/values.yaml
     - sed -i "s,{{tag}},$TAG,g" ${CHART_PATH%/*}/values.yaml
     - helm package ${CHART_PATH%/*} --version $TAG --app-version $TAG
     - helm cm-push ${TEMP##*/}-$TAG.tgz launcher    
