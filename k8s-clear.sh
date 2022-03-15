@@ -10,7 +10,7 @@ kubectl delete configmaps requirements-config user-config -n func2 --force --gra
 
 
 # 清理 deployment
-kubectl delete deployments front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
+kubectl delete deployments front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend openapi websocket -n forethought-core --force --grace-period=0
 kubectl delete deployments kodo kodo-inner kodo-nginx kodo-x kodo-ws -n forethought-kodo --force --grace-period=0
 kubectl delete deployments front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
@@ -20,7 +20,7 @@ kubectl delete deployments utils-server internal-dataway datakit-pl-debug data-w
 kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 service
-kubectl delete services front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
+kubectl delete services front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend openapi websocket -n forethought-core --force --grace-period=0
 kubectl delete services kodo kodo-inner kodo-nginx kodo-x kodo-ws -n forethought-kodo --force --grace-period=0
 kubectl delete services front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
@@ -30,7 +30,7 @@ kubectl delete services utils-server internal-dataway datakit-pl-debug data-ware
 kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 ingress
-kubectl delete ingress front-backend management-backend static-resource-nginx integration-nginx open-api websocket -n forethought-core --force --grace-period=0
+kubectl delete ingress front-backend management-backend static-resource-nginx integration-nginx openapi websocket -n forethought-core --force --grace-period=0
 kubectl delete ingress front-webclient management-webclient -n forethought-webclient --force --grace-period=0
 kubectl delete ingress func -n func --force --grace-period=0
 kubectl delete ingress server -n func2 --force --grace-period=0
