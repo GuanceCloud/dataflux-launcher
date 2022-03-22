@@ -358,6 +358,9 @@ Resources:
         Ref: DBInstanceStorage
       SecurityIPList:
         Ref: VSwitchCidrBlock
+      PayType: Prepaid
+      PeriodType: Month
+      Period: 1
   RDSAccount:
     DependsOn: Database
     Type: ALIYUN::RDS::Account
@@ -391,6 +394,8 @@ Resources:
         Ref: RedisInstanceClass
       Password:
         Ref: RedisPassword
+      ChargeType: PrePaid
+      Period: 1
   RedisWhitelist:
     Type: 'ALIYUN::REDIS::Whitelist'
     Properties:
@@ -429,7 +434,6 @@ Resources:
   ElasticSearch:
     Type: 'ALIYUN::ElasticSearch::Instance'
     Properties:
-      InstanceChargeType: PayAsYouGo
       VSwitchId:
         Ref: EcsVSwitch
       Password:
@@ -443,6 +447,8 @@ Resources:
         Spec:
           Ref: ElasticSearchNodeInstanceType
         DiskType: cloud_ssd
+      InstanceChargeType: Prepaid
+      Period: 1
   FileSystem:
     Type: 'ALIYUN::NAS::FileSystem'
     Properties:
@@ -493,6 +499,9 @@ Resources:
           Config: '{\"IngressSlbNetworkType\":\"internet\"}'
       Name:
         Ref: ClusterName
+      ChargeType: Prepaid
+      PeriodUnit: Month
+      Period: 1
   EcsInstanceJumpBox:
     Type: ALIYUN::ECS::InstanceGroup
     DependsOn:
@@ -540,7 +549,7 @@ Resources:
             curl https://static.guance.com/launcher/launcher.yaml > ~/launcher.yaml
 
             # 最新的安装程序镜像地址
-            dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep -Eo "pubrepo[^\"]+[0-9]+")
+            dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep launcher | grep -Eo "pubrepo[^\"]+[0-9]+")
 
             sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
             sed -i 's/{{ domain }}/${GuanceYunDomain}/g' ~/launcher.yaml
