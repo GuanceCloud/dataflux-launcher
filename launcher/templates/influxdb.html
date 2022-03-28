@@ -24,9 +24,9 @@
             <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="iptInfluxDBHost{{ loop.index }}" required value="{{idb.host}}" placeholder="InfluxDB Host">
             <label class="checkbox-inline">
               {% if idb.ssl %}
-              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> SSL
+              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> 启用 SSL (HTTPS)
               {% else %}
-              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}"> SSL
+              <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}"> 启用 SSL (HTTPS)
               {% endif %}
             </label>
           </div>

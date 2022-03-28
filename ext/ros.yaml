@@ -1,14 +1,18 @@
 ROSTemplateFormatVersion: '2015-09-01'
 Description:
-  en: Create an ECS cloud server using a custom image when you create a new virtual proprietary network, switch, and security group base resource
+  en: >-
+    Create an ECS cloud server using a custom image when you create a new
+    virtual proprietary network, switch, and security group base resource
   zh-cn: 新建虚拟专有网络、交换机和安全组基础资源后，使用自定义镜像创建一台ECS云服务器
 Parameters:
   ZoneId:
     Type: String
     Description:
       zh-cn: 创建实例前，请确认可用区是否支持Redis资源的规格。
-      en: Before you create an instance, confirm that the Availability Zone supports the specifications of Redis resources.
-    AssociationProperty: ALIYUN::ECS::Instance:ZoneId
+      en: >-
+        Before you create an instance, confirm that the Availability Zone
+        supports the specifications of Redis resources.
+    AssociationProperty: 'ALIYUN::ECS::Instance:ZoneId'
     Label:
       en: Zone ID
       zh-cn: 可用区
@@ -18,8 +22,17 @@ Parameters:
       en: VPC CIDR IPv4 Block
       zh-cn: 专有网络IPv4网段
     Description:
-      zh-cn: VPC的ip地址段范围，<br>您可以使用以下的ip地址段或其子网:<br><font color='green'>[10.0.0.0/8]</font><br><font color='green'>[172.16.0.0/12]</font><br><font color='green'>[192.168.0.0/16]</font>
-      en: 'The ip address range of the VPC in the CidrBlock form; <br>You can use the following ip address ranges and their subnets: <br><font color=''green''>[10.0.0.0/8]</font><br><font color=''green''>[172.16.0.0/12]</font><br><font color=''green''>[192.168.0.0/16]</font>'
+      zh-cn: >-
+        VPC的ip地址段范围，<br>您可以使用以下的ip地址段或其子网:<br><font
+        color='green'>[10.0.0.0/8]</font><br><font
+        color='green'>[172.16.0.0/12]</font><br><font
+        color='green'>[192.168.0.0/16]</font>
+      en: >-
+        The ip address range of the VPC in the CidrBlock form; <br>You can use
+        the following ip address ranges and their subnets: <br><font
+        color='green'>[10.0.0.0/8]</font><br><font
+        color='green'>[172.16.0.0/12]</font><br><font
+        color='green'>[192.168.0.0/16]</font>
     Default: 192.168.0.0/16
   VSwitchCidrBlock:
     Type: String
@@ -42,18 +55,87 @@ Parameters:
       zh-cn: 用于观测云部署的主域名。
       en: GuanceYun Primary Domain.
     Default: my-guance.com
+  PayType:
+    Type: String
+    Label:
+      en: ECS Instance Charge Type
+      zh-cn: 付费类型
+    Default: PostPaid
+    AllowedValues:
+      - PostPaid
+      - PrePaid
+    AssociationPropertyMetadata:
+      LocaleKey: InstanceChargeType
+  PayPeriodUnit:
+    Type: String
+    Description:
+      en: >-
+        The long cycle of purchasing resources. <br>Week is a Week and Month is
+        a Month. <br> The default value is month.<br><b><font color='red'> When
+        ECS instance types are PrePaid valid </b></font>
+      zh-cn: >-
+        购买资源时长的周期。<br>Week为周，Month为月<br>默认值为月<br><b><font
+        color='red'>当ECS实例类型为PrePaid有效</b></font>
+    Label:
+      en: Pay Period Unit
+      zh-cn: 购买资源时长周期
+    Default: Month
+    AllowedValues:
+      - Month
+    AssociationPropertyMetadata:
+      Visible:
+        Condition:
+          'Fn::Not':
+            'Fn::Equals':
+              - '${PayType}'
+              - PostPaid
+  PayPeriod:
+    Type: Number
+    Description:
+      en: >-
+        When the purchasing Period is Week, the value of Period ranges from 1 to
+        4. <br> When the resource purchase duration is Month, the value of
+        Period ranges from 1 to 9, 12, 24, 36, 48, or 60. <br><b><font
+        color='red'> When ECS instance types are PrePaid valid </b></font>
+      zh-cn: >-
+        当购买资源时长为Week时，Period取值：1~4。<br>当购买资源时长为Month时，Period取值：1~9 <br><b><font
+        color='red'>当ECS实例类型为PrePaid有效</b></font>
+    Label:
+      en: Period
+      zh-cn: 购买资源时长
+    Default: 1
+    AllowedValues:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+    AssociationPropertyMetadata:
+      Visible:
+        Condition:
+          'Fn::Or':
+            - 'Fn::Equals':
+                - '${PayType}'
+                - PrePaid
+            - 'Fn::Equals':
+                - '${PayType}'
+                - undefined
   EcsInstanceType:
     Type: String
     Label:
       en: Instance Type
       zh-cn: 实例类型
-    AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    AssociationProperty: 'ALIYUN::ECS::Instance::InstanceType'
     Default: ecs.g6.large
   SystemDiskSize:
     Default: 40
     Type: Number
     Description:
-      zh-cn: 系统盘大小, 取值范围：[40, 500], 单位：GB。
+      zh-cn: '系统盘大小, 取值范围：[40, 500], 单位：GB。'
       en: 'System disk size, range of values: 40-500, units: GB.'
     Label:
       zh-cn: 系统盘空间
@@ -61,8 +143,20 @@ Parameters:
   SystemDiskCategory:
     Type: String
     Description:
-      en: '<font color=''blue''><b>Optional values:</b></font><br>[cloud_efficiency: <font color=''green''>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font color=''green''>SSD Cloud Disk</font>]<br>[cloud_essd: <font color=''green''>ESSD Cloud Disk</font>]<br>[cloud: <font color=''green''>Cloud Disk</font>]<br>[ephemeral_ssd: <font color=''green''>Local SSD Cloud Disk</font>]'
-      zh-cn: '<font color=''blue''><b>可选值：</b></font><br>[cloud_efficiency: <font color=''green''>高效云盘</font>]<br>[cloud_ssd: <font color=''green''>SSD云盘</font>]<br>[cloud_essd: <font color=''green''>ESSD云盘</font>]<br>[cloud: <font color=''green''>普通云盘</font>]<br>[ephemeral_ssd: <font color=''green''>本地SSD盘</font>]'
+      en: >-
+        <font color='blue'><b>Optional values:</b></font><br>[cloud_efficiency:
+        <font color='green'>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font
+        color='green'>SSD Cloud Disk</font>]<br>[cloud_essd: <font
+        color='green'>ESSD Cloud Disk</font>]<br>[cloud: <font
+        color='green'>Cloud Disk</font>]<br>[ephemeral_ssd: <font
+        color='green'>Local SSD Cloud Disk</font>]
+      zh-cn: >-
+        <font color='blue'><b>可选值：</b></font><br>[cloud_efficiency: <font
+        color='green'>高效云盘</font>]<br>[cloud_ssd: <font
+        color='green'>SSD云盘</font>]<br>[cloud_essd: <font
+        color='green'>ESSD云盘</font>]<br>[cloud: <font
+        color='green'>普通云盘</font>]<br>[ephemeral_ssd: <font
+        color='green'>本地SSD盘</font>]
     AllowedValues:
       - cloud_efficiency
       - cloud_ssd
@@ -77,14 +171,18 @@ Parameters:
     NoEcho: true
     Type: String
     Description:
-      en: 'Length 8-32 characters, can contain size letters, Numbers and special symbols, including:! @ # $ % ^ & * ( ) _ + - ='
-      zh-cn: 长度8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）
+      en: >-
+        Length 8-32 characters, can contain size letters, Numbers and special
+        symbols, including:! @ # $ % ^ & * ( ) _ + - =
+      zh-cn: '长度8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）'
     Label:
       en: Instance Password
       zh-cn: 实例密码
     ConstraintDescription:
-      en: '8-32 characters, can contain size letters, Numbers and special symbols, including:! @ # $ % ^ & * ( ) _ + - ='
-      zh-cn: 8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）
+      en: >-
+        8-32 characters, can contain size letters, Numbers and special symbols,
+        including:! @ # $ % ^ & * ( ) _ + - =
+      zh-cn: '8-32个字符,可包含大小字母、数字及特殊符号（包含：!@#$%^&*()_+-=）'
     MinLength: 8
     MaxLength: 32
   WorkerInstanceTypes:
@@ -95,7 +193,7 @@ Parameters:
     Description:
       zh-cn: Worker 节点 ECS 实例规格。
       en: The worker node ECS instance specification.
-    AssociationProperty: ALIYUN::ECS::Instance::InstanceType
+    AssociationProperty: 'ALIYUN::ECS::Instance::InstanceType'
     Default: ecs.c7.2xlarge
   WorkerSystemDiskSize:
     Type: Number
@@ -117,7 +215,7 @@ Parameters:
       en: |-
         Number of worker nodes. The range is [3,300].
         Default to 3.
-      zh-cn: 工作节点数。范围为 [3，300]。默认为 3。
+      zh-cn: '工作节点数。范围为 [3，300]。默认为 3。'
     Label:
       en: Num Of Nodes
       zh-cn: Work 节点数量
@@ -127,8 +225,20 @@ Parameters:
   WorkerSystemDiskCategory:
     Type: String
     Description:
-      en: '<font color=''blue''><b>Optional values:</b></font><br>[cloud_efficiency: <font color=''green''>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font color=''green''>SSD Cloud Disk</font>]<br>[cloud_essd: <font color=''green''>ESSD Cloud Disk</font>]<br>[cloud: <font color=''green''>Cloud Disk</font>]<br>[ephemeral_ssd: <font color=''green''>Local SSD Cloud Disk</font>]'
-      zh-cn: '<font color=''blue''><b>可选值：</b></font><br>[cloud_efficiency: <font color=''green''>高效云盘</font>]<br>[cloud_ssd: <font color=''green''>SSD云盘</font>]<br>[cloud_essd: <font color=''green''>ESSD云盘</font>]<br>[cloud: <font color=''green''>普通云盘</font>]<br>[ephemeral_ssd: <font color=''green''>本地SSD盘</font>]'
+      en: >-
+        <font color='blue'><b>Optional values:</b></font><br>[cloud_efficiency:
+        <font color='green'>Efficient Cloud Disk</font>]<br>[cloud_ssd: <font
+        color='green'>SSD Cloud Disk</font>]<br>[cloud_essd: <font
+        color='green'>ESSD Cloud Disk</font>]<br>[cloud: <font
+        color='green'>Cloud Disk</font>]<br>[ephemeral_ssd: <font
+        color='green'>Local SSD Cloud Disk</font>]
+      zh-cn: >-
+        <font color='blue'><b>可选值：</b></font><br>[cloud_efficiency: <font
+        color='green'>高效云盘</font>]<br>[cloud_ssd: <font
+        color='green'>SSD云盘</font>]<br>[cloud_essd: <font
+        color='green'>ESSD云盘</font>]<br>[cloud: <font
+        color='green'>普通云盘</font>]<br>[ephemeral_ssd: <font
+        color='green'>本地SSD盘</font>]
     AllowedValues:
       - cloud
       - cloud_efficiency
@@ -143,18 +253,30 @@ Parameters:
     Label: MySQL 实例规格
     Type: String
     Description:
-      zh-cn: 根据数据库引擎的类型和可用的区域支持选择实例规格；<br>请参见详细信息：<a href='https://help.aliyun.com/document_detail/26312.html' target='_blank'><b><font color='blue'>实例规格表</font></b></a>
-      en: 'Select the instance specification based on the type of database engine and the available area support;<br>see detail: <a href=''https://www.alibabacloud.com/help/doc-detail/26312.html'' target=''_blank''><b><font color=''blue''>Instance specification sheet</font></b></a>'
+      zh-cn: >-
+        根据数据库引擎的类型和可用的区域支持选择实例规格；<br>请参见详细信息：<a
+        href='https://help.aliyun.com/document_detail/26312.html'
+        target='_blank'><b><font color='blue'>实例规格表</font></b></a>
+      en: >-
+        Select the instance specification based on the type of database engine
+        and the available area support;<br>see detail: <a
+        href='https://www.alibabacloud.com/help/doc-detail/26312.html'
+        target='_blank'><b><font color='blue'>Instance specification
+        sheet</font></b></a>
     Default: rds.mysql.s2.large
   DBInstanceStorage:
     Label: 磁盘大小
     Type: Number
     Description:
       zh-cn: RDS 实例大小，范围为 20 - 2000，每 5 个增量，单位为 GB
-      en: The size range of RDS instances is 20 - 2000, Incrementing in every 5, unit GB
+      en: >-
+        The size range of RDS instances is 20 - 2000, Incrementing in every 5,
+        unit GB
     MinValue: 20
     MaxValue: 2000
-    ConstraintDescription: The size range of RDS instances is 20 - 2000, Incrementing in every 5, unit GB
+    ConstraintDescription: >-
+      The size range of RDS instances is 20 - 2000, Incrementing in every 5,
+      unit GB
     Default: 30
   DBAccountName:
     Type: String
@@ -175,17 +297,21 @@ Parameters:
       zh-cn: |-
         长度为8~32个字符。由大写英文字母、小写英文字母、数字、特殊字符中的任意三种组成。支持的特殊字符如下：
         !@#$&amp;%^*()_+-= 。
-      en: |-
-        The length is 8 ~ 32 characters. It is composed of uppercase English letters, lowercase English letters, numbers and special characters. The special characters supported are as follows:
+      en: >-
+        The length is 8 ~ 32 characters. It is composed of uppercase English
+        letters, lowercase English letters, numbers and special characters. The
+        special characters supported are as follows:
+
 
         !@#$& amp;%^* ()_+-=  .
-    Default: 
+    Default: null
   RedisInstanceClass:
     Default: redis.master.small.default
     Type: String
     Description:
       zh-cn: >-
-        Redis 实例规格，请参考：<a href='https://help.aliyun.com/document_detail/26350.html'
+        Redis 实例规格，请参考：<a
+        href='https://help.aliyun.com/document_detail/26350.html'
         target='_blank'><b><font color='blue'>查看规格信息</font></b></a>
       en: >-
         Redis Instance specifications, please refer to：<a
@@ -248,18 +374,20 @@ Parameters:
         Length 8-30, must contain upper case letters, lower case letters,
         Numbers, special symbols three; special characters include:
         ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/
-
   InfluxDBStorage:
     Label: Storage
     Type: Number
     Description:
       zh-cn: InfluxDB 实例存储大小，范围为 50 - 32000， 每 50 个增量，单位为 GB
-      en: The size range of InfluxDB instances is 50 - 32000, Incrementing in every 50, unit GB
+      en: >-
+        The size range of InfluxDB instances is 50 - 32000, Incrementing in
+        every 50, unit GB
     MinValue: 50
     MaxValue: 32000
-    ConstraintDescription: The size range of InfluxDB instances is 50 - 32000, Incrementing in every 50, unit GB
+    ConstraintDescription: >-
+      The size range of InfluxDB instances is 50 - 32000, Incrementing in every
+      50, unit GB
     Default: 200
-
   ElasticSearchNodeInstanceType:
     Type: String
     Default: elasticsearch.sn2ne.2xlarge
@@ -292,31 +420,30 @@ Parameters:
     Type: Number
     Description:
       zh-cn: ElasticSearch 实例数据节点存储大小，范围为 100 - 6144，单位为 GB
-      en: The size range of ElasticSearch data node is 100 - 6144, unit GB
+      en: 'The size range of ElasticSearch data node is 100 - 6144, unit GB'
     MinValue: 100
     MaxValue: 6144
-    ConstraintDescription: The size range of ElasticSearch data node is 100 - 6144, unit GB
+    ConstraintDescription: 'The size range of ElasticSearch data node is 100 - 6144, unit GB'
     Default: 200
   ElasticSearchNodeAmount:
     Label: 数据节点数量
     Type: Number
     Description:
       zh-cn: ElasticSearch 数据节点的数量，范围为 2 - 100
-      en: The number of ElasticSearch data nodes, in the range 2 - 100
+      en: 'The number of ElasticSearch data nodes, in the range 2 - 100'
     MinValue: 2
     MaxValue: 100
-    ConstraintDescription: The number of ElasticSearch data nodes, in the range 2 - 100
+    ConstraintDescription: 'The number of ElasticSearch data nodes, in the range 2 - 100'
     Default: 3
-
 Resources:
   EcsVpc:
-    Type: ALIYUN::ECS::VPC
+    Type: 'ALIYUN::ECS::VPC'
     Properties:
       CidrBlock:
         Ref: VpcCidrBlock
       VpcName: default-vpc
   EcsVSwitch:
-    Type: ALIYUN::ECS::VSwitch
+    Type: 'ALIYUN::ECS::VSwitch'
     Properties:
       VpcId:
         Ref: EcsVpc
@@ -325,7 +452,7 @@ Resources:
       CidrBlock:
         Ref: VSwitchCidrBlock
   EcsSecurityGroup:
-    Type: ALIYUN::ECS::SecurityGroup
+    Type: 'ALIYUN::ECS::SecurityGroup'
     Properties:
       VpcId:
         Ref: EcsVpc
@@ -342,7 +469,7 @@ Resources:
           DestCidrIp: 0.0.0.0/0
           NicType: intranet
   Database:
-    Type: ALIYUN::RDS::DBInstance
+    Type: 'ALIYUN::RDS::DBInstance'
     Properties:
       ZoneId:
         Ref: ZoneId
@@ -351,19 +478,28 @@ Resources:
       VSwitchId:
         Ref: EcsVSwitch
       Engine: MySQL
-      EngineVersion: "5.7"
+      EngineVersion: '5.7'
       DBInstanceClass:
         Ref: DBInstanceClass
       DBInstanceStorage:
         Ref: DBInstanceStorage
       SecurityIPList:
         Ref: VSwitchCidrBlock
+<<<<<<< HEAD
       PayType: Prepaid
       PeriodType: Month
       Period: 1
+=======
+      PayType:
+        Ref: PayType
+      PeriodType:
+        Ref: PayPeriodUnit
+      Period:
+        Ref: PayPeriod
+>>>>>>> dev
   RDSAccount:
     DependsOn: Database
-    Type: ALIYUN::RDS::Account
+    Type: 'ALIYUN::RDS::Account'
     Properties:
       DBInstanceId:
         Ref: Database
@@ -373,7 +509,7 @@ Resources:
       AccountPassword:
         Ref: DBAccountPassword
   RDSParameter:
-    Type: ALIYUN::RDS::DBInstanceParameterGroup
+    Type: 'ALIYUN::RDS::DBInstanceParameterGroup'
     Properties:
       DBInstanceId:
         Ref: Database
@@ -394,8 +530,15 @@ Resources:
         Ref: RedisInstanceClass
       Password:
         Ref: RedisPassword
+<<<<<<< HEAD
       ChargeType: PrePaid
       Period: 1
+=======
+      ChargeType:
+        Ref: PayType
+      Period:
+        Ref: PayPeriod
+>>>>>>> dev
   RedisWhitelist:
     Type: 'ALIYUN::REDIS::Whitelist'
     Properties:
@@ -407,7 +550,7 @@ Resources:
   InfluxDB:
     Type: 'ALIYUN::TSDB::HiTSDBInstance'
     Properties:
-      InstanceStorage: 
+      InstanceStorage:
         Ref: InfluxDBStorage
       ZoneId:
         Ref: ZoneId
@@ -434,21 +577,31 @@ Resources:
   ElasticSearch:
     Type: 'ALIYUN::ElasticSearch::Instance'
     Properties:
+<<<<<<< HEAD
+=======
+      InstanceChargeType:
+        Ref: PayType
+>>>>>>> dev
       VSwitchId:
         Ref: EcsVSwitch
       Password:
         Ref: ElasticSearchPassword
       Version: 7.10_with_X-Pack
       DataNode:
-        Amount: 
+        Amount:
           Ref: ElasticSearchNodeAmount
         DiskSize:
           Ref: ElasticSearchNodeStorage
         Spec:
           Ref: ElasticSearchNodeInstanceType
         DiskType: cloud_ssd
+<<<<<<< HEAD
       InstanceChargeType: Prepaid
       Period: 1
+=======
+      Period:
+        Ref: PayPeriod
+>>>>>>> dev
   FileSystem:
     Type: 'ALIYUN::NAS::FileSystem'
     Properties:
@@ -471,7 +624,7 @@ Resources:
       NetworkType: Vpc
       AccessGroupName: DEFAULT_VPC_GROUP_NAME
   ManagedKubernetesCluster:
-    Type: ALIYUN::CS::ManagedKubernetesCluster
+    Type: 'ALIYUN::CS::ManagedKubernetesCluster'
     Properties:
       VSwitchIds:
         - Ref: EcsVSwitch
@@ -499,11 +652,20 @@ Resources:
           Config: '{\"IngressSlbNetworkType\":\"internet\"}'
       Name:
         Ref: ClusterName
+<<<<<<< HEAD
       ChargeType: Prepaid
       PeriodUnit: Month
       Period: 1
+=======
+      ChargeType:
+        Ref: PayType
+      PeriodUnit:
+        Ref: PayPeriodUnit
+      Period:
+        Ref: PayPeriod
+>>>>>>> dev
   EcsInstanceJumpBox:
-    Type: ALIYUN::ECS::InstanceGroup
+    Type: 'ALIYUN::ECS::InstanceGroup'
     DependsOn:
       - ManagedKubernetesCluster
       - MountTarget
@@ -535,22 +697,27 @@ Resources:
       SystemDiskCategory:
         Ref: SystemDiskCategory
       UserData:
-        Fn::Sub:
+        'Fn::Sub':
           - |
             #!/bin/bash
             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
             cp kubectl /usr/bin/
+
             chmod +x /usr/bin/kubectl
             mkdir -p ~/.kube
             echo '${KubeConfig}' >> ~/.kube/config
             echo '${ApplicationYaml}' > ~/application.yaml
+
             curl https://static.guance.com/launcher/storage_class.yaml > ~/storage-class.yaml
             curl https://static.guance.com/launcher/nas_controller.yaml > ~/nas-controller.yaml
             curl https://static.guance.com/launcher/launcher.yaml > ~/launcher.yaml
 
             # 最新的安装程序镜像地址
             dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep launcher | grep -Eo "pubrepo[^\"]+[0-9]+")
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
             sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
             sed -i 's/{{ domain }}/${GuanceYunDomain}/g' ~/launcher.yaml
             sed -i 's/{{ storageClassName }}/alicloud-nas/g' ~/launcher.yaml
@@ -561,19 +728,17 @@ Resources:
             kubectl apply --kubeconfig=/root/.kube/config -f ~/nas-controller.yaml
             kubectl apply --kubeconfig=/root/.kube/config -f ~/storage-class.yaml
             kubectl apply --kubeconfig=/root/.kube/config -f ~/launcher.yaml
-
-            kubectl delete --kubeconfig=/root/.kube/config cm k8s-config -n launcher 
+            kubectl delete --kubeconfig=/root/.kube/config cm k8s-config -n launcher
             kubectl create --kubeconfig=/root/.kube/config cm k8s-config -n launcher --from-file=config.yaml=/root/.kube/config
 
-
           - KubeConfig:
-              Fn::GetAtt:
-              - ManagedKubernetesCluster
-              - PrivateUserKubConfig
+              'Fn::GetAtt':
+                - ManagedKubernetesCluster
+                - PrivateUserKubConfig
             GuanceYunDomain:
               Ref: GuanceYunDomain
             MountTargetDomain:
-              Fn::GetAtt:
+              'Fn::GetAtt':
                 - MountTarget
                 - MountTargetDomain
             ApplicationYaml: |
@@ -586,30 +751,29 @@ Resources:
                - name: nginx
                  image: nginx
                  imagePullPolicy: IfNotPresent
-
 Outputs:
   RdsConnectString:
     Value:
-      Fn::GetAtt:
+      'Fn::GetAtt':
         - Database
         - InnerConnectionString
   RedisConnectString:
     Value:
-      Fn::GetAtt:
+      'Fn::GetAtt':
         - RedisInstance
         - ConnectionDomain
   InfluxDBConnectionString:
     Value:
-      Fn::GetAtt:
+      'Fn::GetAtt':
         - InfluxDB
         - ConnectionString
   ElasticSearchConnectString:
     Value:
-      Fn::GetAtt:
+      'Fn::GetAtt':
         - ElasticSearch
         - Domain
 Metadata:
-  ALIYUN::ROS::Interface:
+  'ALIYUN::ROS::Interface':
     ParameterGroups:
       - Parameters:
           - ZoneId
@@ -621,6 +785,14 @@ Metadata:
         Label:
           en: Basic Configuration
           zh-cn: 基础配置
+      - Parameters:
+          - PayType
+          - PayPeriodUnit
+          - PayPeriod
+        Label:
+          default:
+            en: PayType Configuration
+            zh-cn: 付费类型配置
       - Parameters:
           - WorkerInstanceTypes
           - WorkerSystemDiskCategory
@@ -662,4 +834,3 @@ Metadata:
           - ElasticSearchNodeStorage
         Label:
           default: ElasticSearch
-

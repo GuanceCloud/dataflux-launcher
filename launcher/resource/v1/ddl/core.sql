@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-03-09 02:12:54 +0000
+# Generation Time: 2022-03-23 07:33:06 +0000
 # ************************************************************
 
 
@@ -642,6 +642,7 @@ CREATE TABLE `biz_pipeline` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(1024) NOT NULL DEFAULT '' COMMENT 'PL文件名',
   `content` text NOT NULL COMMENT '原始内容',
+  `testData` text NOT NULL,
   `isSysTemplate` int(1) DEFAULT '0' COMMENT '是否为系统模版',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1711,7 +1712,7 @@ CREATE TABLE `main_workspace_grant` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'grant-',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `toWorkspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '被授予权限的工作空间 uuid',
-  `expireAt` int(11) NOT NULL COMMENT 'license 过期时间',
+  `expireAt` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
@@ -1719,8 +1720,9 @@ CREATE TABLE `main_workspace_grant` (
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT '主键',
-  UNIQUE KEY `uk_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
-  UNIQUE KEY `uk_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `idx_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
+  KEY `idx_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
