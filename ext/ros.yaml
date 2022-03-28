@@ -689,6 +689,7 @@ Resources:
 
             # 最新的安装程序镜像地址
             dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep launcher | grep -Eo "pubrepo[^\"]+[0-9]+")
+
             sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
             sed -i 's/{{ domain }}/${GuanceYunDomain}/g' ~/launcher.yaml
             sed -i 's/{{ storageClassName }}/alicloud-nas/g' ~/launcher.yaml
