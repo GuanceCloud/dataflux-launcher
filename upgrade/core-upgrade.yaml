@@ -1792,3 +1792,29 @@ upgrade:
       -- 将已禁用的监控器分组 设置为 启用状态
       update biz_monitor set status=0 where status=2;
 
+  # 2022.03.24 迭代
+  - seq: 48
+    config:
+      core: |-
+        
+        # 跨空间授权 邮件通知配置
+        WorkspaceShare:
+          enable: true
+
+    database: |-
+      
+      -- 调整 biz_pipeline 表 新增`testData`字段用于存储 测试数据 1024
+      ALTER TABLE `biz_pipeline` 
+      ADD COLUMN `testData` TEXT NOT NULL AFTER `content`;
+
+      -- 授权空间表修改 索引类型 及 添加新的索引
+      alter table `main_workspace_grant` modify column `expireAt` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间';
+      alter table `main_workspace_grant` add UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一';
+      drop index `uk_workspaceUUID` on `main_workspace_grant`;
+      alter table `main_workspace_grant` add KEY `idx_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID';
+      drop index `uk_toWorkspaceUUID` on `main_workspace_grant`;
+      alter table `main_workspace_grant` add KEY `idx_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID';
+
+
+      -- 【Aliyun / AWS】更新计费公式(此公式仅SAAS版有效，PAAS版无效)
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"ts\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 300)\", \"priceQuantity\": 300, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 10, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1.5, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
