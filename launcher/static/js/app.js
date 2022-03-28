@@ -347,6 +347,7 @@ var setup = (function () {
         "username": $("#iptUserName").val(),
         "email": $("#iptUserEmail").val()
       },
+      "studioHideHelp": $("#ckbStudioHideHelp").is(":checked"),
       "domain": $("#iptDomain").val(),
       "subDomain": {},
       "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet"
@@ -362,7 +363,7 @@ var setup = (function () {
     data.tls = {
       "certificatePrivateKey": $('#certificatePrivateKey').val(),
       "certificateContent": $('#certificateContent').val(),
-      "tlsDisabled": ! $('#ckbTlsEnabled').is(":checked")
+      "tlsDisabled": ! $('#ckbTlsEnabled').is(":checked"),
     }
 
     data.nodeInternalIP = $('#iptNodeIps').val();

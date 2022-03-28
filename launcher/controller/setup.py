@@ -49,7 +49,8 @@ def other_config(params):
   settingsMdl.other = {
     'manager': params.get('manager'),
     'tls': params.get('tls'),
-    'nodeInternalIP': params.get('nodeInternalIP')
+    'nodeInternalIP': params.get('nodeInternalIP'),
+    'studioHideHelp': params.get('studioHideHelp')
   }
 
   return True

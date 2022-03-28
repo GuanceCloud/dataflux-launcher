@@ -10,7 +10,7 @@ window.DEPLOYCONFIG = {
     staticFileUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
     staticDatakit: 'https://static.guance.com',
     cloudDatawayUrl: '',
-    showHelp: 1,
+    showHelp: {{ 0 if other.studioHideHelp else 1 }},
     rumEnable: 0,
     rumDatakitUrl: "",
     rumApplicationId: "",
