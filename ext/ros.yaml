@@ -485,18 +485,12 @@ Resources:
         Ref: DBInstanceStorage
       SecurityIPList:
         Ref: VSwitchCidrBlock
-<<<<<<< HEAD
-      PayType: Prepaid
-      PeriodType: Month
-      Period: 1
-=======
       PayType:
         Ref: PayType
       PeriodType:
         Ref: PayPeriodUnit
       Period:
         Ref: PayPeriod
->>>>>>> dev
   RDSAccount:
     DependsOn: Database
     Type: 'ALIYUN::RDS::Account'
@@ -530,15 +524,10 @@ Resources:
         Ref: RedisInstanceClass
       Password:
         Ref: RedisPassword
-<<<<<<< HEAD
-      ChargeType: PrePaid
-      Period: 1
-=======
       ChargeType:
         Ref: PayType
       Period:
         Ref: PayPeriod
->>>>>>> dev
   RedisWhitelist:
     Type: 'ALIYUN::REDIS::Whitelist'
     Properties:
@@ -577,11 +566,8 @@ Resources:
   ElasticSearch:
     Type: 'ALIYUN::ElasticSearch::Instance'
     Properties:
-<<<<<<< HEAD
-=======
       InstanceChargeType:
         Ref: PayType
->>>>>>> dev
       VSwitchId:
         Ref: EcsVSwitch
       Password:
@@ -595,13 +581,8 @@ Resources:
         Spec:
           Ref: ElasticSearchNodeInstanceType
         DiskType: cloud_ssd
-<<<<<<< HEAD
-      InstanceChargeType: Prepaid
-      Period: 1
-=======
       Period:
         Ref: PayPeriod
->>>>>>> dev
   FileSystem:
     Type: 'ALIYUN::NAS::FileSystem'
     Properties:
@@ -652,18 +633,12 @@ Resources:
           Config: '{\"IngressSlbNetworkType\":\"internet\"}'
       Name:
         Ref: ClusterName
-<<<<<<< HEAD
-      ChargeType: Prepaid
-      PeriodUnit: Month
-      Period: 1
-=======
       ChargeType:
         Ref: PayType
       PeriodUnit:
         Ref: PayPeriodUnit
       Period:
         Ref: PayPeriod
->>>>>>> dev
   EcsInstanceJumpBox:
     Type: 'ALIYUN::ECS::InstanceGroup'
     DependsOn:
@@ -714,10 +689,7 @@ Resources:
 
             # 最新的安装程序镜像地址
             dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep launcher | grep -Eo "pubrepo[^\"]+[0-9]+")
-<<<<<<< HEAD
 
-=======
->>>>>>> dev
             sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
             sed -i 's/{{ domain }}/${GuanceYunDomain}/g' ~/launcher.yaml
             sed -i 's/{{ storageClassName }}/alicloud-nas/g' ~/launcher.yaml
