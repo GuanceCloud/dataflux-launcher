@@ -430,11 +430,27 @@ def studio_init():
   return call_service_url(url, data)
 
 
+# 触发同步视图模板等集成包
 def sync_integration():
   url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
   data = {
     "script_name": "fix_update_integration"
+  }
+
+  return call_service_url(url, data)
+
+
+# 触发官方 Pipeline 库同步到数据库
+def sync_pipeline():
+  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
+
+  data = {
+    "script_name": "timed_sync_pipeline_template",
+    "func_name": "timed_sync_pull", 
+    "funcKwargs": {
+      "need_sync_pipline": True
+    }
   }
 
   return call_service_url(url, data)

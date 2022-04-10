@@ -129,6 +129,13 @@ def sync_integration():
   return  response_jsonify(setup.sync_integration())
 
 
+@setup_bp.route("/setting/sync_pipeline", methods=["post"])
+def sync_pipeline():
+  data = request.json
+
+  return  response_jsonify(setup.sync_pipeline())
+
+
 @setup_bp.route("/service/status", methods=["GET"])
 def service_status():
   return  response_jsonify(setup.service_status())
