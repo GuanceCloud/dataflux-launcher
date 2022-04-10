@@ -252,6 +252,10 @@ Parameters:
   DBInstanceClass:
     Label: MySQL 实例规格
     Type: String
+    AssociationProperty: ALIYUN::RDS::Instance::InstanceType
+    AssociationPropertyMetadata:
+      Engine: MySQL
+      ZoneId: "${ZoneId}"
     Description:
       zh-cn: >-
         根据数据库引擎的类型和可用的区域支持选择实例规格；<br>请参见详细信息：<a
@@ -308,6 +312,10 @@ Parameters:
   RedisInstanceClass:
     Default: redis.master.small.default
     Type: String
+    AssociationProperty: ALIYUN::Redis::Instance::InstanceType
+    AssociationPropertyMetadata:
+      Engine: Redis
+      ZoneId: ${ZoneId}
     Description:
       zh-cn: >-
         Redis 实例规格，请参考：<a
@@ -344,6 +352,9 @@ Parameters:
   InfluxDBInstanceClass:
     Type: String
     Default: influxdata.n1.2xlarge
+    AssociationProperty: ALIYUN::InfluxDB::Instance::InstanceType
+    AssociationPropertyMetadata:
+      ZoneId: ${ZoneId}
     Label:
       zh-cn: InfluxDB 实例规格
       en: InfluxDB Instance Type
@@ -394,6 +405,7 @@ Parameters:
     Label:
       zh-cn: ElasticSearch 数据节点实例规格
       en: ElasticSearch Node Instance Type
+    AssociationProperty: ALIYUN::Elasticsearch::Instance::InstanceType      
   ElasticSearchPassword:
     Type: String
     Description:
@@ -566,6 +578,8 @@ Resources:
   ElasticSearch:
     Type: 'ALIYUN::ElasticSearch::Instance'
     Properties:
+      ZoneId:
+        Ref: ZoneId
       InstanceChargeType:
         Ref: PayType
       VSwitchId:
@@ -689,7 +703,6 @@ Resources:
 
             # 最新的安装程序镜像地址
             dockerImgPath=$(curl -s https://static.guance.com/launcher/version.json | grep launcher | grep -Eo "pubrepo[^\"]+[0-9]+")
-
             sed -i 's/{{ nas_server_id }}/${MountTargetDomain}/g' ~/storage-class.yaml
             sed -i 's/{{ domain }}/${GuanceYunDomain}/g' ~/launcher.yaml
             sed -i 's/{{ storageClassName }}/alicloud-nas/g' ~/launcher.yaml
@@ -806,3 +819,4 @@ Metadata:
           - ElasticSearchNodeStorage
         Label:
           default: ElasticSearch
+
