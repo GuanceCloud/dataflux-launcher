@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-03-23 07:33:06 +0000
+# Generation Time: 2022-04-07 02:42:10 +0000
 # ************************************************************
 
 
@@ -268,7 +268,7 @@ CREATE TABLE `biz_dialing_tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, dial-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('http','tcp','dns','browser') NOT NULL DEFAULT 'http',
+  `type` enum('http','tcp','dns','browser','icmp','websocket') NOT NULL DEFAULT 'http',
   `regions` json NOT NULL,
   `task` json NOT NULL COMMENT '任务数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
