@@ -1821,6 +1821,14 @@ upgrade:
 
   # 2022.04.07 迭代
   - seq: 49
+    config:
+      core: |-
+        
+        # 注意需要将 kodo 配置中 installCmd/upgradeCmd 值中的 ` DW_AK={ak}  DW_SK={sk} `部分删除掉"
+        kodo:
+          installCmd: "需要剔除该值中的 ` DW_AK={ak}  DW_SK={sk} `部分数据"
+          upgradeCmd: "需要剔除该值中的 ` DW_AK={ak}  DW_SK={sk} `部分数据"
+
     database: |-
 
       -- 调整拨测类型，添加tcp、icmp、websocket支持
