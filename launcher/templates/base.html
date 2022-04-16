@@ -62,6 +62,10 @@
                 <li>
                   <a href="javascript:void(0);" onclick="setup.sync_pipeline()">立即同步官方 Pipeline 包</a>
                 </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.activate_license()">License 激活及 AK/SK 配置</a>
+                </li>
               </ul>
             </div>
 
@@ -95,7 +99,7 @@
             ©2013-{{ __common__.year }} 上海驻云信息科技有限公司
         </footer>
 
-        <!-- Large modal -->
+        <!-- 配置信息 Large modal -->
         <div id="settingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -110,6 +114,66 @@
                 <span id="spanYAMLError" class="text-danger">YAML 语法格式不正确！</span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button id="settingModalButtonOK" type="button" onclick="setup.save_setting()" class="btn btn-primary">保存修改</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- License 激活与 AK 配置 Large modal -->
+        <div id="licenseModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">观测云激活</h4>
+              </div>
+              <div class="modal-body" style="padding: 0;height: 525px;">
+
+                <div class="modal-high-block">
+                  <h4>License 信息</h4>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="control-label">1、扫码关注服务号:</label>
+                        <img src="/images/wx.jpeg" style="width: 120px; height: 120px;">
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label class="control-label">2、凭特征码获取 License:</label>
+                        <p id="pFC" style="letter-spacing: 3px; font-weight: bold; font-size: 32px;">8D9A98DE</p>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="iptLicense" class="control-label">3、License 文本:</label>
+                        <textarea id="iptLicense" class="form-control" style="height: 120px; resize: none;" required placeholder="请输入 License 文本"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-high-block">
+                  <h4>BOSS 会员、可用性监测 AK/SK 信息</h4>
+                  <div class="form-group">
+                    <label for="iptGuanceAK" class="control-label">AK:</label>
+                    <input type="text" class="form-control" id="iptGuanceAK" name="guanceAK" required placeholder="Access Key">
+                  </div>
+                  <div class="form-group">
+                    <label for="iptGuanceSK" class="control-label">SK:</label>
+                    <input type="text" class="form-control" id="iptGuanceSK" name="guanceSK" required placeholder="Secret Key">
+                  </div>
+                  <div class="form-group">
+                    <label for="iptDialDataWay" class="control-label">数据网关地址（用于接收可用性监测结果，需要能从公网访问此数据网关）:</label>
+                    <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required placeholder="数据网关地址，示例: http(s)://dataway.dataflux.cn">
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="activateModalButtonOK" type="button" onclick="setup.do_activate()" class="btn btn-primary">激活</button>
               </div>
             </div>
 

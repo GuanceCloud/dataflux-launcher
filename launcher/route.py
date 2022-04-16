@@ -112,7 +112,7 @@ def service_create():
 def setting_get():
   args = request.args.to_dict()
 
-  return  response_jsonify(setting.setting_get(args.get('key')))
+  return  response_jsonify(setting.setting_get(**args))
 
 
 @setup_bp.route("/setting/save", methods=["post"])
@@ -120,6 +120,18 @@ def setting_save():
   data = request.json
 
   return  response_jsonify(setting.setting_save(data))
+
+
+@setup_bp.route("/setting/activate", methods=["post"])
+def setting_activate():
+  data = request.json
+
+  return  response_jsonify(setting.setting_activate(data))
+
+
+@setup_bp.route("/setting/fc/get", methods=["get"])
+def setting_feature_code_get():
+  return  response_jsonify(setting.get_feature_code())
 
 
 @setup_bp.route("/setting/sync_integration", methods=["post"])

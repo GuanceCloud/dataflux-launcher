@@ -283,7 +283,7 @@ var setup = (function () {
         }
 
         if (next && !hasError){
-          that.go("/install/aksk");
+          that.go("/install/other");
         }
       }else{
         alert("InfluxDB 连接失败");
@@ -918,6 +918,86 @@ var setup = (function () {
   app.prototype.sync_pipeline = function(){
     this.post('setting/sync_pipeline').done(function(d){
 
+    });
+  };
+
+  app.prototype.activate_license = function(){
+    var that = this;
+    var jqFC = $('#pFC'),
+        jqAK = $("#iptGuanceAK"), 
+        jqSK = $("#iptGuanceSK"),
+        jqDataWayUrl = $("#iptDialDataWay"),
+        jqLicense = $("#iptLicense");
+
+    var params = {
+      "key": "other",
+      "format": "json"
+    };
+
+    $("#activateModalButtonOK").attr('disabled', true);
+
+    var validateFunc = function(){
+      var noNone =  $.trim(jqAK.val()) != '' && 
+                    $.trim(jqSK.val()) != '' && 
+                    $.trim(jqDataWayUrl.val()) != '' &&
+                    $.trim(jqLicense.val()) != '';
+
+      $("#activateModalButtonOK").attr('disabled', !noNone);
+    }
+
+    this.get('setting/get', params).done(function(d){
+      $("#licenseModel").modal("show");
+
+      var vGuance = d.content.guance || {}
+
+      jqAK.val(vGuance.ak);
+      jqSK.val(vGuance.sk);
+      jqDataWayUrl.val(vGuance.dataway_url);
+      jqLicense.val(vGuance.license);
+
+      validateFunc();
+    });
+
+    this.get('setting/fc/get').done(function(d){
+      if (d.content.commitId){
+        jqFC.css("color", "");
+        jqFC.text(d.content.commitId);
+      }else{
+        jqFC.css("color", "red");
+        jqFC.text("激活特征码获取失败！");
+      }
+    }).fail(function(d){
+      jqFC.css("color", "red");
+      jqFC.text("激活特征码获取失败！");
+    });
+
+    var jqMerged = jqAK.add(jqSK).add(jqDataWayUrl).add(jqLicense);
+    jqMerged.on('keyup', function(){
+      validateFunc();
+    });
+  };
+
+  app.prototype.do_activate = function(){
+    var jqAK = $("#iptGuanceAK"), 
+        jqSK = $("#iptGuanceSK"),
+        jqDataWayUrl = $("#iptDialDataWay"),
+        jqLicense = $("#iptLicense");
+
+    var params = {
+      "ak": jqAK.val(),
+      "sk": jqSK.val(),
+      "dataway_url": jqDataWayUrl.val(),
+      "license": jqLicense.val()
+    }
+
+    this.post('setting/activate', params).done(function(d){
+      content = d.content
+      if(content.success){
+        $("#licenseModel").modal("hide");
+      } else {
+        alert({'kodo.licenseNotFound': '无效的 License', 'kodo.invalidLicense': '无效的 License', 'kodo.licenseExpire': 'License 已过期'}[content.result] || "激活失败！")
+      }
+      console.log(d);
     });
   };
 
