@@ -995,7 +995,7 @@ var setup = (function () {
       if(content.success){
         $("#licenseModel").modal("hide");
       } else {
-        alert({'kodo.licenseNotFound': '无效的 License', 'kodo.invalidLicense': '无效的 License', 'kodo.licenseExpire': 'License 已过期'}[content.result] || "激活失败！")
+        alert({'kodo.licenseNotFound': '无效的 License', 'kodo.licenseCommitIdNotMatch': '无效的 License', 'kodo.invalidLicense': '无效的 License', 'kodo.licenseExpire': 'License 已过期'}[content.result] || "激活失败！")
       }
       console.log(d);
     });

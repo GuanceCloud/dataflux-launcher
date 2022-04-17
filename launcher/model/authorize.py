@@ -11,18 +11,20 @@ from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
 def license_validate(license):
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
+  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
+  url = "http://kodo-inner.forethought-kodo:9527/v1/license/validate"
 
   # headers = {"Content-Type": "application/json"}
   headers = {}
 
-  resp = requests.post(url, data = license, headers = headers)
+  resp = requests.post(url, data = license.encode('utf-8'), headers = headers)
 
   return resp.json(), resp.status_code
 
 
 def get_feature_code():
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
+  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
+  url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
 
   headers = {"Content-Type": "application/json"}
 

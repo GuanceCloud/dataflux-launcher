@@ -2,6 +2,7 @@
 
 import redis
 import json, yaml
+import base64
 
 from launcher.model import k8s as k8sMdl
 from launcher.model import authorize as authorizeMdl
@@ -61,7 +62,7 @@ def setting_save(data):
 def get_feature_code():
   resp, status_code = authorizeMdl.get_feature_code()
 
-  print(resp, status_code)
+  # print(resp, status_code)
   return resp
 
 
@@ -69,12 +70,21 @@ def setting_activate(data):
   other = settingsMdl.other or {}
   other['guance'] = data
   settingsMdl.other = other
-  license_text = data.get('license')
+  license_text_b64 = data.get('license')
 
   # TO DO， 校验 License 是否有效
   license_effective = False
   result = ""
   success = False
+
+  license_text = ''
+  try:
+    license_text = base64.b64decode(license_text_b64).decode('utf-8')
+  except:
+    return {
+      "result": "invaildLicense",
+      "success": False
+    }
 
   resp, status_code = authorizeMdl.license_validate(license_text)
 
