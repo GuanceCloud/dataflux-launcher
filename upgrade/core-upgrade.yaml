@@ -1833,3 +1833,11 @@ upgrade:
 
       -- 调整拨测类型，添加tcp、icmp、websocket支持
       alter table biz_dialing_tasks modify column `type` enum('http','tcp','dns','browser','icmp','websocket') NOT NULL DEFAULT 'http';
+
+  # 2022.04.17 迭代
+  - seq: 50
+    database: |-
+
+      -- 【可选执行】视情况更新拨测服务配置语句， 可配置项为 ak,sk,dataway; 结构：{"ak": "", "sk": "", "dataway": "http://testing-openway.cloudcare.cn?token={}"}
+      -- 注意，dataway 中一定要预留 token 参数
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('DialingServerSet', '拨测服务配置', '{\"ak\": \"\", \"sk\": \"\", \"dataway\": \"\"}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
