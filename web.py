@@ -1,5 +1,6 @@
 # encoding=utf-8
 
+import argparse
 from launcher.app import create_app
 
 def start(host="0.0.0.0", port=5000):
@@ -10,4 +11,15 @@ def start(host="0.0.0.0", port=5000):
 
 
 if __name__ == "__main__":
-  start()
+  parser = argparse.ArgumentParser(description='Start web server.')
+
+  parser.add_argument('--host', dest='host',
+                      default="127.0.0.1",
+                      help='bind host(default: 127.0.0.1)')
+
+  parser.add_argument('--port', dest='port', type=int,
+                      default=5000,
+                      help='bind port(default: 5000)')
+  
+  args = parser.parse_args()
+  start(args.host, args.port)
