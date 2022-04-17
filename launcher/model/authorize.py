@@ -22,13 +22,16 @@ def license_validate(license):
 
 
 def get_feature_code():
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/commit_id/get"
+  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
 
   headers = {"Content-Type": "application/json"}
 
   resp = requests.get(url, headers = headers)
 
-  return resp, resp.status_code
+  if resp.status_code == 200:
+    return resp.json()['content'], resp.status_code
+
+  return None, resp.status_code
 
 
 def save_aksk(params):
@@ -55,7 +58,7 @@ def save_aksk(params):
 
   insertBOSSSettingSql = '''
           INSERT INTO `main_config`(`keyCode`, `description`, `value`) 
-          VALUES ('BOSSSet', 'BOSS 会员 AK/SK 设置', %s) 
+          VALUES ('BossServerSet', 'BOSS 系统对接的 AK/SK 配置', %s) 
           ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
         '''
   insertBOSSParams = (json.dumps({"ak": params.get('ak'), "sk": params.get('sk')}))

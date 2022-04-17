@@ -961,7 +961,7 @@ var setup = (function () {
     this.get('setting/fc/get').done(function(d){
       if (d.content.commitId){
         jqFC.css("color", "");
-        jqFC.text(d.content.commitId);
+        jqFC.text(d.content.commitId.toUpperCase());
       }else{
         jqFC.css("color", "red");
         jqFC.text("激活特征码获取失败！");
