@@ -20,6 +20,20 @@ def license_validate(license):
   return resp.json(), resp.status_code
 
 
+def get_activated_license():
+  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/get"
+  # url = "http://kodo-inner.forethought-kodo:9527/v1/license/get"
+
+  headers = {}
+  resp = requests.get(url, headers = headers)
+
+  if resp.status_code == 200:
+    return resp.json(), resp.status_code
+
+  return None, resp.status_code
+
+
+
 # def get_feature_code():
 #   url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
 #   # url = "http://kodo-inner.forethought-kodo:9527/v1/ping"

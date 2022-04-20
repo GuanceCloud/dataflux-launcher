@@ -221,3 +221,8 @@ def up_database_update():
 
   return  response_jsonify({"project": project, "errorSeq": update.database_update(project)})
 
+
+@setup_bp.route("/setting/activated/license", methods=["GET"])
+def get_kodo_license():
+  return  response_jsonify(setting.get_activated_license())
+

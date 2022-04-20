@@ -27,6 +27,21 @@ def setting_deploy_replicas():
   # print(result)
   return result 
 
+
+def get_activated_license():
+  resp, status_code = authorizeMdl.get_activated_license()
+
+  invaild_content = {
+    "license": None,
+    "status": False
+  }
+
+  if status_code == 200:
+    return resp.get('content', invaild_content)
+
+  return invaild_content
+
+
 def setting_get(key, format = 'yaml'):
   settingJson = getattr(settingsMdl, key)
 
@@ -64,7 +79,6 @@ def setting_save(data):
 
 #   # print(resp, status_code)
 #   return resp
-
 
 def setting_activate(data):
   other = settingsMdl.other or {}
