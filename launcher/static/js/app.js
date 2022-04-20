@@ -958,18 +958,18 @@ var setup = (function () {
       validateFunc();
     });
 
-    this.get('setting/fc/get').done(function(d){
-      if (d.content.commitId){
-        jqFC.css("color", "");
-        jqFC.text(d.content.commitId.toUpperCase());
-      }else{
-        jqFC.css("color", "red");
-        jqFC.text("激活特征码获取失败！");
-      }
-    }).fail(function(d){
-      jqFC.css("color", "red");
-      jqFC.text("激活特征码获取失败！");
-    });
+    // this.get('setting/fc/get').done(function(d){
+    //   if (d.content.commitId){
+    //     jqFC.css("color", "");
+    //     jqFC.text(d.content.commitId.toUpperCase());
+    //   }else{
+    //     jqFC.css("color", "red");
+    //     jqFC.text("激活特征码获取失败！");
+    //   }
+    // }).fail(function(d){
+    //   jqFC.css("color", "red");
+    //   jqFC.text("激活特征码获取失败！");
+    // });
 
     var jqMerged = jqAK.add(jqSK).add(jqDataWayUrl).add(jqLicense);
     jqMerged.on('keyup', function(){
@@ -995,7 +995,13 @@ var setup = (function () {
       if(content.success){
         $("#licenseModel").modal("hide");
       } else {
-        alert({'kodo.licenseNotFound': '无效的 License', 'kodo.licenseCommitIdNotMatch': '无效的 License', 'kodo.invalidLicense': '无效的 License', 'kodo.licenseExpire': 'License 已过期'}[content.result] || "激活失败！")
+        alert({
+              'kodo.licenseNotFound': '无效的 License', 
+              'kodo.licenseCommitIdNotMatch': '无效的 License', 
+              'kodo.invalidLicense': '无效的 License', 
+              'kodo.licenseExpire': 'License 已过期',
+              'invaildLicense': '无效的 License'
+            }[content.result] || "激活失败！")
       }
       console.log(d);
     });

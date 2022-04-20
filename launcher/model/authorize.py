@@ -11,29 +11,27 @@ from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
 def license_validate(license):
-  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
-  url = "http://kodo-inner.forethought-kodo:9527/v1/license/validate"
+  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
+  # url = "http://kodo-inner.forethought-kodo:9527/v1/license/validate"
 
-  # headers = {"Content-Type": "application/json"}
   headers = {}
-
   resp = requests.post(url, data = license.encode('utf-8'), headers = headers)
 
   return resp.json(), resp.status_code
 
 
-def get_feature_code():
-  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
-  url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
+# def get_feature_code():
+#   url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
+#   # url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
 
-  headers = {"Content-Type": "application/json"}
+#   headers = {"Content-Type": "application/json"}
 
-  resp = requests.get(url, headers = headers)
+#   resp = requests.get(url, headers = headers)
 
-  if resp.status_code == 200:
-    return resp.json()['content'], resp.status_code
+#   if resp.status_code == 200:
+#     return resp.json()['content'], resp.status_code
 
-  return None, resp.status_code
+#   return None, resp.status_code
 
 
 def save_aksk(params):

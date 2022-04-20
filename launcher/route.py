@@ -129,9 +129,9 @@ def setting_activate():
   return  response_jsonify(setting.setting_activate(data))
 
 
-@setup_bp.route("/setting/fc/get", methods=["get"])
-def setting_feature_code_get():
-  return  response_jsonify(setting.get_feature_code())
+# @setup_bp.route("/setting/fc/get", methods=["get"])
+# def setting_feature_code_get():
+#   return  response_jsonify(setting.get_feature_code())
 
 
 @setup_bp.route("/setting/sync_integration", methods=["post"])

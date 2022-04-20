@@ -59,11 +59,11 @@ def setting_save(data):
   return True
 
 
-def get_feature_code():
-  resp, status_code = authorizeMdl.get_feature_code()
+# def get_feature_code():
+#   resp, status_code = authorizeMdl.get_feature_code()
 
-  # print(resp, status_code)
-  return resp
+#   # print(resp, status_code)
+#   return resp
 
 
 def setting_activate(data):
@@ -72,7 +72,6 @@ def setting_activate(data):
   settingsMdl.other = other
   license_text_b64 = data.get('license')
 
-  # TO DO， 校验 License 是否有效
   license_effective = False
   result = ""
   success = False
@@ -86,14 +85,14 @@ def setting_activate(data):
       "success": False
     }
 
-  resp, status_code = authorizeMdl.license_validate(license_text)
+  resp_content, status_code = authorizeMdl.license_validate(license_text)
 
   if status_code == 403:
     return {
-      "result": resp['error_code'],
+      "result": resp_content['error_code'],
       "success": False
     }
-  elif status_code == 200 and resp['content']['status']:
+  elif status_code == 200 and resp_content['content']['status']:
     authorizeMdl.save_aksk({
         "ak": data.get('ak'),
         "sk": data.get('sk'),

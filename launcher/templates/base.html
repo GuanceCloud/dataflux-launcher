@@ -128,45 +128,49 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">观测云激活</h4>
               </div>
-              <div class="modal-body" style="padding: 0;height: 525px;">
+              <div class="modal-body" style="padding: 0;height: 500px;">
 
                 <div class="modal-high-block">
-                  <h4>License 信息</h4>
+                  <h4>License 信息：</h4>
                   <div class="row">
                     <div class="col-md-3">
                       <div class="form-group">
-                        <label class="control-label">1、扫码关注服务号:</label>
-                        <img src="/images/wx.jpeg" style="width: 120px; height: 120px;">
+                        <label class="control-label">1、扫码申请 License:</label>
+                        <img src="/images/guance.jpeg" style="width: 150px; height: 150px;">
                       </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-9">
                       <div class="form-group">
-                        <label class="control-label">2、凭特征码获取 License:</label>
-                        <p id="pFC" style="letter-spacing: 3px; font-weight: bold; font-size: 32px;">8D9A98DE</p>
-                      </div>
-                    </div>
-                    <div class="col-md-5">
-                      <div class="form-group">
-                        <label for="iptLicense" class="control-label">3、License 文本:</label>
-                        <textarea id="iptLicense" class="form-control" style="height: 120px; resize: none;" required placeholder="请输入 License 文本"></textarea>
+                        <label for="iptLicense" class="control-label">2、License 文本:</label>
+                        <textarea id="iptLicense" class="form-control" style="height: 150px; resize: none;" required placeholder="请输入 License 文本"></textarea>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="modal-high-block">
-                  <h4>BOSS 会员、可用性监测 AK/SK 信息</h4>
-                  <div class="form-group">
-                    <label for="iptGuanceAK" class="control-label">AK:</label>
-                    <input type="text" class="form-control" id="iptGuanceAK" name="guanceAK" required placeholder="Access Key">
+                  <h4>BOSS 会员、可用性监测 AK/SK 信息：</h4>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="iptGuanceAK" class="control-label">AK:</label>
+                        <input type="text" class="form-control" id="iptGuanceAK" name="guanceAK" required placeholder="Access Key">
+                      </div>
+                    </div>
+                    <div class="col-md-7">
+                      <div class="form-group">
+                        <label for="iptGuanceSK" class="control-label">SK:</label>
+                        <input type="text" class="form-control" id="iptGuanceSK" name="guanceSK" required placeholder="Secret Key">
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label for="iptGuanceSK" class="control-label">SK:</label>
-                    <input type="text" class="form-control" id="iptGuanceSK" name="guanceSK" required placeholder="Secret Key">
-                  </div>
-                  <div class="form-group">
-                    <label for="iptDialDataWay" class="control-label">数据网关地址（用于接收可用性监测结果，需要能从公网访问此数据网关）:</label>
-                    <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required placeholder="数据网关地址，示例: http(s)://dataway.dataflux.cn">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="iptDialDataWay" class="control-label">数据网关地址（用于接收可用性监测结果，需要能从公网访问此数据网关）:</label>
+                        <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required placeholder="数据网关地址，示例: http(s)://dataway.dataflux.cn">
+                      </div>
+                    </div>
                   </div>
                 </div>
 
