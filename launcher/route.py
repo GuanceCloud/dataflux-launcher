@@ -226,3 +226,8 @@ def up_database_update():
 def get_kodo_license():
   return  response_jsonify(setting.get_activated_license())
 
+
+@setup_bp.route("/setting/usage", methods=["GET"])
+def get_usage():
+  return  response_jsonify(setting.get_usage())
+

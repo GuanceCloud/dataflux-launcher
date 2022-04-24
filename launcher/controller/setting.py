@@ -9,6 +9,10 @@ from launcher.model import authorize as authorizeMdl
 from launcher import settingsMdl, SERVICECONFIG
 
 
+def get_usage():
+  return authorizeMdl.get_usage_datakit_total()
+
+
 def setting_deploy_replicas():
   result = {}
 

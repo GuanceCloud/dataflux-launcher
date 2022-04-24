@@ -5,8 +5,8 @@ import markdown, shortuuid
 import json, yaml
 import requests
 
+from launcher.utils.helper import api_helper as apiHelper
 from launcher.utils.helper.db_helper import dbHelper
-
 from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
@@ -31,21 +31,6 @@ def get_activated_license():
     return resp.json(), resp.status_code
 
   return None, resp.status_code
-
-
-
-# def get_feature_code():
-#   url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
-#   # url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
-
-#   headers = {"Content-Type": "application/json"}
-
-#   resp = requests.get(url, headers = headers)
-
-#   if resp.status_code == 200:
-#     return resp.json()['content'], resp.status_code
-
-#   return None, resp.status_code
 
 
 def save_aksk(params):
@@ -83,3 +68,36 @@ def save_aksk(params):
     result = db.execute(insertBOSSSettingSql, dbName = dbName, params = insertBOSSParams)
 
   return True
+
+
+# 统计平台内, 当前接入的 DataKit 总数量
+def get_usage_datakit_total():
+  url_workspace_list  = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/workspace/quick_list"
+  url_usage_state     = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/bill/query_usage_state"
+
+  resp, status_code = apiHelper.do_get(url_workspace_list)
+
+  result = None
+  if status_code != 200:
+    return None
+
+  breakFor = False
+  datakitTotal = 0
+  worksapce_list = [item['uuid'] for item in resp.get("content", {}).get("data", [])]
+
+  for item in worksapce_list:
+    resp, status_code = apiHelper.do_get(url_usage_state, {"workspaceUUID": item})
+    if status_code != 200:
+      breakFor = True
+      break
+
+    d = resp.get('content', {}).get('data', [])
+    if len(d) <= 0:
+      breakFor = True
+      break
+
+    datakitTotal = datakitTotal + d[0].get('datakitCount', 0)
+
+  # print(resp, status_code)
+  return datakitTotal, status_code
+ 
