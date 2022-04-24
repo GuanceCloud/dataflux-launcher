@@ -610,6 +610,12 @@ var setup = (function () {
           }).fail(function(d){
             alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
           });
+        }else{
+          that.get('up/update/finish').then(function(d){
+            if(d.conetnt.status_code != 200){
+              alert("安装完成后的配置升级失败,刷新页面可以重试!");
+            }
+          });
         }
 
         // 初始化 Studio 平台的相关配置：导入 官方 Pipeline 库、指标库、地理信息表、集成包、视图模板包
