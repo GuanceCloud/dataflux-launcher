@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-04-07 02:42:10 +0000
+# Generation Time: 2022-04-20 01:48:00 +0000
 # ************************************************************
 
 
@@ -875,7 +875,7 @@ CREATE TABLE `biz_snapshots` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
   `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
-  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard','ci') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
