@@ -11,8 +11,8 @@ from launcher import settingsMdl
 
 
 def after_container_update():
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
-  # url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
+  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/ping"
+  url = "http://kodo-inner.forethought-kodo:9527/v1/ping"
   for i in range(0, 30):
     content, status_code = apiHelper.get(url)
     if status_code == 200:
@@ -23,8 +23,8 @@ def after_container_update():
   if status_code != 200:
       return False
   else:
-      url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/inner/modify_old_object_ilm"
-      # url = "http://kodo-inner.forethought-kodo:9527/v1/inner/modify_old_object_ilm"
+      # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/inner/modify_old_object_ilm"
+      url = "http://kodo-inner.forethought-kodo:9527/v1/inner/modify_old_object_ilm"
 
       content, status_code = apiHelper.post(url)
 

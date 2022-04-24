@@ -11,8 +11,8 @@ from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
 def license_validate(license):
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
-  # url = "http://kodo-inner.forethought-kodo:9527/v1/license/validate"
+  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/validate"
+  url = "http://kodo-inner.forethought-kodo:9527/v1/license/validate"
 
   headers = {}
   resp = requests.post(url, data = license.encode('utf-8'), headers = headers)
@@ -21,8 +21,8 @@ def license_validate(license):
 
 
 def get_activated_license():
-  url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/get"
-  # url = "http://kodo-inner.forethought-kodo:9527/v1/license/get"
+  # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/license/get"
+  url = "http://kodo-inner.forethought-kodo:9527/v1/license/get"
 
   headers = {}
   resp = requests.get(url, headers = headers)
@@ -72,10 +72,10 @@ def save_aksk(params):
 
 # 统计平台内, 当前接入的 DataKit 总数量
 def get_usage_datakit_total():
-  url_workspace_list  = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/workspace/quick_list"
-  url_usage_state     = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/bill/query_usage_state"
-  # url_workspace_list  = "http://inner.forethought-core:5000/api/v1/inner/workspace/quick_list"
-  # url_usage_state     = "http://inner.forethought-core:5000/api/v1/inner/bill/query_usage_state"
+  # url_workspace_list  = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/workspace/quick_list"
+  # url_usage_state     = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/bill/query_usage_state"
+  url_workspace_list  = "http://inner.forethought-core:5000/api/v1/inner/workspace/quick_list"
+  url_usage_state     = "http://inner.forethought-core:5000/api/v1/inner/bill/query_usage_state"
 
   resp, status_code = apiHelper.do_get(url_workspace_list)
 
