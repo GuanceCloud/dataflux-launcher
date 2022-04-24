@@ -74,6 +74,8 @@ def save_aksk(params):
 def get_usage_datakit_total():
   url_workspace_list  = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/workspace/quick_list"
   url_usage_state     = "http://daily-ft2x-inner.cloudcare.cn/api/v1/inner/bill/query_usage_state"
+  # url_workspace_list  = "http://inner.forethought-core:5000/api/v1/inner/workspace/quick_list"
+  # url_usage_state     = "http://inner.forethought-core:5000/api/v1/inner/bill/query_usage_state"
 
   resp, status_code = apiHelper.do_get(url_workspace_list)
 
