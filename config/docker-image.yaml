@@ -6,12 +6,12 @@ apps:
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.3
     datakit: datakit:1.2.15
-    core: 1.39.90.4:core-0ac23fd1
-    kodo: 1.39.90.4:kodo-a1848b53
-    front-webclient: 1.39.90.4:front-webclient-20d2877c7
-    management-webclient: 1.39.90.4:management-webclient-6e3742d
-    message-desk: 1.39.90.4:message-desk-a8aa5c3
-    message-desk-worker: 1.39.90.4:message-desk-worker-8142aa5
-    dataflux-func: 1.39.90.4:dataflux-func-6960b2a
-    utils-server: 1.39.90.4:utils-server-48799ca
-  version: 1.39.90.4
+    core: 1.39.90.5:core-0ac23fd1
+    kodo: 1.39.90.5:kodo-a1848b53
+    front-webclient: 1.39.90.5:front-webclient-20d2877c7
+    management-webclient: 1.39.90.5:management-webclient-6e3742d
+    message-desk: 1.39.90.5:message-desk-a8aa5c3
+    message-desk-worker: 1.39.90.5:message-desk-worker-8142aa5
+    dataflux-func: 1.39.90.5:dataflux-func-6960b2a
+    utils-server: 1.39.90.5:utils-server-48799ca
+  version: 1.39.90.5
