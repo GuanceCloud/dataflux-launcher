@@ -1,6 +1,6 @@
 # 清理 configmap
 kubectl delete configmaps core static-resource-nginx integration-nginx -n forethought-core --force --grace-period=0
-kubectl delete configmaps kodo kodo-inner kodo-nginx kodo-x kodo-ws -n forethought-kodo --force --grace-period=0
+kubectl delete configmaps kodo kodo-inner kodo-nginx kodo-x kodo-ws kodo-license -n forethought-kodo --force --grace-period=0
 kubectl delete configmaps front-web-config management-nginx-config front-nginx-config management-web-config -n forethought-webclient --force --grace-period=0
 kubectl delete configmaps message-desk message-desk-worker -n middleware --force --grace-period=0
 kubectl delete configmaps func-config func-inner-config func-worker-config  -n func --force --grace-period=0
