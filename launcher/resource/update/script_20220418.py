@@ -53,7 +53,7 @@ def kodo_object_ilm_upgrade():
       # url = "http://daily-ft2x-kodo-inner-api.cloudcare.cn/v1/inner/modify_old_object_ilm"
       url = "http://kodo-inner.forethought-kodo:9527/v1/inner/modify_old_object_ilm"
 
-      content, status_code = apiHelper.post(url)
+      content, status_code = apiHelper.do_post(url)
 
       if status_code != 200:
           return False
