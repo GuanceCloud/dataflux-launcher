@@ -16,7 +16,7 @@ def studio_data_upgrade():
   url       = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
   for i in range(0, 30):
-    content, status_code = apiHelper.do_get(url)
+    content, status_code = apiHelper.do_get(ping_url)
     if status_code == 200:
       break
 
@@ -29,9 +29,9 @@ def studio_data_upgrade():
     d2 = { "script_name": "fix_2022_04_21_update_agg_to_metric_rule" }
     d3 = { "script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": True} }
 
-    apiHelper.do_get(url, data = d1)
-    apiHelper.do_get(url, data = d2)
-    apiHelper.do_get(url, data = d3)
+    apiHelper.do_post(url, data = d1)
+    apiHelper.do_post(url, data = d2)
+    apiHelper.do_post(url, data = d3)
 
   return True
 
