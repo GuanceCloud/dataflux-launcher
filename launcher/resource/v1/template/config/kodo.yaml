@@ -45,8 +45,8 @@ nsq:
     lookupd: http://nsqlookupd.middleware:4161
 
 cc:
-  ak: "{{ other.cc.ak }}"
-  sk: "{{ other.cc.sk }}"
+  ak: ""
+  sk: ""
   syncBillExpired: "7d"
   syncBillHost: "https://boss.guance.com"
   postTime: "01:00"
