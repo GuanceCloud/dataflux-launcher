@@ -27,11 +27,11 @@ def studio_data_upgrade():
   else:
     d1 = '{ "script_name": "fix_2022_04_21_update_rules_funcid" }'
     d2 = '{ "script_name": "fix_2022_04_21_update_agg_to_metric_rule" }'
-    d3 = '{ "script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true} }'
+    # d3 = '{ "script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true} }'
 
     apiHelper.do_post(url, data = d1)
     apiHelper.do_post(url, data = d2)
-    apiHelper.do_post(url, data = d3)
+    # apiHelper.do_post(url, data = d3)
 
   return True
 
