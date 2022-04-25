@@ -1844,14 +1844,6 @@ upgrade:
 
   # 2022.04.21 迭代
   - seq: 51
-    config:
-      core: |-
-        # 有 rule 刷数据操作
-
-        # 设置 语雀服务相关配置
-        YuQueSet:
-          token: "<需要配置token>"
-
     database: |-
       -- 快照新增 ci 类型
       ALTER TABLE `biz_snapshots` 
