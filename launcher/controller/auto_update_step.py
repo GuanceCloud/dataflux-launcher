@@ -89,8 +89,8 @@ class AutoUpdateStep(object):
         pk.before_container_update()
 
 
-# 在所有容器都升级完毕后自动执行
-def do_after_container_update(self):
+  # 在所有容器都升级完毕后自动执行
+  def do_after_container_update(self):
     launcherSeqs = self.get_launcher_seqs()
 
     for ls in launcherSeqs:
@@ -101,4 +101,5 @@ def do_after_container_update(self):
       pk = self.__load_package(package_name)
 
       if 'after_container_update' in dir(pk):
-        pk.after_container_update()
+         pk.after_container_update()
+
