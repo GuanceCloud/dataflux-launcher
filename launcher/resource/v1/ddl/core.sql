@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-04-20 01:48:00 +0000
+# Generation Time: 2022-04-25 05:54:44 +0000
 # ************************************************************
 
 
@@ -900,6 +900,7 @@ CREATE TABLE `biz_sso_setting` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '身份提供商唯一id',
   `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类别:saml2/oauth2',
   `idpName` varchar(256) NOT NULL DEFAULT '' COMMENT '身份提供商',
+  `idpMd5` varchar(48) NOT NULL DEFAULT '' COMMENT 'idp-xml关键信息md5',
   `remark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
   `uploadData` text NOT NULL COMMENT '上传数据',
   `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
@@ -912,7 +913,8 @@ CREATE TABLE `biz_sso_setting` (
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   PRIMARY KEY (`id`),
   KEY `idx_uuid` (`uuid`),
-  KEY `idx_wpuuid` (`workspaceUUID`)
+  KEY `idx_wpuuid` (`workspaceUUID`),
+  KEY `idx_idpMd5` (`idpMd5`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
