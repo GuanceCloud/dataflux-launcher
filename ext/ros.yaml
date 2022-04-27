@@ -623,6 +623,8 @@ Resources:
     Properties:
       VSwitchIds:
         - Ref: EcsVSwitch
+      ZoneIds:
+        - Ref: ZoneId
       VpcId:
         Ref: EcsVpc
       WorkerInstanceTypes:
