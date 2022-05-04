@@ -388,7 +388,7 @@ def certificate_create_all_namespace():
 
   namespaces = SERVICECONFIG['namespaces']
   for ns in namespaces:
-    cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
+    cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {} --dry-run -o yaml | kubectl apply -f -".format(domain, certFile, certKeyFile, ns)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   return True

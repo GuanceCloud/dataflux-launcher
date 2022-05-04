@@ -57,6 +57,10 @@
                 <!-- </li> -->
                 <li class="divider"></li>
                 <li>
+                  <a href="javascript:void(0);" onclick="setup.tls_change_model()">域名 TLS 证书更新</a>
+                </li>
+                <li class="divider"></li>
+                <li>
                   <a href="javascript:void(0);" onclick="setup.sync_integration()">立即同步官方视图模板包</a>
                 </li>
                 <li>
@@ -66,6 +70,7 @@
                 <li>
                   <a href="javascript:void(0);" onclick="setup.activate_license()">License 激活及 AK/SK 配置</a>
                 </li>
+
               </ul>
             </div>
 
@@ -114,6 +119,41 @@
                 <span id="spanYAMLError" class="text-danger">YAML 语法格式不正确！</span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button id="settingModalButtonOK" type="button" onclick="setup.save_setting()" class="btn btn-primary">保存修改</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TLS 证书更换 Large modal -->
+        <div id="TLSModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">域名 TLS 证书更换</h4>
+              </div>
+              <div class="modal-body" style="height: 500px;">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="iptCertificatePrivateKey" class="control-label">私钥:</label>
+                      <textarea id="iptCertificatePrivateKey" class="form-control" style="height: 450px; resize: none;" required placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="iptCertificateContent" class="control-label">证书:</label>
+                      <textarea id="iptCertificateContent" class="form-control" style="height: 450px; resize: none;" required placeholder="输入证书，以-----BEGIN CERTIFICATE-----开头"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btnTLSModalButtonOK" type="button" onclick="setup.do_tls_change()" class="btn btn-primary">更新 TLS 证书</button>
               </div>
             </div>
 

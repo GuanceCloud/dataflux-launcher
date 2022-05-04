@@ -135,3 +135,19 @@ def setting_activate(data):
     "result": result,
     "success": success
   }
+
+def setting_tls_change(params):
+  other = settingsMdl.other or {}
+  tls = other.get('tls', {})
+  tls['certificatePrivateKey'] = params.get('certificatePrivateKey', '')
+  tls['certificateContent'] = params.get('certificateContent', '')
+  if tls.get('tlsDisabled', False):
+    tls['tlsDisabled'] = False
+
+  other['tls'] = tls
+  settingsMdl.other = other
+
+  return {
+          "success": k8sMdl.certificate_create_all_namespace()
+        }
+

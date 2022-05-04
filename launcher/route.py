@@ -236,3 +236,10 @@ def get_kodo_license():
 def get_usage():
   return  response_jsonify(setting.get_usage())
 
+
+@setup_bp.route("/setting/tls/change", methods=["POST"])
+def setting_tls_change():
+  data    = request.json
+
+  return  response_jsonify(setting.setting_tls_change(data))
+

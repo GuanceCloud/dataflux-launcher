@@ -927,10 +927,63 @@ var setup = (function () {
     });
   };
 
+  app.prototype.tls_change_model = function(){
+    var that = this;
+    var jqPrivateKey = $('#iptCertificatePrivateKey'),
+        jqContent = $("#iptCertificateContent");
+
+    var params = {
+      "key": "other",
+      "format": "json"
+    };
+
+    $("#btnTLSModalButtonOK").attr('disabled', true);
+
+    var validateFunc = function(){
+      var noNone =  $.trim(jqPrivateKey.val()) != '' &&
+                    $.trim(jqContent.val()) != '';
+
+      $("#btnTLSModalButtonOK").attr('disabled', !noNone);
+    }
+
+    this.get('setting/get', params).done(function(d){
+      $("#TLSModel").modal("show");
+
+      var vTLS = d.content.tls || {}
+
+      jqPrivateKey.val(vTLS.certificatePrivateKey || '');
+      jqContent.val(vTLS.certificateContent || '');
+
+      validateFunc();
+    });
+
+    var jqMerged = jqPrivateKey.add(jqContent);
+    jqMerged.on('keyup', function(){
+      validateFunc();
+    });
+  };
+
+  app.prototype.do_tls_change = function(){
+    var jqPrivateKey = $('#iptCertificatePrivateKey'),
+        jqContent = $("#iptCertificateContent");
+
+    var params = {
+      "certificatePrivateKey": jqPrivateKey.val(),
+      "certificateContent": jqContent.val()
+    }
+
+    this.post('setting/tls/change', params).done(function(d){
+      content = d.content
+      if(content.success){
+        $("#TLSModel").modal("hide");
+      }
+    });
+
+  };
+
   app.prototype.activate_license = function(){
     var that = this;
-    var jqFC = $('#pFC'),
-        jqAK = $("#iptGuanceAK"), 
+    var jqAK = $("#iptGuanceAK"), 
         jqSK = $("#iptGuanceSK"),
         jqDataWayUrl = $("#iptDialDataWay"),
         jqLicense = $("#iptLicense");
@@ -963,19 +1016,6 @@ var setup = (function () {
 
       validateFunc();
     });
-
-    // this.get('setting/fc/get').done(function(d){
-    //   if (d.content.commitId){
-    //     jqFC.css("color", "");
-    //     jqFC.text(d.content.commitId.toUpperCase());
-    //   }else{
-    //     jqFC.css("color", "red");
-    //     jqFC.text("激活特征码获取失败！");
-    //   }
-    // }).fail(function(d){
-    //   jqFC.css("color", "red");
-    //   jqFC.text("激活特征码获取失败！");
-    // });
 
     var jqMerged = jqAK.add(jqSK).add(jqDataWayUrl).add(jqLicense);
     jqMerged.on('keyup', function(){
