@@ -220,21 +220,6 @@ def service_image_config():
   return d
 
 
-# def ingress_create():
-#   tmpDir = SERVICECONFIG['tmpDir']
-#   ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": settingsMdl})
-#   ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
-
-#   with open(ingressYaml, 'w') as f:
-#     f.write(ingressTemplate)
-
-#   # 创建所有 ingress
-#   cmd = "kubectl apply -f {}".format(ingressYaml)
-#   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-#   return True
-
-
 def _registry_secret_create(registrySetting):
   for ns in SERVICECONFIG['namespaces']:
     k8sMdl.registry_secret_create(ns, **registrySetting)

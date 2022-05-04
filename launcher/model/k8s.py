@@ -78,7 +78,18 @@ def deploy_status():
   return deployStatus
 
 
-def ingress_apply():
+def __ingress_1_yaml():
+  tmpDir = SERVICECONFIG['tmpDir']
+  ingressTemplate = jinjia2_render("template/k8s/ingress_v1.yaml", {"config": settingsMdl})
+  ingressYaml = os.path.abspath(tmpDir + "/ingress_v1.yaml")
+
+  with open(ingressYaml, 'w') as f:
+    f.write(ingressTemplate)
+
+  return ingressYaml
+
+
+def __ingress_latest_yaml():
   tmpDir = SERVICECONFIG['tmpDir']
   ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": settingsMdl})
   ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
@@ -86,11 +97,34 @@ def ingress_apply():
   with open(ingressYaml, 'w') as f:
     f.write(ingressTemplate)
 
+  return ingressYaml
+
+
+def __do_ingress_apply(ingressYaml):
   # 创建所有 ingress
   cmd = "kubectl apply -f {}".format(ingressYaml)
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+  output, err = p.communicate()
 
-  return True
+  return str(output or "", encoding = "utf-8")
+
+
+def ingress_apply():
+  kind_version_error_re = r".*no\s*matches\s*for\s*kind"
+
+  ingressYaml = __ingress_latest_yaml()
+  result = __do_ingress_apply(ingressYaml)
+
+  if re.match(kind_version_error_re, result, flags = re.S) != None:
+    # unable to recognize "ingress. vaml": no matches for kind "Ingress" in version "networking.k8s.i0/v1"
+    # 如何检测到不支持 networking.k8s.i0/v1 这个 apiVersion 的错误
+    # 换成 extensions/v1beta1 版本的重新创建 Ingress
+    ingressYaml = __ingress_1_yaml()
+    result = __do_ingress_apply(ingressYaml)
+
+  success = (re.match(r".*ingress.+(configured)|(unchanged)", result, flags = re.S) != None)
+
+  return success
 
 
 def get_namespace():

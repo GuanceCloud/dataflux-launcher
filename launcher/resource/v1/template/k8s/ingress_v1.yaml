@@ -1,0 +1,198 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: front-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: front-backend
+          servicePort: 5000
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50M"
+  name: management-backend
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: management-backend
+          servicePort: 5000
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: static-resource-nginx
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: static-resource-nginx
+          servicePort: 80
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: open-api
+  namespace: forethought-core
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.openApi }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: open-api
+          servicePort: 5000
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.openApi }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: front-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: front-webclient
+          servicePort: 80
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: management-webclient
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: management-webclient
+          servicePort: 80
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: func
+  namespace: func
+spec:
+  rules:
+  - host: func-removed.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: func
+          servicePort: 8088
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: server
+  namespace: func2
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: server
+          servicePort: 8088
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
