@@ -10,7 +10,8 @@ version=${v[0]}.${v[1]}.${v[2]}
 
 echo '{"content": {"form": {"version": "v'${version}'"} } }' 
 
-curl 'https://shrine-via-core-stone.cloudcare.cn/resources/action/dataFluxVersionUpdate@customerXAdmin' \
+
+curl 'https://shrine.guance.com/api/resources/action/dataFluxVersionUpdate@customerXAdmin' \
   -X POST \
   -H 'content-type: application/json;charset=UTF-8' \
   --data-raw '{"content": {"form": {"version": "v'${version}'"} } }' \

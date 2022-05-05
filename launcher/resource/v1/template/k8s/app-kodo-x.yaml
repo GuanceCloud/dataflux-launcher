@@ -31,6 +31,9 @@ spec:
         - mountPath: /kodo/config/config.yaml
           name: kodo-x
           subPath: config.yaml
+        - mountPath: /kodo/config/license
+          name: kodo-license
+          subPath: license
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
@@ -40,6 +43,11 @@ spec:
           name: kodo-x
           optional: false
         name: kodo-x
+      - configMap:
+          defaultMode: 420
+          name: kodo-license
+          optional: false
+        name: kodo-license
 
 ---
 

@@ -283,7 +283,7 @@ var setup = (function () {
         }
 
         if (next && !hasError){
-          that.go("/install/aksk");
+          that.go("/install/other");
         }
       }else{
         alert("InfluxDB 连接失败");
@@ -347,6 +347,7 @@ var setup = (function () {
         "username": $("#iptUserName").val(),
         "email": $("#iptUserEmail").val()
       },
+      "studioHideHelp": $("#ckbStudioHideHelp").is(":checked"),
       "domain": $("#iptDomain").val(),
       "subDomain": {},
       "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet"
@@ -362,7 +363,7 @@ var setup = (function () {
     data.tls = {
       "certificatePrivateKey": $('#certificatePrivateKey').val(),
       "certificateContent": $('#certificateContent').val(),
-      "tlsDisabled": ! $('#ckbTlsEnabled').is(":checked")
+      "tlsDisabled": ! $('#ckbTlsEnabled').is(":checked"),
     }
 
     data.nodeInternalIP = $('#iptNodeIps').val();
@@ -591,23 +592,54 @@ var setup = (function () {
         });
 
         // 全新安装时，需要初始化 ES 的 RP，升级安装时需要进入 Launcher 容器，手工执行 ES 初始化的接口
-        if(mode == 'install'){         
-          that.post('workspace/init').then(function(d){
-            if(d.content.status_code != 200){
-              alert("初始化系统工作空间失败，刷新页面重试。");
-            }
-          }).fail(function(d){
-            alert("初始化系统工作空间失败，刷新页面重试。");
-          });
-
+        if(mode == 'install'){   
+          // 初始化 ES 生命周期策略、模板等配置
           that.post('elasticsearch/init').then(function(d){
             if(d.content.status_code != 200){
               alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
+            }else{
+              // 初始化系统工作空间
+              that.post('workspace/init').then(function(d){
+                if(d.content.status_code != 200){
+                  alert("初始化系统工作空间失败，刷新页面重试。");
+                }
+              }).fail(function(d){
+                alert("初始化系统工作空间失败，刷新页面重试。");
+              });
             }
           }).fail(function(d){
             alert("Elasticsearch 数据初始化失败，请检查 Elasticsearch 配置信息，然后再刷新本页面。");
           });
+        }else{
+          that.get('up/update/finish').then(function(d){
+            if(d.conetnt.status_code != 200){
+              alert("安装完成后的配置升级失败,刷新页面可以重试!");
+            }
+          });
         }
+
+        // 初始化 Studio 平台的相关配置：导入 官方 Pipeline 库、指标库、地理信息表、集成包、视图模板包
+        that.post('studio/init').then(function(d){
+          if (d.content.status_code != 200){
+            alert("Studio 平台初始化失败，请刷新本页面重试。");
+          }else{
+            // 同步集成包模板到数据库
+            that.post('setting/sync_integration').done(function(d){
+              
+            }).fail(function(d){
+              alert("集成包同步失败。")
+            });
+
+            // 同步官方 Pipeline 模板到数据库
+            that.post('setting/sync_pipeline').done(function(d){
+              
+            }).fail(function(d){
+              alert("官方 Pipeline 包同步失败。")
+            });
+          }
+        }).fail(function(d){
+            alert("Studio 平台初始化失败，请刷新本页面重试。");
+        });
       }
     });
   };
@@ -886,6 +918,138 @@ var setup = (function () {
   app.prototype.sync_integration = function(){
     this.post('setting/sync_integration').done(function(d){
 
+    });
+  };
+
+  app.prototype.sync_pipeline = function(){
+    this.post('setting/sync_pipeline').done(function(d){
+
+    });
+  };
+
+  app.prototype.tls_change_model = function(){
+    var that = this;
+    var jqPrivateKey = $('#iptCertificatePrivateKey'),
+        jqContent = $("#iptCertificateContent");
+
+    var params = {
+      "key": "other",
+      "format": "json"
+    };
+
+    $("#btnTLSModalButtonOK").attr('disabled', true);
+
+    var validateFunc = function(){
+      var noNone =  $.trim(jqPrivateKey.val()) != '' &&
+                    $.trim(jqContent.val()) != '';
+
+      $("#btnTLSModalButtonOK").attr('disabled', !noNone);
+    }
+
+    this.get('setting/get', params).done(function(d){
+      $("#TLSModel").modal("show");
+
+      var vTLS = d.content.tls || {}
+
+      jqPrivateKey.val(vTLS.certificatePrivateKey || '');
+      jqContent.val(vTLS.certificateContent || '');
+
+      validateFunc();
+    });
+
+    var jqMerged = jqPrivateKey.add(jqContent);
+    jqMerged.on('keyup', function(){
+      validateFunc();
+    });
+  };
+
+  app.prototype.do_tls_change = function(){
+    var jqPrivateKey = $('#iptCertificatePrivateKey'),
+        jqContent = $("#iptCertificateContent");
+
+    var params = {
+      "certificatePrivateKey": jqPrivateKey.val(),
+      "certificateContent": jqContent.val()
+    }
+
+    this.post('setting/tls/change', params).done(function(d){
+      content = d.content
+      if(content.success){
+        $("#TLSModel").modal("hide");
+      }
+    });
+
+  };
+
+  app.prototype.activate_license = function(){
+    var that = this;
+    var jqAK = $("#iptGuanceAK"), 
+        jqSK = $("#iptGuanceSK"),
+        jqDataWayUrl = $("#iptDialDataWay"),
+        jqLicense = $("#iptLicense");
+
+    var params = {
+      "key": "other",
+      "format": "json"
+    };
+
+    $("#activateModalButtonOK").attr('disabled', true);
+
+    var validateFunc = function(){
+      var noNone =  $.trim(jqAK.val()) != '' && 
+                    $.trim(jqSK.val()) != '' && 
+                    $.trim(jqDataWayUrl.val()) != '' &&
+                    $.trim(jqLicense.val()) != '';
+
+      $("#activateModalButtonOK").attr('disabled', !noNone);
+    }
+
+    this.get('setting/get', params).done(function(d){
+      $("#licenseModel").modal("show");
+
+      var vGuance = d.content.guance || {}
+
+      jqAK.val(vGuance.ak);
+      jqSK.val(vGuance.sk);
+      jqDataWayUrl.val(vGuance.dataway_url);
+      jqLicense.val(vGuance.license);
+
+      validateFunc();
+    });
+
+    var jqMerged = jqAK.add(jqSK).add(jqDataWayUrl).add(jqLicense);
+    jqMerged.on('keyup', function(){
+      validateFunc();
+    });
+  };
+
+  app.prototype.do_activate = function(){
+    var jqAK = $("#iptGuanceAK"), 
+        jqSK = $("#iptGuanceSK"),
+        jqDataWayUrl = $("#iptDialDataWay"),
+        jqLicense = $("#iptLicense");
+
+    var params = {
+      "ak": jqAK.val(),
+      "sk": jqSK.val(),
+      "dataway_url": jqDataWayUrl.val(),
+      "license": jqLicense.val()
+    }
+
+    this.post('setting/activate', params).done(function(d){
+      content = d.content
+      if(content.success){
+        $("#licenseModel").modal("hide");
+      } else {
+        alert({
+              'kodo.licenseNotFound': '无效的 License', 
+              'kodo.licenseCommitIdNotMatch': '无效的 License', 
+              'kodo.invalidLicense': '无效的 License', 
+              'kodo.licenseExpire': 'License 已过期',
+              'invaildLicense': '无效的 License'
+            }[content.result] || "激活失败！")
+      }
+      console.log(d);
     });
   };
 

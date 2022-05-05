@@ -12,9 +12,9 @@
             <input type="text" class="form-control" id="iptESHost" name="iptESHost" required value="{{ pageData.host }}" placeholder="Elasticsearch 实例地址">
             <label class="checkbox-inline">
               {% if pageData.ssl %}
-              <input type="checkbox" id="ckbElasticsearchSSL" checked="checked"> SSL
+              <input type="checkbox" id="ckbElasticsearchSSL" checked="checked"> 启用 SSL (HTTPS)
               {% else %}
-              <input type="checkbox" id="ckbElasticsearchSSL"> SSL
+              <input type="checkbox" id="ckbElasticsearchSSL"> 启用 SSL (HTTPS)
               {% endif %}
             </label>
           </div>

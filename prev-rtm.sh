@@ -121,6 +121,15 @@ function start(){
     echo "DataWay 最新版本号：$dwVersion \n"
   fi
 
+  dkVersion=`curl -s https://static.guance.com/datakit/version | grep version\" | grep -Eo "(\d+\.){2}\d+(-rc\d+)?"`
+
+  if [ ! -n "$dkVersion" ]; then
+    echo '未获取到 DataKit 的最新版本'
+    exit 0
+  else
+    echo "DataKit 最新版本号：$dkVersion \n"
+  fi
+
   init $1
 
   : > ${imageYaml}
@@ -130,10 +139,12 @@ function start(){
   echo "  images:" >> ${workDir}/${imageYaml}
   echo "    nsq: basis:multiarch_nsq_1.2.1" >> ${workDir}/${imageYaml}
   echo "    nginx: basis:multiarch_nginx_1.13.7" >> ${workDir}/${imageYaml}
-  echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
+  # echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本
   echo "    internal-dataway: dataway:${dwVersion}" >> ${workDir}/${imageYaml}
+  # 最新 DataKit 镜像版本
+  echo "    datakit: datakit:${dkVersion}" >> ${workDir}/${imageYaml}
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
@@ -150,7 +161,7 @@ function start(){
 
   # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server"
-  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse"
+  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse"
 
   echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
 

@@ -6,6 +6,8 @@ from launcher.utils.template import render
 from launcher.controller import setup
 from launcher.controller import env_check
 from launcher.controller import update
+from launcher.controller import setting as settingCtrl
+from launcher.model import authorize as authorizeMdl
 
 from launcher.utils import decorators
 
@@ -15,18 +17,33 @@ from . import settingsMdl, SERVICECONFIG, STEPS_COMMON, STEPS_INSTALL, STEPS_UPD
 # 全新安装时的路由套装
 def register_install_router(app):
 
+  # @app.before_request
+  def license_check():
+    path = request.path
+
+    # 只在升级时需要检测当前系统的 License 激活状态
+    if not path.startswith("/up"):
+        return None
+
+    dk_total, status_code= authorizeMdl.get_usage_datakit_total()
+    content = settingCtrl.get_activated_license()
+
+    if status_code == 200 and content.get('status', False):
+      extra = content.get('license', {}).get('Extra', {})
+      # 限制当前已经接入的 DataKit 数量必须小于 License 限制的数量，才允许升级 版本
+      if dk_total > extra.get('DKLimit', -1):
+        # TO DO
+        # 这个逻辑可以在后续的版本中进行限制
+        # 留一个过渡的版本,这个之后的版本,必须先升级到此版本后,才允许升级到后续的版本
+        pass
+
+
   @app.before_request
   def set_step():
     path = request.path
     isPrev = True
-
-    # # ddtrace 解包
-    # import msgpack
-    # d = request.data
-    # if d != b'':
-    #   print(">>> ", msgpack.unpackb(d))
-
     steps = None
+
     if path.startswith("/install"):
       steps = STEPS_COMMON + STEPS_INSTALL
     elif path.startswith("/up"):

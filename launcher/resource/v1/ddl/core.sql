@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-02-21 01:56:00 +0000
+# Generation Time: 2022-04-25 05:54:44 +0000
 # ************************************************************
 
 
@@ -268,7 +268,7 @@ CREATE TABLE `biz_dialing_tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, dial-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('http','tcp','dns','browser') NOT NULL DEFAULT 'http',
+  `type` enum('http','tcp','dns','browser','icmp','websocket') NOT NULL DEFAULT 'http',
   `regions` json NOT NULL,
   `task` json NOT NULL COMMENT '任务数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -640,8 +640,9 @@ CREATE TABLE `biz_pipeline` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID，带 pl- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
+  `name` varchar(1024) NOT NULL DEFAULT '' COMMENT 'PL文件名',
   `content` text NOT NULL COMMENT '原始内容',
+  `testData` text NOT NULL,
   `isSysTemplate` int(1) DEFAULT '0' COMMENT '是否为系统模版',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -874,7 +875,7 @@ CREATE TABLE `biz_snapshots` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
   `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
-  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard','ci') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -899,6 +900,7 @@ CREATE TABLE `biz_sso_setting` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '身份提供商唯一id',
   `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类别:saml2/oauth2',
   `idpName` varchar(256) NOT NULL DEFAULT '' COMMENT '身份提供商',
+  `idpMd5` varchar(48) NOT NULL DEFAULT '' COMMENT 'idp-xml关键信息md5',
   `remark` varchar(512) NOT NULL DEFAULT '' COMMENT '备注',
   `uploadData` text NOT NULL COMMENT '上传数据',
   `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
@@ -911,7 +913,8 @@ CREATE TABLE `biz_sso_setting` (
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   PRIMARY KEY (`id`),
   KEY `idx_uuid` (`uuid`),
-  KEY `idx_wpuuid` (`workspaceUUID`)
+  KEY `idx_wpuuid` (`workspaceUUID`),
+  KEY `idx_idpMd5` (`idpMd5`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1711,7 +1714,7 @@ CREATE TABLE `main_workspace_grant` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT 'grant-',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `toWorkspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '被授予权限的工作空间 uuid',
-  `expireAt` int(11) NOT NULL COMMENT 'license 过期时间',
+  `expireAt` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
@@ -1719,8 +1722,9 @@ CREATE TABLE `main_workspace_grant` (
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT '主键',
-  UNIQUE KEY `uk_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
-  UNIQUE KEY `uk_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `idx_workspaceUUID` (`workspaceUUID`) COMMENT '授权的工作空间UUID',
+  KEY `idx_toWorkspaceUUID` (`toWorkspaceUUID`) COMMENT '被授予权限的工作空间UUID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

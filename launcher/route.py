@@ -112,7 +112,7 @@ def service_create():
 def setting_get():
   args = request.args.to_dict()
 
-  return  response_jsonify(setting.setting_get(args.get('key')))
+  return  response_jsonify(setting.setting_get(**args))
 
 
 @setup_bp.route("/setting/save", methods=["post"])
@@ -122,11 +122,30 @@ def setting_save():
   return  response_jsonify(setting.setting_save(data))
 
 
+@setup_bp.route("/setting/activate", methods=["post"])
+def setting_activate():
+  data = request.json
+
+  return  response_jsonify(setting.setting_activate(data))
+
+
+# @setup_bp.route("/setting/fc/get", methods=["get"])
+# def setting_feature_code_get():
+#   return  response_jsonify(setting.get_feature_code())
+
+
 @setup_bp.route("/setting/sync_integration", methods=["post"])
 def sync_integration():
   data = request.json
 
   return  response_jsonify(setup.sync_integration())
+
+
+@setup_bp.route("/setting/sync_pipeline", methods=["post"])
+def sync_pipeline():
+  data = request.json
+
+  return  response_jsonify(setup.sync_pipeline())
 
 
 @setup_bp.route("/service/status", methods=["GET"])
@@ -166,6 +185,11 @@ def init_elasticsearch():
   return  response_jsonify(elasticsearch_setup.init_elasticsearch())
 
 
+@setup_bp.route("/studio/init", methods=["POST"])
+def studio_init():
+  return  response_jsonify(setup.studio_init())
+
+
 @setup_bp.route("/up/service/status", methods=["GET"])
 def up_service_status():
   return  response_jsonify(update.deploy_check())
@@ -196,4 +220,26 @@ def up_database_update():
   project = data.get('project')
 
   return  response_jsonify({"project": project, "errorSeq": update.database_update(project)})
+
+
+@setup_bp.route("/up/update/finish", methods=["GET"])
+def up_update_finish():
+  return  response_jsonify(update.update_finish())
+
+
+@setup_bp.route("/setting/activated/license", methods=["GET"])
+def get_kodo_license():
+  return  response_jsonify(setting.get_activated_license())
+
+
+@setup_bp.route("/setting/usage", methods=["GET"])
+def get_usage():
+  return  response_jsonify(setting.get_usage())
+
+
+@setup_bp.route("/setting/tls/change", methods=["POST"])
+def setting_tls_change():
+  data    = request.json
+
+  return  response_jsonify(setting.setting_tls_change(data))
 

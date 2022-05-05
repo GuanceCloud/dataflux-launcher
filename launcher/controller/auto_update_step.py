@@ -24,7 +24,7 @@ class AutoUpdateStep(object):
     self.__projectCurrentSeqs = None
     self.__launcherSeqs = None
 
-  
+
   def get_upgrade_seqs(self):
     if self.__projectCurrentSeqs is not None:
       return self.__projectCurrentSeqs
@@ -69,9 +69,9 @@ class AutoUpdateStep(object):
     return self.__launcherSeqs
 
   def __load_package(self, package_name):
-      pk = importlib.import_module(f"launcher.resource.update.{package_name}")
+    pk = importlib.import_module(f"launcher.resource.update.{package_name}")
 
-      return pk
+    return pk
 
 
   # 在数据库升级完毕、容器升级之前需要自动执行的升级操作。
@@ -87,3 +87,19 @@ class AutoUpdateStep(object):
 
       if 'before_container_update' in dir(pk):
         pk.before_container_update()
+
+
+  # 在所有容器都升级完毕后自动执行
+  def do_after_container_update(self):
+    launcherSeqs = self.get_launcher_seqs()
+
+    for ls in launcherSeqs:
+      package_name = ls.get('func_exec', None)
+      if package_name is None:
+        continue
+
+      pk = self.__load_package(package_name)
+
+      if 'after_container_update' in dir(pk):
+         pk.after_container_update()
+

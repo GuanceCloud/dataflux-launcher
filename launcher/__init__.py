@@ -34,10 +34,10 @@ STEPS_INSTALL = [
       "key": "/install/influxdb",
       "name": "InfluxDB 设置"
   },
-  {
-      "key": "/install/aksk",
-      "name": "AK 配置"
-  },
+  # {
+  #     "key": "/install/aksk",
+  #     "name": "AK 配置"
+  # },
   {
       "key": "/install/other",
       "name": "其他设置"

@@ -423,3 +423,7 @@ upgradeInfo:
       ```
       curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw '{"script_name": "timed_sync_pipeline_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_pipline": true}}'
       ```
+
+  # 2022-04-18 迭代
+  - seq: 24
+    func_exec: script_20220418

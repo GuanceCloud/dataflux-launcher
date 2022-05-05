@@ -255,6 +255,17 @@ services:
       - kodo-ws
       template: kodo-ws.yaml
 
+    - key: kodoLicense
+      mapname: kodo-license
+      mapkey: license
+      services:
+      - kodo
+      - kodo-inner
+      - kodo-x
+      - kodo-ws
+      template: kodo-license
+
+
     pvcs:
     - name: kodo-logs
       storage: 20Gi
@@ -529,8 +540,8 @@ services:
       replicas: 1
 
     - key: datakit-pl-debug
-      name: 内转 Pipline 调试服务
-      image: datakit-pl-debug
+      name: 内置 Pipeline 调试服务
+      image: datakit
       replicas: 1
 
     - key: data-warehouse
@@ -619,6 +630,7 @@ defaultSubdomain:
   managementApi: df-management-api
   # websocket: df-websocket
   function: df-func
+  openApi: df-openapi
   kodo: df-kodo
   staticResource: df-static-res
 

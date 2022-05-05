@@ -49,7 +49,8 @@ def other_config(params):
   settingsMdl.other = {
     'manager': params.get('manager'),
     'tls': params.get('tls'),
-    'nodeInternalIP': params.get('nodeInternalIP')
+    'nodeInternalIP': params.get('nodeInternalIP'),
+    'studioHideHelp': params.get('studioHideHelp')
   }
 
   return True
@@ -101,39 +102,6 @@ def config_template():
 def certificate_create():
   k8sMdl.apply_namespace()
   k8sMdl.certificate_create_all_namespace()
-
-  # tlsSetting = settingsMdl.other.get('tls')
-  #
-  # certificate = dict(
-  #             privateKey = tlsSetting['certificatePrivateKey'],
-  #             content = tlsSetting['certificateContent'],
-  #             disabled = tlsSetting['tlsDisabled']
-  #         )
-  #
-  # if not certificate["privateKey"] or not certificate["content"]:
-  #   return True
-  #
-  # domain = settingsMdl.domain.get('domain')
-  #
-  # tmpPath = SERVICECONFIG['tmpDir']
-  # certFile = '{}/tls.cert'.format(tmpPath)
-  # certKeyFile = '{}/tls.key'.format(tmpPath)
-  #
-  # if not os.path.exists(tmpPath):
-  #   os.mkdir(tmpPath)
-  #
-  # with open(os.path.abspath(certFile), 'w') as f:
-  #   f.write(certificate['content'])
-  #
-  # with open(os.path.abspath(certKeyFile), 'w') as f:
-  #   f.write(certificate['privateKey'])
-  #
-  # k8sMdl.apply_namespace()
-  #
-  # namespaces = SERVICECONFIG['namespaces']
-  # for ns in namespaces:
-  #   cmd = "kubectl create secret tls {} --cert='{}' --key='{}' -n {}".format(domain, certFile, certKeyFile, ns)
-  #   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
   return True
 
@@ -217,21 +185,6 @@ def service_image_config():
   d['storageNames'] = k8sMdl.get_storageclass()
 
   return d
-
-
-# def ingress_create():
-#   tmpDir = SERVICECONFIG['tmpDir']
-#   ingressTemplate = jinjia2_render("template/k8s/ingress.yaml", {"config": settingsMdl})
-#   ingressYaml = os.path.abspath(tmpDir + "/ingress.yaml")
-
-#   with open(ingressYaml, 'w') as f:
-#     f.write(ingressTemplate)
-
-#   # 创建所有 ingress
-#   cmd = "kubectl apply -f {}".format(ingressYaml)
-#   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-
-#   return True
 
 
 def _registry_secret_create(registrySetting):
@@ -362,17 +315,41 @@ def save_version():
   return True
 
 
-# 初始化工作空间的 ES 
-def elasticsearch_init():
+def service_done_check():
   headers = {"Content-Type": "application/json"}
 
-  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/es/init", headers = headers)
+  resp = requests.get("http://inner.forethought-core:5000/api/v1/inner/const/ping", headers = headers)
 
-  return { "status_code": resp.status_code }
+  return resp.status_code == 200
+
+
+def call_service_url(url, jsonData = None):
+  headers = {"Content-Type": "application/json"}
+  isDone = False
+
+  for i in range(0, 50):
+    if not service_done_check():
+      time.sleep(0.5)
+    else:
+      isDone = True
+      break
+
+  if isDone:
+    resp = requests.post(url, json = jsonData, headers = headers)
+    return {"status_code": resp.status_code}
+  else:
+    return {"status_code": 429}
+
+
+# 初始化工作空间的 ES 
+def elasticsearch_init():
+  url = "http://inner.forethought-core:5000/api/v1/inner/es/init"
+
+  return call_service_url(url)
 
 
 def workspace_init():
-  headers = {"Content-Type": "application/json"}
+  url = "http://inner.forethought-core:5000/api/v1/inner/system/init"
 
   data = {
     "workspaceSet": {
@@ -380,21 +357,55 @@ def workspace_init():
       "token": settingsMdl.other["workspace"]["token"]
     }
   }
-  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/system/init", json = data, headers = headers)
 
-  return { "status_code": resp.status_code }
+  return call_service_url(url, data)
 
 
+# 安装成功之后，初始化一些 studio 的相关配置
+def studio_init():
+  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
+
+  data = {
+    "script_name": "data_package_task",
+    "func_name": "distribute_data_package",
+    "funcKwargs": {
+      "keys": [
+        "geo",                  # 拨测的地理信息
+        "internal_pipeline",    # 内置 Pipeline 库
+        "measurements_meta",    # 内置 指标字典
+        "dataflux_integration", # 集成包
+        "dataflux_template"     # 内置视图模板
+      ]  
+    }
+  }
+
+  return call_service_url(url, data)
+
+
+# 触发同步视图模板等集成包
 def sync_integration():
-  headers = {"Content-Type": "application/json"}
+  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
   data = {
     "script_name": "fix_update_integration"
   }
 
-  resp = requests.post("http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data", json = data, headers = headers)
+  return call_service_url(url, data)
 
-  return { "status_code": resp.status_code }
+
+# 触发官方 Pipeline 库同步到数据库
+def sync_pipeline():
+  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
+
+  data = {
+    "script_name": "timed_sync_pipeline_template",
+    "func_name": "timed_sync_pull", 
+    "funcKwargs": {
+      "need_sync_pipline": True
+    }
+  }
+
+  return call_service_url(url, data)
 
 
 def init_setting():

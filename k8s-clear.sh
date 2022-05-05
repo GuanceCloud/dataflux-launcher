@@ -1,6 +1,6 @@
 # 清理 configmap
 kubectl delete configmaps core static-resource-nginx integration-nginx -n forethought-core --force --grace-period=0
-kubectl delete configmaps kodo kodo-inner kodo-nginx kodo-x kodo-ws -n forethought-kodo --force --grace-period=0
+kubectl delete configmaps kodo kodo-inner kodo-nginx kodo-x kodo-ws kodo-license -n forethought-kodo --force --grace-period=0
 kubectl delete configmaps front-web-config management-nginx-config front-nginx-config management-web-config -n forethought-webclient --force --grace-period=0
 kubectl delete configmaps message-desk message-desk-worker -n middleware --force --grace-period=0
 kubectl delete configmaps func-config func-inner-config func-worker-config  -n func --force --grace-period=0
@@ -16,7 +16,7 @@ kubectl delete deployments front-webclient management-webclient -n forethought-w
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
-kubectl delete deployments utils-server internal-dataway  data-warehouse -n utils --force --grace-period=0
+kubectl delete deployments utils-server internal-dataway datakit-pl-debug data-warehouse -n utils --force --grace-period=0
 kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 service
@@ -26,7 +26,7 @@ kubectl delete services front-webclient management-webclient -n forethought-webc
 kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete services trigger -n forethought-inner-app --force --grace-period=0
-kubectl delete services utils-server internal-dataway data-warehouse -n utils --force --grace-period=0
+kubectl delete services utils-server internal-dataway datakit-pl-debug data-warehouse -n utils --force --grace-period=0
 kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 ingress

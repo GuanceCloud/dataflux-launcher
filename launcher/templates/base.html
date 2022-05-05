@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="/css/site.css" crossorigin="anonymous" />
         <link rel="stylesheet" href="/vendor/iconfont/style.css" crossorigin="anonymous" />
         <link rel="stylesheet" href="/css/codemirror.css" crossorigin="anonymous" />
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 
         <script src="/vendor/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="/vendor/jquery.validate/jquery.validate.min.js" crossorigin="anonymous"></script>
@@ -57,8 +58,20 @@
                 <!-- </li> -->
                 <li class="divider"></li>
                 <li>
-                  <a href="javascript:void(0);" onclick="setup.sync_integration()">立即同步集成包</a>
+                  <a href="javascript:void(0);" onclick="setup.tls_change_model()">域名 TLS 证书更新</a>
                 </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.sync_integration()">立即同步官方视图模板包</a>
+                </li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.sync_pipeline()">立即同步官方 Pipeline 脚本库</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="javascript:void(0);" onclick="setup.activate_license()">License 激活及 AK/SK 配置</a>
+                </li>
+
               </ul>
             </div>
 
@@ -92,7 +105,7 @@
             ©2013-{{ __common__.year }} 上海驻云信息科技有限公司
         </footer>
 
-        <!-- Large modal -->
+        <!-- 配置信息 Large modal -->
         <div id="settingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -107,6 +120,105 @@
                 <span id="spanYAMLError" class="text-danger">YAML 语法格式不正确！</span>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button id="settingModalButtonOK" type="button" onclick="setup.save_setting()" class="btn btn-primary">保存修改</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TLS 证书更换 Large modal -->
+        <div id="TLSModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">域名 TLS 证书更新</h4>
+              </div>
+              <div class="modal-body" style="height: 500px;">
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="iptCertificatePrivateKey" class="control-label">私钥:</label>
+                      <textarea id="iptCertificatePrivateKey" class="form-control" style="height: 450px; resize: none;" required placeholder="输入私钥，以-----BEGIN RSA PRIVATE KEY-----开头"></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="iptCertificateContent" class="control-label">证书:</label>
+                      <textarea id="iptCertificateContent" class="form-control" style="height: 450px; resize: none;" required placeholder="输入证书，以-----BEGIN CERTIFICATE-----开头"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btnTLSModalButtonOK" type="button" onclick="setup.do_tls_change()" class="btn btn-primary">更新 TLS 证书</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- License 激活与 AK 配置 Large modal -->
+        <div id="licenseModel" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">观测云激活</h4>
+              </div>
+              <div class="modal-body" style="padding: 0;height: 500px;">
+
+                <div class="modal-high-block">
+                  <h4>License 信息：</h4>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label class="control-label">1、扫码申请 License:</label>
+                        <img src="/images/guance.jpeg" style="width: 150px; height: 150px;">
+                      </div>
+                    </div>
+                    <div class="col-md-9">
+                      <div class="form-group">
+                        <label for="iptLicense" class="control-label">2、License 文本:</label>
+                        <textarea id="iptLicense" class="form-control" style="height: 150px; resize: none;" required placeholder="请输入 License 文本"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-high-block">
+                  <h4>BOSS 会员、可用性监测 AK/SK 信息：</h4>
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="form-group">
+                        <label for="iptGuanceAK" class="control-label">AK:</label>
+                        <input type="text" class="form-control" id="iptGuanceAK" name="guanceAK" required placeholder="Access Key">
+                      </div>
+                    </div>
+                    <div class="col-md-7">
+                      <div class="form-group">
+                        <label for="iptGuanceSK" class="control-label">SK:</label>
+                        <input type="text" class="form-control" id="iptGuanceSK" name="guanceSK" required placeholder="Secret Key">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="iptDialDataWay" class="control-label">数据网关地址(用于接收可用性监测结果，需要能从公网访问此数据网关):</label>
+                        <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required placeholder="示例: http(s)://dataway.dataflux.cn?token={}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="activateModalButtonOK" type="button" onclick="setup.do_activate()" class="btn btn-primary">激活</button>
               </div>
             </div>
 

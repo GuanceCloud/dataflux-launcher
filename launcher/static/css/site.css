@@ -66,6 +66,14 @@ footer{
   margin-bottom: 20px;
 }
 
+.modal-high-block{
+  margin: 10px 0;
+  padding: 10px 20px;
+
+  background-color: #f7f7fc;
+  border: 1px solid #f7f7fc;
+}
+
 .page-main .high-block{
   margin: 20px 0;
   padding: 20px 40px;

@@ -128,13 +128,6 @@ DialingServer:
   port: 443
   timeout: 10
 
-  # 此处需要向产品侧索取拨测服务的 AK
-  # 每个部署版本一组 AK 信息
-  ak_id: "{{ other.dial.ak }}"
-  ak_secret: "{{ other.dial.sk }}"
-  
-  # 每个部署的版本有不同的 DataWay 地址
-  # 用于将拨测数据打入到相应部署版本工作空间内
-  # 只要修改 host，保留原样的 ?token={} 参数，格式不要修改
-  open_dataway_url: "{{ other.dial.dataway_url }}?token={}"
-
+# 跨空间授权 邮件通知配置
+WorkspaceShare:
+  enable: true

@@ -493,3 +493,10 @@ def database_update(project):
 
   return errorSeq
 
+
+# 处理一些更新完毕后的事
+def update_finish():
+  autoUpdateStep = AutoUpdateStep()
+  autoUpdateStep.do_after_container_update()
+
+  return True
