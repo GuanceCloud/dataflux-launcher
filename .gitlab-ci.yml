@@ -34,16 +34,11 @@ buildRTM:
     - VDIR=${V[0]}.${V[1]}.${V[2]}
     - REPO=dataflux/$VDIR
     - TAG=${PROJECT}-${V[3]}-${V[4]}
-    - CHART_PATH=`find . -maxdepth 3 -name Chart.yaml`
-    - TEMP=${CHART_PATH%/*}
-
     - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
-    
-    - cp ${CHART_PATH%/*/*}/values.yaml ${CHART_PATH%/*}/values.yaml
-    - sed -i "s,{{repository}},pubrepo.jiagouyun.com/$REPO,g" ${CHART_PATH%/*}/values.yaml
-    - sed -i "s,{{tag}},$TAG,g" ${CHART_PATH%/*}/values.yaml
-    - helm package ${CHART_PATH%/*} --version $TAG --app-version $TAG
-    - helm cm-push ${TEMP##*/}-$TAG.tgz launcher    
+    - sed -e "s,{{repository}},pubrepo.jiagouyun.com/$REPO,g" -e "s,{{tag}},$TAG,g"  charts/values.yaml > charts/launcher/values.yaml
+    - helm package charts/launcher --version $TAG --app-version $TAG
+    - helm cm-push launcher-$TAG.tgz launcher
+    - rm -f launcher-$TAG.tgz
     
   tags:
     - cloudcare-multiarch 
@@ -75,6 +70,6 @@ buildRTMPrev:
 #     - sed -i "s,{{repository}},registry.jiagouyun.com/$REPOSITORY,g" ${CHART_PATH%/*}/values.yaml
 #     - sed -i "s,{{tag}},testing,g" ${CHART_PATH%/*}/values.yaml
 #     - helm package ${CHART_PATH%/*} --version 1.0 --app-version 1.0
-#     - helm cm-push ${TEMP##*/}-1.0.tgz launcher   
+#     - helm cm-push ${TEMP##*/}-1.0.tgz launcher
 #   tags:
-#     - cloudcare-multiarch      
+#     - cloudcare-multiarch
