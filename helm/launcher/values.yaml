@@ -2,65 +2,54 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-namespace: launcher
+
+## @param storageClassName - string - required
+## storageClassName，Launcher storage
+#
 storageClassName: nfs-client
 
-configyaml: "config.yaml"
+## @param configyaml - string - required
+## By default, kubectl is in $home / Find the file named config in the Kube directory
+#
+configyaml: |-
+  apiVersion: v1
+  clusters:
+  - cluster:
+      certificate-authority-data: LS0tLS1CRUdJTiBDRVJUxxxRS0tLS0tCk1JSUM1ekNDQWMrZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJeU1ERXlOVEV4TkRFeE1sb1hEVE15TURFeU16RXhOREV4TWxvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTTJ5CkFTV0tUYVFVMnAyMk5OeVJ1SW00QjV5RStCcUNJSm50UVM3UERBRDNjMnh2TkgydHZHYlZKSmtOMFVmSDJVdWQKdWlkMHE0MW5ZT0Z5ZStyRml1dE1rc3ZYYTdwZ2xaUXE2QjgvYS9ETXZrQmRMUkhvR0poZUZwZUVFQmxNRERreQpJV2c4VHhVS2ovV05jdDdvVHdGTFpjbkxDU0NIQzVqNWQ4enRnd0o5Z1UxZnd1Unh6aGpibnVaZVdKZHdvNlgrCjZJMXZOVGhtclh1TCtxdGMzbmhNeFhGcElFeEdHb3lKVkh4aUorQ0NwbTBWMFp1eEdEVExxTWhKOWMxZFNtalMKMUUyZGtqa05OWmIwRDAzVXJBNVZ6VURPM1ZKbzhVTGprWnBYanhZeitNeVNlL2JqWThGWmRrUmpJM0hHU1UzUQpxNFhyeUUyN2dlY3ZrNC91Lzg4Q0F3RUFBYU5DTUVBd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZEQmdXcUpqbDdTbldJUURvazlONVdhd0hoVEFNQTBHQ1NxR1NJYjMKRFFFQkN3VUFBNElCQVFDaklCUFBCQ3dBM2dVQUEwL3RHYmw3TDVubG9PcmJPZ0IyeTFpaTBteHRvSHIrNjBXSQowS1pEeHhLS05EZG12OTI3RXhYUHE1ZWpCa29mQlRnV3pLSTFmZjRYeUdaQk9CRlc0NXdscS9hT3I5NnJ3N21FCkMrN1JiZDBILzhsaXRQYnFoYm1Eb3FhckZxR0M0U3FIQVRXTWNyTEp4dGkvRXZ3d1A5ZjlIaFlLZzNPeWtNNDIKemdtR09GdXBQZ0NnVXlnNmN5MUlsS0NlMDhLMkRnUVF4U1pZK21wMG9DTVFHTnVGa012cDBsY3lQcFZlVmU1NQp2Umo4Vi8yQTJFaW1oUUdVZERNRnFjcXNORjc0Mm5IZ0lNSmtMem1lWXZXL1hGanRQbWZlS0pReG1ndkJNSEV5Clh1OFJDUHhvRmN6UlhGNTJsNm5WVFBZTTlFYTJqeXoyY0M5SQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+      server: https://10.200.14.87:6443
+    name: global
+  contexts:
+  - context:
+      cluster: global
+      user: admin
+    name: admin@global
+  current-context: admin@global
+  kind: Config
+  preferences: {}
+  users:
+  - name: admin
+    user:
+      token: 24Bjxy80xsQn10xP8IWBnFB
+
 
 
 image:
-  repository: {{repository}}
+  repository: "pubrepo.jiagouyun.com/dataflux/1.37.86"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: {{tag}}
+  tag: "launcher-bd2650e-1648456839"
 
 
 service:
-  type: ClusterIP
+  type: ClusterIP  # ClusterIP NodePort LoadBalancer
   port: 5000
+  nodePort: 30001
 
 ingress:
-  ## Set to true to enable ingress record generation
-  enabled: ture
-
-  ## Set this to true in order to add the corresponding annotations for cert-manager
-  certManager: false
-
-  ## When the ingress is enabled, a host pointing to this will be created
-  hostname: launcher.test.com
-
-  ## Ingress annotations done as key:value pairs
-  ## For a full list of possible ingress annotations, please see
-  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
-  ##
-  ## If tls is set to true, annotation ingress.kubernetes.io/secure-backends: "true" will automatically be set
-  ## If certManager is set to true, annotation kubernetes.io/tls-acme: "true" will automatically be set
+  enabled: true
+  className: ""
+  hostName: launcher.my.com
   annotations: {}
-  #  kubernetes.io/ingress.class: nginx
-
-  ## The list of additional hostnames to be covered with this ingress record.
-  ## Most likely the hostname above will be enough, but in the event more hosts are needed, this is an array
-  ## hosts:
-  ## - name: wordpress.local
-  ##   path: /
-
-  ## The tls configuration for the ingress
-  ## see: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
-  ## tls:
-  ## - hosts:
-  ##     - wordpress.local
-  ##   secretName: wordpress.local-tls
-
-  secrets:
-  ## If you're providing your own certificates, please use this to add the certificates as secrets
-  ## key and certificate should start with -----BEGIN CERTIFICATE----- or
-  ## -----BEGIN RSA PRIVATE KEY-----
-  ##
-  ## name should line up with a tlsSecret set further up
-  ## If you're using cert-manager, this is unneeded, as it will create the secret for you if it is not set
-  ##
-  ## It is also possible to create and manage the certificates outside of this helm chart
-  ## Please see README.md for more information
-  # - name: wordpress.local-tls
-  #   key:
-  #   certificate:
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  tls: ""

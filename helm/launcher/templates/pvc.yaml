@@ -5,7 +5,6 @@ metadata:
   annotations:
     volume.beta.kubernetes.io/storage-provisioner: "kubernetes.io/nfs"
   name: persistent-data
-  # namespace: {{ .Values.namespace }}
 spec:
   accessModes:
   - ReadWriteOnce

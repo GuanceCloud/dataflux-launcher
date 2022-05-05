@@ -1,6 +1,9 @@
+annotations:
+  catalog.cattle.io/release-name: launcher
 apiVersion: v2
 name: launcher
 description: A Helm chart for dataflux-launcher
+icon: https://static.guance.com/dataflux-icon/guance.ico
 
 # A chart can be either an 'application' or a 'library' chart.
 #

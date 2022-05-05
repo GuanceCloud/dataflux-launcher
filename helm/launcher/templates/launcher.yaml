@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: launcher
-  # namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
@@ -51,5 +50,11 @@ spec:
       - name: persistent-data
         persistentVolumeClaim:
           claimName: persistent-data
+      - configMap:
+          defaultMode: 256
+          name: launcher-settings
+          optional: false
+        name: settings
+
   
 
