@@ -5,13 +5,13 @@ apps:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.3
-    datakit: datakit:1.2.16
-    core: 1.39.91:core-5bd4c4f1-1650979666
-    kodo: 1.39.91:kodo-6cd4aa02-1650979666
-    front-webclient: 1.39.91:front-webclient-434c7e6a9-1650979666
-    management-webclient: 1.39.91:management-webclient-6e3742d-1650979666
-    message-desk: 1.39.91:message-desk-a8aa5c3-1650979666
-    message-desk-worker: 1.39.91:message-desk-worker-8142aa5-1650979666
-    dataflux-func: 1.39.91:dataflux-func-6960b2a-1650979666
-    utils-server: 1.39.91:utils-server-48799ca-1650979666
-  version: 1.39.91
+    datakit: datakit:1.2.17
+    core: 1.39.92:core-5bd4c4f1-1651715327
+    kodo: 1.39.92:kodo-9bee7a18-1651715327
+    front-webclient: 1.39.92:front-webclient-8a6fe6728-1651715327
+    management-webclient: 1.39.92:management-webclient-6e3742d-1651715327
+    message-desk: 1.39.92:message-desk-a8aa5c3-1651715327
+    message-desk-worker: 1.39.92:message-desk-worker-8142aa5-1651715327
+    dataflux-func: 1.39.92:dataflux-func-6960b2a-1651715327
+    utils-server: 1.39.92:utils-server-48799ca-1651715327
+  version: 1.39.92
