@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-config
+  # namespace: {{ .Values.namespace }}
+data:
+  config.yaml: |- {{ .Values.configyaml | nindent 4}}
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: launcher-settings
+data:
+  settings.yaml: ''

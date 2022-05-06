@@ -1,0 +1,75 @@
+questions:
+#image Configurationss
+- variable: defaultImage
+  default: true
+  description: "使用默认 Launcher 镜像或指定自定义镜像"
+  label: Use Default Launcher Image
+  type: boolean
+  show_subquestion_if: false
+  group: "Container Images"
+  subquestions:
+  - variable: image.repository
+    default: "Launcher images"
+    description: "Launcher images name"
+    type: string
+    label: Launcher Image Name
+  - variable: image.tag
+    default: "latest"
+    description: "Launcher Image Tag"
+    type: string
+    label: Launcher Image Tag
+
+# 存储设置
+- variable: storageClassName
+  required: true
+  default: ""
+  description: "启用共享存储"
+  type: storageclass
+  label: Storage
+  group: "Launcher Storage"
+
+- variable: configyaml
+  required: true
+  default: ""
+  description: "kubernetes kubeconfig 配置"
+  type: string
+  label: Kubernetes KubeConfig
+  group: "Launcher Configuration"
+
+
+# Launcher Network
+- variable: ingress.enabled
+  default: false
+  description: "是否启用 ingress 访问"
+  type: boolean
+  label: Enable Ingress
+  group: "Launcher Network"
+
+- variable: ingress.hostName
+  default: ""
+  description: "访问域名"
+  type: string
+  label: Enable Ingress
+  group: "Launcher Network"
+  show_if: "ingress.enabled=true"
+
+- variable: service.type
+  default: "ClusterIP"
+  type: enum
+  group: "Service Settings"
+  options:
+    - "ClusterIP"
+    - "NodePort"
+    - "LoadBalancer"
+  required: true
+  label: Service Type
+  show_subquestion_if: "NodePort"
+  subquestions:
+  - variable: service.nodePort
+    default: ""
+    description: "NodePort port number (to set explicitly, choose port between 30000-32767)"
+    type: int
+    min: 30000
+    max: 32767
+    label: Service NodePort
+
