@@ -37,8 +37,6 @@ spec:
           name: persistent-data
         workingDir: /config/cloudcare-forethought-setup
       dnsPolicy: ClusterFirst
-      imagePullSecrets:
-      - name: registry-key
       restartPolicy: Always
       schedulerName: default-scheduler
       volumes:
