@@ -1859,3 +1859,12 @@ upgrade:
     curl: |-
       # 【inner api 服务器执行】执行 fix_2022_04_25_sso_setting_account 操作 更新sso配置表及accout表
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_04_25_sso_setting_account"}'
+
+
+  # 2022.05.06 迭代
+  - seq: 53
+    database: |-
+      -- 其他 saas-xxx-upgrade.yaml 存在独立更新命令
+      
+      -- 免费额度配置参数更新  使各个节点的使用量限制与 SAAS 版杭州节点保持一致
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 3000, \"job\": 100000, \"rum_pv\": 2000, \"logs\": 1000000, \"trace\": 8000, \"dialing_api\": 200000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
