@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-04-25 05:54:44 +0000
+# Generation Time: 2022-05-19 01:21:50 +0000
 # ************************************************************
 
 
@@ -1634,6 +1634,48 @@ CREATE TABLE `main_subscription` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `db_isuuid` (`dbUUID`),
   KEY `kapa_uuid` (`kapaUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table main_tdengine_db
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_tdengine_db`;
+
+CREATE TABLE `main_tdengine_db` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 tddb_',
+  `db` varchar(48) NOT NULL DEFAULT '' COMMENT 'DB 名称',
+  `tdInstanceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'instance的UUID',
+  `rpName` varchar(48) NOT NULL DEFAULT '' COMMENT '数据保留策略名',
+  `status` int(11) NOT NULL COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `createAt` int(11) NOT NULL,
+  `deleteAt` int(11) DEFAULT NULL,
+  `updateAt` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`,`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table main_tdengine_instance
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_tdengine_instance`;
+
+CREATE TABLE `main_tdengine_instance` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 tden_',
+  `host` json NOT NULL,
+  `Authorization` json NOT NULL,
+  `dbcount` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `createAt` int(11) NOT NULL,
+  `deleteAt` int(11) NOT NULL,
+  `updateAt` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`uuid`),
+  UNIQUE KEY `uuid_UNIQUE` (`uuid`),
+  UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

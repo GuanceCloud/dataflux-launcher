@@ -1868,3 +1868,79 @@ upgrade:
       
       -- 免费额度配置参数更新  使各个节点的使用量限制与 SAAS 版杭州节点保持一致
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 3000, \"job\": 100000, \"rum_pv\": 2000, \"logs\": 1000000, \"trace\": 8000, \"dialing_api\": 200000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+    curl: |-
+      
+      # 【inner api 服务器执行】同步更新视图模版
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true}}' \
+      --compressed
+
+
+  # 2022.05.19 迭代
+  - seq: 53
+    config:
+      innerApp: |-
+        # inner app 需要在 【server】配置下追加`enterpriseSignupIdCodeAge`用于设置企业版注册时，每一步的idCode的缓存有效时间
+        [server]
+        enterpriseSignupIdCodeAge = 1800
+        
+        # inner app 新增配置 BossServer 配置
+        [BossServer]
+        akId = "与DF侧【CloudCareServer】的 ak_id 对应"
+        akSecret = "与DF侧【CloudCareServer】的 ak_secret 对应"
+        server = "http://testing-zc-portal.cloudflux.cn" 
+        timeout = 6
+
+      core: |-
+        # 如果需要从 ES 中查询计量数据，则需设置 
+        MeteringStatisticsFromToEs: true
+        
+        如果需要使用 TDengine 替换 Influxdb 则需设置
+        OpenTDengineServer: true
+
+    database: |-
+      -- 创建 tdengine 实例配置表
+      CREATE TABLE `main_tdengine_instance` (
+        `id` int(11) NOT NULL,
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 tden_',
+        `host` json NOT NULL,
+        `Authorization` json NOT NULL,
+        `dbcount` int(11) NOT NULL,
+        `status` int(11) NOT NULL,
+        `createAt` int(11) NOT NULL,
+        `deleteAt` int(11) NOT NULL,
+        `updateAt` int(11) NOT NULL,
+        PRIMARY KEY (`id`,`uuid`),
+        UNIQUE KEY `uuid_UNIQUE` (`uuid`),
+        UNIQUE KEY `id_UNIQUE` (`id`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 创建 tdengine 的 db 表
+      CREATE TABLE `main_tdengine_db` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 tddb_',
+        `db` varchar(48) NOT NULL DEFAULT '' COMMENT 'DB 名称',
+        `tdInstanceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'instance的UUID',
+        `rpName` varchar(48) NOT NULL DEFAULT '' COMMENT '数据保留策略名',
+        `status` int(11) NOT NULL COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `createAt` int(11) NOT NULL,
+        `deleteAt` int(11) DEFAULT NULL,
+        `updateAt` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`,`uuid`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+    curl: |-
+      
+      # 【inner api 服务器执行】同步更新视图模版
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true}}' \
+      --compressed
+      
+      # 【特别注意】 - 计量数据需要迁移至ES的情况下才能执行; 创建 ES 计量数据索引模版
+      curl --location --request POST 'http://kodo-inner.forethought-kodo:9527/v1/es/create_metering'
+        
+      # 【特别注意】 - 计量数据需要迁移至ES的情况下才能执行; 执行计量数据迁移命令, 默认迁移90天的数据至 ES 
+      curl --location --request POST 'http://kodo-inner.forethought-kodo:9527/v1/migration/influxdb_to_es'
