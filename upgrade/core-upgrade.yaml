@@ -1897,7 +1897,7 @@ upgrade:
         # 如果需要从 ES 中查询计量数据，则需设置为 true 
         MeteringStatisticsFromToEs: false
         
-        如果需要使用 TDengine 替换 Influxdb 则需设置为 true
+        # 如果需要使用 TDengine 替换 Influxdb 则需设置为 true
         OpenTDengineServer: false
 
     database: |-
