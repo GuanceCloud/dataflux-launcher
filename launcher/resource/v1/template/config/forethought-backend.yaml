@@ -30,6 +30,13 @@ kodo:
   versionUrl: "https://static.guance.com/dataway/version"
   datakitVersionUrl: "https://static.guance.com/datakit/version"
 
+# 如果需要从 ES 中查询计量数据，则需设置为 true
+MeteringStatisticsFromToEs: false
+
+# 如果需要使用 TDengine 替换 Influxdb 则需设置为 true
+OpenTDengineServer: false
+
+
 # kodo metric 配置自动更新
 KodoMetricInnerSet:
   isOpen: true
