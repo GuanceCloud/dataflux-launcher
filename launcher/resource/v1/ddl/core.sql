@@ -640,6 +640,7 @@ CREATE TABLE `biz_pipeline` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID，带 pl- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `category` varchar(256) NOT NULL DEFAULT '',
   `name` varchar(1024) NOT NULL DEFAULT '' COMMENT 'PL文件名',
   `content` text NOT NULL COMMENT '原始内容',
   `testData` text NOT NULL,

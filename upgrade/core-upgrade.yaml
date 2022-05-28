@@ -1879,7 +1879,7 @@ upgrade:
 
 
   # 2022.05.19 迭代
-  - seq: 53
+  - seq: 54
     config:
       innerApp: |-
         # inner app 需要在 【server】配置下追加`enterpriseSignupIdCodeAge`用于设置企业版注册时，每一步的idCode的缓存有效时间
@@ -1894,11 +1894,11 @@ upgrade:
         timeout = 6
 
       core: |-
-        # 如果需要从 ES 中查询计量数据，则需设置 
-        MeteringStatisticsFromToEs: true
+        # 如果需要从 ES 中查询计量数据，则需设置为 true 
+        MeteringStatisticsFromToEs: false
         
-        如果需要使用 TDengine 替换 Influxdb 则需设置
-        OpenTDengineServer: true
+        如果需要使用 TDengine 替换 Influxdb 则需设置为 true
+        OpenTDengineServer: false
 
     database: |-
       -- 创建 tdengine 实例配置表
@@ -1930,6 +1930,10 @@ upgrade:
         `updateAt` int(11) DEFAULT NULL,
         PRIMARY KEY (`id`,`uuid`)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+      
+      -- 为 biz_pipeline 表新增字段`category`; 本次迭代仅数据库侧增加字段;
+      ALTER TABLE `biz_pipeline` 
+      ADD COLUMN `category` VARCHAR(256) NOT NULL DEFAULT '' AFTER `workspaceUUID`;
 
     curl: |-
       
