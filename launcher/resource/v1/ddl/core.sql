@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-05-19 01:21:50 +0000
+# Generation Time: 2022-06-01 06:12:37 +0000
 # ************************************************************
 
 
@@ -876,7 +876,7 @@ CREATE TABLE `biz_snapshots` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
   `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
-  `type` enum('logging','keyevent','tracing','object','dialing_task','security','rum','measurement','other','scene_dashboard','dashboard','ci') NOT NULL DEFAULT 'logging' COMMENT '快照类型',
+  `type` varchar(64) NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1609,6 +1609,33 @@ CREATE TABLE `main_manage_account` (
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table main_metric_rp
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_metric_rp`;
+
+CREATE TABLE `main_metric_rp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀metrp_',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `dbUUID` varchar(48) NOT NULL COMMENT 'influx/TDengine 对应实例的DB名的uuid(来源不同的uuid, 其前缀不同)',
+  `dbName` varchar(48) NOT NULL DEFAULT '' COMMENT 'DB 原始名称',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '指标集名称',
+  `duration` varchar(48) NOT NULL DEFAULT '' COMMENT '指标集的数据保留时间，此处单位为小时(d), 例如1d,7d',
+  `rpName` varchar(48) NOT NULL COMMENT '数据保留策略名称',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
