@@ -427,3 +427,7 @@ upgradeInfo:
   # 2022-04-18 迭代
   - seq: 24
     func_exec: script_20220418
+
+  # 2022-06-06 迭代
+  - seq: 25
+    func_exec: script_20220606
