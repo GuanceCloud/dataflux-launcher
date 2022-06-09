@@ -103,10 +103,10 @@ def __ingress_latest_yaml():
 def __do_ingress_apply(ingressYaml):
   # 创建所有 ingress
   cmd = "kubectl apply -f {}".format(ingressYaml)
-  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, stderr=subprocess.STDOUT)
   output, err = p.communicate()
 
-  return str(output or "", encoding = "utf-8")
+  return str(output or b"", encoding = "utf-8")
 
 
 def ingress_apply():
