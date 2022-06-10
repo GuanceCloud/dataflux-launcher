@@ -15,7 +15,7 @@ def __do_call(url, method, params, data, headers):
   else:
     raise Exception("Method Not Allowed")
 
-  return resp.json(), resp.status_code
+  return None if not resp.text else resp.json(), resp.status_code
 
 
 def do_get(url, params = None, data = None,  headers = {"Content-Type": "application/json"}):
