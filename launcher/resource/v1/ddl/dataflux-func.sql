@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: dataflux_func
 -- ------------------------------------------------------
--- Server version   5.7.36
+-- Server version	5.7.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -63,6 +63,7 @@ CREATE TABLE `biz_main_auth_link` (
   `throttlingJSON` json DEFAULT NULL COMMENT '限流JSON（value="<From Parameter>"表示从参数获取）',
   `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'API' COMMENT '来源 API|UI',
   `showInDoc` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在文档中显示',
+  `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
   `note` text COMMENT '备注',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -79,7 +80,7 @@ CREATE TABLE `biz_main_auth_link` (
 
 LOCK TABLES `biz_main_auth_link` WRITE;
 /*!40000 ALTER TABLE `biz_main_auth_link` DISABLE KEYS */;
-INSERT INTO `biz_main_auth_link` (`seq`, `id`, `funcId`, `funcCallKwargsJSON`, `tagsJSON`, `apiAuthId`, `expireTime`, `throttlingJSON`, `origin`, `showInDoc`, `isDisabled`, `note`, `createTime`, `updateTime`) VALUES (1,'auln-plus','demo__basic.plus','{\"x\":\"INPUT_BY_CALLER\",\"y\":\"INPUT_BY_CALLER\"}',NULL,NULL,NULL,'{}','UI',0,0,NULL,'2021-07-19 18:13:18','2021-07-19 18:13:18');
+INSERT INTO `biz_main_auth_link` (`seq`, `id`, `funcId`, `funcCallKwargsJSON`, `tagsJSON`, `apiAuthId`, `expireTime`, `throttlingJSON`, `origin`, `showInDoc`, `taskInfoLimit`, `isDisabled`, `note`, `createTime`, `updateTime`) VALUES (1,'auln-plus','demo__basic.plus','{\"x\":\"INPUT_BY_CALLER\",\"y\":\"INPUT_BY_CALLER\"}',NULL,NULL,NULL,'{}','UI',0,NULL,0,NULL,'2021-07-19 18:13:18','2021-07-19 18:13:18');
 /*!40000 ALTER TABLE `biz_main_auth_link` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -976,7 +977,7 @@ CREATE TABLE `wat_main_user` (
 
 LOCK TABLES `wat_main_user` WRITE;
 /*!40000 ALTER TABLE `wat_main_user` DISABLE KEYS */;
-INSERT INTO `wat_main_user` (`seq`, `id`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`) VALUES (1,'u-admin','admin',NULL,'Administrator',NULL,NULL,'sa','*',0,'2017-07-28 18:08:03','2021-10-30 17:48:12');
+INSERT INTO `wat_main_user` (`seq`, `id`, `username`, `passwordHash`, `name`, `mobile`, `markers`, `roles`, `customPrivileges`, `isDisabled`, `createTime`, `updateTime`) VALUES (1,'u-admin','admin',NULL,'Administrator',NULL,NULL,'sa','*',0,'2022-06-14 04:39:53','2022-06-14 04:39:53');
 /*!40000 ALTER TABLE `wat_main_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -989,4 +990,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-17 20:25:23
+-- Dump completed on 2022-06-14 12:47:28
