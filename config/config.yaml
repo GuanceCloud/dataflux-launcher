@@ -157,6 +157,11 @@ services:
       image: front-webclient
       replicas: 1
 
+    - key: dataflux-doc
+      name: 文档中心
+      image: dataflux-doc
+      replicas: 1
+
     configmaps:
     - key: frontWeb
       mapname: front-web-config
@@ -172,6 +177,13 @@ services:
       services:
       - front-webclient
       template: front-nginx.conf
+
+    - key: datafluxDocNginx
+      mapname: dataflux-doc-nginx-config
+      mapkey: nginx.conf
+      services:
+      - dataflux-doc
+      template: dataflux-doc-nginx.conf
 
     - key: managementWeb
       mapname: management-web-config
@@ -626,6 +638,7 @@ influxDB:
 defaultSubdomain:
   console: dataflux
   consoleApi: df-api
+  docs: df-docs
   management: df-management
   managementApi: df-management-api
   # websocket: df-websocket

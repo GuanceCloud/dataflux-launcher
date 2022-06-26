@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataflux-doc
+  namespace: forethought-webclient
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-webclient-dataflux-doc
+  strategy:
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-webclient-dataflux-doc
+    spec:
+      containers:
+      - image: {{ config.fullImagePath }}
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: dataflux-doc
+        ports:
+        - containerPort: 80
+          name: 80tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: dataflux-doc-nginx-config
+      imagePullSecrets:
+      - name: registry-key
+      volumes:
+      - configMap:
+          defaultMode: 292
+          name: dataflux-doc-nginx-config
+          optional: false
+        name: dataflux-doc-nginx-config
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: dataflux-doc
+  namespace: forethought-webclient
+spec:
+  ports:
+  - name: 80tcp02
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: deployment-forethought-webclient-dataflux-doc
+  type: ClusterIP

@@ -102,6 +102,8 @@ rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo" "
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webclient.git" "front-webclient" "cloudcare-front/cloudcare-forethought-webclient"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webmanage.git" "management-webclient" "cloudcare-front/cloudcare-forethought-webmanage"
 
+rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/zy-docs/dataflux-doc.git"  "dataflux-doc" "cloudcare-front/dataflux-doc"
+
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk" "middlewares/message-desk"
 rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.git" "message-desk-worker" "middlewares/message-desk-worker"
 

@@ -143,6 +143,34 @@ status:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: dataflux-doc
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.docs }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          service: 
+            name: dataflux-doc
+            port: 
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.docs }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: management-webclient
   namespace: forethought-webclient
 spec:

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 workDir=$(pwd)
-allProject="cloudcare-forethought-backend cloudcare-forethought-webclient cloudcare-forethought-setup cloudcare-forethought-webmanage kodo dataflux-func message-desk message-desk-worker screenhot-server"
+allProject="cloudcare-forethought-backend cloudcare-forethought-webclient cloudcare-forethought-setup cloudcare-forethought-webmanage kodo dataflux-func dataflux-doc message-desk message-desk-worker screenhot-server"
 
 branch=$1
 

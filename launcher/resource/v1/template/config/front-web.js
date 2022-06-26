@@ -18,5 +18,6 @@ window.DEPLOYCONFIG = {
     rumDataEnv: 'prod',
     shrineApiUrl: '',
     upgradeUrl: '',
-    rechargeUrl: ''
+    rechargeUrl: '',
+    docDomain: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.docs }}.{{ domain.domain }}'
 };

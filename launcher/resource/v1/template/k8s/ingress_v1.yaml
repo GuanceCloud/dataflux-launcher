@@ -126,6 +126,31 @@ status:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
+  name: dataflux-doc
+  namespace: forethought-webclient
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.docs }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: dataflux-doc
+          servicePort: 80
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.docs }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
   name: management-webclient
   namespace: forethought-webclient
 spec:

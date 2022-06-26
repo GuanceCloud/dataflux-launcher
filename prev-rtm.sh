@@ -151,6 +151,8 @@ function start(){
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webclient.git" "front-webclient"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare/cloudcare-forethought-webmanage.git" "management-webclient"
 
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/zy-docs/dataflux-doc.git"  "dataflux-doc"
+
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.git" "message-desk-worker"
 
