@@ -1982,3 +1982,67 @@ upgrade:
       -- 更新使用量统计公式（非出账单）
       INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"ts\": {\"countEquation\": \"max(0, ts_count - count * 300)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
+
+  # 2022.06.21 迭代
+  - seq: 56
+    confg:
+      innerApp: |-
+        ; server 配置项下追加`cloudAcntBindWkspIdCodeAge`配置，设置绑定云账号操作的缓存时长
+        [server]
+        cloudAcntBindWkspIdCodeAge = 1800
+        
+        ; 阿里云云市场跳转相关配置, 阿里云节点需要设置 isOpen=true, 其他节点设置为false
+        [aliyunCloudMarket]
+        isOpen = false
+        secret = "云市场的secret"
+    
+    database: |-
+      
+      -- 基础对象标签信息表
+      CREATE TABLE `biz_object_label` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一ID,用于获取具体对象的标签',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `labels` json DEFAULT NULL COMMENT '标签信息',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `label_uuid` (`workspaceUUID`,`uuid`) COMMENT '由 workspaceUUID,uuid 唯一确定'
+      ) comment='基础对象标签信息' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 调整 时序数据库实例表, 新增数据库类型字段 和 优先级字段
+      ALTER TABLE `main_influx_instance` 
+      ADD COLUMN `dbType` ENUM('influxdb', 'tdengine') NOT NULL DEFAULT 'influxdb' COMMENT '实例的引擎类型' AFTER `pwd`,
+      ADD COLUMN `priority` INT(11) NOT NULL DEFAULT '50' COMMENT '新建DB时选择实例的依据，默认选择优先级最高的实例创建DB' AFTER `dbType`;
+      
+      -- 调整时序数据库 db 表， 新增db引擎类型字段
+      ALTER TABLE `main_influx_db` 
+      ADD COLUMN `dbType` ENUM('influxdb', 'tdengine') NULL DEFAULT 'influxdb' AFTER `cqrp`;
+      
+      -- 工作空间表新增ES索引是否聚合的标识字段, 工作空间新增字段`supportJsonMessage` 用于标识工作空间是否支持 jsonMessage
+      ALTER TABLE main_workspace ADD COLUMN esIndexMerged BOOLEAN DEFAULT false COMMENT '空间ES索引是否合并，默认值是false，不合并'  AFTER `billingState`, 
+      ADD COLUMN `supportJsonMessage` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '空间是否支持JSON类型的message字段，默认是false，不使用JSON类型的message' AFTER `esIndexMerged`;
+      
+      -- RUM 配置表新增 自定义标识字段
+      ALTER TABLE `biz_rum_cfg` 
+      ADD COLUMN `customIdentity` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '用户自定义标识' AFTER `jsonContent`;
+      
+      -- 为 main_es_instance 添加 versionType 区分集群版本
+      ALTER TABLE main_es_instance ADD COLUMN versionType enum('free', 'pay', 'unlimited') DEFAULT 'unlimited' COMMENT '集群类型，free免费用户使用，pay付费用户使用，unlimited没有限制' AFTER `extend`;
+      
+      -- pipeline 表添加 extend 字段，支持存 json 数据
+      alter table biz_pipeline add column `extend` json DEFAULT NULL COMMENT '额外配置数据' after `isSysTemplate`;
+      
+      -- 初始化 pipeline 表新增的 extend 字段的初始值
+      update biz_pipeline set extend='{}' where extend is NULL;
+      
+      -- 设置 biz_pipeline 表中历史数据的 category 
+      update biz_pipeline set category='logging' where status!=3 and category='' and isSysTemplate=0;
+
+    curl: |-
+
+      # 【inner api 服务器执行】更新进程类别为基础对象类别，2022-06-21版本后进程类别合入基础对象类别
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_06_21_process_checker"}'
+
+

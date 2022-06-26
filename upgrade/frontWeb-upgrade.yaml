@@ -70,3 +70,12 @@ upgradeInfo:
 
         // pass版本是否可以访问公网, 1 表示可以  0 表示不可以, 默认为1即可以访问
         passPublicNetwork: 1,
+
+
+  - seq: 10
+    config:
+      frontWeb: |-
+
+        // 新增的配置项
+        // 部署私有帮助中心的域名，以客户实际部署需要的域名为准
+        docDomain: 'https://df-docs.xx.com'

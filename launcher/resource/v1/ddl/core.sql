@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-06-01 06:12:37 +0000
+# Generation Time: 2022-06-20 12:18:49 +0000
 # ************************************************************
 
 
@@ -580,6 +580,25 @@ CREATE TABLE `biz_object_class_cfg` (
 
 
 
+# Dump of table biz_object_label
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_object_label`;
+
+CREATE TABLE `biz_object_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一ID,用于获取具体对象的标签',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `labels` json DEFAULT NULL COMMENT '标签信息',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `label_uuid` (`workspaceUUID`,`uuid`) COMMENT '由 workspaceUUID,uuid 唯一确定'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基础对象标签信息';
+
+
+
 # Dump of table biz_object_relation_graph
 # ------------------------------------------------------------
 
@@ -645,6 +664,7 @@ CREATE TABLE `biz_pipeline` (
   `content` text NOT NULL COMMENT '原始内容',
   `testData` text NOT NULL,
   `isSysTemplate` int(1) DEFAULT '0' COMMENT '是否为系统模版',
+  `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -771,6 +791,7 @@ CREATE TABLE `biz_rum_cfg` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rum- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `jsonContent` json NOT NULL COMMENT '额外拓展字段',
+  `customIdentity` varchar(48) NOT NULL DEFAULT '' COMMENT '用户自定义标识',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1372,6 +1393,7 @@ CREATE TABLE `main_es_instance` (
   `version` varchar(48) NOT NULL,
   `timeout` varchar(48) DEFAULT '60s' COMMENT '超时时间设置',
   `extend` json DEFAULT NULL,
+  `versionType` enum('free','pay','unlimited') DEFAULT 'unlimited' COMMENT '集群类型，free免费用户使用，pay付费用户使用，unlimited没有限制',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1427,6 +1449,7 @@ CREATE TABLE `main_influx_db` (
   `influxRpUUID` varchar(48) NOT NULL DEFAULT '' COMMENT 'influx rp uuid',
   `influxRpName` varchar(48) NOT NULL DEFAULT '' COMMENT 'influx dbrp name',
   `cqrp` varchar(48) NOT NULL,
+  `dbType` enum('influxdb','tdengine') DEFAULT 'influxdb',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1454,6 +1477,8 @@ CREATE TABLE `main_influx_instance` (
   `dbcount` int(11) NOT NULL DEFAULT '0' COMMENT '当前实例的DB总数量',
   `user` varchar(64) NOT NULL DEFAULT '',
   `pwd` varchar(64) NOT NULL DEFAULT '',
+  `dbType` enum('influxdb','tdengine') NOT NULL DEFAULT 'influxdb' COMMENT '实例的引擎类型',
+  `priority` int(11) NOT NULL DEFAULT '50' COMMENT '新建DB时选择实例的依据，默认选择优先级最高的实例创建DB',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1738,6 +1763,8 @@ CREATE TABLE `main_workspace` (
   `durationSet` json DEFAULT NULL COMMENT '数据保留时长设置',
   `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
+  `esIndexMerged` tinyint(1) DEFAULT '0' COMMENT '空间ES索引是否合并，默认值是false，不合并',
+  `supportJsonMessage` tinyint(1) NOT NULL DEFAULT '0' COMMENT '空间是否支持JSON类型的message字段，默认是false，不使用JSON类型的message',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
