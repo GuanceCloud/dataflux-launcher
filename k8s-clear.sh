@@ -1,7 +1,7 @@
 # 清理 configmap
 kubectl delete configmaps core static-resource-nginx integration-nginx -n forethought-core --force --grace-period=0
 kubectl delete configmaps kodo kodo-inner kodo-nginx kodo-x kodo-ws kodo-license -n forethought-kodo --force --grace-period=0
-kubectl delete configmaps front-web-config management-nginx-config front-nginx-config management-web-config -n forethought-webclient --force --grace-period=0
+kubectl delete configmaps front-web-config management-nginx-config front-nginx-config management-web-config dataflux-doc-nginx-config -n forethought-webclient --force --grace-period=0
 kubectl delete configmaps message-desk message-desk-worker -n middleware --force --grace-period=0
 kubectl delete configmaps func-config func-inner-config func-worker-config  -n func --force --grace-period=0
 kubectl delete configmaps trigger-conf -n forethought-inner-app --force --grace-period=0
@@ -12,7 +12,7 @@ kubectl delete configmaps requirements-config user-config -n func2 --force --gra
 # 清理 deployment
 kubectl delete deployments front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
 kubectl delete deployments kodo kodo-inner kodo-nginx kodo-x kodo-ws -n forethought-kodo --force --grace-period=0
-kubectl delete deployments front-webclient management-webclient -n forethought-webclient --force --grace-period=0
+kubectl delete deployments front-webclient management-webclient dataflux-doc -n forethought-webclient --force --grace-period=0
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
@@ -31,7 +31,7 @@ kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worke
 
 # 清理 ingress
 kubectl delete ingress front-backend management-backend static-resource-nginx integration-nginx open-api websocket -n forethought-core --force --grace-period=0
-kubectl delete ingress front-webclient management-webclient -n forethought-webclient --force --grace-period=0
+kubectl delete ingress front-webclient management-webclient dataflux-doc -n forethought-webclient --force --grace-period=0
 kubectl delete ingress func -n func --force --grace-period=0
 kubectl delete ingress server -n func2 --force --grace-period=0
 
