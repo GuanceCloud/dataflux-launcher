@@ -128,6 +128,10 @@
                 {% elif pageData.elasticsearch.provider == 'aws'  %}
                 <p class="form-control-static">
                   AWS 上的 OpenSearch 云产品{{ '（开启 Ultrawarm 数据节点）' if pageData.elasticsearch.isUltrawarm }}
+                </p>%}
+                {% elif pageData.elasticsearch.provider == 'huawei'  %}
+                <p class="form-control-static">
+                  Huawei 云上的 OpenSearch 云产品
                 </p>
                 {% endif %}
               </div>

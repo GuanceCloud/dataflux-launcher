@@ -67,6 +67,8 @@ def init_elasticsearch():
         provider = provider + '_opensearch'
       else:
         provider = provider + '_ultrawarm'
+    elif provider == 'huawei':
+      provider = provider + '_opensearch'
 
     authorization = {"admin": {"password": instance['password'], "username": instance['user'] }}
     configJson = {'provider': provider}
