@@ -1,18 +1,18 @@
 apps:
   registry: pubrepo.jiagouyun.com
-  image_dir: dataflux-prev/
+  image_dir: dataflux/
   images:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.6
     datakit: datakit:1.4.7
-    core: 1.44.98.3:core-4e72e740
-    kodo: 1.44.98.3:kodo-b1763728
-    front-webclient: 1.44.98.3:front-webclient-ead2635f0
-    management-webclient: 1.44.98.3:management-webclient-87f1ffb
-    dataflux-doc: 1.44.98.3:dataflux-doc-8fe6fb4b
-    message-desk: 1.44.98.3:message-desk-e8d1665
-    message-desk-worker: 1.44.98.3:message-desk-worker-d4fd3f9
-    dataflux-func: 1.44.98.3:dataflux-func-3d91963
-    utils-server: 1.44.98.3:utils-server-48799ca
-  version: 1.44.98.3
+    core: 1.44.98:core-4e72e740-1657638696
+    kodo: 1.44.98:kodo-b1763728-1657638696
+    front-webclient: 1.44.98:front-webclient-ead2635f0-1657638696
+    management-webclient: 1.44.98:management-webclient-87f1ffb-1657638696
+    dataflux-doc: 1.44.98:dataflux-doc-8fe6fb4b-1657638696
+    message-desk: 1.44.98:message-desk-e8d1665-1657638696
+    message-desk-worker: 1.44.98:message-desk-worker-d4fd3f9-1657638696
+    dataflux-func: 1.44.98:dataflux-func-3d91963-1657638696
+    utils-server: 1.44.98:utils-server-48799ca-1657638696
+  version: 1.44.98
