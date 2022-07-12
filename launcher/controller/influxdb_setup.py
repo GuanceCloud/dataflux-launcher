@@ -369,11 +369,11 @@ def init_influxdb_all():
   for instance in instances:
     instance["ro"] = {
       "username": "user_ro",
-      "password": shortuuid.ShortUUID().random(length = 16)
+      "password": shortuuid.ShortUUID().random(length = 16) + '!'
     }
     instance["wr"] = {
       "username": "user_wr",
-      "password": shortuuid.ShortUUID().random(length = 16)
+      "password": shortuuid.ShortUUID().random(length = 16) + '!'
     }
 
   settingsMdl.influxdb = instances
