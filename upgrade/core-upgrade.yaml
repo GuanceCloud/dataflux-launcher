@@ -2046,3 +2046,22 @@ upgrade:
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_06_21_process_checker"}'
 
 
+  # 2022.07.07 迭代
+  - seq: 57
+    confg:
+      innerApp: |-
+        ; 配置文件中 redis 配置追加 poolSize， minIdle 两项配置
+        [redis]
+        poolSize = 10
+        minIdle = 10
+        
+        ;  配置文件中 新增 trace 配置
+        [tracer]
+        service = "inner-app"
+        
+        ; 追加环境变量配置， 用于支持 trace
+        DD_TRACE_ENABLED = true
+        DD_SERVICE = inner-app
+        DD_TRACE_AGENT_PORT = 9529
+        DD_AGENT_HOST = status.hostIP
+    
