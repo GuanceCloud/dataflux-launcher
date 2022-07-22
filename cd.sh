@@ -5,6 +5,7 @@ function do_cd(){
   imageFullName=$2
   namespace=$3
   workload=$4
+  version=$5
 
   url=https://${RANCHER_API_BASE_URL}/k8s/clusters/${clusterID}/apis/apps/v1/namespaces/${namespace}/deployments/${workload}
   imagePath=${imageFullName}:${version}
@@ -17,6 +18,8 @@ function do_cd(){
 
 function deploy_cluster(){
   clusterID=$1
+  version=$2
+
   imageHost=pubrepo.jiagouyun.com
 
   if [ $DEPLOY_PROJECT_NAME = "kodo" ]; then
@@ -53,14 +56,16 @@ function deploy_cluster(){
 
   for wk in $workload
   do
-    do_cd $clusterID $imageFullName $namespace $wk
+    do_cd $clusterID $imageFullName $namespace $wk $version
   done
 }
 
 function each_cluster(){
+  lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
+
   for clusterID in $RANCHER_CLUSTER_IDS
   do
-    deploy_cluster $clusterID
+    deploy_cluster $clusterID $lastReleaseTag
   done
 }
 
