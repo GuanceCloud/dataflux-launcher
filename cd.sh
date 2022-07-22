@@ -23,32 +23,32 @@ function deploy_cluster(){
   imageHost=pubrepo.jiagouyun.com
 
   if [ $DEPLOY_PROJECT_NAME = "kodo" ]; then
-    echo 'do kodo upgrade, version: ${version}'
+    echo "do kodo upgrade, version: ${version}"
     namespace=forethought-kodo
     imageFullName=${imageHost}/cloudcare-forethought/kodo
     workload="kodo kodo-inner kodo-ws kodo-x"
   elif [ $DEPLOY_PROJECT_NAME = "core" ]; then
-    echo 'do core upgrade, version: ${version}'
+    echo "do core upgrade, version: ${version}"
     namespace=forethought-core
     imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-backend
     workload="core-worker core-worker-beat core-worker-correlation front-backend inner management-backend open-api openapi"
   elif [ $DEPLOY_PROJECT_NAME = "studio_front" ]; then
-    echo 'do studio front upgrade, version: ${version}'
+    echo "do studio front upgrade, version: ${version}"
     namespace=forethought-webclient
     imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-webclient
     workload="front-webclient"
   elif [ $DEPLOY_PROJECT_NAME = "studio_mgr" ]; then
-    echo 'do studio management upgrade, version: ${version}'
+    echo "do studio management upgrade, version: ${version}"
     namespace=forethought-webclient
     imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-webmanage
     workload="management-webclient"
   elif [ $DEPLOY_PROJECT_NAME = "func" ]; then
-    echo 'do func upgrade, version: ${version}'
+    echo "do func upgrade, version: ${version}"
     namespace=func2
     imageFullName=${imageHost}/dataflux-func/dataflux-func
     workload="server server-inner worker-0 worker-1-6 worker-7 worker-8 worker-9 worker-beat"
   elif [ $DEPLOY_PROJECT_NAME = "launcher" ]; then
-    echo 'do launcher upgrade, version: ${version}'
+    echo "do launcher upgrade, version: ${version}"
     namespace=launcher
     imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-setup
     workload="launcher"
