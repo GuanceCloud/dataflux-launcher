@@ -4,6 +4,7 @@ variables:
 
 stages:
   - build
+  - deploy
 
 buildProd:
   stage: build
@@ -22,6 +23,15 @@ buildTesting:
   script:
     - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
 
+  tags:
+    - cloudcare-multiarch 
+
+deployProd:
+  stage: deploy
+  only:
+    - /^deploy_\d+$/
+  script:
+    - sh cd.sh -d
   tags:
     - cloudcare-multiarch 
 
