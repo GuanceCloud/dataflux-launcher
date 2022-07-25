@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-06-20 12:18:49 +0000
+# Generation Time: 2022-07-25 11:53:34 +0000
 # ************************************************************
 
 
@@ -761,7 +761,7 @@ CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute') NOT NULL DEFAULT 'trigger',
+  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute','bot_obs') NOT NULL DEFAULT 'trigger',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
@@ -1053,7 +1053,7 @@ CREATE TABLE `biz_variable` (
   `seq` int(4) NOT NULL DEFAULT '0' COMMENT '变量排序',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '变量显示名',
   `code` varchar(128) NOT NULL DEFAULT '' COMMENT '变量名',
-  `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE','TAG','FIELD') NOT NULL COMMENT '类型',
+  `type` enum('QUERY','CUSTOM_LIST','ALIYUN_INSTANCE','TAG','FIELD','LOGGING','TRACING','RUM','SECURITY') NOT NULL COMMENT '类型',
   `datasource` varchar(48) NOT NULL COMMENT '数据源类型',
   `definition` json DEFAULT NULL COMMENT '解说，原content内容',
   `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
