@@ -413,6 +413,17 @@ services:
     - key: worker-8-9
       name: 8-9 号任务队列
       image: dataflux-func
+      replicas: 0
+      deleted: True
+
+    - key: worker-8
+      name: 8 号任务队列
+      image: dataflux-func
+      replicas: 2
+
+    - key: worker-9
+      name: 9 号任务队列
+      image: dataflux-func
       replicas: 2
 
     configmaps:
@@ -427,7 +438,8 @@ services:
       - worker-0
       - worker-1-6
       - worker-7
-      - worker-8-9
+      - worker-8
+      - worker-9
       template: func2-user-config.yaml
 
     - key: func2Requirements
@@ -438,7 +450,8 @@ services:
       - worker-0
       - worker-1-6
       - worker-7
-      - worker-8-9
+      - worker-8
+      - worker-9
       template: func2-requirements.txt
 
     pvcs:
