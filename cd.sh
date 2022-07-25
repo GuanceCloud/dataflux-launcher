@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+# 此脚本会统一提供最新的版本，最好不要在自己的项目中对此脚本进行修改
+
 function do_cd(){
   clusterID=$1
   imageFullName=$2
