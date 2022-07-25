@@ -2064,4 +2064,17 @@ upgrade:
         DD_SERVICE = inner-app
         DD_TRACE_AGENT_PORT = 9529
         DD_AGENT_HOST = status.hostIP
-    
+
+  # 2022.07.21 迭代
+  - seq: 58
+    database: |-
+      
+      -- 视图变量 type 字段新增枚举值 
+      ALTER TABLE `biz_variable` 
+      CHANGE COLUMN `type` `type` ENUM('QUERY', 'CUSTOM_LIST', 'ALIYUN_INSTANCE', 'TAG', 'FIELD', 'LOGGING', 'TRACING', 'RUM', 'SECURITY') NOT NULL COMMENT '类型' ;
+      
+      -- 规则表的 type 字段新增枚举值
+      ALTER TABLE `biz_rule` 
+      CHANGE COLUMN `type` `type` ENUM('trigger', 'baseline', 'aggs', 'cloud_correlation_switch', 'logbackup', 'slo_detect', 'slo_compute', 'bot_obs') NOT NULL DEFAULT 'trigger' ;
+
+      
