@@ -35,6 +35,9 @@ spec:
           subPath: config.yaml
         - mountPath: /config/cloudcare-forethought-setup/persistent-data
           name: persistent-data
+        - mountPath: /config/cloudcare-forethought-setup/config/settings.yaml
+          name: settings
+          subPath: settings.yaml
         workingDir: /config/cloudcare-forethought-setup
       dnsPolicy: ClusterFirst
       restartPolicy: Always
