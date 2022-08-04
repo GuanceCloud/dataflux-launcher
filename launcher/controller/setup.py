@@ -361,6 +361,14 @@ def workspace_init():
   return call_service_url(url, data)
 
 
+#  ES 计量数据索引模板初始化
+def metering_init():
+  url = "http://inner.forethought-core:5000/api/v1/inner/es/init_subsequent"
+
+  return call_service_url(url)
+
+
+
 # 安装成功之后，初始化一些 studio 的相关配置
 def studio_init():
   url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"

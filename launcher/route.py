@@ -171,6 +171,11 @@ def workspace_init():
 @setup_bp.route("/elasticsearch/init", methods=["POST"])
 def elasticsearch_init():
   return  response_jsonify(setup.elasticsearch_init())
+
+
+@setup_bp.route("/metering/init", methods=["POST"])
+def metering_init():
+  return  response_jsonify(setup.metering_init())
   
 
 @setup_bp.route("/elasticsearch/ping", methods=["POST"])

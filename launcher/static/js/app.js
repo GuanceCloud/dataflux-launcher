@@ -602,6 +602,12 @@ var setup = (function () {
               that.post('workspace/init').then(function(d){
                 if(d.content.status_code != 200){
                   alert("初始化系统工作空间失败，刷新页面重试。");
+                }else{
+                  that.post('metering/init').then(function(d){
+                    if(d.content.status_code != 200){
+                      alert("初始化 ES 计量数据索引模板失败，请排除问题后刷新页面重试。");
+                    }
+                  });
                 }
               }).fail(function(d){
                 alert("初始化系统工作空间失败，刷新页面重试。");
