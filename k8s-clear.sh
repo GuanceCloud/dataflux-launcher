@@ -17,7 +17,7 @@ kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd 
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete deployments utils-server internal-dataway datakit-pl-debug data-warehouse -n utils --force --grace-period=0
-kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
+kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-8 worker-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 service
 kubectl delete services front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
@@ -27,7 +27,7 @@ kubectl delete services message-desk message-desk-worker nsqadmin nsqlookupd nsq
 kubectl delete services func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
 kubectl delete services trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete services utils-server internal-dataway datakit-pl-debug data-warehouse -n utils --force --grace-period=0
-kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worker-7 worker-beat -n func2 --force --grace-period=0
+kubectl delete services server server-inner worker-0 worker-1-6 worker-8-9 worker-8 worker-9 worker-7 worker-beat -n func2 --force --grace-period=0
 
 # 清理 ingress
 kubectl delete ingress front-backend management-backend static-resource-nginx integration-nginx open-api websocket -n forethought-core --force --grace-period=0
