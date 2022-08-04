@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJwdWJyZXBvLmppYWdvdXl1bi5jb20iOnsidXNlcm5hbWUiOiJmdGRlcGxveSIsInBhc3N3b3JkIjoiZ3VhbmNlIUAjMTIzIn19fQ==
+kind: Secret
+metadata:
+  name: registry-key
+  namespace: launcher
+type: kubernetes.io/dockerconfigjson
