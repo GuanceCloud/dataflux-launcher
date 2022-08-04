@@ -233,31 +233,31 @@ def service_create(data):
   imagePullPolicy = data.get('imagePullPolicy') or ''
   images = data.get('images', {})
 
-  # registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
+  registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
   
-  # registry      = registrySecrets[0]
-  # registryAddr  = registry.get('address') or ''
-  # registryUser  = registry.get('username') or ''
-  # registryPwd   = registry.get('password') or ''
+  registry      = registrySecrets[0]
+  registryAddr  = registry.get('address') or ''
+  registryUser  = registry.get('username') or ''
+  registryPwd   = registry.get('password') or ''
 
   imageSettings = {
-    # "imageRegistry": registryAddr,
+    "imageRegistry": registryAddr,
     "imageDir": imageDir,
     "images": {}
   }
 
-  # settingsMdl.registry = {
-  #   "server": registryAddr,
-  #   "username": registryUser,
-  #   "password": registryPwd
-  # }
+  settingsMdl.registry = {
+    "server": registryAddr,
+    "username": registryUser,
+    "password": registryPwd
+  }
 
   settingsMdl.other = {
     "storageClassName": storageClassName,
     "imagePullPolicy": imagePullPolicy
   }
 
-  # _registry_secret_create(settingsMdl.registry)
+  _registry_secret_create(settingsMdl.registry)
   _PVC_create(storageClassName)
 
   for key, val in images.items():

@@ -310,7 +310,6 @@ def registry_secret_get(namespace, registryKeyName):
 
 
 # 创建镜像凭证
-# 已作废
 def registry_secret_create(namespace, server, username, password):
   patch = { "imagePullSecrets": [{"name": "registry-key"}] }
 
