@@ -344,11 +344,11 @@ var setup = (function () {
     var that = this;
     var data = {
       "manager":{
-        "username": $("#iptUserName").val(),
-        "email": $("#iptUserEmail").val()
+        "username": $("#iptUserName").val().trim(),
+        "email": $("#iptUserEmail").val().trim()
       },
       "studioHideHelp": $("#ckbStudioHideHelp").is(":checked"),
-      "domain": $("#iptDomain").val(),
+      "domain": $("#iptDomain").val().trim(),
       "subDomain": {},
       "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet"
     };
@@ -357,7 +357,7 @@ var setup = (function () {
       var jqMe = $(item);
       var name = jqMe.attr('name');
 
-      data.subDomain[name] = jqMe.val();
+      data.subDomain[name] = jqMe.val().trim();
     });
 
     data.tls = {
