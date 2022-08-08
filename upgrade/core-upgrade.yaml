@@ -2077,4 +2077,33 @@ upgrade:
       ALTER TABLE `biz_rule` 
       CHANGE COLUMN `type` `type` ENUM('trigger', 'baseline', 'aggs', 'cloud_correlation_switch', 'logbackup', 'slo_detect', 'slo_compute', 'bot_obs') NOT NULL DEFAULT 'trigger' ;
 
+
+  # 2022.08.04 迭代
+  - seq: 59
+    database: |-
       
+      -- 黑名单 type 字段新增枚举值
+      ALTER TABLE `biz_data_blacklist_rule`
+      CHANGE COLUMN `type` `type` ENUM('object', 'custom_object', 'logging', 'keyevent', 'tracing', 'rum', 'network', 'security', 'profiling', 'metric') NOT NULL DEFAULT 'logging' COMMENT '数据源类型' ;
+      
+      -- 工作空间新增 isLocked 和 lockAt 记录空间的锁定状态和锁定时间
+      ALTER TABLE `main_workspace` 
+      ADD COLUMN `isLocked` TINYINT(1) NOT NULL DEFAULT '0' AFTER `supportJsonMessage`,
+      ADD COLUMN `lockAt` INT(11) NOT NULL DEFAULT '-1' AFTER `isLocked`;
+
+      -- 工作空间新添针对聚合,非聚合索引的配置信息字段
+      ALTER TABLE `main_workspace` ADD COLUMN `esIndexSettings` json NULL COMMENT '索引配置信息' AFTER `durationSet`;
+      
+      -- 变更黑名单source字段大小
+      ALTER TABLE `biz_data_blacklist_rule` CHANGE COLUMN `source` `source` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '数据来源';
+      
+      -- main_account 表的 username 字段添加索引, 并添加已使用过的标记
+      ALTER TABLE `main_account` 
+      ADD COLUMN `isUsed` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '标记账号是否登录过DF系统' AFTER `nameSpace`,
+      ADD INDEX `uk_username` (`username` ASC) COMMENT 'DF登录用户名加索引';
+      
+      -- 更新新添加字段esIndexSettings 默认值为{}
+      UPDATE main_workspace SET esIndexSettings= '{}';
+      
+      -- 将曾经登录过DF系统的账号标记为已使用账号
+      UPDATE main_account set isUsed=1 where uuid in (select distinct(accountUUID) from biz_account_login_history where status=0);

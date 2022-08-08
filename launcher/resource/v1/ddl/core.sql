@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-07-25 11:53:34 +0000
+# Generation Time: 2022-08-04 07:24:15 +0000
 # ************************************************************
 
 
@@ -215,8 +215,8 @@ CREATE TABLE `biz_data_blacklist_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, bkrul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('logging') NOT NULL DEFAULT 'logging' COMMENT '数据源类型',
-  `source` varchar(64) NOT NULL DEFAULT '' COMMENT '数据来源',
+  `type` enum('object','custom_object','logging','keyevent','tracing','rum','network','security','profiling','metric') NOT NULL DEFAULT 'logging' COMMENT '数据源类型',
+  `source` varchar(128) NOT NULL DEFAULT '' COMMENT '数据来源',
   `filters` json NOT NULL COMMENT '过滤条件列表',
   `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -1136,6 +1136,7 @@ CREATE TABLE `main_account` (
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `extend` json DEFAULT NULL COMMENT '额外信息',
   `nameSpace` varchar(48) NOT NULL DEFAULT '' COMMENT '账号的命名空间',
+  `isUsed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '标记账号是否登录过DF系统',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -1143,7 +1144,8 @@ CREATE TABLE `main_account` (
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
-  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一'
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一',
+  KEY `uk_username` (`username`) COMMENT 'DF登录用户名加索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1761,10 +1763,13 @@ CREATE TABLE `main_workspace` (
   `esRP` json DEFAULT NULL COMMENT 'es 生命周期管理',
   `enablePublicDataway` int(1) NOT NULL DEFAULT '1' COMMENT '允许公网Dataway上传数据',
   `durationSet` json DEFAULT NULL COMMENT '数据保留时长设置',
+  `esIndexSettings` json DEFAULT NULL COMMENT '索引配置信息',
   `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
   `esIndexMerged` tinyint(1) DEFAULT '0' COMMENT '空间ES索引是否合并，默认值是false，不合并',
   `supportJsonMessage` tinyint(1) NOT NULL DEFAULT '0' COMMENT '空间是否支持JSON类型的message字段，默认是false，不使用JSON类型的message',
+  `isLocked` tinyint(1) NOT NULL DEFAULT '0',
+  `lockAt` int(11) NOT NULL DEFAULT '-1',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
