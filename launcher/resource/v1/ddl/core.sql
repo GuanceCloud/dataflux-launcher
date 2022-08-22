@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-08-04 07:24:15 +0000
+# Generation Time: 2022-08-18 01:44:33 +0000
 # ************************************************************
 
 
@@ -163,6 +163,7 @@ CREATE TABLE `biz_dashboard` (
   `chartGroupPos` json NOT NULL COMMENT 'chartGroup 位置信息[chartGroupUUIDs]',
   `type` varchar(48) NOT NULL DEFAULT 'CUSTOM' COMMENT '视图类型：仪表板视图',
   `ownerType` enum('node','inner','object_class','workspace','account','viewer','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `mapping` json NOT NULL COMMENT '视图变量的mapping',
   `dashboardBindSet` json DEFAULT NULL COMMENT '绑定视图设置',
@@ -515,6 +516,7 @@ CREATE TABLE `biz_notes` (
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `pos` json NOT NULL COMMENT 'charts 位置信息[]',
   `createdWay` enum('import','template','') NOT NULL DEFAULT '' COMMENT '笔记的创建方式',
+  `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
@@ -899,6 +901,7 @@ CREATE TABLE `biz_snapshots` (
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
   `type` varchar(64) NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
+  `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',

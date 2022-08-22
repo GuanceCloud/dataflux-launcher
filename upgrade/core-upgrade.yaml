@@ -2107,3 +2107,26 @@ upgrade:
       
       -- 将曾经登录过DF系统的账号标记为已使用账号
       UPDATE main_account set isUsed=1 where uuid in (select distinct(accountUUID) from biz_account_login_history where status=0);
+
+  # 2022.08.18 迭代
+  - seq: 60
+    config:
+      core: |-
+        # 定时释放 锁定时间超过 14 天的工作空间
+        clearLockedWorkspaceDataSet:
+          isOpen: true
+
+        # 定时清理空数据工作空间设置
+        workspaceArrearsEmailNoticeSet:
+          isOpen: true
+
+    database: |-
+      -- biz_dashboard表新添isPublic,添加的仪表板和查看器是否公开
+      ALTER TABLE `biz_dashboard` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `ownerType`;
+
+      -- biz_notes表新添isPublic,添加的快照是否公开
+       ALTER TABLE `biz_notes` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `createdWay`;
+
+      -- biz_snapshots表新添isPublic,添加的快照是否公开
+       ALTER TABLE `biz_snapshots` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `content`;
+
