@@ -1,6 +1,6 @@
 FROM python:3.6.8
 
-MAINTAINER "lhm@jiagouyun.com
+MAINTAINER "lhm@jiagouyun.com"
 
 # 设置系统时区
 RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
