@@ -11,8 +11,8 @@ apps:
     front-webclient: 1.47.105:front-webclient-acb61b309-1661501338
     management-webclient: 1.47.105:management-webclient-a57f317-1661501338
     dataflux-doc: 1.47.105:dataflux-doc-d08c7033-1661501338
-    message-desk: 1.47.105:message-desk-d3aa187-1661501338
-    message-desk-worker: 1.47.105:message-desk-worker-f56d67a-1661501338
+    message-desk: 1.47.103:message-desk-d3aa187-1661174654
+    message-desk-worker: 1.47.103:message-desk-worker-f56d67a-1661174654
     dataflux-func: 1.47.105:dataflux-func-ca22457-1661501338
     utils-server: 1.47.105:utils-server-48799ca-1661501338
   version: 1.47.105
