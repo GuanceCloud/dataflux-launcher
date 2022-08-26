@@ -78,4 +78,14 @@ upgradeInfo:
 
         // 新增的配置项
         // 部署私有帮助中心的域名，以客户实际部署需要的域名为准
-        docDomain: 'https://df-docs.xx.com'
+        docDomain: 'https://docs.guance.com'
+
+
+  - seq: 11
+    config:
+      frontWeb: |-
+
+        // 新增的配置项
+        // 部署版本第三方登录url地址
+        paasCustomLoginUrl: ''   
+
