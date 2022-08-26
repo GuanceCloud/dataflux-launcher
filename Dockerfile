@@ -47,3 +47,6 @@ RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip && pip 
 
 ADD . /config/cloudcare-forethought-setup/
 
+# 危险脚本，移到项目目录之外
+RUN mkdir /config/tools
+RUN mv /config/cloudcare-forethought-setup/k8s-clear.sh /config/tools
