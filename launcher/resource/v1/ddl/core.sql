@@ -792,6 +792,7 @@ CREATE TABLE `biz_rum_cfg` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rum- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `appId` varchar(128) NOT NULL DEFAULT '',
   `jsonContent` json NOT NULL COMMENT '额外拓展字段',
   `customIdentity` varchar(48) NOT NULL DEFAULT '' COMMENT '用户自定义标识',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -802,7 +803,8 @@ CREATE TABLE `biz_rum_cfg` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `k_ws_uuid` (`workspaceUUID`)
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_appid` (`appId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

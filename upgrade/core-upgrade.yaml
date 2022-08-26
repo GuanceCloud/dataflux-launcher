@@ -2129,4 +2129,12 @@ upgrade:
 
       -- biz_snapshots表新添isPublic,添加的快照是否公开
        ALTER TABLE `biz_snapshots` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `content`;
+      
+      -- rum 配置表新增 appId 字段，对外替换uuid
+      ALTER TABLE `biz_rum_cfg` 
+      ADD COLUMN `appId` VARCHAR(128) NOT NULL DEFAULT '' AFTER `workspaceUUID`,
+      ADD INDEX `k_appid` (`appId` ASC);
+      
+      -- 同步 rum appId 数据
+      update biz_rum_cfg set appId=uuid where status=0 and appId="";
 
