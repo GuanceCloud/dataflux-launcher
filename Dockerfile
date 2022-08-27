@@ -1,7 +1,6 @@
-FROM python:3.6.8
 FROM registry.jiagouyun.com/basis/launcher-basis:v1.0
 
-MAINTAINER "lhm@jiagouyun.com"
+MAINTAINER "lhm@guance.com"
 
 WORKDIR /config/cloudcare-forethought-setup
 ADD . /config/cloudcare-forethought-setup/
