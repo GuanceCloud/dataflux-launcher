@@ -26,6 +26,25 @@ buildTesting:
   tags:
     - cloudcare-multiarch 
 
+buildProd:
+  stage: build
+  only:
+    - /^basis[\/-_]?.*$/
+  script:
+    - docker buildx build --platform linux/arm64,linux/amd64 -t registry.jiagouyun.com/basis/launcher-basis:v1.0 . -f ./basis.Dockerfile --push
+  tags:
+    - cloudcare-multiarch 
+
+buildTesting:
+  stage: build
+  only:
+    - dev
+  script:
+    - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
+
+  tags:
+    - cloudcare-multiarch 
+
 deployProd:
   stage: deploy
   only:
