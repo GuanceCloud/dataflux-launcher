@@ -35,15 +35,15 @@ buildBasis:
   tags:
     - cloudcare-multiarch 
 
-buildTesting:
-  stage: build
-  only:
-    - dev
-  script:
-    - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
+# buildTesting:
+#   stage: build
+#   only:
+#     - dev
+#   script:
+#     - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPOSITORY:testing . --push
 
-  tags:
-    - cloudcare-multiarch 
+#   tags:
+#     - cloudcare-multiarch 
 
 deployProd:
   stage: deploy
