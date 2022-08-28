@@ -3,33 +3,27 @@
 import shortuuid
 import json
 import time
+import requests
 
-from elasticsearch import Elasticsearch, RequestsHttpConnection
+from requests.auth import HTTPBasicAuth
+
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl
 
 
 def elasticsearch_ping(params):
-  params['port'] = int(params['port'])
-
-  esHosts = [{
-              'host': params.get('host'),
-              'port': params.get('port')
-            }]
-
-  http_auth = (params.get('user'), params.get('password'))
-
   use_ssl = params.get('ssl', False)
-
-  es = Elasticsearch(esHosts, http_auth = http_auth, use_ssl = use_ssl, connection_class = RequestsHttpConnection)
+  http_auth = HTTPBasicAuth(params.get('user'), params.get('password'))
+  url = "{protocol}://{host}:{port}".format(**{"protocol": "https" if use_ssl else "http", "host": params.get('host'), "port": params.get('port')})
 
   pingStatus = False
 
   try:
-    pingStatus =es.ping()
-    print(pingStatus)
-  except:
-    pass
+    resp = requests.get(url, auth = http_auth)
+    if resp.status_code == 200:
+      pingStatus = True
+  except Exception as e:
+    print(e)
 
   if pingStatus:
     settingsMdl.elasticsearch = params
