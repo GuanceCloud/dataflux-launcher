@@ -22,28 +22,29 @@ RUN DEBIAN_FRONTEND=noninteractive && \
             python3.8-dev python3-pip default-libmysqlclient-dev build-essential libpq-dev libaio1 && \
             update-alternatives --install /usr/bin/python python /usr/bin/python3.8 100
 
-RUN \
-    dpkgArch="$(dpkg --print-architecture)"; \
-    awscliv2Url=""; \
-    \
-    case "$dpkgArch" in \
-        arm64) \
-            awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-aarch64.zip"; \
-            ;; \
-        amd64) \
-            awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-x86_64.zip"; \
-            ;; \
-    esac; \
-    \
-    curl "$awscliv2Url" -o "awscliv2.zip"; \
-    unzip awscliv2.zip; \
-    ./aws/install; \
-    \
-    rm -rf ./aws; \
-    rm awscliv2.zip;
+# RUN \
+#     dpkgArch="$(dpkg --print-architecture)"; \
+#     awscliv2Url=""; \
+#     \
+#     case "$dpkgArch" in \
+#         arm64) \
+#             awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-aarch64.zip"; \
+#             ;; \
+#         amd64) \
+#             awscliv2Url="https://static.guance.com/launcher/awscli-exe-linux-x86_64.zip"; \
+#             ;; \
+#     esac; \
+#     \
+#     curl "$awscliv2Url" -o "awscliv2.zip"; \
+#     unzip awscliv2.zip; \
+#     ./aws/install; \
+#     \
+#     rm -rf ./aws; \
+#     rm awscliv2.zip;
 
 WORKDIR /config/cloudcare-forethought-setup
 ADD ./requirements.txt /config/cloudcare-forethought-setup/
 
 RUN pip install -i https://mirrors.aliyun.com/pypi/simple/ --upgrade pip && \
     pip install -i https://mirrors.aliyun.com/pypi/simple/ -r /config/cloudcare-forethought-setup/requirements.txt
+
