@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-08-18 01:44:33 +0000
+# Generation Time: 2022-08-31 02:12:23 +0000
 # ************************************************************
 
 
@@ -371,6 +371,59 @@ CREATE TABLE `biz_integration` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_logging_backup_cfg
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_logging_backup_cfg`;
+
+CREATE TABLE `biz_logging_backup_cfg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, lgbp-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '备份规则名',
+  `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
+  `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_logging_index_cfg
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_logging_index_cfg`;
+
+CREATE TABLE `biz_logging_index_cfg` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, lgim-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '索引名称',
+  `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
+  `duration` varchar(48) NOT NULL DEFAULT '' COMMENT '数据保留时长',
+  `sortNo` int(11) NOT NULL DEFAULT '0' COMMENT '排序值, 值越大优先级越高',
+  `setting` json DEFAULT NULL COMMENT '索引分片设置',
+  `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1775,6 +1828,7 @@ CREATE TABLE `main_workspace` (
   `supportJsonMessage` tinyint(1) NOT NULL DEFAULT '0' COMMENT '空间是否支持JSON类型的message字段，默认是false，不使用JSON类型的message',
   `isLocked` tinyint(1) NOT NULL DEFAULT '0',
   `lockAt` int(11) NOT NULL DEFAULT '-1',
+  `isOpenLogMultipleIndex` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启日志多索引配置',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',

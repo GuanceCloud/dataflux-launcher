@@ -80,12 +80,10 @@ upgradeInfo:
         // 部署私有帮助中心的域名，以客户实际部署需要的域名为准
         docDomain: 'https://docs.guance.com'
 
-
-  - seq: 11
+  - seq: 12
     config:
       frontWeb: |-
 
         // 新增的配置项
-        // 部署版本第三方登录url地址
-        paasCustomLoginUrl: ''   
-
+        // 部署版本第三方登录配置信息 label为页面第三方登录按钮显示文案 url为第三方登录的跳转地址
+        paasCustomLoginInfo: [{"url": "xxxx", "label": "xxx"}]

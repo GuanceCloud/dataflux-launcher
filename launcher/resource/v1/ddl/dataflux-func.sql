@@ -267,35 +267,35 @@ LOCK TABLES `biz_main_crontab_task_info` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `biz_main_data_source`
+-- Table structure for table `biz_main_connector`
 --
 
-DROP TABLE IF EXISTS `biz_main_data_source`;
+DROP TABLE IF EXISTS `biz_main_connector`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `biz_main_data_source` (
+CREATE TABLE `biz_main_connector` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `title` varchar(256) DEFAULT NULL COMMENT '标题',
   `description` text COMMENT '描述',
   `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '类型 influxdb|mysql|redis|..',
   `configJSON` json NOT NULL COMMENT '配置JSON',
-  `isBuiltin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为内建数据源',
+  `isBuiltin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为内建连接器',
   `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据源';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='连接器';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `biz_main_data_source`
+-- Dumping data for table `biz_main_connector`
 --
 
-LOCK TABLES `biz_main_data_source` WRITE;
-/*!40000 ALTER TABLE `biz_main_data_source` DISABLE KEYS */;
-/*!40000 ALTER TABLE `biz_main_data_source` ENABLE KEYS */;
+LOCK TABLES `biz_main_connector` WRITE;
+/*!40000 ALTER TABLE `biz_main_connector` DISABLE KEYS */;
+/*!40000 ALTER TABLE `biz_main_connector` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -990,4 +990,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-14 12:47:28
+-- Dump completed on 2022-06-14 12:48:34

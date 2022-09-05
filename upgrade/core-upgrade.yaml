@@ -2110,16 +2110,6 @@ upgrade:
 
   # 2022.08.18 迭代
   - seq: 60
-    config:
-      core: |-
-        # 定时释放 锁定时间超过 14 天的工作空间
-        clearLockedWorkspaceDataSet:
-          isOpen: true
-
-        # 定时清理空数据工作空间设置
-        workspaceArrearsEmailNoticeSet:
-          isOpen: true
-
     database: |-
       -- biz_dashboard表新添isPublic,添加的仪表板和查看器是否公开
       ALTER TABLE `biz_dashboard` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `ownerType`;
@@ -2129,7 +2119,7 @@ upgrade:
 
       -- biz_snapshots表新添isPublic,添加的快照是否公开
        ALTER TABLE `biz_snapshots` ADD COLUMN `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见' AFTER `content`;
-      
+
       -- rum 配置表新增 appId 字段，对外替换uuid
       ALTER TABLE `biz_rum_cfg` 
       ADD COLUMN `appId` VARCHAR(128) NOT NULL DEFAULT '' AFTER `workspaceUUID`,
@@ -2138,3 +2128,72 @@ upgrade:
       -- 同步 rum appId 数据
       update biz_rum_cfg set appId=uuid where status=0 and appId="";
 
+  # 2022.09.01 迭代
+  - seq: 61
+    env: |-
+      # ddtrace版本更新为1.4.3,ddtrace环境变量名DATADOG_PATCH_MODULES,更新为DD_PATCH_MODULES, 变量值不变
+      DATADOG_PATCH_MODULES -->  DD_PATCH_MODULES
+
+      # ddtrace无效变量值变更
+      DATADOG_TRACE_AGENT_PORT -->  DD_AGENT_PORT
+
+    database: |-
+      -- 新建 日志备份配置表
+      CREATE TABLE `biz_logging_backup_cfg` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, lgbp-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT '备份规则名',
+        `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
+        `extend` json DEFAULT NULL COMMENT '额外配置数据',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 添加日志索引配置表`biz_logging_index_cfg`
+      CREATE TABLE `biz_logging_index_cfg` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, lgim-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT '索引名称',
+        `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
+        `duration` varchar(48) NOT NULL DEFAULT '' COMMENT '数据保留时长',
+        `sortNo` int(11) NOT NULL DEFAULT '0' COMMENT '排序值, 值越大优先级越高',
+        `setting` json DEFAULT NULL COMMENT '索引分片设置',
+        `extend` json DEFAULT NULL COMMENT '额外配置数据',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 工作空间表设置 日志多索引配置开关
+      ALTER TABLE `main_workspace` 
+      ADD COLUMN `isOpenLogMultipleIndex` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否开启日志多索引配置' AFTER `lockAt`;
+
+
+      -- 工作空间使用量统计公式, 添加backup_log_bytes 备份日志数据容量统计
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"ts\": {\"countEquation\": \"max(0, ts_count - count * 500)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log_bytes\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 工作空间使用量和计费统计公式, 添加backup_log_bytes容量计算公司
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"ts\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 300)\", \"priceQuantity\": 300, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 10, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1.5, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log_bytes\": {\"price\": 0.007, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1073741824, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 修改监控默认分组名为默认
+      UPDATE biz_monitor SET name= '默认' where name='默认分组' and status =0;
+
+    curl: |-
+
+      # 【inner api 服务器执行】将biz_rule 中的备份日志规则迁移至 新的 备份日志表中，并做数据格式处理
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_01_log_backup"}'
