@@ -19,5 +19,6 @@ window.DEPLOYCONFIG = {
     shrineApiUrl: '',
     upgradeUrl: '',
     rechargeUrl: '',
-    docDomain: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.docs }}.{{ domain.domain }}'
+    docDomain: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.docs }}.{{ domain.domain }}',
+    paasCustomLoginInfo: []
 };
