@@ -2199,3 +2199,24 @@ upgrade:
 
       # 【inner api 服务器执行】将biz_rule 中的备份日志规则迁移至 新的 备份日志表中，并做数据格式处理
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_01_log_backup"}'
+
+  # 2022.09.15 迭代
+  - seq: 62
+    database: |-
+      
+      -- 静默管理表biz_mute新增重复配置定时字段 crontabDuration, crontab, 重复过期时间字段 repeatExpire
+      ALTER TABLE `biz_mute`
+      ADD COLUMN `crontabDuration` int(11) NOT NULL DEFAULT '0' COMMENT '重复静默时, 调用func的crontabDuration参数, 单位为 s' AFTER `end`,
+      ADD COLUMN `crontab` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '重复静默时, 调用func的crontab参数' AFTER `crontabDuration`,
+      ADD COLUMN `repeatExpire` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间, 0代表无过期时间,永久生效, -1为默认配置,非重复静默' AFTER `crontab`;
+
+
+      -- 账号添加灰度发布标记字段
+      ALTER TABLE `main_account`
+      ADD COLUMN `canaryPublic` BOOLEAN DEFAULT false COMMENT 'true 为有灰度标志, false为没有' AFTER `status`;
+
+      -- 规则表新增支持 自建监控器类型，并添加关联 keyRef 字段用来关联规则
+      ALTER TABLE `biz_rule` 
+      ADD COLUMN `refKey` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '关联key' AFTER `type`, 
+      CHANGE COLUMN `type` `type` ENUM('trigger', 'baseline', 'aggs', 'cloud_correlation_switch', 'logbackup', 'slo_detect', 'slo_compute', 'bot_obs', 'self_built_trigger') NOT NULL DEFAULT 'trigger' ,
+      ADD INDEX `k_refkey` (`refKey` ASC);

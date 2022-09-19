@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-08-31 02:12:23 +0000
+# Generation Time: 2022-09-15 02:05:49 +0000
 # ************************************************************
 
 
@@ -499,6 +499,9 @@ CREATE TABLE `biz_mute` (
   `notifyTime` int(11) NOT NULL DEFAULT '-1',
   `start` int(11) NOT NULL DEFAULT '-1',
   `end` int(11) NOT NULL DEFAULT '-1',
+  `crontabDuration` int(11) NOT NULL DEFAULT '0' COMMENT '重复静默时, 调用func的crontabDuration参数, 单位为 s',
+  `crontab` varchar(48) NOT NULL DEFAULT '' COMMENT '重复静默时, 调用func的crontab参数',
+  `repeatExpire` int(11) NOT NULL DEFAULT '-1' COMMENT '过期时间, 0代表无过期时间,永久生效, -1为默认配置,非重复静默',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -816,7 +819,8 @@ CREATE TABLE `biz_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute','bot_obs') NOT NULL DEFAULT 'trigger',
+  `type` enum('trigger','baseline','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute','bot_obs','self_built_trigger') NOT NULL DEFAULT 'trigger',
+  `refKey` varchar(48) NOT NULL DEFAULT '' COMMENT '关联key',
   `kapaUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Kapa的UUID',
   `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监视器UUID',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
@@ -831,7 +835,8 @@ CREATE TABLE `biz_rule` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `k_ws_uuid` (`workspaceUUID`)
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_refkey` (`refKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1198,6 +1203,7 @@ CREATE TABLE `main_account` (
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `canaryPublic` tinyint(1) DEFAULT '0' COMMENT 'true 为有灰度标志, false为没有',
   `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
   `deleteAt` int(11) NOT NULL DEFAULT '-1' COMMENT '删除时间',
