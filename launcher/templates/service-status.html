@@ -24,10 +24,10 @@
               <span id="img_path_{{ item.key }}">
                 {{ item.fullImagePath }}
               </span>
-              {% if not item.fullImagePath or item.replicas != item.availableReplicas %}
+              {% if not item.fullImagePath or item.availableReplicas < item.replicas %}
               (<span class="text-success available-replicas">{{ item.availableReplicas }}</span><span>/</span><span class="text-warning require-replicas">{{ item.replicas }}</span>)
               <i class="service-pendding"></i>
-              {% elif item.replicas == item.availableReplicas %}
+              {% elif item.availableReplicas >= item.replicas %}
               (<span class="text-success available-replicas">{{ item.availableReplicas }}</span><span>/</span><span class="text-warning require-replicas">{{ item.replicas }}</span>)
               <i class="icon-success"></i>
               {% endif %}
