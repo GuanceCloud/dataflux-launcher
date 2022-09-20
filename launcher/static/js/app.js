@@ -559,12 +559,12 @@ var setup = (function () {
             total = total + 1;
 
             jqI.removeClass('icon-success service-pendding');
-            if(!item.fullImagePath || item.replicas != item.availableReplicas || item.unavailableReplicas != 0){
+            if(!item.fullImagePath || item.availableReplicas < item.replicas || item.unavailableReplicas != 0){
               jqI.addClass('service-pendding');
 
               hasPendding = true;
               penddingCount = penddingCount + 1;
-            }else if(item.replicas == item.availableReplicas){
+            }else if(item.availableReplicas >= item.replicas){
               jqI.addClass('icon-success');
             }
 
@@ -674,23 +674,23 @@ var setup = (function () {
               jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
 
               hasPendding = true;
-            }else if(item.replicas == item.availableReplicas){
+            }else if(item.availableReplicas >= item.replicas){
               jqNewI.addClass('icon-success');
               jqOldI.addClass('text-warning glyphicon glyphicon-ban-circle');
             }
           }else{
-            if(!item.fullImagePath || item.replicas != item.availableReplicas ){
+            if(!item.fullImagePath || item.availableReplicas < item.replicas){
               jqOldI.addClass('service-pendding');
               jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
 
               hasPendding = true;
-            }else if(item.replicas == item.availableReplicas){
+            }else if(item.availableReplicas >= item.replicas){
               jqOldI.addClass('icon-success');
               jqNewI.addClass('text-warning glyphicon glyphicon-ban-circle');
             }
           }
 
-          if (item.newImagePath != item.fullImagePath || item.replicas != item.availableReplicas){
+          if (item.newImagePath != item.fullImagePath || item.availableReplicas < item.replicas){
             hasUnUpdated = true
           }
         });
