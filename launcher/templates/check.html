@@ -162,9 +162,9 @@
                   {% for item in ns.services %}
                     {% if item.fullImagePath and item.replicas > 0 %}
                     <span>
-                      {% if item.replicas > item.availableReplicas %}
+                      {% if item.availableReplicas < item.replicas %}
                       <i class="service-pendding"></i>
-                      {% elif item.replicas == item.availableReplicas %}
+                      {% elif item.availableReplicas >= item.replicas %}
                       <i class="icon-success"></i>
                       {% endif %}
                     </span>

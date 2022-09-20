@@ -30,9 +30,9 @@
                     {{ item.fullImagePath }}
                   </span>
                   {% if item.newImagePath != item.fullImagePath %}
-                    {% if not item.fullImagePath or item.replicas != item.availableReplicas %}
+                    {% if not item.fullImagePath or item.availableReplicas < item.replicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas == item.availableReplicas %}
+                    {% elif item.availableReplicas >= item.replicas%}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}
@@ -47,9 +47,9 @@
                     {{ item.newImagePath }}
                   </span>
                   {% if item.newImagePath == item.fullImagePath %}
-                    {% if item.replicas != item.availableReplicas %}
+                    {% if item.availableReplicas < item.replicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas == item.availableReplicas %}
+                    {% elif item.availableReplicas >= item.replicas %}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}
@@ -76,9 +76,9 @@
                     {{ item.newImagePath }}
                   </span>
                   {% if item.newImagePath == item.fullImagePath %}
-                    {% if item.replicas > item.availableReplicas %}
+                    {% if item.availableReplicas < item.replicas %}
                       <i class="service-pendding"></i>
-                    {% elif item.replicas == item.availableReplicas %}
+                    {% elif item.availableReplicas >= item.replicas %}
                       <i class="icon-success"></i>
                     {% endif %}
                   {% else %}
