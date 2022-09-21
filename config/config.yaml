@@ -676,14 +676,23 @@ updates:
     noDatabase: True
     dataKey: data
     config:
+      - key: frontNginx
+        mapName: front-nginx-config
+        mapKey: nginx.conf
       - key: frontWeb
         mapName: front-web-config
         mapKey: config.js
         format: js
+      - key: managementNginx
+        mapName: management-nginx-config
+        mapKey: nginx.conf
       - key: managementWeb
         mapName: management-web-config
         mapKey: config.json
         format: json
+      - key: datafluxDocNginx
+        mapName: dataflux-doc-nginx-config
+        mapKey: nginx.conf
 
   - namespace: forethought-kodo
     project: kodo
