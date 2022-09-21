@@ -20,6 +20,7 @@ global:
     stats_on: 256
     listen: ":9527"
     workers: 8
+    log_workers: 16
     es_consumer: true
 
 func:
