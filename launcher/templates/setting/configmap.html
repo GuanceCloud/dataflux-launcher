@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row form-body">
+  <h2 class="page-heading">{{ title }}</h2>
+
+  {% for ns in pageData %}
+  <div class="high-block">
+    <h5>命名空间：{{ ns.namespace }}</h5>
+    <div class="panel-group configAccordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default config-review">
+        {% for conf in ns.configmaps %}
+        <div class="config-item-group">
+          <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+              {% if conf.updates | length > 0 %}
+                <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会修改此配置项">
+                  <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" checked="checked"/>&nbsp;修改配置
+                </label>
+              {% else %}
+                <label class="pull-right config-check-edit" onclick="setup.up_config_check_edit()" title="不勾选不会修改此配置项">
+                  <input id="chk{{ conf.key }}" data-key="{{ conf.key }}" type="checkbox" />&nbsp;修改配置
+                </label>
+              {% endif %}
+
+              <i class="icon-right"></i>
+              <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ conf.key }}" aria-expanded="true" aria-controls="collapse{{ conf.key }}">
+                {{ conf.key }}（
+                {% for serviceName in conf.services %}
+                  {{ serviceName }}{{ '、' if not loop.last }}
+                {% endfor %}）
+              </a>
+
+              {% if conf.updates | length > 0 %}
+              <span class="text-danger">配置有更新!!!</span>
+              {% endif %}
+            </h4>
+          </div>
+          <div id="collapse{{ conf.key }}" class="panel-collapse collapse {{ 'checked-edit' if conf.updates | length > 0  }}" role="tabpanel">
+            <div class="panel-body">
+              <div class="disable-layer"></div>
+              <textarea id="txt{{ conf.key }}" data-key="{{ conf.key }}" data-format="{{ conf.format }}" onchange="setup.format_validate(this)" class="text-left monospaced">{{ conf.content }}</textarea>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row form-body">
+    <div class="pull-left">
+      <span class="text-danger" style="font-weight: bold;">只会修改勾选了“修改配置”的配置项 !!！</span>
+    </div>
+
+    <div class="pull-right">
+      <label class="config-check-edit">
+        <input id="chk_redeploy" type="checkbox" />&nbsp;修改配置后自动重启相关服务&nbsp;
+      </label>
+
+      <button id="btnConfigmapUpdate"  class="btn btn-primary" onclick="setup.setting_configmap()">
+        确认修改配置
+      </button>
+    </div>
+</div>
+
+
+<script text="text/javascript">
+
+  $().ready(function(){
+    $('.configAccordion').on('hidden.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-Retract').addClass('icon-right');
+
+      return true;
+    }).on('shown.bs.collapse', function(ev){
+      var jqTarget = $(ev.target);
+      var jqHeading = jqTarget.prev();
+
+      jqHeading.addClass('in');
+      jqHeading.find("h4 > i").removeClass('icon-right').addClass('icon-Retract');
+
+      return true;
+    });
+
+    setup.up_config_check_edit()
+  });
+
+</script>
+
+{% endblock %}
+
+
+

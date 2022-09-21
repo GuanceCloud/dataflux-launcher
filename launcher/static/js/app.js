@@ -732,9 +732,13 @@ var setup = (function () {
     });
   };
 
-  app.prototype.configmap_update = function(){
+  // 升级步骤
+  app.prototype.do_configmap_edit = function(options, complate_func){
     var that = this;
-    var maps = {};
+    var params = {
+      "options": options || {},
+      "configmaps": {}
+    };
     var hasErr = false;
 
     $('#btnConfigmapUpdate').attr("disabled", true);
@@ -751,7 +755,7 @@ var setup = (function () {
       if (!formatErr){
         // 只更新勾选了 “升级配置” 的配置项
         if ($('#chk' + key).is(":checked")){
-          maps[key] = val;
+          params["configmaps"][key] = val;
         }
       }else{
         me.parents('.config-item-group').addClass('error');
@@ -761,14 +765,16 @@ var setup = (function () {
     });
 
     if (!hasErr){ 
-      if (Object.keys(maps).length == 0){
+      if (Object.keys(params["configmaps"]).length == 0){
         alert("未勾选需要升级的配置项。");
 
         return;
       }
 
-      this.post("up/configmap/update", maps).then(function(d){
-        that.go("/up/database");
+      this.post("up/configmap/update", params).then(function(d){
+        if (complate_func && typeof(complate_func) == 'function'){
+          complate_func();
+        }
       }).done(function(){
 
       });
@@ -777,6 +783,26 @@ var setup = (function () {
     }
 
     this.up_config_check_edit();
+  };
+
+
+  app.prototype.configmap_update = function(){
+    var that = this;
+
+    this.do_configmap_edit(null, function(){
+      that.go("/up/database");
+    });
+  };
+
+
+  app.prototype.setting_configmap = function(){
+    var that = this;
+    var jqRedeploy = $('#chk_redeploy');
+    var redeploy = jqRedeploy.is(':checked');
+
+    this.do_configmap_edit({"redeploy": redeploy}, function(){
+      that.go("/setting/configmap")
+    });
   };
 
 

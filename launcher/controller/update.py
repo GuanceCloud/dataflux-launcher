@@ -419,7 +419,7 @@ def list_config_ref_services():
   return result
 
 
-def redeploy(configServices, configKey, namespace):
+def do_redeploy(configServices, configKey, namespace):
   services = configServices.get(namespace, {}).get(configKey) or []
 
   for deployName in services:
@@ -432,6 +432,9 @@ def configmap_update(params):
   updateProjects = SERVICECONFIG['updates']
   configServices = list_config_ref_services()
 
+  configmaps = params['configmaps']
+  redeploy = params['options']['redeploy']
+
   for project in updateProjects:
     namespace = project['namespace']
 
@@ -440,12 +443,16 @@ def configmap_update(params):
       mapName = item['mapName']
       mapKey  = item['mapKey']
 
-      content = params.get(key)
+      content = configmaps.get(key)
 
       if not content:
         continue
 
       k8sMdl.patch_configmap(mapName, mapKey, content, namespace)
+
+      # 勾选了需要重启相关服务选项
+      if redeploy:
+        do_redeploy(configServices, key, namespace)
 
   return True
 

@@ -275,6 +275,13 @@ def register_update_router(app):
     return render("up/finished.html", {"title": "应用启动状态", "pageData": serviceStatus, "steps": STEPS_COMMON + STEPS_UPDATE })
 
 
+  @app.route("/setting/configmap")
+  def setting_configmap():
+    configmaps = update.list_source_and_update_configmaps()
+
+    return render("setting/configmap.html", {"title": "修改应用配置", "pageData": configmaps, "steps": STEPS_COMMON + STEPS_UPDATE })
+
+
 def register_blueprint(app):
   from launcher.route import setup_bp
 
