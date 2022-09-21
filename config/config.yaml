@@ -4,7 +4,7 @@ tmpDir: /tmp/k8s
 
 namespaces:
   - forethought-core
-  - forethought-inner-app
+  # - forethought-inner-app
   - forethought-webclient
   - forethought-kodo
   - func
@@ -128,22 +128,22 @@ services:
     - name: open-api-logs
       storage: 10Gi
 
-  - namespace: forethought-inner-app
-    services:
-    - key: trigger
-      name: 通知触发器
-      image: trigger
-      replicas: 0
-      deleted: True
-
-    configmaps:
-    - key: innerAppTrigger
-      mapname: trigger-conf
-      mapkey: config.yaml
-      format: yaml
-      services:
-      - trigger
-      template: inner-app-trigger-config.yaml
+  # - namespace: forethought-inner-app
+  #   services:
+  #   - key: trigger
+  #     name: 通知触发器
+  #     image: trigger
+  #     replicas: 0
+  #     deleted: True
+  #
+  #   configmaps:
+  #   - key: innerAppTrigger
+  #     mapname: trigger-conf
+  #     mapkey: config.yaml
+  #     format: yaml
+  #     services:
+  #     - trigger
+  #     template: inner-app-trigger-config.yaml
 
   - namespace: forethought-webclient
     services:
