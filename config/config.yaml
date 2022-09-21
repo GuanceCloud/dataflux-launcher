@@ -671,6 +671,11 @@ updates:
         mapKey: config.yaml
         format: yaml
 
+      - key: staticResourceNginx
+        mapName: static-resource-nginx
+        mapKey: static-resource-nginx.conf
+
+
   - namespace: forethought-webclient
     project: frontWeb
     noDatabase: True
@@ -774,11 +779,6 @@ updates:
     noDatabase: True
     dataKey: data
     config:
-      - key: dataWarehouseConfig
-        mapName: data-warehouse-config
-        mapKey: config.yaml
-        format: yaml
-
       - key: internalDataWay
         mapName: dataway-config
         mapKey: config.yaml

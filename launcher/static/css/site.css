@@ -257,14 +257,17 @@ footer{
   width: 40%;
 }
 
-.config-review .config-update-right{
+.config-review .config-update-box{
   position: relative;
+}
+
+.config-review .config-update-right{
   margin-left: 40%;
 
   width: 60%;
 }
 
-.config-review .config-update-right .disable-layer{
+.config-review .config-update-box .disable-layer{
   position: absolute;
   top: 0;
   left: 0;
@@ -275,7 +278,7 @@ footer{
   background-color: rgba(255, 255, 255, 0);
 }
 
-.config-review .checked-edit .config-update-right .disable-layer{
+.config-review .checked-edit .config-update-box .disable-layer{
   display: none;
 }
 
