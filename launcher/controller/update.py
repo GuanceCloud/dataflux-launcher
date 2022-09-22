@@ -433,7 +433,7 @@ def configmap_update(params):
   configServices = list_config_ref_services()
 
   configmaps = params['configmaps']
-  redeploy = params['options']['redeploy']
+  redeploy = params['options'].get('redeploy', False)
 
   for project in updateProjects:
     namespace = project['namespace']
