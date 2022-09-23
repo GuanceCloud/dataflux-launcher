@@ -443,3 +443,7 @@ upgradeInfo:
       subDomain:
         docs: df-docs
       ```
+
+  # 2022-09-23 fix 版本
+  - seq: 27
+    func_exec: script_20220923
