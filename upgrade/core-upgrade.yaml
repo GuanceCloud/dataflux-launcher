@@ -2220,3 +2220,9 @@ upgrade:
       ADD COLUMN `refKey` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '关联key' AFTER `type`, 
       CHANGE COLUMN `type` `type` ENUM('trigger', 'baseline', 'aggs', 'cloud_correlation_switch', 'logbackup', 'slo_detect', 'slo_compute', 'bot_obs', 'self_built_trigger') NOT NULL DEFAULT 'trigger' ,
       ADD INDEX `k_refkey` (`refKey` ASC);
+
+    curl: |-
+
+      # 【inner api 服务器执行】将biz_data_blacklist_rule 中的的conditions 中not in 和 not match 替换为notin not match
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_15_blacklist_notin"}'
+
