@@ -5,7 +5,7 @@
 <div class="row form-body">
     <form id="validateForm" class="form-horizontal" onsubmit="return false;">
       <div>
-        <button class="btn btn-sm btn-success pull-right" onclick="setup.influxdb_add()">
+        <button class="btn btn-sm btn-success pull-right hide" onclick="setup.influxdb_add()">
           <i class="glyphicon glyphicon-plus"></i> 添加
         </button>
         <h2 class="page-heading">{{ title }}</h2>
@@ -16,12 +16,34 @@
       {% if idb.pingError %}
       <div class="high-block influxdb-list error">
       {% else %}
-      <div class="high-block influxdb-list">
+      <div class="high-block influxdb-list" data-idx="{{ loop.index }}">
       {% endif %}
         <div class="form-group">
-          <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
+          <label class="col-sm-2 control-label">时序存储引擎:</label>
           <div class="col-sm-5">
-            <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="iptInfluxDBHost{{ loop.index }}" required value="{{idb.host}}" placeholder="InfluxDB Host">
+            <label class="checkbox-inline">
+              <input type="radio" name="radioSeriesEngine{{ loop.index }}" {{ "checked" if idb.engine == "influxdb"}} value="influxdb"> InfluxDB
+            </label>
+            <label class="checkbox-inline">
+              <input type="radio" name="radioSeriesEngine{{ loop.index }}" {{ "checked" if idb.engine == "tdengine"}} value="tdengine"> TDengine
+            </label>
+          </div>
+          <div class="col-sm-5 error"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">
+            <span id="hostLabel{{ loop.index }}">
+            {% if idb.engine == "influxdb" %}
+            InfluxDB
+            {% else %}
+            TDengine
+            {% endif %}
+            </span>
+            Host:
+          </label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="iptInfluxDBHost{{ loop.index }}" name="iptInfluxDBHost{{ loop.index }}" required value="{{idb.host}}" placeholder="{{ "InfluxDB" if idb.engine == 'influxdb' else 'TDengine'}} Host">
             <label class="checkbox-inline">
               {% if idb.ssl %}
               <input type="checkbox" id="ckbInfluxDBSSL{{ loop.index }}" checked="checked"> 启用 SSL (HTTPS)
@@ -108,5 +130,18 @@
       </div>
     </form>
 </div>
+
+<script type="text/javascript">
+  $().ready(function(){
+    $('input:radio').on('change', function(){
+      var jqRadio = $(this);
+      var idx = jqRadio.parents('.influxdb-list').data("idx");
+      var label = {'influxdb': "InfluxDB", "tdengine": "TDengine"}[jqRadio.val()];
+
+      $("#hostLabel" + idx).text(label);
+      $("#iptInfluxDBHost" + idx).attr("placeholder", label + "host");
+    });
+  });
+</script>
 
 {% endblock %}

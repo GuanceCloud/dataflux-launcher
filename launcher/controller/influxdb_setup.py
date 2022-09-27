@@ -3,7 +3,9 @@
 import shortuuid
 import json
 import time
+import requests
 
+from requests.auth import HTTPBasicAuth
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 from launcher.utils import encrypt
@@ -37,9 +39,56 @@ def influxdb_ping(db):
 
   return not pingError
 
+
+def tdengine_ping(db):
+  dbInfo = {
+    "host": db.get('host', '').strip(),
+    "port": int(db.get('port', '').strip()),
+    "username": db.get('username', '').strip(),
+    "password": db.get('password', '').strip(),
+    "ssl": db.get('ssl')
+  }
+
+  pingError = True
+  # client = InfluxDBClient(**dbInfo)
+  use_ssl = dbInfo.get('ssl', False)
+  http_auth = HTTPBasicAuth(dbInfo.get('username'), dbInfo.get('password'))
+  url = "{protocol}://{host}:{port}".format(**{"protocol": "https" if use_ssl else "http", "host": dbInfo.get('host'), "port": dbInfo.get('port')})
+
+  try:
+    resp = requests.get(url + "/-/ping", auth = http_auth)
+
+    if resp.status_code == 200:
+      pingError = False
+
+    sql = "SHOW DATABASES"
+    resp = requests.post(url + "/rest/sql", data = sql, auth = http_auth)
+
+    if resp.status_code != 200:
+      pingError = True
+    else:
+      result = resp.json()
+
+      if result.get('code', -1) != 0:
+        pingError = True
+        return False
+  except Exception as ex:
+    print(ex)
+    pingError = True
+
+  db["pingError"] = pingError
+
+  return not pingError
+
+
 def influxdb_ping_all(dbs):
   for db in dbs:
-    influxdb_ping(db)
+
+    engine = db.get("engine", "influxdb")
+    if engine == 'influxdb':
+      influxdb_ping(db)
+    elif engine == 'tdengine':
+      tdengine_ping(db)
 
   influxdb = settingsMdl.influxdb
 
@@ -297,7 +346,7 @@ def _init_influx_user(instance, roUser, wrUser):
   return True
 
 
-def _init_db_instance(instance):
+def _init_influx_db_instance(instance):
   # encryptKey = settingsMdl.other['core']['secret']['encryptKey']
   # influxPassword = instance.get('password')
   # passwordEncrypt = str(encrypt.cipher_by_aes(influxPassword, encryptKey), encoding="utf-8")
@@ -344,22 +393,44 @@ def _init_db_instance(instance):
       host,
       json.dumps(authorization)
     ]
-    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 4, '', '', 0, UNIX_TIMESTAMP());"
+    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `dbType`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 0, 'influxdb', '', '', 0, UNIX_TIMESTAMP());"
     db.execute(sql, dbName = dbInfo['database'], params = params)
 
-    # kapacitorHost = instance.get('kapacitorHost')
+  return influxdb_uuid
 
-    # if kapacitorHost:
-    #   # kapa instance
-    #   params = [
-    #     "kapa-" + shortuuid.ShortUUID().random(length = 24),
-    #     instance.get('kapacitorHost'),
-    #     influxdb_uuid
-    #   ]
-    #   sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`) VALUES (%s, %s, %s, 0);"
-    #   db.execute(sql, dbName = dbInfo['dbName'], params = params)
+
+def _init_td_db_instance(instance):
+
+  user = {
+    "username": instance.get('username'),
+    "password": instance.get('password'),
+  }
+
+  authorization = { "admin": user }
+
+  mysqlSetting = settingsMdl.mysql
+  mysqlInfo = mysqlSetting.get('base')
+  dbInfo = mysqlSetting.get('core')
+
+  with dbHelper(mysqlInfo) as db:
+    # influx instance 
+    influxdb_uuid = "iflx_" + shortuuid.ShortUUID().random(length = 24)
+    host = "{protocol}://{host}:{port}".format(**{
+        "protocol": 'https' if instance.get('ssl') else 'http',
+        "host": instance.get('host'),
+        "port": instance.get('port')
+      })
+
+    params = [
+      influxdb_uuid,
+      host,
+      json.dumps(authorization)
+    ]
+    sql = "INSERT INTO `main_influx_instance` (`uuid`, `host`, `authorization`, `dbcount`, `dbType`, `user`, `pwd`, `status`, `createAt`) VALUES (%s, %s, %s, 0, 'tdengine', '', '', 0, UNIX_TIMESTAMP());"
+    db.execute(sql, dbName = dbInfo['database'], params = params)
 
   return influxdb_uuid
+
 
 
 def init_influxdb_all():
@@ -379,7 +450,12 @@ def init_influxdb_all():
   settingsMdl.influxdb = instances
 
   for idx, instance in enumerate(instances):
-    instanceUUID = _init_db_instance(instance)
+    engine = instance.get('engine', 'influxdb')
+
+    if engine == 'influxdb':
+      instanceUUID = _init_influx_db_instance(instance)
+    else:
+      instanceUUID = _init_td_db_instance(instance)
 
     ###
     # 系统工作空间初始化不在安装程序内完成，

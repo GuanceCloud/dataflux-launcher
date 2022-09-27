@@ -90,7 +90,61 @@ def __redis_ping():
   return {"key": "{}:{}".format(params['host'],  params['port']), "status": pingStatus}
 
 
-def __influxdb_ping():
+def __tdengine_ping(dbInfo):
+  pingError = True
+
+  use_ssl = dbInfo.get('ssl', False)
+  http_auth = HTTPBasicAuth(dbInfo.get('username'), dbInfo.get('password'))
+  url = "{protocol}://{host}:{port}".format(**{"protocol": "https" if use_ssl else "http", "host": dbInfo.get('host'), "port": dbInfo.get('port')})
+
+  try:
+    resp = requests.get(url + "/-/ping", auth = http_auth)
+
+    if resp.status_code == 200:
+      pingError = False
+
+    sql = "SHOW DATABASES"
+    resp = requests.post(url + "/rest/sql", data = sql, auth = http_auth)
+
+    if resp.status_code != 200:
+      pingError = True
+    else:
+      result = resp.json()
+
+      if result.get('code', -1) != 0:
+        pingError = True
+        return False
+  except Exception as ex:
+    print(ex)
+    pingError = True
+
+  return not pingError
+
+
+def __influxdb_ping(db):
+  dbInfo = {
+    "host": db.get('host', '').strip(),
+    "port": int(db.get('port', '').strip()),
+    "username": db.get('username', '').strip(),
+    "password": db.get('password', '').strip(),
+    "ssl": db.get('ssl')
+  }
+
+  pingError = True
+  client = InfluxDBClient(**dbInfo)
+
+  try:
+    pingError = not client.ping()
+
+    if not pingError:
+      client.query("SHOW DATABASES")
+  except:
+    pingError = True
+
+  return not pingError
+
+
+def __series_ping():
   influxdbSettings = settingsMdl.influxdb
   result = []  
 
@@ -106,20 +160,16 @@ def __influxdb_ping():
       "ssl": item.get('ssl')
     }
 
-    pingError = True
-    client = InfluxDBClient(**dbInfo)
-
-    try:
-      pingError = not client.ping()
-
-      if not pingError:
-        client.query("SHOW DATABASES")
-    except:
-      pingError = True
+    engine = item.get('engine', "influxdb")
+    if engine == 'influxdb':
+      pingSuccess = __influxdb_ping(dbInfo)
+    else:
+      pingSuccess = __tdengine_ping(dbInfo)
 
     result.append({
         "key": "{}:{}".format(dbInfo['host'],  dbInfo['port']),
-        "status": not pingError
+        "engine": engine,
+        "status": pingSuccess
       })
 
   return result
@@ -212,7 +262,7 @@ def __mysql_ping():
 def db_setting_check():
   return {
             "mysql": __mysql_ping(),
-            "influxdb": __influxdb_ping(),
+            "influxdb": __series_ping(),
             "redis": __redis_ping(),
             "elasticsearch": __elasticsearch_ping()
           }

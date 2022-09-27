@@ -32,7 +32,7 @@ STEPS_INSTALL = [
   },
   {
       "key": "/install/influxdb",
-      "name": "InfluxDB 设置"
+      "name": "时序引擎 设置"
   },
   # {
   #     "key": "/install/aksk",

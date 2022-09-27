@@ -226,6 +226,7 @@ var setup = (function () {
 
     var dbs = []
     for(var i = 1; i < influxdbCount + 1; i++){
+      var engine = $('input:radio[name=radioSeriesEngine' + i + ']:checked').val();
       var db = {
         "host": $("#iptInfluxDBHost" + i).val(),
         "port": $("#iptInfluxDBPort" + i).val(),
@@ -233,7 +234,8 @@ var setup = (function () {
         "password": $("#iptInfluxDBPassword" + i).val(),
         // "dbName": $("#iptInfluxDBName" + i).val(),
         "ssl": $("#ckbInfluxDBSSL" + i).is(":checked"),
-        "defaultRP": $("#sltInfluxRP" + i).val()
+        "defaultRP": $("#sltInfluxRP" + i).val(),
+        "engine": engine
       }
 
       $("#validateForm").validate();

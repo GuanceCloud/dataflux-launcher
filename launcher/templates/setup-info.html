@@ -162,9 +162,15 @@
 
           {% for idb in pageData.influxdb %}
           <div class="high-block well-influxdb">
-            <h4>InfluxDB 信息</h4>
+            <h4>时序引擎 信息</h4>
             <div class="form-group">
-              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">InfluxDB Host:</label>
+              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">时序引擎:</label>
+              <div class="col-sm-5">
+                <p class="form-control-static">&nbsp;{{ "TDengine" if idb.engine == 'tdengine' else "InfluxDB" }} </p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="iptInfluxDBHost{{ loop.index }}" class="col-sm-2 control-label">{{ "TDengine" if idb.engine == 'tdengine' else "InfluxDB" }} Host:</label>
               <div class="col-sm-5">
                 <p class="form-control-static">{{idb.host}}&nbsp;
                   {% if idb.ssl %}

@@ -161,7 +161,7 @@ def register_install_router(app):
     rps = SERVICECONFIG['influxDB']['replication']
     influxs = settingsMdl.influxdb
 
-    return render("influxdb.html", {"title": "InfluxDB 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS_COMMON + STEPS_INSTALL})
+    return render("influxdb.html", {"title": "时序引擎 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 
   @app.route("/install/aksk")

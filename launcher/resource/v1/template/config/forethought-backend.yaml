@@ -12,6 +12,10 @@ database:
     max_overflow: 10
     echo: false
 
+{% if( influxdb | length >= 1) %}
+DefaultTimeDbEngineType: {{ influxdb[0].engine }}
+{% endif %}
+
 # Elasticsearch Server 配置
 ElasticsearchServer:
   protocol: {{ 'https' if elasticsearch.ssl else 'http' }}

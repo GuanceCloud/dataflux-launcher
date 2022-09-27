@@ -99,7 +99,7 @@
             </div>
 
             <div class="high-block">
-              <h5>InfluxDB</h5>
+              <h5>时序引擎</h5>
               <div class="form-group">
                 <div class="col-sm-12 service-status">
                   {% if pageData.db.influxdb %}
@@ -111,7 +111,7 @@
                         <i class="icon-fail"></i>
                         {% endif %}
                       </span>
-                      <span>{{ item.key }}</span>&nbsp;&nbsp;
+                      <span>{{ item.key }} ({{ "TDengine" if item.engine == 'tdengine' else "InfluxDB" }})</span>&nbsp;&nbsp;
                     {%endfor%}
                   {% else %}
                     <span>无</span>
