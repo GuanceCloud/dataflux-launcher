@@ -69,9 +69,8 @@ def tdengine_ping(db):
     else:
       result = resp.json()
 
-      if result.get('status', 'err') != 'succ':
+      if result.get('status', 'error') != 'succ':
         pingError = True
-        return False
   except Exception as ex:
     print(ex)
     pingError = True
