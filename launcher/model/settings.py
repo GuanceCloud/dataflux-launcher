@@ -28,38 +28,8 @@ class Settings(object):
 
     self.__save_to_configmap(str(cipheredSetting, encoding="utf-8"))
 
-    # base_path = os.path.dirname(os.path.abspath(__file__))
-    # dirPath = base_path + "/../../persistent-data"
-
-    # if not os.path.exists(dirPath):
-    #   os.mkdir(dirPath)
-
-    # path = dirPath + "/settings.yaml"
-    # with open(path, 'w') as f:
-    #   cipheredSetting = encrypt.cipher_by_aes(settingsYaml, _SETTING_ENCRYPT_KEY)
-    #   f.write(str(cipheredSetting, encoding="utf-8"))
-    #   f.close()
-
     return True
-  #
-  #
-  # def __default_deploy_replicas():
-  #   result = {}
-  #
-  #   for ns in SERVICECONFIG['services']:
-  #     nsName = ns['namespace']
-  #     result[nsName] = {}
-  #
-  #     for service in ns['services']:
-  #       serviceKey = service['key']
-  #       serviceDisabled = service.get('deleted', False)
-  #       serviceReplicas = service.get('replicas', 0)
-  #
-  #       if not serviceDisabled:
-  #         result[nsName][serviceKey] = {'replicas': serviceReplicas}
-  #
-  #   return result 
-  #
+
 
   def __dict_merge(self, key, value):
     if key not in self._settingJson:

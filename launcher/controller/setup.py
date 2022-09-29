@@ -368,7 +368,6 @@ def metering_init():
   return call_service_url(url)
 
 
-
 # 安装成功之后，初始化一些 studio 的相关配置
 def studio_init():
   url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
@@ -381,8 +380,9 @@ def studio_init():
         "geo",                  # 拨测的地理信息
         "internal_pipeline",    # 内置 Pipeline 库
         "measurements_meta",    # 内置 指标字典
-        "dataflux_integration", # 集成包
-        "dataflux_template"     # 内置视图模板
+        # "dataflux_integration", # 集成包
+        "dataflux_template",    # 内置视图模板
+        "internal_field_cfg"    # 同步官方字段说明
       ]  
     }
   }
