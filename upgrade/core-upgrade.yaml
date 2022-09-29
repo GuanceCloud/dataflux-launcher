@@ -2226,3 +2226,64 @@ upgrade:
       # 【inner api 服务器执行】将biz_data_blacklist_rule 中的的conditions 中not in 和 not match 替换为notin not match
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_15_blacklist_notin"}'
 
+  # 2022.09.29 迭代
+  - seq: 63
+    database: |-
+      --  新增biz_field_management 字段管理
+      CREATE TABLE `biz_field_management` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 field-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
+        `fieldType`  enum('text','number','time','percent') NOT NULL DEFAULT 'text',
+        `desc` varchar(512) NOT NULL DEFAULT '' COMMENT '描述信息',
+        `sysField` int(1) NOT NULL DEFAULT '0' COMMENT '自定义字段或者 系统内置字段, 1代表系统内置字段, 0代表自定义字段',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 笔记新增`extend`字段用于存储额外拓展字段数据
+      ALTER TABLE `biz_notes`
+      ADD COLUMN `extend` JSON NULL DEFAULT NULL COMMENT '额外拓展字段' AFTER `isPublic`;
+
+      -- 为笔记中新增的 extend 字段设置默认值
+      update `biz_notes` set extend='{}' where extend is NULL;
+
+
+      -- biz_mute表新增muteRange字段
+      ALTER TABLE `biz_mute`
+      ADD COLUMN `muteRanges` JSON NULL COMMENT '静默范围, []代表所有' AFTER `type`;
+
+      -- biz_mute表muteRange字段 设置默认值
+      UPDATE biz_mute set muteRanges='[]';
+      
+
+    curl: |-
+
+      # 【inner api 服务器执行】将biz_mute 老数据的 tags和muteRanges进行更新
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_mute_tags_range_2022_09_29"}'
+
+      #  data_package 分发数据包命令 data_package_task.distribute_data_package(keys=[internal_field_cfg]) 的参数 keys 需要新增值`internal_field_cfg`:
+      # 【inner api 服务器执行】 同步拉取并更新字段管理文件
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_field_cfg_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_field_cfg": true}}' \
+      --compressed
+
+
+      # 在部署完成之后 执行该操作【inner api 服务器执行】重新生成所有的conditions,
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_15_blacklist_notin"}'
+      
+      # 清理 kodo 侧已删除工作空间但未清理 token 缓存的问题
+      curl --location --request DELETE 'http://kodo-inner.forethought-kodo:9527/v1/rediskey?key=tkn_info*' \ --data-raw ''
+      
+
+

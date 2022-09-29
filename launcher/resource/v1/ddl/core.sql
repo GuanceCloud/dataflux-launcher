@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-09-15 02:05:49 +0000
+# Generation Time: 2022-09-29 02:58:26 +0000
 # ************************************************************
 
 
@@ -332,6 +332,33 @@ CREATE TABLE `biz_entity_relationship` (
 
 
 
+# Dump of table biz_field_management
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_field_management`;
+
+CREATE TABLE `biz_field_management` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 field-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
+  `fieldType` enum('text','number','time','percent') NOT NULL DEFAULT 'text',
+  `desc` varchar(512) NOT NULL DEFAULT '' COMMENT '描述信息',
+  `sysField` int(1) NOT NULL DEFAULT '0' COMMENT '自定义字段或者 系统内置字段, 1代表系统内置字段, 0代表自定义字段',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_geo
 # ------------------------------------------------------------
 
@@ -493,6 +520,7 @@ CREATE TABLE `biz_mute` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID mute- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `type` enum('host','checker','monitor') NOT NULL DEFAULT 'host' COMMENT '静默对象的资源类型',
+  `muteRanges` json DEFAULT NULL COMMENT '静默范围, []代表所有',
   `tags` json DEFAULT NULL COMMENT '目标的tags',
   `notifyTargets` json DEFAULT NULL COMMENT '通知对象列表',
   `notifyMessage` text NOT NULL COMMENT '通知内容',
@@ -573,6 +601,7 @@ CREATE TABLE `biz_notes` (
   `pos` json NOT NULL COMMENT 'charts 位置信息[]',
   `createdWay` enum('import','template','') NOT NULL DEFAULT '' COMMENT '笔记的创建方式',
   `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见',
+  `extend` json DEFAULT NULL COMMENT '额外拓展字段',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
