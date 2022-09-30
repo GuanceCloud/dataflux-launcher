@@ -444,6 +444,6 @@ upgradeInfo:
         docs: df-docs
       ```
 
-  # 2022-09-23 fix 版本
-  - seq: 27
-    func_exec: script_20220923
+  # 2022-09-29 fix 版本
+  - seq: 28
+    func_exec: script_20220929
