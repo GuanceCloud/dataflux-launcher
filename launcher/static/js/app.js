@@ -644,6 +644,13 @@ var setup = (function () {
             }).fail(function(d){
               alert("官方 Pipeline 包同步失败。")
             });
+
+            // 同步官方 Field 列表到数据库
+            that.post('setting/sync_field_list').done(function(d){
+              
+            }).fail(function(d){
+              alert("官方 Field 库同步失败。")
+            });
           }
         }).fail(function(d){
             alert("Studio 平台初始化失败，请刷新本页面重试。");
@@ -957,6 +964,12 @@ var setup = (function () {
 
   app.prototype.sync_pipeline = function(){
     this.post('setting/sync_pipeline').done(function(d){
+
+    });
+  };
+
+  app.prototype.sync_field_list = function(){
+    this.post('setting/sync_field_list').done(function(d){
 
     });
   };

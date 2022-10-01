@@ -414,6 +414,21 @@ def sync_pipeline():
   }
 
   return call_service_url(url, data)
+  
+
+# 触发官方 字段 库同步到数据库
+def sync_field_list():
+  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
+
+  data = {
+    "script_name": "timed_sync_field_cfg_template",
+    "func_name": "timed_sync_pull", 
+    "funcKwargs": {
+      "need_sync_field_cfg": True
+    }
+  }
+
+  return call_service_url(url, data)
 
 
 def init_setting():

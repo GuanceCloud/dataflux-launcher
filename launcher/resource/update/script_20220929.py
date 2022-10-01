@@ -15,8 +15,6 @@ def fix_script_exec():
   ping_url  = "http://inner.forethought-core:5000/api/v1/inner/const/ping"
   url       = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
-  # curl 'http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_15_blacklist_notin"}'
-
   for i in range(0, 60):
     content, status_code = apiHelper.do_get(ping_url)
     if status_code == 200:
@@ -41,6 +39,4 @@ def fix_script_exec():
 
 def after_container_update():
 
-  fix_script_exec()
-
-  return True
+  return fix_script_exec()
