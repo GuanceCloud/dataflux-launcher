@@ -122,10 +122,10 @@ def __tdengine_ping(dbInfo):
 
 def __influxdb_ping(db):
   dbInfo = {
-    "host": db.get('host', '').strip(),
-    "port": int(db.get('port', '').strip()),
-    "username": db.get('username', '').strip(),
-    "password": db.get('password', '').strip(),
+    "host": db.get('host', ''),
+    "port": db.get('port', 0),
+    "username": db.get('username', ''),
+    "password": db.get('password', ''),
     "ssl": db.get('ssl')
   }
 

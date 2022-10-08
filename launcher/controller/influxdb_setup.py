@@ -16,7 +16,7 @@ from influxdb import InfluxDBClient
 def influxdb_ping(db):
   dbInfo = {
     "host": db.get('host', '').strip(),
-    "port": int(db.get('port', '').strip()),
+    "port": int(db.get('port', '0').strip()),
     "username": db.get('username', '').strip(),
     "password": db.get('password', '').strip(),
     "ssl": db.get('ssl')
