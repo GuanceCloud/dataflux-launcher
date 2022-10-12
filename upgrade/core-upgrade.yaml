@@ -2284,6 +2284,9 @@ upgrade:
       
       # 清理 kodo 侧已删除工作空间但未清理 token 缓存的问题
       curl --request DELETE 'http://kodo-inner.forethought-kodo:9527/v1/rediskey?key=tkn_info*' --data-raw ''
+
+      # 在部署完成之后 执行该操作【inner api 服务器执行】重新生成rum 相应的的conditions,
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_09_29_blacklist_rum"}'
       
 
 
