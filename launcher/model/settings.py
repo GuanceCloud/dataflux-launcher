@@ -84,8 +84,12 @@ class Settings(object):
 
       output, err = p.communicate()
 
-      data = json.loads(output).get('data') or {}
+      try:
+        dJson = json.loads(output)
+      except:
+        dJson = {}
 
+      data = dJson.get('data') or {}
       result = yaml.safe_load(data.get('setting.yaml', ''))
 
     except:
