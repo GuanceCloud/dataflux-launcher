@@ -28,15 +28,6 @@ questions:
   label: Storage
   group: "Launcher Storage"
 
-- variable: configyaml
-  required: true
-  default: ""
-  description: "kubernetes kubeconfig 配置"
-  type: string
-  label: Kubernetes KubeConfig
-  group: "Launcher Configuration"
-
-
 # Launcher Network
 - variable: ingress.enabled
   default: false

@@ -7,7 +7,6 @@
 ```shell
 $ helm repo add launcher https://pubrepo.guance.com/chartrepo/launcher
 $ helm install my-launcher launcher/launcher -n launcher --create-namespace  \
-        --set-file configyaml="/Users/buleleaf/.kube/config" \
   --set ingress.hostName="launcher.my.com",storageClassName=nfs-client
 ```
 
@@ -29,7 +28,6 @@ $ helm install my-launcher launcher/launcher -n launcher --create-namespace  \
 ```shell
 $ helm repo add launcher https://pubrepo.guance.com/chartrepo/launcher
 $ helm install my-launcher launcher/launcher -n launcher --create-namespace  \
-        --set-file configyaml="/Users/buleleaf/.kube/config" \
   --set ingress.hostName="launcher.my.com",storageClassName=nfs-client
 ```
 
@@ -55,7 +53,6 @@ $ helm delete my-launcher -n launcher
 | --------------------- | ------------------------------------- | ----------------- |
 | `storageClassName `   | PVC Storage Class                     | `nfs-client`      |
 | `persistence.size`    | PVC Storage Request                   | `8Gi`             |
-| `configyaml`          | kubernetes kubeconfig                 | `nil`             |
 | `image.repository`    | Launcher image name                   | `nil`             |
 | `image.tag`           | Launcher image tag                    | `nil`             |
 | `image.pullPolicy`    | Image pull policy                     | `IfNotPresent`    |
@@ -72,7 +69,6 @@ $ helm delete my-launcher -n launcher
 
 ```console
 $ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
-        --set-file configyaml="/Users/buleleaf/.kube/config" \
   --set ingress.hostName="launcher.my.com",storageClassName=nfs-client
 ```
 
@@ -84,20 +80,4 @@ $ helm install my-release -f values.yaml <helm-repo>/Launcher
 
 > **Tip**: 可以使用默认值[values.yaml](values.yaml)
 
-
-### 配置 config.yaml 
-可使用以下命令进行配置：
-```shell
-$ helm pull dataflux/launcher --tar
-$ cd launcher
-# 修改 values.yaml 文件
-$ helm install my-launcher  -n launcher ./launcher --create-namespace
-```
-
-或者使用`--set-file` 命令指定路径
-
-```shell
-$ helm install my-launcher dataflux/launcher -n launcher --create-namespace  \
-        --set-file configyaml="/Users/buleleaf/.kube/config" 
-```
 
