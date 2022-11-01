@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-09-29 02:58:26 +0000
+# Generation Time: 2022-10-20 01:51:57 +0000
 # ************************************************************
 
 
@@ -1856,6 +1856,7 @@ CREATE TABLE `main_workspace` (
   `esRP` json DEFAULT NULL COMMENT 'es 生命周期管理',
   `enablePublicDataway` int(1) NOT NULL DEFAULT '1' COMMENT '允许公网Dataway上传数据',
   `durationSet` json DEFAULT NULL COMMENT '数据保留时长设置',
+  `datastore` json DEFAULT NULL COMMENT '数据存储信息',
   `esIndexSettings` json DEFAULT NULL COMMENT '索引配置信息',
   `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
@@ -1896,6 +1897,31 @@ CREATE TABLE `main_workspace_accesskey` (
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   UNIQUE KEY `uuid_UNIQUE` (`uuid`),
   KEY `idx_ak` (`ak`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table main_workspace_config
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `main_workspace_config`;
+
+CREATE TABLE `main_workspace_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `keyCode` enum('StoreSchemeCfg','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '配置项Code',
+  `config` json NOT NULL COMMENT '配置信息',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_key_code` (`keyCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

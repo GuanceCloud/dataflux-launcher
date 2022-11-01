@@ -2290,3 +2290,44 @@ upgrade:
       
 
 
+  # 2022.10.20 迭代
+  - seq: 64
+    database: |-
+      
+      -- 新增工作空间系统配置表
+      CREATE TABLE `main_workspace_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `keyCode` enum('StoreSchemeCfg', '') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '配置项Code',
+        `config` json NOT NULL COMMENT '配置信息',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_key_code` (`keyCode`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 工作空间新增 datastore 字段保存工作空间的数据存储信息
+      ALTER TABLE `main_workspace` 
+      ADD COLUMN `datastore` JSON NULL DEFAULT NULL COMMENT '数据存储信息' AFTER `durationSet`;
+      
+      -- 设置 main_workspace 表中的 datastore 值， 上线时需要批量更新历史工作空间数据中的字段值
+      -- update main_workspace set datastore='{}' where datastore is null and status=0;
+      
+      
+      -- 设置时序数据库类型为 influxdb 的工作空间的 datastore 配置值 
+      update main_workspace set `datastore`=JSON_OBJECT("metric", "influxdb", "rum", "es", "logging", "es", "network", "es", "tracing", "es", "keyevent", "es", "security", "es", "backup_log", "es", "object", "es", "object_history", "es", "custom_object", "es") where `status` = 0 and dbUUID in (select uuid from main_influx_db where dbType='influxdb' and status=0);
+
+      -- 设置时序数据库类型为 tdengine 的工作空间的 datastore 配置值(区别仅是 metric 的值)
+      update main_workspace set `datastore`=JSON_OBJECT("metric", "tdengine", "rum", "es", "logging", "es", "network", "es", "tracing", "es", "keyevent", "es", "security", "es", "backup_log", "es", "object", "es", "object_history", "es", "custom_object", "es") where `status` = 0 and dbUUID in (select uuid from main_influx_db where dbType='tdengine' and status=0);
+
+    curl: |-
+
+      # 在部署完成之后 执行该操作【inner api 服务器执行】重新生成所有的biz_rule表中的jsonScript, 本地迭代修改noDataPeriodCount字段为noDataInterval,需要将count重新计算为noDataInterval的时间分钟格式
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_10_20_checker_jsonscript_update"}'
