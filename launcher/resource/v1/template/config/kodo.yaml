@@ -50,3 +50,8 @@ cc:
   syncBillExpired: "7d"
   syncBillHost: "https://boss.guance.com"
   postTime: "01:00"
+
+
+# 新增配置项，用于 profile 数据的磁盘存储
+profile:
+  data_path: /data/profile
