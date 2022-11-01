@@ -22,6 +22,7 @@ global:
     workers: 8
     log_workers: 16
     es_consumer: true
+    sys_ws_uuid: "wksp_system"
 
 func:
     host: "http://server-inner.func2:8088"

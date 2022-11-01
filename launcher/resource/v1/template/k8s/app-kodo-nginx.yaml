@@ -20,18 +20,6 @@ spec:
       labels:
         app: deployment-forethought-kodo-kodo-nginx
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - deployment-forethought-kodo-kodo-nginx
-              topologyKey: kubernetes.io/hostname
-            weight: 100
       containers:
       - image: {{ config.fullImagePath }}
         imagePullPolicy: {{ settings.imagePullPolicy }}
