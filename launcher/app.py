@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import logging
+
 from flask import Flask, request, g
 
 from launcher.utils.template import render
@@ -152,7 +154,6 @@ def register_install_router(app):
 
   @app.route("/install/elasticsearch")
   def elasticsearch():
-    print(settingsMdl.elasticsearch)
     return render("elasticsearch.html", {"title": "Elasticsearch 设置", "pageData": settingsMdl.elasticsearch, "steps": STEPS_COMMON + STEPS_INSTALL})
 
 

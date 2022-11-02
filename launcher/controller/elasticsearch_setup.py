@@ -4,6 +4,7 @@ import shortuuid
 import json
 import time
 import requests
+import logging
 
 from requests.auth import HTTPBasicAuth
 
@@ -23,7 +24,7 @@ def elasticsearch_ping(params):
     if resp.status_code == 200:
       pingStatus = True
   except Exception as e:
-    print(e)
+    logging.error(e)
 
   if pingStatus:
     settingsMdl.elasticsearch = params

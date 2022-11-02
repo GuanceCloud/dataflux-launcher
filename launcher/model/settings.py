@@ -1,7 +1,7 @@
 # encoding=utf-8
 
 import os, re, subprocess
-import json, yaml
+import json, yaml, logging
 
 from launcher.utils import utils
 from launcher.utils import encrypt
@@ -68,7 +68,7 @@ class Settings(object):
       cmd = "kubectl apply  -f {}".format(tmpPath)
       p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     except Exception as e:
-      print(e)
+      logging.error(e)
       return False
 
     return True

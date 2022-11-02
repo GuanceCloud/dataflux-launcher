@@ -2,7 +2,7 @@
 
 import os, re, subprocess
 import markdown, shortuuid, pymysql
-import json, time, yaml
+import json, time, yaml, logging
 
 from .auto_update_step import AutoUpdateStep
 
@@ -61,7 +61,7 @@ def configmap_create(maps):
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
   except Exception as e:
-    print(e)
+    logging.error(e)
     return False
 
   return True

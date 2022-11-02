@@ -1,7 +1,7 @@
 # encoding=utf-8
 
 import os, re, subprocess
-import json, time
+import json, time, logging
 
 import redis
 import pymysql
@@ -114,7 +114,7 @@ def __tdengine_ping(dbInfo):
       if result.get('status', 'error') != 'succ':
         pingError = True
   except Exception as ex:
-    print(ex)
+    logging.error(ex)
     pingError = True
 
   return not pingError
@@ -199,7 +199,7 @@ def __elasticsearch_ping():
     if resp.status_code == 200:
       pingStatus = True
   except Exception as e:
-    print(e)
+    logging.error(e)
 
   return {"key": "{}:{}".format(params['host'],  params['port']), "status": pingStatus}
 
