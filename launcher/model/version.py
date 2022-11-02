@@ -2,7 +2,7 @@
 
 import os, re, subprocess, time
 import markdown, shortuuid
-import json, yaml
+import json, yaml, logging
 import requests
 
 from launcher.utils.helper.db_helper import dbHelper
@@ -155,14 +155,14 @@ def excute_update_sql(mysqlInfo, dbName, sqls):
   seq = 0
 
   try:
-    print(sqls)
+    logging.info(sqls)
     with dbHelper(mysqlInfo) as db:
       for sql in sqls:
         seq = sql['seq']
         db.execute(sql['content'], dbName = dbName)
     
   except Exception as e:
-    print(e)
+    logging.error(e)
     return seq
 
   return -1

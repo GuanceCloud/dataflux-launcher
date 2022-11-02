@@ -4,6 +4,7 @@ import shortuuid
 import json
 import time
 import requests
+import logging
 
 from requests.auth import HTTPBasicAuth
 from launcher.utils.helper.db_helper import dbHelper
@@ -72,7 +73,7 @@ def tdengine_ping(db):
       if result.get('status', 'error') != 'succ':
         pingError = True
   except Exception as ex:
-    print(ex)
+    logging.error(ex)
     pingError = True
 
   db["pingError"] = pingError
