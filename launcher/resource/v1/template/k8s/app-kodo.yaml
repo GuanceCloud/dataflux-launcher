@@ -60,8 +60,6 @@ spec:
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
-      tolerations:
-      - operator: Exists
       volumes:
       - name: kodo-logs
         persistentVolumeClaim:
