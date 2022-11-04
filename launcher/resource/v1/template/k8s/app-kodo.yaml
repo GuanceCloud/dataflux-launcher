@@ -57,8 +57,6 @@ spec:
         - mountPath: /kodo/config/license
           name: kodo-license
           subPath: license
-        - mountPath: /data
-          name: profile
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
