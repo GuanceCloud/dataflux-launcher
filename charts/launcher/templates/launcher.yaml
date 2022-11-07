@@ -17,7 +17,7 @@ spec:
       - args:
         - python
         - web.py
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        image: {{ .Values.image.repository }}:{{  .Values.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.pullPolicy }}
         name: launcher
         ports:
@@ -30,9 +30,6 @@ spec:
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /root/.kube/config
-          name: k8s-config
-          subPath: config.yaml
         - mountPath: /config/cloudcare-forethought-setup/persistent-data
           name: persistent-data
         - mountPath: /config/cloudcare-forethought-setup/config/settings.yaml
@@ -42,12 +39,9 @@ spec:
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
+      serviceAccount: launcher
+      serviceAccountName: launcher      
       volumes:
-      - configMap:
-          defaultMode: 256
-          name: k8s-config
-          optional: false
-        name: k8s-config
       - name: persistent-data
         persistentVolumeClaim:
           claimName: persistent-data
