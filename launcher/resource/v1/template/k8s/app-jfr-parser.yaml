@@ -37,7 +37,7 @@ spec:
           name: jfr-parser
           subPath: config.yaml
         - mountPath: /usr/local/jfr-parser/config
-          name: python-pprof-parser
+          name: jfr-parser
           subPath: config.yaml
         - mountPath: /data
           name: profiling-data

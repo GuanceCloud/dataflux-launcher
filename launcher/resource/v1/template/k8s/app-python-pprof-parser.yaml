@@ -48,8 +48,8 @@ spec:
           claimName: profiling-data
       - configMap:
           defaultMode: 420
-          name: python-parser-config
-        name: main-config
+          name: python-pprof-parser
+        name: python-pprof-parser
 
 ---
 
