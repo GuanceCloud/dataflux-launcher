@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-jfr-parser
+  name: jfr-parser
+  namespace: forethought-kodo
+spec:
+  progressDeadlineSeconds: 600
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-jfr-parser
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-jfr-parser
+    spec:
+      containers:
+      - image: {{ config.fullImagePath }}
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: container-jfr-parser
+        ports:
+        - containerPort: 9633
+          name: port9633
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/local/jfr-parser/config/application.yml
+          name: jfr-parser
+          subPath: config.yaml
+        - mountPath: /usr/local/jfr-parser/config
+          name: python-pprof-parser
+          subPath: config.yaml
+        - mountPath: /data
+          name: profiling-data
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - name: profiling-data
+        persistentVolumeClaim:
+          claimName: profiling-data
+      - configMap:
+          defaultMode: 420
+          name: jfr-parser
+        name: jfr-parser
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jfr-parser
+  namespace: forethought-kodo
+spec:
+  ports:
+  - name: port9633
+    port: 9633
+    protocol: TCP
+    targetPort: 9633
+  selector:
+    app: deployment-forethought-kodo-jfr-parser
+  sessionAffinity: None
+  type: ClusterIP

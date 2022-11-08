@@ -57,10 +57,15 @@ spec:
         - mountPath: /kodo/config/license
           name: kodo-license
           subPath: license
+        - mountPath: /data
+          name: profiling-data
       imagePullSecrets:
       - name: registry-key
       restartPolicy: Always
       volumes:
+      - name: profiling-data
+        persistentVolumeClaim:
+          claimName: profiling-data
       - name: kodo-logs
         persistentVolumeClaim:
           claimName: kodo-logs

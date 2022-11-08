@@ -1,0 +1,15 @@
+server:
+  address: '0.0.0.0'
+  port: 9633
+
+logging:
+  level:
+    root: info
+  file:
+    name: "spring.log"
+  pattern:
+    console: "" #设置为 "" 可以关闭控制台输出
+
+storage:
+  disk:
+    profileDir: '/data/profile'

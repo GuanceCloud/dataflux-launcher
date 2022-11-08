@@ -6,7 +6,7 @@ rm -rf /tmp/rtm
 [[ ! -d "$tmpRTMDir" ]] && mkdir $tmpRTMDir
 cd $tmpRTMDir
 
-allProject="core trigger front-webclient launcher management-webclient kodo func func-worker message-desk message-desk-worker utils-server "
+allProject="core trigger front-webclient launcher management-webclient kodo func func-worker message-desk message-desk-worker utils-server jfr-parser pprofparser"
 allAliRepo="zhuyun-forethought-backend zhuyun-forethought-trigger zhuyun-forethought-webclient zhuyun-forethought-launcher zhuyun-forethought-webmanage zhuyun-forethought-kodo zhuyun-forethought-data-processor zhuyun-forethought-data-processor-worker zhuyun-forethought-message-desk zhuyun-forethought-message-desk-worker zhuyun-forethought-utils-server"
 allLocalRepo="cloudcare-tools/cloudcare-forethought-backend cloudcare-tools/cloudcare-forethought-trigger cloudcare/cloudcare-forethought-webclient cloudcare-tools/cloudcare-forethought-setup cloudcare/cloudcare-forethought-webmanage cloudcare-tools/kodo middlewares/ft-data-processor middlewares/ft-data-processor-worker middlewares/message-desk middlewares/message-desk-worker cloudcare-tools/screenhot-server"
 
