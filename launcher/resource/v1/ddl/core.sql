@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-10-20 01:51:57 +0000
+# Generation Time: 2022-11-03 02:16:42 +0000
 # ************************************************************
 
 
@@ -441,6 +441,9 @@ CREATE TABLE `biz_logging_index_cfg` (
   `duration` varchar(48) NOT NULL DEFAULT '' COMMENT '数据保留时长',
   `sortNo` int(11) NOT NULL DEFAULT '0' COMMENT '排序值, 值越大优先级越高',
   `setting` json DEFAULT NULL COMMENT '索引分片设置',
+  `isBindCustomStore` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为绑定的自定义存储',
+  `queryType` varchar(64) NOT NULL DEFAULT 'logging' COMMENT '外部store的查询类型',
+  `exterStoreProject` varchar(256) NOT NULL DEFAULT '' COMMENT '外部Store的上层标识',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1861,10 +1864,12 @@ CREATE TABLE `main_workspace` (
   `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
   `esIndexMerged` tinyint(1) DEFAULT '0' COMMENT '空间ES索引是否合并，默认值是false，不合并',
+  `loggingCutSize` int(11) NOT NULL DEFAULT '10240' COMMENT '超大日志切割基础单位,单位:字节byte, SLS 工作空间 默认为 2048byte， ES 工作空间默认为10240byte',
   `supportJsonMessage` tinyint(1) NOT NULL DEFAULT '0' COMMENT '空间是否支持JSON类型的message字段，默认是false，不使用JSON类型的message',
   `isLocked` tinyint(1) NOT NULL DEFAULT '0',
   `lockAt` int(11) NOT NULL DEFAULT '-1',
   `isOpenLogMultipleIndex` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启日志多索引配置',
+  `makeResourceExceptionCode` varchar(256) NOT NULL DEFAULT '' COMMENT '工作空间开通资源时的异常信息Code',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',

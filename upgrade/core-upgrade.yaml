@@ -2331,3 +2331,19 @@ upgrade:
 
       # 在部署完成之后 执行该操作【inner api 服务器执行】重新生成所有的biz_rule表中的jsonScript, 本地迭代修改noDataPeriodCount字段为noDataInterval,需要将count重新计算为noDataInterval的时间分钟格式
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_10_20_checker_jsonscript_update"}'
+
+
+  # 2022.11.03 迭代
+  - seq: 65
+    database: |-
+      
+      -- 索引绑定外部 SLS project 功能中添加的部分外部字段      
+      ALTER TABLE `biz_logging_index_cfg` 
+      ADD COLUMN `isBindCustomStore` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否为绑定的自定义存储' AFTER `setting`,
+      ADD COLUMN `queryType` VARCHAR(64) NOT NULL DEFAULT 'logging' COMMENT '外部store的查询类型' AFTER `isBindCustomStore`,
+      ADD COLUMN `exterStoreProject` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '外部Store的上层标识' AFTER `queryType`;
+      
+      -- main_workspace表新增loggingCutSize字段记录超大日志切割大小, 新增`makeResourceExceptionCode`记录资源开通过程中错误的Code
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `loggingCutSize` int(11) NOT NULL DEFAULT '10240' COMMENT '超大日志切割基础单位,单位:字节byte, SLS 工作空间 默认为 2048byte， ES 工作空间默认为10240byte' AFTER `esIndexMerged`,
+      ADD COLUMN `makeResourceExceptionCode` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '工作空间开通资源时的异常信息Code' AFTER `isOpenLogMultipleIndex`;
