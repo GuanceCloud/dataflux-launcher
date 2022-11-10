@@ -222,6 +222,11 @@ services:
       image: nginx
       replicas: 3
 
+    - key: kodo-asynq-client
+      name: Kodo Asynq Client
+      image: kodo
+      replicas: 1
+
     - key: kodo-ws
       name: Kodo Websocket
       image: kodo
@@ -244,6 +249,7 @@ services:
       format: yaml
       services:
       - kodo
+      - kodo-asynq-client
       template: kodo.yaml
 
     - key: kodoInner
@@ -301,6 +307,7 @@ services:
       - kodo-inner
       - kodo-x
       - kodo-ws
+      - kodo-asynq-client
       template: kodo-license
 
     pvcs:

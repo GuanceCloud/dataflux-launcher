@@ -29,7 +29,7 @@ def setting_deploy_replicas():
         result[nsName][serviceKey] = {'replicas': serviceReplicas}
 
   # print(result)
-  return result 
+  return result
 
 
 def get_activated_license():
@@ -129,6 +129,7 @@ def setting_activate(data):
     k8sMdl.redeploy("kodo-inner", "forethought-kodo")
     k8sMdl.redeploy("kodo-ws", "forethought-kodo")
     k8sMdl.redeploy("kodo-x", "forethought-kodo")
+    k8sMdl.redeploy("kodo-asynq-client", "forethought-kodo")
     k8sMdl.redeploy("front-backend", "forethought-core")
 
   return {
