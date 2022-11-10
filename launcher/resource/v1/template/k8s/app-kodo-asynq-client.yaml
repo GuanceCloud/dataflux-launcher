@@ -27,8 +27,6 @@ spec:
         - mountPath: /kodo/config/config.yaml
           name: kodo
           subPath: config.yaml
-        - mountPath: /logdata
-          name: log
       dnsConfig:
         options:
         - name: single-request-reopen
