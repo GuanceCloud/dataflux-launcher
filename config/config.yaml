@@ -229,7 +229,7 @@ services:
 
     - key: python-pprof-parser
       name: Python Profiling Parser
-      image: python-pprof-parser
+      image: pprofparser
       replicas: 1
 
     - key: jfr-parser

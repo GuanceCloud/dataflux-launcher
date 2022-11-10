@@ -164,7 +164,7 @@ function start(){
   # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/jfr-parser.git" "jfr-parser"
-  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/pprofparser.git" "python-pprof-parser"
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/pprofparser.git" "pprofparser"
   # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse"
 
   echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
