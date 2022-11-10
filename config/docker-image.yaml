@@ -16,5 +16,5 @@ apps:
     dataflux-func: 1.52.113:dataflux-func-1970169-1668045272
     utils-server: 1.52.113:utils-server-48799ca-1668045272
     jfr-parser: 1.52.113:jfr-parser-16ed409-1668045272
-    python-pprof-parser: 1.52.113:python-pprof-parser-9380a7c-1668045272
+    pprofparser: 1.52.113:pprofparser-9380a7c-1668045272
   version: 1.52.113
