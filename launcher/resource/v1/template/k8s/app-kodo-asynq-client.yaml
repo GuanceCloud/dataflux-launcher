@@ -43,3 +43,10 @@ spec:
           name: kodo
           optional: false
         name: kodo
+      - configMap:
+          defaultMode: 420
+          name: kodo-license
+          optional: false
+        name: kodo-license
+
+
