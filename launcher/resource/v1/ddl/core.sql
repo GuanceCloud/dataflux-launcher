@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-11-03 02:16:42 +0000
+# Generation Time: 2022-11-17 10:52:28 +0000
 # ************************************************************
 
 
@@ -42,6 +42,54 @@ CREATE TABLE `biz_account_device` (
   PRIMARY KEY (`id`) COMMENT 'sk 可以存在相同的情况',
   KEY `uk_acnt` (`accountId`) USING BTREE COMMENT '全局唯一',
   KEY `uk_device` (`deviceId`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_account_group
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_account_group`;
+
+CREATE TABLE `biz_account_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 group-',
+  `name` varchar(48) NOT NULL DEFAULT '' COMMENT '成员组名称',
+  `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_account_group_relation
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_account_group_relation`;
+
+CREATE TABLE `biz_account_group_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rlag-',
+  `groupUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '成员组 uuid',
+  `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '成员账户uuid',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_group_uuid` (`groupUUID`),
+  KEY `k_acnt_uuid` (`accountUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -750,6 +798,7 @@ CREATE TABLE `biz_pipeline` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID，带 pl- 前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `category` varchar(256) NOT NULL DEFAULT '',
+  `asDefault` tinyint(1) DEFAULT '0' COMMENT '是否该类型默认pipeline',
   `name` varchar(1024) NOT NULL DEFAULT '' COMMENT 'PL文件名',
   `content` text NOT NULL COMMENT '原始内容',
   `testData` text NOT NULL,
@@ -764,6 +813,33 @@ CREATE TABLE `biz_pipeline` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_pipeline_relation
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_pipeline_relation`;
+
+CREATE TABLE `biz_pipeline_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rlag-',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT 'PL文件名',
+  `source` varchar(256) NOT NULL DEFAULT '' COMMENT 'source来源',
+  `category` varchar(48) NOT NULL DEFAULT '' COMMENT 'pipeline类型',
+  `pipelineUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '成员账户uuid',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_source` (`source`),
+  KEY `k_pipeline_uuid` (`pipelineUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
