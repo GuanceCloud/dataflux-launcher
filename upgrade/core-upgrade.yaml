@@ -2351,12 +2351,6 @@ upgrade:
 
   # 2022.11.17 迭代
   - seq: 66
-    config:
-      core: |-
-        # 原有的 nodeSet 配置废弃； 原有的节点名使用 envName; 原有的可选结算方式使用新配置 bossSettlementCode， 其值为原来的 nodeSet.curNode 值;
-        # 目前可选值为 阿里云节点: aliyun, AWS节点: aws; 华为云节点: huawei
-        bossSettlementCode: aliyun
-
     database: |-
 
       -- 新增成员组表

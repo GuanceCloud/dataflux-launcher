@@ -1,20 +1,20 @@
 apps:
   registry: pubrepo.jiagouyun.com
-  image_dir: dataflux-prev/
+  image_dir: dataflux/
   images:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.10
     datakit: datakit:1.5.0
-    core: 1.53.115.1:core-968f079b8
-    kodo: 1.53.115.1:kodo-d395ec79
-    front-webclient: 1.53.115.1:front-webclient-bf4edbc23
-    management-webclient: 1.53.115.1:management-webclient-e547c20
-    dataflux-doc: 1.53.115.1:dataflux-doc-4ecbe915
-    message-desk: 1.53.115.1:message-desk-5421439
-    message-desk-worker: 1.53.115.1:message-desk-worker-42451b1
-    dataflux-func: 1.53.115.1:dataflux-func-9242381
-    utils-server: 1.53.115.1:utils-server-48799ca
-    jfr-parser: 1.53.115.1:jfr-parser-16ed409
-    pprofparser: 1.53.115.1:pprofparser-9380a7c
-  version: 1.53.115.1
+    core: 1.53.115:core-552eb163d-1669271832
+    kodo: 1.53.115:kodo-d395ec79-1669271832
+    front-webclient: 1.53.115:front-webclient-bf4edbc23-1669271832
+    management-webclient: 1.53.115:management-webclient-e547c20-1669271832
+    dataflux-doc: 1.53.115:dataflux-doc-4d9a0b5f-1669271832
+    message-desk: 1.53.115:message-desk-5421439-1669271832
+    message-desk-worker: 1.53.115:message-desk-worker-42451b1-1669271832
+    dataflux-func: 1.53.115:dataflux-func-9242381-1669271832
+    utils-server: 1.53.115:utils-server-48799ca-1669271832
+    jfr-parser: 1.53.115:jfr-parser-16ed409-1669271832
+    pprofparser: 1.53.115:pprofparser-9380a7c-1669271832
+  version: 1.53.115
