@@ -11,7 +11,7 @@ kubectl delete configmaps requirements-config user-config -n func2 --force --gra
 
 # 清理 deployment
 kubectl delete deployments front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
-kubectl delete deployments kodo kodo-inner kodo-nginx kodo-x kodo-ws jfr-parser python-pprof-parser -n forethought-kodo --force --grace-period=0
+kubectl delete deployments kodo kodo-inner kodo-nginx kodo-x kodo-ws kodo-asynq-client jfr-parser python-pprof-parser -n forethought-kodo --force --grace-period=0
 kubectl delete deployments front-webclient management-webclient dataflux-doc -n forethought-webclient --force --grace-period=0
 kubectl delete deployments message-desk message-desk-worker nsqadmin nsqlookupd nsqd nsqd2 nsqd3 kapacitor kapacitor02 -n middleware --force --grace-period=0
 kubectl delete deployments func func-inner func-worker-beat func-worker-debugger func-worker-rpc-crontab func-worker-crontab func-worker-rpc func-worker-utils func-worker-batch func-worker-batch-builtin -n func --force --grace-period=0
