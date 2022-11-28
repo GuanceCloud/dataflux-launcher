@@ -10,7 +10,7 @@ apps:
     kodo: 1.53.115:kodo-d395ec79-1669271832
     front-webclient: 1.53.115:front-webclient-bf4edbc23-1669271832
     management-webclient: 1.53.115:management-webclient-e547c20-1669271832
-    dataflux-doc: 1.53.115:dataflux-doc-4d9a0b5f-1669271832
+    dataflux-doc: 1.53.115:dataflux-doc-fdf66925-1669271832
     message-desk: 1.53.115:message-desk-5421439-1669271832
     message-desk-worker: 1.53.115:message-desk-worker-42451b1-1669271832
     dataflux-func: 1.53.115:dataflux-func-9242381-1669271832
