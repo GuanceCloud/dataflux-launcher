@@ -1,0 +1,82 @@
+---
+# Source: mysql/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql
+  labels:
+    app.kubernetes.io/name: mysql  
+type: Opaque
+data:
+  root-password:  "{{ mysql_password }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app.kubernetes.io/name: mysql
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+      targetPort: server
+      protocol: TCP
+      name: server
+  selector:
+    app.kubernetes.io/name: mysql
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  labels:  
+    app.kubernetes.io/name: mysql 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mysql     
+  serviceName: mysql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mysql  
+    spec:
+      containers:
+        - name: mysql
+          image: pubrepo.jiagouyun.com/googleimages/mysql:5.7
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: server
+            containerPort: 3306
+            protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: server
+          readinessProbe:
+            tcpSocket:
+              port: server
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql
+                key: root-password
+          volumeMounts:
+          - name: data
+            mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: "{{ storage_class }}"
+      resources:
+        requests:
+          storage: 2Gi

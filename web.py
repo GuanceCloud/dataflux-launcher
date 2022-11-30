@@ -3,13 +3,20 @@
 import sys
 import logging
 import argparse
+
+from flask import Flask
+
 from launcher.app import create_app
+from launcher.utils.handler import handle_exception
 
-def start(host="0.0.0.0", port=5000):
-  app = create_app()
+def start(host="0.0.0.0", port=5000, debug=False, app_log=logging.INFO, http_log=logging.ERROR):
+  app: Flask = create_app()
+  app.register_error_handler(Exception, handle_exception)
 
-  app.debug = True
-  app.run(host=host, port=port)
+  app.logger.setLevel(app_log)
+  logging.getLogger('werkzeug').setLevel(http_log)
+
+  app.run(host=host, port=port, debug=True)
 
 
 if __name__ == "__main__":
@@ -22,15 +29,15 @@ if __name__ == "__main__":
   parser.add_argument('--port', dest='port', type=int,
                       default=5000,
                       help='bind port(default: 5000)')
-
-  parser.add_argument('--log-level', dest='log_level', type=str,
-                      default='INFO',
-                      help='logging level')
+  
+  parser.add_argument('--debug', dest='debug', type=bool, default=False, help='debug mode')
+  parser.add_argument('--app-log', dest='app_log', type=str,default='INFO', help='app log level')
+  parser.add_argument('--http-log', dest='http_log', type=str, default='ERROR', help='http log level')
   
   args = parser.parse_args()
   logging.basicConfig(
-    format="%(asctime)s\t%(levelname)s\t%(filename)s:%(lineno)d\t%(funcName)s\t%(message)s",
-    level=getattr(logging, args.log_level, logging.INFO),
+    format="%(asctime)s\t%(levelname)s\t%(filename)s:%(lineno)d\t%(message)s",
+    level=getattr(logging, args.app_log, logging.INFO),
     stream=sys.stdout
   )
-  start(args.host, args.port)
+  start(args.host, args.port, args.debug, args.app_log, args.http_log)
