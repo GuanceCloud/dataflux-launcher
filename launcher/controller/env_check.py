@@ -48,7 +48,7 @@ def __deploy_info():
   return '; '.join(namespaces)
 
 
-def __get_storageclass():
+def get_storageclass():
   cmd = "kubectl get storageclass -o json"
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
@@ -59,7 +59,7 @@ def __get_storageclass():
   for item in storage['items']:
     storageNames.append(item['metadata']['name'])
 
-  return '; '.join(storageNames)
+  return storageNames
 
 
 def __redis_ping():
@@ -280,7 +280,7 @@ def do_check():
     checkResult['deploy_info'] = __deploy_info()
 
   if len(checkResult['clusterInfo']) > 0:
-    checkResult['storage'] = __get_storageclass()
+    checkResult['storage'] = '; '.join(get_storageclass())
 
   return checkResult
 

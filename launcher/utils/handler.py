@@ -1,6 +1,8 @@
 # encoding=utf-8
 
 import copy
+import logging
+import traceback
 
 from flask import jsonify, Response
 
@@ -43,3 +45,8 @@ class JSONMarshal(object):
 def response_jsonify(*args, **kwargs):
   marshal = JSONMarshal(*args, **kwargs)
   return marshal.make_response()
+
+
+def handle_exception(e: Exception):
+  logging.exception(e)
+  return response_jsonify(success=False, message=str(e))

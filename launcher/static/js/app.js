@@ -1100,5 +1100,92 @@ var setup = (function () {
     });
   };
 
+  app.prototype.mysql_install = function(){
+    var mysql_password = $("#mysql_password").val();
+    if (mysql_password === "") {
+      alert("请输入MySQL密码");
+      return
+    }
+
+    var params = {
+      'mysql_password': btoa(mysql_password),
+      'storage_class': $("#storage_class").val()
+    };
+    this.post('mysql/install', params).done(function(response){
+      if (!response.success) {
+        alert(`安装失败\n${response.message}`);
+      } else {
+        console.debug(response);
+        $("#iptDBHost").val("mysql.middleware.svc.cluster.local");
+        $("#iptDBPort").val("3306");
+        $("#iptDBUserName").val("root");
+        $("#iptDBUserPwd").val($("#mysql_password").val());
+        alert("安装成功");
+      }
+    });
+  };
+
+  app.prototype.redis_install = function(){
+    var redis_password = $("#redis_password").val();
+    if (redis_password === "") {
+      alert("请输入Redis密码");
+      return
+    }
+
+    var params = {
+      'redis_password': btoa(redis_password),
+      'storage_class': $("#storage_class").val()
+    };
+    this.post('redis/install', params).done(function(response){
+      if (!response.success) {
+        alert(`安装失败\n${response.message}`);
+      } else {
+        console.debug(response);
+        $("#iptRedisHost").val("redis.middleware.svc.cluster.local");
+        $("#iptRedisPort").val("6379");
+        $("#iptRedisPassword").val($("#redis_password").val());
+        alert("安装成功");
+      }
+    });
+  }
+
+  app.prototype.opensearch_install = function(){
+    var params = {'storage_class': $("#storage_class").val()};
+    this.post('opensearch/install', params).done(function(response){
+      if (!response.success) {
+        alert(`安装失败\n${response.message}`);
+      } else {
+        console.debug(response);
+        $("#iptESHost").val("opensearch-single.middleware.svc.cluster.local");
+        $("#ckbElasticsearchSSL").prop("checked", false)
+        $("#iptESPort").val("9200");
+        $("#iptESUserName").val("admin");
+        $("#iptESUserPwd").val("admin");
+        $("#sltESProvider").val("opensearch");
+        alert("安装成功");
+      }
+    });
+  }
+
+  app.prototype.tdengine_install = function(){
+    var params = {'storage_class': $("#storage_class").val()};
+    this.post('tdengine/install', params).done(function(response){
+      if (!response.success) {
+        alert(`安装失败\n${response.message}`);
+      } else {
+        console.debug(response);
+        $("input:radio[value='influxdb']").prop("checked", false)
+        $("input:radio[value='tdengine']").prop("checked", true)
+        $("#timeseries-tdengine").prop("checked", true)
+        $("#iptInfluxDBHost1").val("tdengine.middleware.svc.cluster.local");
+        $("#ckbInfluxDBSSL1").prop("checked", false)
+        $("#iptInfluxDBPort1").val("6041");
+        $("#iptInfluxDBUserName1").val("root");
+        $("#iptInfluxDBPassword1").val("taosdata");
+        alert("安装成功");
+      }
+    });
+  }
+
   return new app();
 })();
