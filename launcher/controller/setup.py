@@ -162,8 +162,18 @@ def service_image_config():
   imageDir = apps.get('image_dir', '')
   defaultImage  = apps.get('images', {})
 
+  registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
+  
+  registry      = registrySecrets[0]
+  registryAddr  = registry.get('address') or ''
+  registryUser  = registry.get('username') or ''
+  registryPwd   = registry.get('password') or ''
+
+
   d = {
-    "imageRegistry": apps.get('registry', ''),
+    "imageRegistry": registryAddr,
+    "imageRegistryUser": registryUser,
+    "imageRegistryPwd": registryPwd,
     "imageDir": imageDir,
     "storageClassName": settingsMdl.other.get("storageClassName"),
     "imagePullPolicy": settingsMdl.other.get("imagePullPolicy", "IfNotPresent"),

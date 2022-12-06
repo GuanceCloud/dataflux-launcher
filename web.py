@@ -32,7 +32,7 @@ if __name__ == "__main__":
   
   parser.add_argument('--debug', dest='debug', type=bool, default=False, help='debug mode')
   parser.add_argument('--app-log', dest='app_log', type=str,default='INFO', help='app log level')
-  parser.add_argument('--http-log', dest='http_log', type=str, default='ERROR', help='http log level')
+  parser.add_argument('--http-log', dest='http_log', type=str, default='INFO', help='http log level')
   
   args = parser.parse_args()
   logging.basicConfig(
