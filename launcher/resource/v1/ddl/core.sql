@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-11-17 10:52:28 +0000
+# Generation Time: 2022-12-01 11:38:36 +0000
 # ************************************************************
 
 
@@ -380,6 +380,29 @@ CREATE TABLE `biz_entity_relationship` (
 
 
 
+# Dump of table biz_external_resource_access_config
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_external_resource_access_config`;
+
+CREATE TABLE `biz_external_resource_access_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 erac-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `config` json DEFAULT NULL COMMENT '访问配置信息',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_field_management
 # ------------------------------------------------------------
 
@@ -419,6 +442,33 @@ CREATE TABLE `biz_geo` (
   `city` varchar(128) NOT NULL DEFAULT '' COMMENT '城市',
   PRIMARY KEY (`id`),
   KEY `k_country` (`country`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_index_field_mapping
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_index_field_mapping`;
+
+CREATE TABLE `biz_index_field_mapping` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 indfm-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `indexCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '索引配置的 uuid',
+  `field` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
+  `originalField` varchar(256) NOT NULL DEFAULT '' COMMENT '原始字段名',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_index_cfg_uuid` (`indexCfgUUID`),
+  KEY `k_field` (`field`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -492,7 +542,12 @@ CREATE TABLE `biz_logging_index_cfg` (
   `isBindCustomStore` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为绑定的自定义存储',
   `queryType` varchar(64) NOT NULL DEFAULT 'logging' COMMENT '外部store的查询类型',
   `exterStoreProject` varchar(256) NOT NULL DEFAULT '' COMMENT '外部Store的上层标识',
+  `exterStoreName` varchar(256) NOT NULL DEFAULT '' COMMENT '与name互为映射的外部存储的名字',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `externalResourceAccessCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID',
+  `storeType` enum('','es','sls') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致',
+  `region` varchar(45) NOT NULL DEFAULT '' COMMENT '目标地域',
+  `isPublicNetworkAccess` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否走公网访问',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -501,7 +556,8 @@ CREATE TABLE `biz_logging_index_cfg` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `k_ws_uuid` (`workspaceUUID`)
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_external_resource_access_cfg_uuid` (`externalResourceAccessCfgUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1230,6 +1286,7 @@ CREATE TABLE `biz_variable` (
   `valueSort` varchar(8) DEFAULT '' COMMENT '视图变量的值排序',
   `content` json DEFAULT NULL COMMENT '变量配置数据',
   `hide` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏',
+  `isHiddenAsterisk` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是隐藏星号',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1439,7 +1496,8 @@ CREATE TABLE `main_apm_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 apmc-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
-  `service` varchar(48) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '服务名',
+  `service` varchar(256) NOT NULL DEFAULT '' COMMENT '服务名',
+  `serviceCatelog` text NOT NULL COMMENT '服务清单配置信息',
   `config` json NOT NULL COMMENT 'apm配置参数',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1915,7 +1973,7 @@ DROP TABLE IF EXISTS `main_workspace`;
 CREATE TABLE `main_workspace` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 wksp_',
-  `name` varchar(128) NOT NULL COMMENT '命名',
+  `name` varchar(256) DEFAULT NULL,
   `token` varchar(64) DEFAULT '""' COMMENT '采集数据token',
   `cliToken` varchar(64) NOT NULL DEFAULT '' COMMENT '命令行Token验证',
   `dbUUID` varchar(48) NOT NULL COMMENT 'influx_db uuid对应influx实例的DB名',
