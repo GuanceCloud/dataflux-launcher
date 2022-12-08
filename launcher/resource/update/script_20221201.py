@@ -7,7 +7,7 @@ from launcher.utils.helper import api_helper as apiHelper
 
 
 def fix_script_exec():
-  logging.info('do after_container_update, 2022.12.01 sprint upgrade')
+  logging.info('do after_container_update, 2022.12.01 sprint upgrade start')
   ping_url  = "http://inner.forethought-core:5000/api/v1/inner/const/ping"
   url       = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
@@ -22,19 +22,15 @@ def fix_script_exec():
     return False
   else:
     # pipeline 表数据结构更新
-    d1 = '{ "script_name": "fix_update_pipeline_relation" }'
-
-    # 内置视图绑定字段数据结构修改
-    d2 = '{ "script_name": "fix_2022_11_17_update_dashboard_bidding" }'
+    d1 = '{ "script_name": "fix_update_inner_config_order" }'
 
     apiHelper.do_post(url, data = d1)
-    apiHelper.do_post(url, data = d2)
 
+  logging.info('do after_container_update, 2022.12.01 sprint upgrade finish')
   return True
 
 
 def after_container_update():
 
   return fix_script_exec()
-
 
