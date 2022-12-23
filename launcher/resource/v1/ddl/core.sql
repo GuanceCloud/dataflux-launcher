@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-12-01 11:38:36 +0000
+# Generation Time: 2022-12-15 03:47:46 +0000
 # ************************************************************
 
 
@@ -156,6 +156,7 @@ CREATE TABLE `biz_chart` (
   `type` varchar(48) NOT NULL COMMENT '图表线条类型',
   `queries` json DEFAULT NULL COMMENT '查询信息',
   `extend` json NOT NULL COMMENT '额外拓展字段',
+  `isWorkspaceKeyIndicator` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为工作空间关键指标的查询',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -255,6 +256,34 @@ CREATE TABLE `biz_dashboard_bidding` (
 
 
 
+# Dump of table biz_dashboard_carousel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_dashboard_carousel`;
+
+CREATE TABLE `biz_dashboard_carousel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 csel-',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '轮播名称',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `accountUUID` varchar(256) NOT NULL DEFAULT '' COMMENT '账户uuid',
+  `dashboardUUIDs` json NOT NULL COMMENT '仪表板轮播列表',
+  `intervalTime` varchar(48) NOT NULL COMMENT '轮播频率',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_acount_uuid` (`accountUUID`),
+  KEY `k_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_data_blacklist_rule
 # ------------------------------------------------------------
 
@@ -342,7 +371,7 @@ CREATE TABLE `biz_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, 前缀是email_',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('almost','already','invitation') NOT NULL DEFAULT 'almost' COMMENT '邮件类型',
+  `type` enum('almost','already','invitation','usageAlready') NOT NULL DEFAULT 'almost',
   `temName` varchar(64) NOT NULL DEFAULT '' COMMENT '邮件模版名',
   `info` json NOT NULL COMMENT '邮件参数',
   `content` text NOT NULL COMMENT '邮件内容',
@@ -1420,6 +1449,7 @@ CREATE TABLE `main_account_workspace` (
   `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `waitAudit` int(1) NOT NULL DEFAULT '0' COMMENT '是否等待审核',
+  `workspaceNote` text NOT NULL COMMENT '自定义工作空间备注',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1995,7 +2025,7 @@ CREATE TABLE `main_workspace` (
   `durationSet` json DEFAULT NULL COMMENT '数据保留时长设置',
   `datastore` json DEFAULT NULL COMMENT '数据存储信息',
   `esIndexSettings` json DEFAULT NULL COMMENT '索引配置信息',
-  `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版',
+  `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示体验版，pay表示付费版',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
   `esIndexMerged` tinyint(1) DEFAULT '0' COMMENT '空间ES索引是否合并，默认值是false，不合并',
   `loggingCutSize` int(11) NOT NULL DEFAULT '10240' COMMENT '超大日志切割基础单位,单位:字节byte, SLS 工作空间 默认为 2048byte， ES 工作空间默认为10240byte',
@@ -2049,7 +2079,7 @@ CREATE TABLE `main_workspace_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
-  `keyCode` enum('StoreSchemeCfg','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '配置项Code',
+  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg') NOT NULL DEFAULT 'StoreSchemeCfg',
   `config` json NOT NULL COMMENT '配置信息',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',

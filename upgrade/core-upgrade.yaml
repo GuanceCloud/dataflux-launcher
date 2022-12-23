@@ -504,7 +504,7 @@ upgrade:
       -- 工作空间表新增 账单状态字段，
       ALTER TABLE `main_workspace`
       ADD COLUMN `durationSet` json NULL COMMENT '数据保留时长设置' AFTER `enablePublicDataway`,
-      ADD COLUMN `versionType` enum('free','pay','unlimited') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版' AFTER `durationSet`,
+      ADD COLUMN `versionType` enum('free','pay','unlimited') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT 'free表示体验版，pay表示付费版' AFTER `durationSet`,
       ADD COLUMN `billingState` enum('free','unlimited','normal','arrearage','expired') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT '帐户费用状态' AFTER `versionType`;
 
       -- 新增账单计费配置信息
@@ -514,7 +514,7 @@ upgrade:
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimit', '免费额度', '{\"ts\": 500, \"job\": 1000, \"datakit\": 5, \"tracing\": 1000000, \"logging_keyevent\": 1000000}');
 
 
-      -- 原有的非免费版变更为 付费版
+      -- 原有的非体验版变更为 付费版
       update main_workspace set versionType="free", billingState="free" where status=0 and versionInfo ->> "$.version" = "free";
       update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "BASIC";
       update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "TEAM";
@@ -1165,8 +1165,8 @@ upgrade:
       -- 清理视图已删除，但关联的图表未删除的数据4
       UPDATE biz_chart set status=3 WHERE status=0 and dashboardUUID in (SELECT uuid from biz_dashboard WHERE status=3);
 
-      -- 插入免费版工作空间使用量统计配置
-      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeMeteringUnitConfig', '免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count + keyevent_count + security_count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+      -- 插入体验版工作空间使用量统计配置
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeMeteringUnitConfig', '体验版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count + keyevent_count + security_count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
       -- 免费额度限制配置
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 500, \"job\": 5000, \"rum\": 100, \"logs\": 2000000, \"trace\": 10000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
@@ -1298,7 +1298,7 @@ upgrade:
   - seq: 38
     database: |-
 
-      -- 新增 network 数据类型配置，免费版刷新成1d
+      -- 新增 network 数据类型配置，体验版刷新成1d
       update main_workspace set durationSet=JSON_SET(durationSet, "$.network", "1d") where `status` = 0 and versionType='free';
 
       -- 新增 network 数据类型配置，付费版/部署版 刷新成2d
@@ -1510,8 +1510,8 @@ upgrade:
       -- 更新计费公式(此公式仅SAAS版有效，PAAS版无效)
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"ts\": {\"price\": 3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 500)\", \"priceQuantity\": 500, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 0.1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 0.5, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
-      -- 更新 免费版使用量统计公式
-      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('FreeMeteringUnitConfig','免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"job\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count \", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"logging\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+      -- 更新 体验版使用量统计公式
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('FreeMeteringUnitConfig','体验版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"job\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count \", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"logging\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
       -- 更新使用量统计公式（非出账单）
       INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"ts\": {\"countEquation\": \"max(0, ts_count - count * 500)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
@@ -2500,12 +2500,61 @@ upgrade:
       update biz_dashboard_bidding set status=3 where dashboardUUID in (select uuid from biz_dashboard where status=3);
 
     curl: |-
-      # 【inner api 服务器执行】根据配置项初始化`biz_logging_index_cfg`表中外部索引的地域和是否公网访问的属性信息
-      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_12_01_update_log_index_cfg"}'
-
+      
       # 【inner api 服务器执行】执行 fix_update_inner_config_order.py 操作 更新main_custom_config配置表及config字段
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_inner_config_order"}'
 
 
+  # 2022.12.15 迭代
+  - seq: 68
+    database: |-
+
+      -- 新增仪表板轮播表
+      CREATE TABLE `biz_dashboard_carousel` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 csel-',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '轮播名称',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `accountUUID` varchar(256) NOT NULL DEFAULT '' COMMENT '账户uuid',
+        `dashboardUUIDs` json NOT NULL COMMENT '仪表板轮播列表',
+        `intervalTime` varchar(48) NOT NULL COMMENT '轮播频率',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_acount_uuid` (`accountUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 账号*工作空间关系表 新增用户自定义的 工作空间备注信息字段
+      ALTER TABLE `main_account_workspace` 
+      ADD COLUMN `workspaceNote` TEXT(256) NOT NULL COMMENT '自定义工作空间备注' AFTER `waitAudit`;
+      
+      -- 图表添加 是否为工作空间关键指标查询标记, 默认为否
+      ALTER TABLE `biz_chart`
+      ADD COLUMN `isWorkspaceKeyIndicator` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否为工作空间关键指标的查询' AFTER `extend`;
+
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 商业版空间使用量限制字段 usageLimit, 空间菜单栏管理字段 wsMenuCfg
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+      -- 更新邮件通知配置表 biz_email type枚举类型 商业版空间使用量限制字段 usageAlready
+      ALTER TABLE `biz_email`
+      MODIFY COLUMN `type` enum('almost','already','invitation', 'usageAlready') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'almost';
+      
+      -- 免费额度配置参数更新
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 3000, \"job\": 100000, \"rum_pv\": 2000, \"logs\": 1000000, \"trace\": 8000, \"profile\": 60, \"dialing_api\": 200000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+
+      -- 工作空间使用量统计公式, 添加 profile, network 数据容量统计
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"ts\": {\"countEquation\": \"max(0, ts_count - count * 300)\", \"discountQuantity\": 0}, \"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"profile\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"network\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log_bytes\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 工作空间使用量和计费统计公式, 添加 profile, network 容量计算公式
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('MeteringUnitPriceConfig','priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 300)\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 10, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.7, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000000, \"discountQuantity\": 0}, \"profile\": {\"price\": 0.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"network\": {\"price\": 2, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"backup_log_bytes\": {\"price\": 0.007, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1073741824, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
 
