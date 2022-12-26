@@ -174,6 +174,7 @@ function start(){
 
   cd $workDir
   git add ${imageYaml}
+  git add ${imageTxt}
   git add upgrade/*
   git add launcher/resource/v1/ddl/*
   git add launcher/resource/v1/data/*
