@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+#set -eux
 
 list="$(dirname $0)/docker-image.txt"
 
