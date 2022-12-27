@@ -10,7 +10,7 @@ pubrepo.guance.com/dataflux/1.55.117:management-webclient-4fb3faa-1672025178
 pubrepo.guance.com/dataflux/1.55.117:dataflux-doc-ca295f83-1672025178
 pubrepo.guance.com/dataflux/1.55.117:message-desk-5a7df6c-1672025178
 pubrepo.guance.com/dataflux/1.55.117:message-desk-worker-0bd78ea-1672025178
-pubrepo.guance.com/dataflux/1.55.117:dataflux-func-9242381-1672025178
+pubrepo.guance.com/dataflux/1.55.117:dataflux-func-e5d9067-1672025178
 pubrepo.guance.com/dataflux/1.55.117:utils-server-48799ca-1672025178
 pubrepo.guance.com/dataflux/1.55.117:jfr-parser-16ed409-1672025178
 pubrepo.guance.com/dataflux/1.55.117:pprofparser-7136293-1672025178
