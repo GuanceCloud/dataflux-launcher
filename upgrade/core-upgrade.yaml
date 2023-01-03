@@ -2558,3 +2558,25 @@ upgrade:
       INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('MeteringUnitPriceConfig','priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 300)\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 10, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.7, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000000, \"discountQuantity\": 0}, \"profile\": {\"price\": 0.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"network\": {\"price\": 2, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"backup_log_bytes\": {\"price\": 0.007, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1073741824, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
 
+
+
+  # 2022.12.29 迭代
+  - seq: 69
+    database: |-
+      -- 账号表新增 MFA 开关 和 MFA 密钥存储字段
+      ALTER TABLE `main_account` 
+      ADD COLUMN `enableMFA` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否开启MFA认证，默认为0，表示未开启' AFTER `status`,
+      ADD COLUMN `mfaSecret` VARCHAR(256) NOT NULL DEFAULT '' COMMENT 'MFA密钥，默认为空字符串' AFTER `enableMFA`;
+      
+      
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 keyCode新增IP白名单 WhileList枚举类型
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg', 'WhileList') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+    curl: |-
+      
+      # 【inner api 服务器执行】执行 fix_2022_12_29_clear_obs_checker.py 操作 删除所有的 bot_obs 智能巡检规则
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_12_29_clear_obs_checker"}'
+
+      # 【inner api 服务器执行】执行 fix_update_pipeline_rum_extend.py 操作 更新biz_pipeline, 字段extend中appid字符串为列表
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_pipeline_rum_extend"}'
