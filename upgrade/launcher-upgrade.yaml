@@ -464,3 +464,7 @@ upgradeInfo:
   - seq: 32
     func_exec: script_20221201
 
+  # 2022-12-29 迭代的版本
+  - seq: 33
+    func_exec: script_20221229
+
