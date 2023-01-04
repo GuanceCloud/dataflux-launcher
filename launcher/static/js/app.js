@@ -1077,10 +1077,10 @@ var setup = (function () {
         jqLicense = $("#iptLicense");
 
     var params = {
-      "ak": jqAK.val(),
-      "sk": jqSK.val(),
-      "dataway_url": jqDataWayUrl.val(),
-      "license": jqLicense.val()
+      "ak": $.trim(jqAK.val()),
+      "sk": $.trim(jqSK.val()),
+      "dataway_url": $.trim(jqDataWayUrl.val()),
+      "license": $.trim(jqLicense.val())
     }
 
     this.post('setting/activate', params).done(function(d){

@@ -88,7 +88,7 @@ def setting_activate(data):
   other = settingsMdl.other or {}
   other['guance'] = data
   settingsMdl.other = other
-  license_text_b64 = data.get('license')
+  license_text_b64 = data.get('license', '')
 
   license_effective = False
   result = ""
