@@ -1,3 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: middleware
 ---
 # Source: opensearch/templates/poddisruptionbudget.yaml
 apiVersion: policy/v1
@@ -141,7 +145,7 @@ spec:
       resources:
         requests:
           storage: "8Gi"
-      storageClassName: "openebs-hostpath"
+      storageClassName: "{{ storage_class }}"
   template:
     metadata:
       name: "opensearch-single"

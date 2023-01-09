@@ -8,6 +8,7 @@ from . import script_20221012
 from . import script_20221020
 from . import script_20221117
 from . import script_20221201
+from . import script_20221229
 
 
 __all__ = [
@@ -18,5 +19,6 @@ __all__ = [
         "script_20221012",
         "script_20221020",
         "script_20221117",
-        "script_20221201"
+        "script_20221201",
+        "script_20221229"
     ]

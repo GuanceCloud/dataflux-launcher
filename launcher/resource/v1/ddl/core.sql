@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-12-15 03:47:46 +0000
+# Generation Time: 2022-12-29 02:05:37 +0000
 # ************************************************************
 
 
@@ -1397,6 +1397,8 @@ CREATE TABLE `main_account` (
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `enableMFA` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启MFA认证，默认为0，表示未开启',
+  `mfaSecret` varchar(256) NOT NULL DEFAULT '' COMMENT 'MFA密钥，默认为空字符串',
   `canaryPublic` tinyint(1) DEFAULT '0' COMMENT 'true 为有灰度标志, false为没有',
   `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
@@ -2079,7 +2081,7 @@ CREATE TABLE `main_workspace_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
-  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg') NOT NULL DEFAULT 'StoreSchemeCfg',
+  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg','WhileList') NOT NULL DEFAULT 'StoreSchemeCfg',
   `config` json NOT NULL COMMENT '配置信息',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
