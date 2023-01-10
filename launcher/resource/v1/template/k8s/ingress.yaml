@@ -4,6 +4,7 @@ metadata:
   name: front-backend
   namespace: forethought-core
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.consoleApi }}.{{ config.domain.domain }}
     http:
@@ -34,6 +35,7 @@ metadata:
   name: management-backend
   namespace: forethought-core
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.managementApi }}.{{ config.domain.domain }}
     http:
@@ -62,6 +64,7 @@ metadata:
   name: static-resource-nginx
   namespace: forethought-core
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.staticResource }}.{{ config.domain.domain }}
     http:
@@ -90,6 +93,7 @@ metadata:
   name: open-api
   namespace: forethought-core
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.openApi }}.{{ config.domain.domain }}
     http:
@@ -118,6 +122,7 @@ metadata:
   name: front-webclient
   namespace: forethought-webclient
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.console }}.{{ config.domain.domain }}
     http:
@@ -146,6 +151,7 @@ metadata:
   name: dataflux-doc
   namespace: forethought-webclient
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.docs }}.{{ config.domain.domain }}
     http:
@@ -174,6 +180,7 @@ metadata:
   name: management-webclient
   namespace: forethought-webclient
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.management }}.{{ config.domain.domain }}
     http:
@@ -202,6 +209,7 @@ metadata:
   name: func
   namespace: func
 spec:
+  ingressClassName: nginx
   rules:
   - host: func-removed.{{ config.domain.domain }}
     http:
@@ -230,6 +238,7 @@ metadata:
   name: server
   namespace: func2
 spec:
+  ingressClassName: nginx
   rules:
   - host: {{ config.domain.subDomain.function }}.{{ config.domain.domain }}
     http:
