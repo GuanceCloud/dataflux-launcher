@@ -14,3 +14,4 @@ pubrepo.guance.com/dataflux/1.56.119:dataflux-func-1e08eab-1672825365
 pubrepo.guance.com/dataflux/1.56.119:utils-server-48799ca-1672825365
 pubrepo.guance.com/dataflux/1.56.119:jfr-parser-16ed409-1672825365
 pubrepo.guance.com/dataflux/1.56.119:pprofparser-7136293-1672825365
+pubrepo.guance.com/dataflux/1.56.119:launcher-e4d9302-1672825365
