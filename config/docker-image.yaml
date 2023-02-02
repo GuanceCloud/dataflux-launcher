@@ -5,16 +5,16 @@ apps:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.10
-    datakit: datakit:1.5.3
-    core: 1.56.119:core-88dc6e599-1672825365
-    kodo: 1.56.119:kodo-0f040c0d-1672825365
-    front-webclient: 1.56.119:front-webclient-3b3eeaadb-1672825365
-    management-webclient: 1.56.119:management-webclient-fc66bfe-1672825365
-    dataflux-doc: 1.56.119:dataflux-doc-14f15554-1672825365
-    message-desk: 1.56.119:message-desk-5a7df6c-1672825365
-    message-desk-worker: 1.56.119:message-desk-worker-0bd78ea-1672825365
-    dataflux-func: 1.56.119:dataflux-func-1e08eab-1672825365
-    utils-server: 1.56.119:utils-server-48799ca-1672825365
-    jfr-parser: 1.56.119:jfr-parser-16ed409-1672825365
-    pprofparser: 1.56.119:pprofparser-7136293-1672825365
-  version: 1.56.119
+    datakit: datakit:1.5.4
+    core: 1.57.120:core-5f9761b75-1675061598
+    kodo: 1.57.120:kodo-d6cf1212-1675061598
+    front-webclient: 1.57.120:front-webclient-088fbd702-1675061598
+    management-webclient: 1.57.120:management-webclient-283b740-1675061598
+    dataflux-doc: 1.57.120:dataflux-doc-d06358f4-1675061598
+    message-desk: 1.57.120:message-desk-5a7df6c-1675061598
+    message-desk-worker: 1.57.120:message-desk-worker-0bd78ea-1675061598
+    dataflux-func: 1.57.120:dataflux-func-1e08eab9-1675061598
+    utils-server: 1.57.120:utils-server-48799ca-1675061598
+    jfr-parser: 1.57.120:jfr-parser-16ed409-1675061598
+    pprofparser: 1.57.120:pprofparser-f2081c3-1675061598
+  version: 1.57.120

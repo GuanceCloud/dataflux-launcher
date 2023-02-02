@@ -2580,3 +2580,47 @@ upgrade:
 
       # 【inner api 服务器执行】执行 fix_update_pipeline_rum_extend.py 操作 更新biz_pipeline, 字段extend中appid字符串为列表
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_pipeline_rum_extend"}'
+
+
+
+  # 2023.01.12 迭代
+  - seq: 70
+    database: |-
+      -- 账号表新增 默认语言字段
+      ALTER TABLE `main_account` 
+      ADD COLUMN `language` VARCHAR(48) NOT NULL DEFAULT '' AFTER `mfaSecret`;
+
+      -- 账号表新增 默认语言字段
+      ALTER TABLE `biz_field_management`
+      ADD COLUMN `descEn` VARCHAR(1024) NOT NULL DEFAULT '' AFTER `desc`;
+
+      -- 日志索引配置表中的字段 storeType 新增可选类型 opensearch
+      ALTER TABLE `biz_logging_index_cfg` 
+      CHANGE COLUMN `storeType` `storeType` ENUM('', 'es', 'sls', 'opensearch') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致' ;
+      
+      -- 集成表新增 language 语言版本字段，用于支持多语言
+      ALTER TABLE `biz_integration` 
+      ADD COLUMN `language` VARCHAR(64) NOT NULL DEFAULT 'zh' COMMENT '语言类型' AFTER `meta`;
+
+      -- 补全外部绑定索引的 字段映射数据
+      update biz_index_field_mapping set originalField=field where status=0 and originalField="";
+
+    curl: |-
+
+      # 【inner api 服务器执行】执行 fix_update_rule_nodata_action.py 刷新监控器中创建阈值检测时,noDataAction的值为none的情况
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_rule_nodata_action"}'
+
+      # 【inner api 服务器执行】再次执行优化后的 fix_2022_12_29_clear_obs_checker.py 操作 删除所有的 bot_obs 智能巡检规则
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_12_29_clear_obs_checker"}'
+
+      # 【inner api 服务器执行】 同步拉取并更新字段管理文件, 本次更新descEn字段, 数据库字段添加后, 执行
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_field_cfg_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_field_cfg": true}}' \
+      --compressed
+
+      # 【inner api 服务器执行】同步更新视图模版
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true}}' \
+      --compressed

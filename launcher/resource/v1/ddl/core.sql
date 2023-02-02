@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.32)
 # Database: ft-new
-# Generation Time: 2022-12-29 02:05:37 +0000
+# Generation Time: 2023-01-12 03:17:58 +0000
 # ************************************************************
 
 
@@ -444,6 +444,7 @@ CREATE TABLE `biz_field_management` (
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
   `fieldType` enum('text','number','time','percent') NOT NULL DEFAULT 'text',
   `desc` varchar(512) NOT NULL DEFAULT '' COMMENT '描述信息',
+  `descEn` varchar(1024) NOT NULL DEFAULT '',
   `sysField` int(1) NOT NULL DEFAULT '0' COMMENT '自定义字段或者 系统内置字段, 1代表系统内置字段, 0代表自定义字段',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -517,6 +518,7 @@ CREATE TABLE `biz_integration` (
   `metaHash` varchar(256) DEFAULT NULL COMMENT 'meta hash值',
   `isHidden` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏，默认隐藏',
   `meta` json DEFAULT NULL COMMENT '数据集meta信息',
+  `language` varchar(64) NOT NULL DEFAULT 'zh' COMMENT '语言类型',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -574,7 +576,7 @@ CREATE TABLE `biz_logging_index_cfg` (
   `exterStoreName` varchar(256) NOT NULL DEFAULT '' COMMENT '与name互为映射的外部存储的名字',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `externalResourceAccessCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID',
-  `storeType` enum('','es','sls') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致',
+  `storeType` enum('','es','sls','opensearch') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致',
   `region` varchar(45) NOT NULL DEFAULT '' COMMENT '目标地域',
   `isPublicNetworkAccess` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否走公网访问',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -1399,6 +1401,7 @@ CREATE TABLE `main_account` (
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `enableMFA` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启MFA认证，默认为0，表示未开启',
   `mfaSecret` varchar(256) NOT NULL DEFAULT '' COMMENT 'MFA密钥，默认为空字符串',
+  `language` varchar(48) NOT NULL DEFAULT '',
   `canaryPublic` tinyint(1) DEFAULT '0' COMMENT 'true 为有灰度标志, false为没有',
   `createAt` int(11) NOT NULL DEFAULT '-1' COMMENT '创建时间',
   `updateAt` int(11) NOT NULL DEFAULT '-1' COMMENT '更新时间 ',
