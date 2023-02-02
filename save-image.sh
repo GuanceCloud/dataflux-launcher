@@ -56,7 +56,7 @@ guance_package (){
 	done
 
 	docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz && \
-	docker rmi  $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
+	docker rmi -f   $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
 }
 
 push_packages_oss (){
@@ -78,7 +78,7 @@ do
         p)
             echo "do packages"
             guance_package arm64
-            guance_package amd64
+            #guance_package amd64
 	    push_packages_oss 
             ;;
         ?)

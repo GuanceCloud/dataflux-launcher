@@ -14,4 +14,3 @@ pubrepo.guance.com/dataflux/basis:multiarch_nginx_1.13.7
 #pubrepo.guance.com/dataflux/1.57.120:utils-server-48799ca-1675061598
 #pubrepo.guance.com/dataflux/1.57.120:jfr-parser-16ed409-1675061598
 #pubrepo.guance.com/dataflux/1.57.120:pprofparser-f2081c3-1675061598
-pubrepo.guance.com/dataflux/1.57.120:launcher-e5345d3-1675061598
