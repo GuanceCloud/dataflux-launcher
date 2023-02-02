@@ -55,13 +55,11 @@ guance_package (){
 	   docker pull --platform=${arc_name} ${i}
 	done
 
-	docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz  && 
-	docker rmi -f   $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
+	docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz  && docker rmi -f   $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
 }
 
 push_packages_oss (){
-	  tools/ossutil64 cp  /tmp/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} &&  
-          rm -rf ${temp_dest} 
+	  tools/ossutil64 cp  /tmp/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} && rm -rf ${temp_dest} 
 
 	  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} 
 
