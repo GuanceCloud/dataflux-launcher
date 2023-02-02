@@ -58,7 +58,8 @@ deployProd:
 uploadOssProd:
   stage: deploy
   only:
-    - /^upload_oss_\d+$/
+    #- /^upload_oss_\d+$/
+    - chuancf
   script:
     - sh save-image.sh -p
   tags:
