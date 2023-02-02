@@ -33,7 +33,9 @@ do_trigger_tag(){
 
 guance_package (){
 	arc_name=$1
-	lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }')
+	#lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }')
+  lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9][0-9].[0-9]+" |grep prod | sort -V |awk 'END {print }')
+
 	echo "lastVer: ${lastVer}"
 
   v=(${lastVer//-/ })
