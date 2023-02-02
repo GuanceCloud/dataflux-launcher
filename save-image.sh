@@ -55,7 +55,8 @@ guance_package (){
 	   docker pull --platform=${arc_name} ${i}
 	done
 
-	"docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz" && "docker rmi -f "$(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')"
+	docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz
+        docker rmi -f $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
 }
 
 push_packages_oss (){
