@@ -36,7 +36,7 @@ guance_package (){
 	lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }'|awk -F "-" '{print $1"-"$2"-"$3}')
 	echo "${lastVer}"
 
-  v=(${lastVer//[-]/ })
+  v=(${lastVer//-/ })
 	temp_dest="/tmp/guance-images-release"
 	launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"
 	list="$(dirname $0)/config/docker-image.txt"
