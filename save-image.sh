@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+set +eux
 
 do_trigger_tag(){
   #lastReleaseTag=$(git fetch --tag && git tag --list | grep -E "^release_" | sort -V | tail -1)
@@ -35,7 +35,7 @@ guance_package (){
 	arc_name=$1
 	#lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }'|awk -F "-" '{print $1"-"$2"-"$3}')
 	lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }')
-	v=(${lastVer//-/ })
+	v=(${lastVer//[-]/ })
 	temp_dest="/tmp/guance-images-release"
 	launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"
 	list="$(dirname $0)/config/docker-image.txt"
