@@ -34,14 +34,16 @@ do_trigger_tag(){
 guance_package (){
 	arc_name=$1
 	lastVer=$(git fetch --tag && git tag --list | grep -E "\d+\.\d+\.\d+-\w+-\d+" | sort -V|awk 'END {print }'|awk -F "-" '{print $1"-"$2"-"$3}')
-	v=(${lastVer//[-]/ })
+	echo "${lastVer}"
+
+  v=(${lastVer//[-]/ })
 	temp_dest="/tmp/guance-images-release"
 	launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"
 	list="$(dirname $0)/config/docker-image.txt"
 	version=$(sed -n "1p" ${list} |sed -r  "s/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/g")
 
 
-	if ! grep  -w ${launVer} ${list} 
+	if ! grep -w ${launVer} ${list} 
 	then
 	  echo ${launVer} >>${list}
 	fi
