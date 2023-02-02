@@ -1,5 +1,3 @@
-#!/bin/bash
-
 set -eux
 
 do_trigger_tag(){
