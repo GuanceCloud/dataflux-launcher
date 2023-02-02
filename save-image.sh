@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -eux
+set -eux
 
 do_trigger_tag(){
   #lastReleaseTag=$(git fetch --tag && git tag --list | grep -E "^release_" | sort -V | tail -1)
