@@ -60,7 +60,7 @@ guance_package (){
 }
 
 push_packages_oss (){
-	  tools/ossutil64 cp  $(dirname $0)/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} && \
+	  tools/ossutil64 cp  /tmp/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} && \
           rm -rf ${temp_dest} 
 
 	  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} 
