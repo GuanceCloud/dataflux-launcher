@@ -15,16 +15,13 @@ do_trigger_tag(){
     # 当前版本的 tag 已经存在，后续版本数字递增1
     #deployCount=$[10#${lastDeployTag:${#v_main} + 1:5} + 100001]
     deployCount=$[10#${lastDeployTag:11 + 1:5 } + 100001]
-    echo $deployCount
     deployCount=${deployCount:1:5}
-    echo $deployCount
-
     newDeployTag=${v_main}_${deployCount}
   } || {
     newDeployTag=upload_oss_00001
   }
 
-  # 在最新的 release tag 处打上 deploy tag，触发 CD 动作
+  # 在最新的 release tag 处打上 upload_oss tag，触发 CD 动作
   git tag -a $newDeployTag -m 'upload_oss trigger ${newDeployTag}' $lastReleaseTagCommitID
   git push --tags 
 }
