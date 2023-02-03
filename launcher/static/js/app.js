@@ -1187,5 +1187,26 @@ var setup = (function () {
     });
   }
 
+  app.prototype.external_dataway = function() {
+    $("#dataway-modal").modal("show");
+  }
+
+  app.prototype.external_dataway_install = function() {
+    var params = {
+      'name': $("#dataway-name").val(),
+      'url': $("#dataway-url").val(),
+      'storage_class': $("#dataway-storage-class").val()
+    };
+
+    this.post('external_dataway/install', params).done(function(response){
+      if (!response.success) {
+        alert(`安装失败\n${response.message}`);
+      } else {
+        console.debug(response);
+        alert("安装成功");
+      }
+    });  
+  }
+
   return new app();
 })();

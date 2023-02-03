@@ -298,3 +298,11 @@ def tdengine_install():
 
   poc_install.install_tdengine(**params)
   return response_jsonify(success=True)
+
+@setup_bp.route("/external_dataway/install", methods=["POST"])
+def external_dataway_install():
+  params: dict = request.json
+  logging.debug(params)
+  
+  poc_install.install_external_dataway(**params)  
+  return response_jsonify(success=True)

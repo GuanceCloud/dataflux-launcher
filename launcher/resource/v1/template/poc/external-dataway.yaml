@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dataway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-dataway
+  template:
+    metadata:
+      labels:
+        app: external-dataway
+    spec:
+      containers:
+      - name: dataway
+        image: {{ image }}
+        imagePullPolicy: {{ other.imagePullPolicy }}
+
+        ports:
+        - containerPort: 9528
+          name: server
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          subPath: config.yaml
+          mountPath: /usr/local/cloudcare/dataflux/dataway/dataway.yaml
+        - name: license
+          subPath: license
+          mountPath: /usr/local/cloudcare/dataflux/dataway/license
+        - name: cache
+          mountPath: /usr/local/cloudcare/dataflux/dataway/cache  
+      imagePullSecrets:
+      - name: registry-key
+      volumes:
+      - name: config
+        configMap:
+          name: external-dataway
+      - name: license
+        configMap:
+          name: dataway-license
+      - name: cache
+        persistentVolumeClaim:
+          claimName: external-dataway
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-dataway
+spec:
+  ports:
+  - name: server
+    port: 9528
+    protocol: TCP
+    targetPort: 9528
+  selector:
+    app: external-dataway
+  type: LoadBalancer
+  
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: external-dataway
+data:
+  config.yaml: |
+    # dataway oerating parameters
+    uuid: {{ uuid }}
+
+    # 初始安装是默认工作空间的 token
+    token: {{ (other.workspace or {}).token }}
+    enable_internal_token: true
+    collect_second: 60
+
+    bind: "0.0.0.0:9528"
+
+    # 初始安装是默认工作空间的 ak、sk
+    access_key: ''
+    secret_key: ''
+
+    remote_host: http://kodo.forethought-kodo:9527
+
+    log: log
+    log_level: warning
+    gin_log: gin.log
+
+    cache_cfg:
+      dir: cache
+
+    # routes config
+    routes_config:
+      - name: default
+        ak_open: false
+        lua:
+
+    # batch config
+    batch_config:
+      workers: 8
+      batch_size: 100
+      batch_interval: 5
+      queue_size: 128
+
+    retag_configs:
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: external-dataway
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: {{ storage_class }}
+  volumeMode: Filesystem
