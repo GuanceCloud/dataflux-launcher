@@ -75,6 +75,9 @@
                 </li>
                 <li class="divider"></li>
                 <li>
+                  <a href="javascript:void(0);" onclick="setup.external_dataway()">安装数据网关</a>
+                </li>
+                <li>
                   <a href="javascript:void(0);" onclick="setup.activate_license()">License 激活及 AK/SK 配置</a>
                 </li>
 
@@ -227,6 +230,55 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button id="activateModalButtonOK" type="button" onclick="setup.do_activate()" class="btn btn-primary">激活</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- License 激活与 AK 配置 Large modal -->
+        <div id="dataway-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">安装DataWay</h4>
+              </div>
+              <div class="modal-body" style="padding: 0;height: 500px;">
+                <div class="modal-high-block">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="dataway-name" class="control-label">网关名称</label>
+                        <input type="text" class="form-control" id="dataway-name" value="DataWay" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="dataway-url" class="control-label">绑定地址</label>
+                        <input type="text" class="form-control" id="dataway-url" value="dataway.dataflux.cn" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label for="dataway-storage-class" class="control-label">存储后端</label>
+                        <select id="dataway-storage-class" class="form-control">
+                          {% for class in storageClasses %}
+                          <option value="{{ class }}">{{ class }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="btn-install-dataway" type="button" onclick="setup.external_dataway_install()" class="btn btn-primary">一键安装</button>
               </div>
             </div>
 
