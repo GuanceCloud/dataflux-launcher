@@ -50,9 +50,14 @@ guance_package (){
 	for i in $(cat ${list}|grep -Ev "^$|#"); do
 	   docker pull --platform=${arc_name} ${i}
 	done
+        
+        docker save $(cat ${list} | grep -Ev "^$|#" | tr '\n' ' ') | gzip -c >${temp_dest}/guance-${arc_name}-${version}.tar.gz
+        
+        for i in $(cat ${list} | grep -Ev "^$|#"); do
+          docker rmi  ${i}
+        done
 
-	docker save $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ') | gzip -c > ${temp_dest}/guance-${arc_name}-${version}.tar.gz 
-        docker rmi -f $(cat ${list} | grep -Ev "^$|#"|tr '\n' ' ')
+
 }
 
 push_packages_oss (){
