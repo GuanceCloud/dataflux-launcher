@@ -54,6 +54,16 @@ deployProd:
   tags:
     - cloudcare-multiarch 
 
+#push offline images to oss
+uploadOssProd:
+  stage: deploy
+  only:
+    - /^upload_oss_\d+$/
+  script:
+    - sh save-image.sh -p
+  tags:
+    - cloudcare-multiarch 
+
 buildRTM:
   stage: build
   only:
