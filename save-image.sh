@@ -54,7 +54,7 @@ guance_package (){
         docker save $(cat ${list} | grep -Ev "^$|#" | tr '\n' ' ') | gzip -c >${temp_dest}/guance-${arc_name}-${version}.tar.gz
         
         for i in $(cat ${list} | grep -Ev "^$|#"); do
-          docker rmi --platform=${arc_name} ${i}
+          docker rmi  ${i}
         done
 
 
