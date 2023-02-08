@@ -45,8 +45,7 @@ spec:
         configMap:
           name: dataway-license
       - name: cache
-        persistentVolumeClaim:
-          claimName: external-dataway
+        emptyDir: {}
 
 ---
 
@@ -109,18 +108,3 @@ data:
       queue_size: 128
 
     retag_configs:
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: external-dataway
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Mi
-  storageClassName: {{ storage_class }}
-  volumeMode: Filesystem

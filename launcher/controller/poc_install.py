@@ -100,6 +100,9 @@ def install_external_dataway(**params):
     
     results = []
     with dbHelper(base_settings) as db:
+        rows = db.execute("SHOW DATABASES;").pop()
+        if not any(row['Database'] == 'df_core' for row in rows):
+            raise Exception("数据库不存在")
         results.extend(db.execute(sql, dbName=core_settings['database']))
     
     tmp_dir = SERVICECONFIG['tmpDir']

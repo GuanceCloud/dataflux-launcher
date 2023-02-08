@@ -1194,8 +1194,7 @@ var setup = (function () {
   app.prototype.external_dataway_install = function() {
     var params = {
       'name': $("#dataway-name").val(),
-      'url': $("#dataway-url").val(),
-      'storage_class': $("#dataway-storage-class").val()
+      'url': $("#dataway-url").val()
     };
 
     this.post('external_dataway/install', params).done(function(response){
