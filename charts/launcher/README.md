@@ -62,6 +62,9 @@ $ helm delete my-launcher -n launcher
 | `ingress.hostName`    | Default host for the ingress resource | `launcher.my.com` |
 | `ingress.annotations` | Ingress annotations                   | `{}`              |
 | `ingress.tls`         | TLS Secret (certificates)             | `nil`             |
+| `imageSecrets.url`    |   registry-key url           | `pubrepo.guance.com`             |
+| `imageSecrets.username` | registry-key username              | `nil`             |
+| `imageSecrets.password` | registry-key password            | `nil`             |
 
 
 

@@ -1,0 +1,1 @@
+{"auths":{"{{ .Values.imageSecrets.url }}":{"username":"{{ .Values.imageSecrets.username }}","password":"{{ .Values.imageSecrets.password }}"}}}
