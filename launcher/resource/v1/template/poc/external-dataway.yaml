@@ -16,11 +16,16 @@ spec:
       - name: dataway
         image: {{ image }}
         imagePullPolicy: {{ other.imagePullPolicy }}
-
         ports:
         - containerPort: 9528
           name: server
           protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: server
+        readinessProbe:
+          tcpSocket:
+            port: server
         volumeMounts:
         - name: config
           subPath: config.yaml

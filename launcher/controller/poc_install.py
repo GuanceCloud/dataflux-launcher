@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import shortuuid
 import subprocess
@@ -71,6 +72,13 @@ def install_external_dataway(**params):
     logging.debug(f"install external dataway: {params}")
 
     namespace = 'utils'
+    deployment = 'external-dataway'
+    # 已经安装时直接返回
+    result = subprocess.run(f"kubectl get deploy -n {namespace} -o json {deployment}", shell=True, check=True, capture_output=True)
+    status = json.loads(result.stdout.decode()).get('status')
+    logging.debug(f"dataway deploy status: {status}")
+    if status['replicas'] == status['readyReplicas']:
+        return
 
     base_settings = settingsMdl.mysql.get('base')
     core_settings = settingsMdl.mysql.get('core')
