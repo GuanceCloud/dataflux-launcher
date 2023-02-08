@@ -3,7 +3,7 @@
 import requests
 import os, re, subprocess
 import markdown, shortuuid, pymysql
-import json, time
+import json, time, logging
 
 from launcher.model import k8s as k8sMdl
 from launcher.model import version as versionMdl
@@ -149,7 +149,7 @@ def configmap_create(maps):
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
   except Exception as e:
-    print(e)
+    logging.error(e)
     return False
 
   return True
@@ -162,8 +162,18 @@ def service_image_config():
   imageDir = apps.get('image_dir', '')
   defaultImage  = apps.get('images', {})
 
+  registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
+  
+  registry      = registrySecrets[0]
+  registryAddr  = registry.get('address') or ''
+  registryUser  = registry.get('username') or ''
+  registryPwd   = registry.get('password') or ''
+
+
   d = {
-    "imageRegistry": apps.get('registry', ''),
+    "imageRegistry": registryAddr,
+    "imageRegistryUser": registryUser,
+    "imageRegistryPwd": registryPwd,
     "imageDir": imageDir,
     "storageClassName": settingsMdl.other.get("storageClassName"),
     "imagePullPolicy": settingsMdl.other.get("imagePullPolicy", "IfNotPresent"),

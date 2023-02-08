@@ -2,7 +2,7 @@
 
 import os, re, subprocess
 import markdown, shortuuid, pymysql
-import json, time, yaml
+import json, time, yaml, logging
 
 from .auto_update_step import AutoUpdateStep
 
@@ -61,7 +61,7 @@ def configmap_create(maps):
     cmd = "kubectl apply  -f {}".format(tmpPath)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
   except Exception as e:
-    print(e)
+    logging.error(e)
     return False
 
   return True
@@ -147,6 +147,11 @@ def deploy_check():
   deployStatus = k8sMdl.deploy_status()
   k8sNamespaces = k8sMdl.get_namespace()
 
+  registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
+
+  registry      = registrySecrets[0]
+  registryAddr  = registry.get('address') or ''
+  
   apps = DOCKERIMAGES.get('apps', {})
   imageDir = apps.get('image_dir', '')
   defaultImage  = apps.get('images', {})
@@ -158,7 +163,7 @@ def deploy_check():
     ns['isNew'] = (namespaceName not in k8sNamespaces)
 
     for deploy in ns['services']:
-      newImagePath = '{}/{}/{}'.format(apps.get('registry', ''), imageDir, defaultImage.get(deploy['imageKey'], ''))
+      newImagePath = '{}/{}/{}'.format(registryAddr, imageDir, defaultImage.get(deploy['imageKey'], ''))
 
       deploy['newImagePath'] = re.sub('/+', '/', newImagePath)
 

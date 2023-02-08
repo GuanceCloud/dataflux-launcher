@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import logging
+
 from flask import Flask, request, g
 
 from launcher.utils.template import render
@@ -110,7 +112,14 @@ def register_install_router(app):
   @app.route("/install/database")
   @decorators.upgrade_install
   def database():
-    return render("database.html", {"title": "MySQL 设置", "pageData": settingsMdl.mysql, "steps": STEPS_COMMON + STEPS_INSTALL})
+    storage_classes: list = env_check.get_storageclass()
+    
+    return render("database.html", {
+      "title": "MySQL 设置",
+      "pageData": settingsMdl.mysql,
+      "steps": STEPS_COMMON + STEPS_INSTALL,
+      'storageClasses': storage_classes
+    })
 
 
   @app.route("/install/other")
@@ -147,13 +156,26 @@ def register_install_router(app):
 
   @app.route("/install/redis")
   def redis():
-    return render("redis.html", {"title": "Redis 设置", "pageData": settingsMdl.redis, "steps": STEPS_COMMON + STEPS_INSTALL})
+    storage_classes: list = env_check.get_storageclass()
+    
+    return render("redis.html", {
+      "title": "Redis 设置",
+      "pageData": settingsMdl.redis,
+      "steps": STEPS_COMMON + STEPS_INSTALL,
+      'storageClasses': storage_classes
+    })
 
 
   @app.route("/install/elasticsearch")
   def elasticsearch():
-    print(settingsMdl.elasticsearch)
-    return render("elasticsearch.html", {"title": "Elasticsearch 设置", "pageData": settingsMdl.elasticsearch, "steps": STEPS_COMMON + STEPS_INSTALL})
+    storage_classes: list = env_check.get_storageclass()
+    
+    return render("elasticsearch.html", {
+      "title": "Elasticsearch 设置",
+      "pageData": settingsMdl.elasticsearch,
+      "steps": STEPS_COMMON + STEPS_INSTALL,
+      'storageClasses': storage_classes
+    })
 
 
   @app.route("/install/influxdb")
@@ -161,7 +183,14 @@ def register_install_router(app):
     rps = SERVICECONFIG['influxDB']['replication']
     influxs = settingsMdl.influxdb
 
-    return render("influxdb.html", {"title": "时序引擎 设置", "pageData": {"influxs": influxs, "rps": rps}, "steps": STEPS_COMMON + STEPS_INSTALL})
+    storage_classes: list = env_check.get_storageclass()
+
+    return render("influxdb.html", {
+      "title": "时序引擎 设置",
+      "pageData": {"influxs": influxs, "rps": rps},
+      "steps": STEPS_COMMON + STEPS_INSTALL,
+      'storageClasses': storage_classes
+    })
 
 
   @app.route("/install/aksk")

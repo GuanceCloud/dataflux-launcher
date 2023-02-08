@@ -1,12 +1,13 @@
 # encoding=utf-8
 
 import time
+import logging
 
 from launcher.utils.helper import api_helper as apiHelper
 
 
 def fix_script_exec():
-  print('black list upgrade')
+  logging.info('do after_container_update, 2022.12.01 sprint upgrade start')
   ping_url  = "http://inner.forethought-core:5000/api/v1/inner/const/ping"
   url       = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
 
@@ -20,18 +21,16 @@ def fix_script_exec():
   if status_code != 200:
     return False
   else:
-    # biz_mute 更新
-    d1 = '{ "script_name": "fix_mute_tags_range_2022_09_29"}'
-
-    # black_list fix
-    d2 = '{ "script_name": "fix_2022_09_15_blacklist_notin" }'
+    # pipeline 表数据结构更新
+    d1 = '{ "script_name": "fix_update_inner_config_order" }'
 
     apiHelper.do_post(url, data = d1)
-    apiHelper.do_post(url, data = d2)
 
+  logging.info('do after_container_update, 2022.12.01 sprint upgrade finish')
   return True
 
 
 def after_container_update():
 
   return fix_script_exec()
+

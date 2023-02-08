@@ -504,7 +504,7 @@ upgrade:
       -- 工作空间表新增 账单状态字段，
       ALTER TABLE `main_workspace`
       ADD COLUMN `durationSet` json NULL COMMENT '数据保留时长设置' AFTER `enablePublicDataway`,
-      ADD COLUMN `versionType` enum('free','pay','unlimited') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT 'free表示免费版，pay表示付费版' AFTER `durationSet`,
+      ADD COLUMN `versionType` enum('free','pay','unlimited') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT 'free表示体验版，pay表示付费版' AFTER `durationSet`,
       ADD COLUMN `billingState` enum('free','unlimited','normal','arrearage','expired') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'free' COMMENT '帐户费用状态' AFTER `versionType`;
 
       -- 新增账单计费配置信息
@@ -514,7 +514,7 @@ upgrade:
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimit', '免费额度', '{\"ts\": 500, \"job\": 1000, \"datakit\": 5, \"tracing\": 1000000, \"logging_keyevent\": 1000000}');
 
 
-      -- 原有的非免费版变更为 付费版
+      -- 原有的非体验版变更为 付费版
       update main_workspace set versionType="free", billingState="free" where status=0 and versionInfo ->> "$.version" = "free";
       update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "BASIC";
       update main_workspace set versionType="pay", billingState="normal" where status=0 and versionInfo ->> "$.version" = "TEAM";
@@ -1165,8 +1165,8 @@ upgrade:
       -- 清理视图已删除，但关联的图表未删除的数据4
       UPDATE biz_chart set status=3 WHERE status=0 and dashboardUUID in (SELECT uuid from biz_dashboard WHERE status=3);
 
-      -- 插入免费版工作空间使用量统计配置
-      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeMeteringUnitConfig', '免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count + keyevent_count + security_count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+      -- 插入体验版工作空间使用量统计配置
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeMeteringUnitConfig', '体验版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"job\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 100, \"discountQuantity\": 0}, \"datakit\": {\"price\": 5, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count + keyevent_count + security_count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
       -- 免费额度限制配置
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 500, \"job\": 5000, \"rum\": 100, \"logs\": 2000000, \"trace\": 10000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
@@ -1298,7 +1298,7 @@ upgrade:
   - seq: 38
     database: |-
 
-      -- 新增 network 数据类型配置，免费版刷新成1d
+      -- 新增 network 数据类型配置，体验版刷新成1d
       update main_workspace set durationSet=JSON_SET(durationSet, "$.network", "1d") where `status` = 0 and versionType='free';
 
       -- 新增 network 数据类型配置，付费版/部署版 刷新成2d
@@ -1510,8 +1510,8 @@ upgrade:
       -- 更新计费公式(此公式仅SAAS版有效，PAAS版无效)
       INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('MeteringUnitPriceConfig', 'priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式', '{\"ts\": {\"price\": 3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 500)\", \"priceQuantity\": 500, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 0.1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.3, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 0.5, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 0.2, \"equation\": \"math.ceil(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
-      -- 更新 免费版使用量统计公式
-      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('FreeMeteringUnitConfig','免费版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"job\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count \", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"logging\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+      -- 更新 体验版使用量统计公式
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('FreeMeteringUnitConfig','体验版工作空间使用量统计计算配置; priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"job\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count \", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"logging\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 0, \"equation\": \"0\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
 
       -- 更新使用量统计公式（非出账单）
       INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"ts\": {\"countEquation\": \"max(0, ts_count - count * 500)\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
@@ -2331,3 +2331,296 @@ upgrade:
 
       # 在部署完成之后 执行该操作【inner api 服务器执行】重新生成所有的biz_rule表中的jsonScript, 本地迭代修改noDataPeriodCount字段为noDataInterval,需要将count重新计算为noDataInterval的时间分钟格式
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_10_20_checker_jsonscript_update"}'
+
+
+  # 2022.11.03 迭代
+  - seq: 65
+    database: |-
+      
+      -- 索引绑定外部 SLS project 功能中添加的部分外部字段      
+      ALTER TABLE `biz_logging_index_cfg` 
+      ADD COLUMN `isBindCustomStore` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否为绑定的自定义存储' AFTER `setting`,
+      ADD COLUMN `queryType` VARCHAR(64) NOT NULL DEFAULT 'logging' COMMENT '外部store的查询类型' AFTER `isBindCustomStore`,
+      ADD COLUMN `exterStoreProject` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '外部Store的上层标识' AFTER `queryType`;
+      
+      -- main_workspace表新增loggingCutSize字段记录超大日志切割大小, 新增`makeResourceExceptionCode`记录资源开通过程中错误的Code
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `loggingCutSize` int(11) NOT NULL DEFAULT '10240' COMMENT '超大日志切割基础单位,单位:字节byte, SLS 工作空间 默认为 2048byte， ES 工作空间默认为10240byte' AFTER `esIndexMerged`,
+      ADD COLUMN `makeResourceExceptionCode` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '工作空间开通资源时的异常信息Code' AFTER `isOpenLogMultipleIndex`;
+
+
+  # 2022.11.17 迭代
+  - seq: 66
+    database: |-
+
+      -- 新增成员组表
+      CREATE TABLE `biz_account_group` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 group-',
+        `name` varchar(48) NOT NULL DEFAULT '' COMMENT '成员组名称',
+        `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新增成员组和成员关联表
+      CREATE TABLE `biz_account_group_relation` (
+      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+      `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rlag-',
+      `groupUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '成员组 uuid',
+      `accountUUID`  varchar(48) NOT NULL DEFAULT '' COMMENT '成员账户uuid',
+      `status` int(11) NOT NULL DEFAULT '0',
+      `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+      `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+      `createAt` int(11) NOT NULL DEFAULT '-1',
+      `deleteAt` int(11) NOT NULL DEFAULT '-1',
+      `updateAt` int(11) NOT NULL DEFAULT '-1',
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+      KEY `k_group_uuid` (`groupUUID`),
+      KEY `k_acnt_uuid` (`accountUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新增pipeline关联表, name, category, workspaceUUID为datakit侧单独需求添加的字段
+      CREATE TABLE `biz_pipeline_relation` (
+      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+      `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rlag-',
+      `name` varchar(256) NOT NULL DEFAULT '' COMMENT 'PL文件名',
+      `source` varchar(256) NOT NULL DEFAULT '' COMMENT 'source来源',
+      `category` varchar(48) NOT NULL DEFAULT '' COMMENT 'pipeline类型',
+      `pipelineUUID`  varchar(48) NOT NULL DEFAULT '' COMMENT '成员账户uuid',
+      `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+      `status` int(11) NOT NULL DEFAULT '0',
+      `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+      `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+      `createAt` int(11) NOT NULL DEFAULT '-1',
+      `deleteAt` int(11) NOT NULL DEFAULT '-1',
+      `updateAt` int(11) NOT NULL DEFAULT '-1',
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+      KEY `k_source` (`source`),
+      KEY `k_pipeline_uuid` (`pipelineUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- biz_pipeline表新增asDefault字段, 用户具体类型使用默认pipeline
+      ALTER TABLE `biz_pipeline`
+      ADD COLUMN `asDefault` BOOLEAN DEFAULT false COMMENT '是否该类型默认pipeline' AFTER `category`;
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_update_pipeline_relation.py 操作 更新biz_pipeline配置表及biz_pipeline_relation表
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_pipeline_relation"}'
+
+      #【inner api 服务器执行】重新生成所有内置视图的绑定字段的数据结构
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_11_17_update_dashboard_bidding"}'
+
+
+  # 2022.12.01 迭代
+  - seq: 67
+    config:
+      core: |-
+        # 原有的 bossSettlementCode 配置废弃, 其可选值不变，仅将 key 变更为 basicEnvCode, 表示基础环境供应商Code
+        # 目前可选值为 阿里云节点: aliyun, AWS节点: aws; 华为云节点: huawei; 默认值为 aliyun
+        basicEnvCode: aliyun
+        
+        # 当前基础环境所在区域的Code (根据 basicEnvCode 的不同，可以设置不同的值, 默认为 cn-hangzhou)
+        basicEnvRegionCode: cn-hangzhou
+
+    database: |-
+
+      -- 新增外部数据访问配置信息表
+      CREATE TABLE `biz_external_resource_access_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 erac-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `config` json DEFAULT NULL COMMENT '访问配置信息',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新增 索引字段映射配置表
+      CREATE TABLE `biz_index_field_mapping` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 indfm-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `indexCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '索引配置的 uuid',
+        `field` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
+        `originalField` varchar(256) NOT NULL DEFAULT '' COMMENT '原始字段名',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_index_cfg_uuid` (`indexCfgUUID`),
+        KEY `k_field` (`field`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      
+      -- 索引配置表 支持外部绑定索引相关功能添加的字段
+      ALTER TABLE `biz_logging_index_cfg` 
+      ADD COLUMN `exterStoreName` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '与name互为映射的外部存储的名字' AFTER `exterStoreProject`,
+      ADD COLUMN `externalResourceAccessCfgUUID` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID' AFTER `extend`,
+      ADD COLUMN `storeType` ENUM('', 'es', 'sls') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致' AFTER `externalResourceAccessCfgUUID`,
+      ADD COLUMN `region` VARCHAR(45) NOT NULL DEFAULT '' COMMENT '目标地域' AFTER `storeType`,
+      ADD COLUMN `isPublicNetworkAccess` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否走公网访问' AFTER `region`,
+      ADD INDEX `k_external_resource_access_cfg_uuid` (`externalResourceAccessCfgUUID` ASC);
+      
+      -- 视图变量表新增`isHiddenAsterisk`字段用来控制是否隐藏星号，默认不隐藏
+      ALTER TABLE `biz_variable` 
+      ADD COLUMN `isHiddenAsterisk` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是隐藏星号' AFTER `hide`;
+      
+      -- 修改工作空间名称字段长度
+      ALTER TABLE `main_workspace` 
+      CHANGE COLUMN `name` `name` VARCHAR(256) NULL DEFAULT NULL ;
+
+      -- 新增 serviceCatelog 服务清单配置字段, 调整字段service大小
+      ALTER TABLE `main_apm_config`
+      ADD COLUMN `serviceCatelog` text NOT NULL COMMENT '服务清单配置信息' AFTER `service`,
+      CHANGE COLUMN `service` `service` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '服务名';
+      
+      -- 软删除 已删除仪表板的绑定字段记录
+      update biz_dashboard_bidding set status=3 where dashboardUUID in (select uuid from biz_dashboard where status=3);
+
+    curl: |-
+      
+      # 【inner api 服务器执行】执行 fix_update_inner_config_order.py 操作 更新main_custom_config配置表及config字段
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_inner_config_order"}'
+
+
+  # 2022.12.15 迭代
+  - seq: 68
+    database: |-
+
+      -- 新增仪表板轮播表
+      CREATE TABLE `biz_dashboard_carousel` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 csel-',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '轮播名称',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `accountUUID` varchar(256) NOT NULL DEFAULT '' COMMENT '账户uuid',
+        `dashboardUUIDs` json NOT NULL COMMENT '仪表板轮播列表',
+        `intervalTime` varchar(48) NOT NULL COMMENT '轮播频率',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_acount_uuid` (`accountUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 账号*工作空间关系表 新增用户自定义的 工作空间备注信息字段
+      ALTER TABLE `main_account_workspace` 
+      ADD COLUMN `workspaceNote` TEXT(256) NOT NULL COMMENT '自定义工作空间备注' AFTER `waitAudit`;
+      
+      -- 图表添加 是否为工作空间关键指标查询标记, 默认为否
+      ALTER TABLE `biz_chart`
+      ADD COLUMN `isWorkspaceKeyIndicator` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否为工作空间关键指标的查询' AFTER `extend`;
+
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 商业版空间使用量限制字段 usageLimit, 空间菜单栏管理字段 wsMenuCfg
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+      -- 更新邮件通知配置表 biz_email type枚举类型 商业版空间使用量限制字段 usageAlready
+      ALTER TABLE `biz_email`
+      MODIFY COLUMN `type` enum('almost','already','invitation', 'usageAlready') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'almost';
+      
+      -- 免费额度配置参数更新
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 3000, \"job\": 100000, \"rum_pv\": 2000, \"logs\": 1000000, \"trace\": 8000, \"profile\": 60, \"dialing_api\": 200000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+
+      -- 工作空间使用量统计公式, 添加 profile, network 数据容量统计
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('UsageStatisticalFormula','工作空间使用量统计公式（非计费公式）','{\"ts\": {\"countEquation\": \"max(0, ts_count - count * 300)\", \"discountQuantity\": 0}, \"job\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"rum_pv\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"datakit\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"logging\": {\"countEquation\": \"count + keyevent_count + security_count\", \"discountQuantity\": 0}, \"tracing\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"api_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"browser_test\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"profile\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"network\": {\"countEquation\": \"count\", \"discountQuantity\": 0}, \"backup_log_bytes\": {\"countEquation\": \"count\", \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 工作空间使用量和计费统计公式, 添加 profile, network 容量计算公式
+      INSERT INTO `main_config` (`keyCode`,`description`,`value`) VALUES ('MeteringUnitPriceConfig','priceQuantity表示价格对应的数量，price表示priceQuantity数量对应的价格，discountQuantity表示免费额度，equation是计算公式, count_equation是账单计算时的统计数量计算公式','{\"ts\": {\"price\": 3, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"max(0, count - datakit_count * 300)\", \"priceQuantity\": 1000, \"discountQuantity\": 0}, \"job\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"sms\": {\"price\": 1, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 10, \"discountQuantity\": 0}, \"rum_pv\": {\"price\": 0.7, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"datakit\": {\"price\": 3, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"logging\": {\"price\": 1.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"sum([count, keyevent_count, security_count])\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"tracing\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1000000, \"discountQuantity\": 0}, \"api_test\": {\"price\": 1, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"backup_log\": {\"price\": 2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000000, \"discountQuantity\": 0}, \"profile\": {\"price\": 0.2, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 10000, \"discountQuantity\": 0}, \"network\": {\"price\": 2, \"equation\": \"count*price\", \"countEquation\": \"count\", \"priceQuantity\": 1, \"discountQuantity\": 0}, \"backup_log_bytes\": {\"price\": 0.007, \"equation\": \"(count/priceQuantity)*price\", \"countEquation\": \"count\", \"priceQuantity\": 1073741824, \"discountQuantity\": 0}}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+
+
+
+  # 2022.12.29 迭代
+  - seq: 69
+    database: |-
+      -- 账号表新增 MFA 开关 和 MFA 密钥存储字段
+      ALTER TABLE `main_account` 
+      ADD COLUMN `enableMFA` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否开启MFA认证，默认为0，表示未开启' AFTER `status`,
+      ADD COLUMN `mfaSecret` VARCHAR(256) NOT NULL DEFAULT '' COMMENT 'MFA密钥，默认为空字符串' AFTER `enableMFA`;
+      
+      
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 keyCode新增IP白名单 WhileList枚举类型
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg', 'WhileList') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+    curl: |-
+      
+      # 【inner api 服务器执行】执行 fix_2022_12_29_clear_obs_checker.py 操作 删除所有的 bot_obs 智能巡检规则
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_12_29_clear_obs_checker"}'
+
+      # 【inner api 服务器执行】执行 fix_update_pipeline_rum_extend.py 操作 更新biz_pipeline, 字段extend中appid字符串为列表
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_pipeline_rum_extend"}'
+
+
+
+  # 2023.01.12 迭代
+  - seq: 70
+    database: |-
+      -- 账号表新增 默认语言字段
+      ALTER TABLE `main_account` 
+      ADD COLUMN `language` VARCHAR(48) NOT NULL DEFAULT '' AFTER `mfaSecret`;
+
+      -- 账号表新增 默认语言字段
+      ALTER TABLE `biz_field_management`
+      ADD COLUMN `descEn` VARCHAR(1024) NOT NULL DEFAULT '' AFTER `desc`;
+
+      -- 日志索引配置表中的字段 storeType 新增可选类型 opensearch
+      ALTER TABLE `biz_logging_index_cfg` 
+      CHANGE COLUMN `storeType` `storeType` ENUM('', 'es', 'sls', 'opensearch') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致' ;
+      
+      -- 集成表新增 language 语言版本字段，用于支持多语言
+      ALTER TABLE `biz_integration` 
+      ADD COLUMN `language` VARCHAR(64) NOT NULL DEFAULT 'zh' COMMENT '语言类型' AFTER `meta`;
+
+      -- 补全外部绑定索引的 字段映射数据
+      update biz_index_field_mapping set originalField=field where status=0 and originalField="";
+
+    curl: |-
+
+      # 【inner api 服务器执行】执行 fix_update_rule_nodata_action.py 刷新监控器中创建阈值检测时,noDataAction的值为none的情况
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_rule_nodata_action"}'
+
+      # 【inner api 服务器执行】再次执行优化后的 fix_2022_12_29_clear_obs_checker.py 操作 删除所有的 bot_obs 智能巡检规则
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2022_12_29_clear_obs_checker"}'
+
+      # 【inner api 服务器执行】 同步拉取并更新字段管理文件, 本次更新descEn字段, 数据库字段添加后, 执行
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_field_cfg_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_field_cfg": true}}' \
+      --compressed
+
+      # 【inner api 服务器执行】同步更新视图模版
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true}}' \
+      --compressed

@@ -1,5 +1,7 @@
 # encoding=utf-8
 
+import logging
+
 from flask import Blueprint, request
 from launcher.utils.handler import response_jsonify
 
@@ -12,6 +14,7 @@ from launcher.controller import redis_setup
 from launcher.controller import elasticsearch_setup
 from launcher.controller import influxdb_setup
 from launcher.controller import update
+from launcher.controller import poc_install
 
 setup_bp = Blueprint('setup', __name__)
 
@@ -255,3 +258,43 @@ def setting_tls_change():
 
   return  response_jsonify(setting.setting_tls_change(data))
 
+@setup_bp.route("/mysql/install", methods=["POST"])
+def mysql_install():
+  params: dict = request.json
+  logging.debug(params)
+
+  mysql_password = params.get('mysql_password')
+  if not mysql_password or mysql_password == 'Cg==':
+    return response_jsonify(success=False, message='MySQL密码不能为空')
+  
+  poc_install.install_mysql(**params)
+  return response_jsonify(success=True)
+
+@setup_bp.route("/redis/install", methods=["POST"])
+def redis_install():
+  params: dict = request.json
+  logging.debug(params)
+
+  redis_password = params.get('redis_password')
+  if not redis_password or redis_password == 'Cg==':
+    return response_jsonify(success=False, message='Redis密码不能为空')
+  
+  poc_install.install_redis(**params)
+  
+  return response_jsonify(success=True)
+
+@setup_bp.route("/opensearch/install", methods=["POST"])
+def opensearch_install():
+  params: dict = request.json
+  logging.debug(params)
+
+  poc_install.install_opensearch(**params)
+  return response_jsonify(success=True)
+
+@setup_bp.route("/tdengine/install", methods=["POST"])
+def tdengine_install():
+  params: dict = request.json
+  logging.debug(params)
+
+  poc_install.install_tdengine(**params)
+  return response_jsonify(success=True)

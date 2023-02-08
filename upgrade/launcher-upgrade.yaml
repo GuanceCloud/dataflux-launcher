@@ -456,3 +456,20 @@ upgradeInfo:
   - seq: 30
     func_exec: script_20221020
 
+  # 2022-11-17 迭代的 fix 版本
+  - seq: 31
+    func_exec: script_20221117
+
+  # 2022-12-01 迭代的版本
+  - seq: 32
+    func_exec: script_20221201
+
+  # 2022-12-29 迭代的版本
+  - seq: 33
+    func_exec: script_20221229
+
+  # 2023-1-12 迭代的版本
+  - seq: 34
+    func_exec: script_20230112
+
+

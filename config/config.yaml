@@ -105,28 +105,28 @@ services:
 
     pvcs:
     - name: ft-sysconfig
-      storage: 10Gi
+      storage: 5Gi
 
     - name: front-backend-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: management-backend-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: inner-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: core-worker-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: core-worker-correlation-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: core-worker-beat-logs
-      storage: 10Gi
+      storage: 5Gi
 
     - name: open-api-logs
-      storage: 10Gi
+      storage: 5Gi
 
   # - namespace: forethought-inner-app
   #   services:
@@ -222,9 +222,24 @@ services:
       image: nginx
       replicas: 3
 
+    - key: kodo-asynq-client
+      name: Kodo Asynq Client
+      image: kodo
+      replicas: 1
+
     - key: kodo-ws
       name: Kodo Websocket
       image: kodo
+      replicas: 1
+
+    - key: python-pprof-parser
+      name: Python Profiling Parser
+      image: pprofparser
+      replicas: 1
+
+    - key: jfr-parser
+      name: Java Profiling Parser
+      image: jfr-parser
       replicas: 1
 
     configmaps:
@@ -234,6 +249,7 @@ services:
       format: yaml
       services:
       - kodo
+      - kodo-asynq-client
       template: kodo.yaml
 
     - key: kodoInner
@@ -267,6 +283,22 @@ services:
       - kodo-ws
       template: kodo-ws.yaml
 
+    - key: jfrParser
+      mapname: jfr-parser
+      mapkey: config.yaml
+      format: yaml
+      services:
+      - jfr-parser
+      template: jfr-parser.yaml
+
+    - key: pythonPprofParser
+      mapname: python-pprof-parser
+      mapkey: config.yaml
+      format: yaml
+      services:
+      - python-pprof-parser
+      template: python-pprof-parser.yaml
+
     - key: kodoLicense
       mapname: kodo-license
       mapkey: license
@@ -275,15 +307,18 @@ services:
       - kodo-inner
       - kodo-x
       - kodo-ws
+      - kodo-asynq-client
       template: kodo-license
-
 
     pvcs:
     - name: kodo-logs
-      storage: 20Gi
+      storage: 10Gi
 
     - name: kodo-inner-logs
-      storage: 20Gi
+      storage: 10Gi
+
+    - name: profiling-data
+      storage: 100Gi
 
   # - namespace: func
   #   services:
@@ -546,11 +581,11 @@ services:
     - name: nsqd-data-3
       storage: 40Gi
 
-    - name: kapacitor-data-01
-      storage: 40Gi
+    # - name: kapacitor-data-01
+    #   storage: 40Gi
 
-    - name: kapacitor-data-02
-      storage: 40Gi
+    # - name: kapacitor-data-02
+    #   storage: 40Gi
 
   - namespace: utils
     services:
@@ -725,6 +760,16 @@ updates:
 
       - key: kodoWS
         mapName: kodo-ws
+        mapKey: config.yaml
+        format: yaml
+
+      - key: jfrParser
+        mapName: jfr-parser
+        mapKey: config.yaml
+        format: yaml
+
+      - key: pythonPprofParser
+        mapName: python-pprof-parser
         mapKey: config.yaml
         format: yaml
 

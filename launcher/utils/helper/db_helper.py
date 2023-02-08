@@ -3,6 +3,7 @@
 import pymysql
 import traceback
 import io
+import logging
 
 
 class dbHelper(object):
@@ -32,7 +33,7 @@ class dbHelper(object):
       traceback.print_exception(ex_type, ex_value, ex_trace, file = fo)
       trace_message = fo.getvalue()
 
-      print(trace_message)
+      logging.error(trace_message)
       raise Exception(trace_message)
       
     self.close()

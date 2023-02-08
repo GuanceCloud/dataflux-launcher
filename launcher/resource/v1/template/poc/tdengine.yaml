@@ -1,0 +1,332 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: middleware
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tdengine-taoscfg
+  labels:
+    app.kubernetes.io/name: tdengine  
+data:
+  TAOS_NUM_OF_MNODES: "1"
+  TAOS_REPLICA: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdengine-arbitrator
+  labels:
+    app.kubernetes.io/name: tdengine
+    app: "arbitrator"
+spec:
+  type: ClusterIP
+  ports:
+    - name: tcp6042
+      port: 6042
+      protocol: TCP
+  selector:
+    app: "arbitrator"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tdengine
+  labels:   
+    app.kubernetes.io/name: tdengine   
+spec:
+  type: ClusterIP
+  ports: 
+    - name: tcp0
+      port: 6030
+      protocol: TCP
+    - name: tcp1
+      port: 6031
+      protocol: TCP
+    - name: tcp2
+      port: 6032
+      protocol: TCP
+    - name: tcp3
+      port: 6033
+      protocol: TCP
+    - name: tcp4
+      port: 6034
+      protocol: TCP
+    - name: tcp5
+      port: 6035
+      protocol: TCP
+    - name: tcp6
+      port: 6036
+      protocol: TCP
+    - name: tcp7
+      port: 6037
+      protocol: TCP
+    - name: tcp8
+      port: 6038
+      protocol: TCP
+    - name: tcp9
+      port: 6039
+      protocol: TCP
+    - name: tcp10
+      port: 6040
+      protocol: TCP
+    - name: tcp11
+      port: 6041
+      protocol: TCP
+    - name: tcp12
+      port: 6042
+      protocol: TCP
+    - name: tcp13
+      port: 6043
+      protocol: TCP
+    - name: tcp14
+      port: 6044
+      protocol: TCP
+    - name: tcp15
+      port: 6045
+      protocol: TCP
+    - name: tcp16
+      port: 6060
+      protocol: TCP  
+    - name: udp0
+      port: 6030
+      protocol: UDP
+    - name: udp1
+      port: 6031
+      protocol: UDP
+    - name: udp2
+      port: 6032
+      protocol: UDP
+    - name: udp3
+      port: 6033
+      protocol: UDP
+    - name: udp4
+      port: 6034
+      protocol: UDP
+    - name: udp5
+      port: 6035
+      protocol: UDP
+    - name: udp6
+      port: 6036
+      protocol: UDP
+    - name: udp7
+      port: 6037
+      protocol: UDP
+    - name: udp8
+      port: 6038
+      protocol: UDP
+    - name: udp9
+      port: 6039
+      protocol: UDP
+  selector:
+    app.kubernetes.io/name: tdengine  
+    app: "taosd"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdengine-arbitrator
+  labels: 
+    app.kubernetes.io/name: tdengine  
+    app: "arbitrator"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tdengine    
+      app: "arbitrator"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tdengine        
+        app: "arbitrator"
+    spec:
+      containers:
+      - name: arbitrator
+        image: pubrepo.jiagouyun.com/googleimages/tdengine:2.6.0.10
+        command: ["tarbitrator"]
+        ports:
+        - name: tcp6042
+          containerPort: 6042
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 512Mi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tdengine
+  labels:    
+    app.kubernetes.io/name: tdengine
+    app: taosd
+spec:
+  serviceName: tdengine
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tdengine
+      app: taosd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tdengine    
+        app: taosd
+    spec:
+      containers:
+        - name: tdengine
+          image: pubrepo.jiagouyun.com/googleimages/tdengine:2.6.0.10
+          imagePullPolicy: IfNotPresent
+          ports: 
+          - name: tcp0
+            containerPort: 6030
+            protocol: TCP
+          - name: tcp1
+            containerPort: 6031
+            protocol: TCP
+          - name: tcp2
+            containerPort: 6032
+            protocol: TCP
+          - name: tcp3
+            containerPort: 6033
+            protocol: TCP
+          - name: tcp4
+            containerPort: 6034
+            protocol: TCP
+          - name: tcp5
+            containerPort: 6035
+            protocol: TCP
+          - name: tcp6
+            containerPort: 6036
+            protocol: TCP
+          - name: tcp7
+            containerPort: 6037
+            protocol: TCP
+          - name: tcp8
+            containerPort: 6038
+            protocol: TCP
+          - name: tcp9
+            containerPort: 6039
+            protocol: TCP
+          - name: tcp10
+            containerPort: 6040
+            protocol: TCP
+          - name: tcp11
+            containerPort: 6041
+            protocol: TCP
+          - name: tcp12
+            containerPort: 6042
+            protocol: TCP
+          - name: tcp13
+            containerPort: 6043
+            protocol: TCP
+          - name: tcp14
+            containerPort: 6044
+            protocol: TCP
+          - name: tcp15
+            containerPort: 6045
+            protocol: TCP
+          - name: tcp16
+            containerPort: 6060
+            protocol: TCP    
+          - name: udp0
+            containerPort: 6030
+            protocol: UDP
+          - name: udp1
+            containerPort: 6031
+            protocol: UDP
+          - name: udp2
+            containerPort: 6032
+            protocol: UDP
+          - name: udp3
+            containerPort: 6033
+            protocol: UDP
+          - name: udp4
+            containerPort: 6034
+            protocol: UDP
+          - name: udp5
+            containerPort: 6035
+            protocol: UDP
+          - name: udp6
+            containerPort: 6036
+            protocol: UDP
+          - name: udp7
+            containerPort: 6037
+            protocol: UDP
+          - name: udp8
+            containerPort: 6038
+            protocol: UDP
+          - name: udp9
+            containerPort: 6039
+            protocol: UDP
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: SERVICE_NAME
+            value: tdengine
+          - name: STS_NAME
+            value: tdengine
+          - name: STS_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: TZ
+            value: UTC
+          - name: TAOS_SERVER_PORT
+            value: "6030"
+          - name: TAOS_FIRST_EP
+            value: '$(STS_NAME)-0.$(SERVICE_NAME).$(STS_NAMESPACE).svc.cluster.local:$(TAOS_SERVER_PORT)'
+          - name: TAOS_FQDN
+            value: '$(POD_NAME).$(SERVICE_NAME).$(STS_NAMESPACE).svc.cluster.local'
+          - name: TAOS_ARBITRATOR
+            value: tdengine-arbitrator
+          envFrom:
+          - configMapRef:
+              name: tdengine-taoscfg
+          volumeMounts:
+          - name: tdengine-taosdata
+            mountPath: /var/lib/taos
+          - name: tdengine-taoslog
+            mountPath: /var/log/taos
+          readinessProbe:
+            exec:
+              command:
+              - taos
+              - -n
+              - startup
+              - -h
+              - "${POD_NAME}"
+            initialDelaySeconds: 5
+            timeoutSeconds: 5000
+          livenessProbe:
+            tcpSocket:
+              port: 6030
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+  volumeClaimTemplates:
+  - metadata:
+      name: tdengine-taosdata
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      storageClassName: "{{ storage_class }}"
+      resources:
+        requests:
+          storage: "2Gi"
+  - metadata:
+      name: tdengine-taoslog
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      storageClassName: "{{ storage_class }}"
+      resources:
+        requests:
+          storage: "128Mi"

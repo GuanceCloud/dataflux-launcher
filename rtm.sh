@@ -4,6 +4,10 @@ tmpRTMDir=/tmp/rtm
 workDir=$(pwd)
 imageYaml=config/docker-image.yaml
 timestamp=$(date +%s)
+imageTxt=config/docker-image.txt
+
+imageHubHost=pubrepo.guance.com
+imageHubProject=dataflux
 
 # 清空临时工作区
 # 危险操作，必须显式指定目录
@@ -102,6 +106,8 @@ function rtm_tag(){
     copy_upgrade $project
 
     echo "    ${project}: ${VDIR}:${project}-${commitId}-${timestamp}" >> ${workDir}/${imageYaml}
+
+    echo "${imageHubHost}/${imageHubProject}/${VDIR}:${project}-${commitId}-${timestamp}" >> ${workDir}/${imageTxt}
   }
 }
 
@@ -129,17 +135,24 @@ function start(){
 
   : > ${imageYaml}
   echo "apps:" > ${workDir}/${imageYaml}
-  echo "  registry: pubrepo.jiagouyun.com" >> ${workDir}/${imageYaml}
-  echo "  image_dir: dataflux/" >> ${workDir}/${imageYaml}
+  echo "  registry: ${imageHubHost}" >> ${workDir}/${imageYaml}
+  echo "  image_dir: ${imageHubProject}/" >> ${workDir}/${imageYaml}
   echo "  images:" >> ${workDir}/${imageYaml}
   echo "    nsq: basis:multiarch_nsq_1.2.1" >> ${workDir}/${imageYaml}
   echo "    nginx: basis:multiarch_nginx_1.13.7" >> ${workDir}/${imageYaml}
-  # echo "    kapacitor: basis:kapacitor_1.5.4" >> ${workDir}/${imageYaml}
   
   # 最新 DataWay 镜像版本
   echo "    internal-dataway: dataway:${dwVersion}" >> ${workDir}/${imageYaml}
   # 最新 DataKit 镜像版本
   echo "    datakit: datakit:${dkVersion}" >> ${workDir}/${imageYaml}
+
+  # docker 镜像列表 txt 文件输出，用于离线镜像打包
+  : > ${imageTxt}
+  echo "# Guance Cloud Version: ${VDIR}" > ${workDir}/${imageTxt}
+  echo "${imageHubHost}/${imageHubProject}/basis:multiarch_nsq_1.2.1" >> ${workDir}/${imageTxt}
+  echo "${imageHubHost}/${imageHubProject}/basis:multiarch_nginx_1.13.7" >> ${workDir}/${imageTxt}
+  echo "${imageHubHost}/${imageHubProject}/dataway:${dwVersion}" >> ${workDir}/${imageTxt}
+  echo "${imageHubHost}/${imageHubProject}/datakit:${dkVersion}" >> ${workDir}/${imageTxt}
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-backend.git" "core"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/kodo.git" "kodo"
@@ -150,20 +163,18 @@ function start(){
 
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk.git" "message-desk"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/message-desk-worker.git" "message-desk-worker"
-
-  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor.git" "func"
-  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/ft-data-processor-worker.git" "func-worker"
   
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/middlewares/dataflux-func.git"  "dataflux-func"
 
-  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/cloudcare-forethought-trigger.git" "trigger"
   rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/screenhot-server.git" "utils-server"
-  # rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/ft-data-warehouse.git" "data-warehouse"
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/jfr-parser.git" "jfr-parser"
+  rtm_tag "ssh://git@gitlab.jiagouyun.com:40022/cloudcare-tools/pprofparser.git" "pprofparser"
 
   echo "  version: ${VDIR}" >> ${workDir}/${imageYaml}
 
   cd $workDir
   git add ${imageYaml}
+  git add ${imageTxt}
   git add upgrade/*
   git add launcher/resource/v1/ddl/*
   git add launcher/resource/v1/data/*

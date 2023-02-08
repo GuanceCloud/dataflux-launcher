@@ -1,7 +1,7 @@
 # encoding=utf-8
 
 import os, re, subprocess
-import json, time
+import json, time, logging
 
 import redis
 import pymysql
@@ -48,7 +48,7 @@ def __deploy_info():
   return '; '.join(namespaces)
 
 
-def __get_storageclass():
+def get_storageclass():
   cmd = "kubectl get storageclass -o json"
   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
@@ -59,7 +59,7 @@ def __get_storageclass():
   for item in storage['items']:
     storageNames.append(item['metadata']['name'])
 
-  return '; '.join(storageNames)
+  return storageNames
 
 
 def __redis_ping():
@@ -114,7 +114,7 @@ def __tdengine_ping(dbInfo):
       if result.get('status', 'error') != 'succ':
         pingError = True
   except Exception as ex:
-    print(ex)
+    logging.error(ex)
     pingError = True
 
   return not pingError
@@ -199,7 +199,7 @@ def __elasticsearch_ping():
     if resp.status_code == 200:
       pingStatus = True
   except Exception as e:
-    print(e)
+    logging.error(e)
 
   return {"key": "{}:{}".format(params['host'],  params['port']), "status": pingStatus}
 
@@ -280,7 +280,7 @@ def do_check():
     checkResult['deploy_info'] = __deploy_info()
 
   if len(checkResult['clusterInfo']) > 0:
-    checkResult['storage'] = __get_storageclass()
+    checkResult['storage'] = '; '.join(get_storageclass())
 
   return checkResult
 

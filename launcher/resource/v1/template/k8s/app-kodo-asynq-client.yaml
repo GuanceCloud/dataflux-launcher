@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-asynq-client
+  name: kodo-asynq-client
+  namespace: forethought-kodo
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-asynq-client
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-asynq-client
+    spec:
+      containers:
+      - args:
+        - /kodo/kodoasynq
+        - -cfg
+        - /kodo/config/config.yaml
+        image: {{ config.fullImagePath }} 
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: kodo-asynq-client
+        volumeMounts:
+        - mountPath: /kodo/config/config.yaml
+          name: kodo
+          subPath: config.yaml
+      dnsConfig:
+        options:
+        - name: single-request-reopen
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: kodo
+          optional: false
+        name: kodo
+      - configMap:
+          defaultMode: 420
+          name: kodo-license
+          optional: false
+        name: kodo-license
+
+
