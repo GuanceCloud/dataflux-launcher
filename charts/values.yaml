@@ -29,3 +29,8 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   tls: ""
+
+imageSecrets:
+  url: "pubrepo.guance.com"
+  username: ""
+  password: ""
