@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
-  .dockerconfigjson:  {{ tpl (.Files.Get "registry-key.json") . | b64enc }}
+  .dockerconfigjson: {{ tpl (.Files.Get "registry-key.json") . | b64enc }}
+kind: Secret
 metadata:
   name: registry-key
   namespace: launcher
