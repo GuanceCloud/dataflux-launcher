@@ -64,7 +64,7 @@ buildRTM:
     - REPO=dataflux/$VDIR
     - TAG=${PROJECT}-${V[3]}-${V[4]}
     - docker buildx build --platform linux/arm64,linux/amd64 -t pubrepo.jiagouyun.com/$REPO:$TAG . --push
-    - sed -e "s,{{repository}},pubrepo.jiagouyun.com/$REPO,g" charts/values.yaml > charts/launcher/values.yaml
+    - sed -e "s,{{repository}},pubrepo.guance.com/$REPO,g" charts/values.yaml > charts/launcher/values.yaml
     - helm package charts/launcher --version $VDIR --app-version $TAG
     - helm cm-push launcher-$VDIR.tgz launcher
     - rm -f launcher-$VDIR.tgz
