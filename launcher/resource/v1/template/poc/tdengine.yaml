@@ -309,7 +309,7 @@ spec:
             periodSeconds: 20
           resources:
             limits:
-              cpu: 250m
+              # cpu: 250m
               memory: 512Mi
   volumeClaimTemplates:
   - metadata:
