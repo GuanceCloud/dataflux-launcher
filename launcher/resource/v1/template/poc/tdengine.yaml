@@ -260,7 +260,10 @@ spec:
           resources:
             limits:
               # cpu: 250m
-              memory: 512Mi
+              # memory: 512Mi
+              # 此时pod的qos级别为BestEffort
+              # 以后可能改回来
+              memory: 2Gi
   volumeClaimTemplates:
   - metadata:
       name: tdengine-taosdata
