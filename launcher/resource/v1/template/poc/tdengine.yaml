@@ -264,6 +264,9 @@ spec:
               # 此时pod的qos级别为BestEffort
               # 以后可能改回来
               memory: 2Gi
+      volumes:
+        - name: tdengine-taoslog
+          emptyDir: {}
   volumeClaimTemplates:
   - metadata:
       name: tdengine-taosdata
@@ -274,12 +277,3 @@ spec:
       resources:
         requests:
           storage: "2Gi"
-  - metadata:
-      name: tdengine-taoslog
-    spec:
-      accessModes:
-        - "ReadWriteOnce"
-      storageClassName: "{{ storage_class }}"
-      resources:
-        requests:
-          storage: "128Mi"
