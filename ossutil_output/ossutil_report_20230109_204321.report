@@ -1,1 +1,0 @@
-# tools/ossutil64 cp ./guance-images-release oss://zhuyun-static-files-production/dataflux/package-test -e oss-cn-hangzhou-internal.aliyuncs.com -r -f -u --only-current-dir -i LTAI5tRjD2iZbrznVD9zPPNT -k Lb4j5fszw5OdAX4Ii1PGpUIyobbtLo
