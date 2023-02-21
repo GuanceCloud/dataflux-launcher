@@ -9,6 +9,9 @@ spec:
       app: external-dataway
   template:
     metadata:
+      annotations:
+        datakit/logs: |-
+          [{"disable": true}]
       labels:
         app: external-dataway
     spec:
