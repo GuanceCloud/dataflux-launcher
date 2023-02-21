@@ -426,9 +426,15 @@ var setup = (function () {
 
 
   app.prototype.do_setup = function(){
-    var that = this
+    var that = this;
+    var jqBtnSetup = $('#btnDoSetup');
 
-    $('#btnDoSetup').attr("disabled","disabled");
+    if (jqBtnSetup.attr("disabled") == 'disabled'){
+      return false;
+    }
+
+    jqBtnSetup.attr("disabled", true);
+
     this.database_setup().then(function(){
       return that.database_manager_create();
     }).then(function(){
@@ -442,7 +448,7 @@ var setup = (function () {
         that.go("/install/config/review");
       }
     }).done(function(){
-      $('#btnDoSetup').attr("disabled", false);
+      jqBtnSetup.attr("disabled", false);
     });
   };
 
@@ -471,6 +477,10 @@ var setup = (function () {
     var that = this;
     var maps = {};
     var hasErr = false;
+
+    if ($('#btnConfigmapCreate').attr("disabled") == "disabled"){
+      return false;
+    }
 
     $('#btnConfigmapCreate').attr("disabled","disabled");
     $('.config-review textarea').each(function(idx, item){
@@ -507,6 +517,10 @@ var setup = (function () {
 
     var configs = {};
     var images = {};
+
+    if ($('#btnServiceCreate').attr("disabled") == "disabled"){
+      return false;
+    }
 
     $('#btnServiceCreate').attr("disabled", true);
     $('div.app-image :text').each(function(idx, item){
@@ -715,6 +729,10 @@ var setup = (function () {
   app.prototype.up_service_update = function(){
     var that = this;
 
+    if ($('#btnDoUpdate').attr("disabled") == "disabled"){
+      return false;
+    }
+
     $('#btnDoUpdate').attr("disabled", true);
     this.post('up/service/update').then(function(d){
       // window.setTimeout(function(){that.up_service_status();}, 1000);
@@ -725,6 +743,10 @@ var setup = (function () {
   app.prototype.up_config_check_edit = function(){
     var jqCheckbox = $('label.config-check-edit > :checkbox');
     var btnConfigmapUpdate = $('#btnConfigmapUpdate');
+
+    if(btnConfigmapUpdate.attr("disabled") == "disabled"){
+      return false;
+    }
 
     btnConfigmapUpdate.attr("disabled", true);
     jqCheckbox.each(function(idx, item){
@@ -749,6 +771,10 @@ var setup = (function () {
       "configmaps": {}
     };
     var hasErr = false;
+
+    if($('#btnConfigmapUpdate').attr("disabled") == "disabled"){
+      return false;
+    }
 
     $('#btnConfigmapUpdate').attr("disabled", true);
     $('.config-review textarea').each(function(idx, item){
@@ -819,6 +845,10 @@ var setup = (function () {
     var that = this;
     var count = 0, error = 0;
 
+    if($("#btnDatabaseUpdate").attr('disabled') == "disabled"){
+      return false;
+    }
+
     $('#btnDatabaseUpdate').attr("disabled", true);
     jqProject = $('.upgrade-sql-list');
 
@@ -862,6 +892,10 @@ var setup = (function () {
     var that = this;
     var maps = {};
     var hasErr = false;
+
+    if($("#btnConfigmapCreate").attr('disabled') == "disabled"){
+      return false;
+    }
 
     $('#btnConfigmapCreate').attr("disabled","disabled");
 
@@ -935,6 +969,10 @@ var setup = (function () {
 
     var dict = null;
 
+    if($("#settingModalButtonOK").attr('disabled') == "disabled"){
+      return false;
+    }
+
     $("#settingModalButtonOK").attr('disabled', true);
     try {
       dict = jsyaml.safeLoad(val);
@@ -983,6 +1021,10 @@ var setup = (function () {
       "key": "other",
       "format": "json"
     };
+
+    if($("#btnTLSModalButtonOK").attr('disabled') == "disabled"){
+      return false;
+    }
 
     $("#btnTLSModalButtonOK").attr('disabled', true);
 
@@ -1039,6 +1081,10 @@ var setup = (function () {
       "key": "other",
       "format": "json"
     };
+
+    if($("#activateModalButtonOK").attr('disabled') == "disabled"){
+      return false;
+    }
 
     $("#activateModalButtonOK").attr('disabled', true);
 
