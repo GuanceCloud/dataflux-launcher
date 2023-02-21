@@ -192,6 +192,20 @@ def register_install_router(app):
       'storageClasses': storage_classes
     })
 
+  @app.route("/install/external-dataway")
+  def external_dataway():
+    nodes = env_check.list_nodes()
+    node_ips = []
+    for node in nodes:
+      for item in node['status']['addresses']:
+        if item['type'] == 'InternalIP':
+          node_ips.append(item['address'])
+
+    return render("external-dataway.html", {
+      "title": "安装数据网关",
+      "node_ips": node_ips,
+      "steps": STEPS_COMMON + STEPS_INSTALL
+    })
 
   @app.route("/install/aksk")
   def aksk():

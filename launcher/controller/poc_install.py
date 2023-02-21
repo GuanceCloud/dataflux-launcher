@@ -74,10 +74,9 @@ def install_external_dataway(**params):
     namespace = 'utils'
     deployment = 'external-dataway'
     # 已经安装时直接返回
-    result = subprocess.run(f"kubectl get deploy -n {namespace} -o json {deployment}", shell=True, check=True, capture_output=True)
-    status = json.loads(result.stdout.decode()).get('status')
-    logging.debug(f"dataway deploy status: {status}")
-    if status['replicas'] == status['readyReplicas']:
+    result = subprocess.run(f"kubectl get deployments -n {namespace} -o json", shell=True, check=True, capture_output=True)
+    items = json.loads(result.stdout.decode()).get('items')
+    if any(item['metadata']['name'] == deployment for item in items):
         return
 
     base_settings = settingsMdl.mysql.get('base')

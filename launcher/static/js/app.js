@@ -1233,14 +1233,18 @@ var setup = (function () {
     });
   }
 
-  app.prototype.external_dataway = function() {
-    $("#dataway-modal").modal("show");
-  }
-
   app.prototype.external_dataway_install = function() {
+    var cluster_node = $("#cluster_node").val();
+    var node_port = parseInt($("#node_port").val(), 10);
+    if (node_port < 1 || node_port > 65535) {
+      alert(`无效端口${node_port}`);
+      return;
+    }
+
     var params = {
       'name': $("#dataway-name").val(),
-      'url': $("#dataway-url").val()
+      'url': `http://${cluster_node}:${node_port}`,
+      'node_port': node_port
     };
 
     this.post('external_dataway/install', params).done(function(response){

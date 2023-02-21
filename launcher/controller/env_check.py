@@ -61,6 +61,11 @@ def get_storageclass():
 
   return storageNames
 
+def list_nodes():
+  command = "kubectl get nodes -o json"
+  result = subprocess.run(command, shell=True, check=True, capture_output=True)
+  return json.loads(result.stdout.decode()).get('items', [])
+
 
 def __redis_ping():
   redisSettings = settingsMdl.redis
