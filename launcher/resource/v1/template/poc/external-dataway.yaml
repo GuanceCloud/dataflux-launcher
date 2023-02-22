@@ -9,6 +9,9 @@ spec:
       app: external-dataway
   template:
     metadata:
+      annotations:
+        datakit/logs: |-
+          [{"disable": true}]
       labels:
         app: external-dataway
     spec:
@@ -59,9 +62,10 @@ spec:
     port: 9528
     protocol: TCP
     targetPort: 9528
+    nodePort: {{ node_port }}
   selector:
     app: external-dataway
-  type: LoadBalancer
+  type: NodePort
   
 ---
 

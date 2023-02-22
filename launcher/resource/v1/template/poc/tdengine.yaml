@@ -16,22 +16,6 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: tdengine-arbitrator
-  labels:
-    app.kubernetes.io/name: tdengine
-    app: "arbitrator"
-spec:
-  type: ClusterIP
-  ports:
-    - name: tcp6042
-      port: 6042
-      protocol: TCP
-  selector:
-    app: "arbitrator"
----
-apiVersion: v1
-kind: Service
-metadata:
   name: tdengine
   labels:   
     app.kubernetes.io/name: tdengine   
@@ -122,38 +106,6 @@ spec:
   selector:
     app.kubernetes.io/name: tdengine  
     app: "taosd"
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: tdengine-arbitrator
-  labels: 
-    app.kubernetes.io/name: tdengine  
-    app: "arbitrator"
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: tdengine    
-      app: "arbitrator"
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: tdengine        
-        app: "arbitrator"
-    spec:
-      containers:
-      - name: arbitrator
-        image: pubrepo.jiagouyun.com/googleimages/tdengine:2.6.0.10
-        command: ["tarbitrator"]
-        ports:
-        - name: tcp6042
-          containerPort: 6042
-          protocol: TCP
-        resources:
-          limits:
-            cpu: 250m
-            memory: 512Mi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -282,8 +234,6 @@ spec:
             value: '$(STS_NAME)-0.$(SERVICE_NAME).$(STS_NAMESPACE).svc.cluster.local:$(TAOS_SERVER_PORT)'
           - name: TAOS_FQDN
             value: '$(POD_NAME).$(SERVICE_NAME).$(STS_NAMESPACE).svc.cluster.local'
-          - name: TAOS_ARBITRATOR
-            value: tdengine-arbitrator
           envFrom:
           - configMapRef:
               name: tdengine-taoscfg
@@ -309,8 +259,14 @@ spec:
             periodSeconds: 20
           resources:
             limits:
-              cpu: 250m
-              memory: 512Mi
+              # cpu: 250m
+              # memory: 512Mi
+              # 此时pod的qos级别为BestEffort
+              # 以后可能改回来
+              memory: 2Gi
+      volumes:
+        - name: tdengine-taoslog
+          emptyDir: {}
   volumeClaimTemplates:
   - metadata:
       name: tdengine-taosdata
@@ -321,12 +277,3 @@ spec:
       resources:
         requests:
           storage: "2Gi"
-  - metadata:
-      name: tdengine-taoslog
-    spec:
-      accessModes:
-        - "ReadWriteOnce"
-      storageClassName: "{{ storage_class }}"
-      resources:
-        requests:
-          storage: "128Mi"
