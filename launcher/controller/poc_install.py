@@ -9,6 +9,10 @@ from launcher.utils.template import jinjia2_render
 from launcher.model.k8s import registry_secret_get
 from launcher.utils.helper.db_helper import dbHelper
 
+
+ExternalDatawayNodePort = 32528
+
+
 def install_mysql(**params):
     logging.debug("install mysql")
 
@@ -87,9 +91,12 @@ def install_external_dataway(**params):
     image_dir = DOCKERIMAGES['apps']['image_dir'].rstrip('/')
     dataway_image = DOCKERIMAGES['apps']['images']['internal-dataway']
 
+    cluster_node = params.get('cluster_node')
+
     params['other'] = settingsMdl.other
     params['image'] = f'{registry_address}/{image_dir}/{dataway_image}'
     params['uuid'] = f'agnt_{shortuuid.ShortUUID().random(length=24)}'
+    params['url'] = f"http://{cluster_node}:{ExternalDatawayNodePort}"
     
     sql  = '''
     INSERT INTO `main_agent` (`uuid`, `name`, `url`, `workspaceUUID`, `createAt`, `uploadAt`, `deleteAt`, `updateAt`)

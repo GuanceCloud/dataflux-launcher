@@ -1234,17 +1234,9 @@ var setup = (function () {
   }
 
   app.prototype.external_dataway_install = function() {
-    var cluster_node = $("#cluster_node").val();
-    var node_port = parseInt($("#node_port").val(), 10);
-    if (node_port < 1 || node_port > 65535) {
-      alert(`无效端口${node_port}`);
-      return;
-    }
-
     var params = {
       'name': $("#dataway-name").val(),
-      'url': `http://${cluster_node}:${node_port}`,
-      'node_port': node_port
+      'cluster_node': $("#cluster_node").val()
     };
 
     this.post('external_dataway/install', params).done(function(response){
@@ -1255,6 +1247,11 @@ var setup = (function () {
         alert("安装成功");
       }
     });  
+  }
+
+  app.prototype.on_cluster_node_change = function() {
+    var cluster_node = $("#cluster_node").val();
+    $("#external-dataway-url").text(`http://${cluster_node}:32528`);
   }
 
   return new app();
