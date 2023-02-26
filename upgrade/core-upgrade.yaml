@@ -2624,3 +2624,197 @@ upgrade:
       -H 'Content-Type: application/json' \
       --data-raw $'{"script_name": "timed_sync_integration", "func_name": "timed_sync_gitee_code", "funcKwargs": {"need_sync_integration": true}}' \
       --compressed
+
+
+  # 2023.02.09 迭代
+  - seq: 71
+    database: |-
+      
+      -- 权限相关设置
+      -- 新增工作空间角色表
+      CREATE TABLE `biz_role` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 role- 前缀',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT '角色名',
+        `desc` text COMMENT '描述信息',
+        `isSystem` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为系统内置角色',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      
+      -- 创建权限配置表
+      CREATE TABLE `biz_permission` (
+        `key` varchar(256) NOT NULL DEFAULT '' COMMENT '权限标识',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT '权限名称',
+        `desc` text COMMENT '权限描述',
+        `nameEn` varchar(256) DEFAULT '''''' COMMENT '英文名称',
+        `descEn` text COMMENT '英文描述',
+        `isSupportOwner` tinyint(1) DEFAULT '0' COMMENT '支持 owner 角色使用',
+        `isSupportWsAdmin` tinyint(1) DEFAULT '0' COMMENT '支持 wsAdmin 角色使用',
+        `isSupportGeneral` tinyint(1) DEFAULT '0' COMMENT '支持 general 角色使用',
+        `isSupportReadOnly` tinyint(1) DEFAULT '0' COMMENT '支持 readOnly 角色使用',
+        `isSupportCustomRole` tinyint(1) DEFAULT '0' COMMENT '支持自定义角色使用',
+        `seq` int(11) DEFAULT NULL COMMENT '序号',
+        PRIMARY KEY (`key`),
+        KEY `k_name` (`name`),
+        KEY `k_name_en` (`nameEn`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 创建 api 接口标识与 权限之间的关联关系表
+      CREATE TABLE `biz_api_permission` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `permission` varchar(256) NOT NULL DEFAULT '' COMMENT '权限标识',
+        `code` varchar(256) NOT NULL DEFAULT '' COMMENT 'api接口标识',
+        `name` varchar(256) NOT NULL DEFAULT '' COMMENT 'api接口名称',
+        `url` varchar(256) NOT NULL DEFAULT '''''' COMMENT '路由标志',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_permission_code` (`permission`,`code`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_permission` (`permission`),
+        KEY `k_code` (`code`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+      -- 创建角色与账号的关联关系表
+      CREATE TABLE `biz_role_permission` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 refrp- 前缀',
+        `roleUUID` varchar(64) NOT NULL COMMENT '角色UUID',
+        `permission` varchar(128) NOT NULL COMMENT '权限组,即biz_permission表中的key',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_role_uuid` (`roleUUID`),
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_permission` (`permission`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 创建账号与角色关联关系表
+      CREATE TABLE `biz_account_role` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID，带 refar- 前缀',
+        `accountUUID` varchar(64) NOT NULL COMMENT '账号UUID',
+        `roleUUID` varchar(64) NOT NULL COMMENT '角色UUID',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_account_uuid` (`accountUUID`),
+        KEY `k_role_uuid` (`roleUUID`),
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      
+      -- 创建 SAML Mapping 字段映射关系表
+      CREATE TABLE `biz_saml_mapping` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 fdmp- 前缀',
+        `sourceField` varchar(128) NOT NULL DEFAULT '' COMMENT '源字段名',
+        `sourceValue` varchar(256) NOT NULL DEFAULT '' COMMENT '源字段值',
+        `targetValue` varchar(256) NOT NULL DEFAULT '' COMMENT '目标字段值',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- task表新增, accountUUID字段
+      ALTER TABLE `biz_tasks`
+      ADD COLUMN `accountUUID` VARCHAR(64) NOT NULL DEFAULT '' AFTER `workspaceUUID`;
+
+      -- 工作空间表新增 默认语言字段
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `language` VARCHAR(48) NOT NULL DEFAULT 'zh' AFTER `makeResourceExceptionCode`;
+      
+      -- SSO 配置表新增 token 保持时长 和 token 最长有效期配置字段
+      ALTER TABLE `biz_sso_setting` 
+      ADD COLUMN `tokenHoldTime` INT NOT NULL DEFAULT '1800' COMMENT 'token 保持时长' AFTER `role`,
+      ADD COLUMN `tokenMaxValidDuration` INT NOT NULL DEFAULT '604800' COMMENT 'token 最长的有效期' AFTER `tokenHoldTime`,
+      ADD COLUMN `isOpenSAMLMapping` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '是否开启SAML 的 Mapping' AFTER `tokenMaxValidDuration`;
+      
+      -- 账号表新增 token 保持时长 和 token 最长有效期配置字段
+      ALTER TABLE `main_account` 
+      ADD COLUMN `tokenHoldTime` INT NOT NULL DEFAULT '1800' COMMENT 'token 保持时长' AFTER `canaryPublic`,
+      ADD COLUMN `tokenMaxValidDuration` INT NOT NULL DEFAULT '604800' COMMENT 'token 最长的有效期' AFTER `tokenHoldTime`,
+      ADD COLUMN `attributes` JSON NULL DEFAULT NULL COMMENT '账号属性' AFTER `tokenMaxValidDuration`;
+
+      -- 数据初始化： 初始化 角色表中的内置角色
+      INSERT INTO `biz_role` (`id`, `uuid`, `name`, `desc`, `isSystem`, `workspaceUUID`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`) 
+      VALUES 
+        ('1', 'owner', 'Owner', '拥有者', 1, '', 0, 'SYS', 'SYS', -1, -1, -1),
+        ('2', 'wsAdmin', 'Administrator', '管理员', 1, '', 0, 'SYS', 'SYS', -1, -1, -1),
+        ('3', 'general', 'Standard', '标准成员', 1, '', 0, 'SYS', 'SYS', -1, -1, -1),
+        ('4', 'readOnly', 'Read-only', '只读成员', 1, '', 0, 'SYS', 'SYS', -1, -1, -1)
+      ON DUPLICATE KEY UPDATE id=VALUES(id),uuid=VALUES(uuid),name=VALUES(name),`desc`=VALUES(`desc`),isSystem=VALUES(isSystem),workspaceUUID=VALUES(workspaceUUID),status=VALUES(status),creator=VALUES(creator),updator=VALUES(updator),createAt=VALUES(createAt),deleteAt=VALUES(deleteAt),updateAt=VALUES(updateAt);
+      
+      
+      -- 将现有的 main_account_workspace 表中账号/工作空间/角色关系入 biz_account_role 表中
+      insert into biz_account_role(`uuid`, `accountUUID`, `roleUUID`, `workspaceUUID`,  `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`)
+      select CONCAT('refar_', SUBSTRING_INDEX(`uuid`, '_', -1)) as `uuid`, `accountUUID`, `role`, `workspaceUUID`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt` from main_account_workspace where status=0 and role!="";
+
+    curl: |-
+
+      # 1.【inner api 服务器执行】【部署版请忽略本次命令】执行 sync_permission_tasks.py 初始化接口权限相关数据和缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_permissions"}'
+      
+      # 3.【inner api 服务器执行】执行 fix_2023_02_09_biz_task_update_json.py biz_tasks表中的数据结构,(用于boss审核的数据) 等accountUUID字段加完, 再执行
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_02_09_biz_task_update_json"}'
+      
+
+
+  # 2023.02.23 迭代
+  - seq: 72
+    database: |-
+      -- 新增查看器与菜单类型绑定表
+      CREATE TABLE `biz_bind_menu` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 rlvm- 前缀',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `bindUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '查看器UUID',
+        `bindType` enum('viewer', '') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '菜单栏类型',
+        `menuType` enum('Events', 'Objectadmin', 'MetricQuery', 'LogIndi', 'Tracing', 'Rum','CloudDial', 'Security', 'GitLabCI', '') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '菜单栏类型',
+        `extend` json NOT NULL COMMENT '额外拓展字段',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_v_uuid` (`bindUUID`),
+        KEY `k_bind_type` (`bindType`),
+        KEY `k_menu_type` (`menuType`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    curl: |-
+      
+      # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 初始化接口权限相关数据和缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_permissions"}'
