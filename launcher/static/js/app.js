@@ -386,44 +386,54 @@ var setup = (function () {
   app.prototype.database_setup = function(){
     return this.post("database/setup").done(function(d){
       if(d.content){
-        $('.well-mysql').addClass('success');
+        $('.well-mysql').removeClass('error').addClass('success');
       }
+    }).fail(function(d){
+      $('.well-mysql').removeClass('success').addClass('error');
     });
   };
 
   app.prototype.database_manager_create = function(){
     return this.post("database/manager/create").done(function(d){
       if (d.content){
-        $('.well-manager').addClass('success');
-        $('.well-redis').addClass('success');
+        $('.well-manager').removeClass('error').addClass('success');
+        $('.well-redis').removeClass('error').addClass('success');
       }
+    }).fail(function(d){
+      $('.well-manager').removeClass('success').addClass('error');
+      $('.well-redis').removeClass('success').addClass('error');
     });
   };
 
   app.prototype.influxdb_setup = function(){
     return this.post("influxdb/setup").done(function(d){
       if (d.content){
-        $('.well-influxdb').addClass('success');
+        $('.well-influxdb').removeClass('error').addClass('success');
       }
+    }).fail(function(d){
+      $('.well-influxdb').removeClass('success').addClass('error');
     });
   };
 
   app.prototype.elasticsearch_setup = function(){
     return this.post("elasticsearch/setup").done(function(d){
       if (d.content){
-        $('.well-elasticsearch').addClass('success');
+        $('.well-elasticsearch').removeClass('error').addClass('success');
       }
+    }).fail(function(d){
+      $('.well-elasticsearch').removeClass('success').addClass('error');
     });
   };
 
   app.prototype.certificate_create = function(){
     return this.post("certificate/create").done(function(d){
       if (d.content){
-        $('.well-certificate').addClass('success');
+        $('.well-certificate').removeClass('error').addClass('success');
       }
+    }).fail(function(d){
+      $('.well-certificate').removeClass('success').addClass('error');
     });
   };
-
 
   app.prototype.do_setup = function(){
     var that = this;

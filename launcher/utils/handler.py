@@ -49,4 +49,4 @@ def response_jsonify(*args, **kwargs):
 
 def handle_exception(e: Exception):
   logging.exception(e)
-  return response_jsonify(success=False, message=str(e))
+  return response_jsonify(success=False, status_code = 500, message=str(e))

@@ -57,7 +57,7 @@ def other_config():
 @setup_bp.route("/database/manager/create", methods=["POST"])
 def database_manage_account_create():
   return response_jsonify(db_setup_core.database_manage_account_create())
-  
+
 
 @setup_bp.route("/redis/ping", methods=["GET"])
 def redis_ping():
@@ -71,7 +71,7 @@ def influxdb_ping():
   data = request.json
 
   return response_jsonify(influxdb_setup.influxdb_ping_all(data))
-  
+
 
 @setup_bp.route("/influxdb/add", methods=["POST"])
 def influxdb_add():
@@ -186,7 +186,7 @@ def elasticsearch_init():
 @setup_bp.route("/metering/init", methods=["POST"])
 def metering_init():
   return  response_jsonify(setup.metering_init())
-  
+
 
 @setup_bp.route("/elasticsearch/ping", methods=["POST"])
 def elasticsearch_ping():
@@ -266,7 +266,7 @@ def mysql_install():
   mysql_password = params.get('mysql_password')
   if not mysql_password or mysql_password == 'Cg==':
     return response_jsonify(success=False, message='MySQL密码不能为空')
-  
+
   poc_install.install_mysql(**params)
   return response_jsonify(success=True)
 
@@ -278,9 +278,9 @@ def redis_install():
   redis_password = params.get('redis_password')
   if not redis_password or redis_password == 'Cg==':
     return response_jsonify(success=False, message='Redis密码不能为空')
-  
+
   poc_install.install_redis(**params)
-  
+
   return response_jsonify(success=True)
 
 @setup_bp.route("/opensearch/install", methods=["POST"])
@@ -303,6 +303,6 @@ def tdengine_install():
 def external_dataway_install():
   params: dict = request.json
   logging.debug(params)
-  
-  poc_install.install_external_dataway(**params)  
+
+  poc_install.install_external_dataway(**params)
   return response_jsonify(success=True)
