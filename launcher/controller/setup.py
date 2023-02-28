@@ -163,7 +163,7 @@ def service_image_config():
   defaultImage  = apps.get('images', {})
 
   registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
-  
+
   registry      = registrySecrets[0]
   registryAddr  = registry.get('address') or ''
   registryUser  = registry.get('username') or ''
@@ -244,7 +244,7 @@ def service_create(data):
   images = data.get('images', {})
 
   registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
-  
+
   registry      = registrySecrets[0]
   registryAddr  = registry.get('address') or ''
   registryUser  = registry.get('username') or ''
@@ -351,7 +351,7 @@ def call_service_url(url, jsonData = None):
     return {"status_code": 429}
 
 
-# 初始化工作空间的 ES 
+# 初始化工作空间的 ES
 def elasticsearch_init():
   url = "http://inner.forethought-core:5000/api/v1/inner/es/init"
 
@@ -392,8 +392,9 @@ def studio_init():
         "measurements_meta",    # 内置 指标字典
         # "dataflux_integration", # 集成包
         "dataflux_template",    # 内置视图模板
-        "internal_field_cfg"    # 同步官方字段说明
-      ]  
+        "internal_field_cfg",    # 同步官方字段说明
+        "permission"            # 同步权限相关的数据
+      ]
     }
   }
 
@@ -417,14 +418,14 @@ def sync_pipeline():
 
   data = {
     "script_name": "timed_sync_pipeline_template",
-    "func_name": "timed_sync_pull", 
+    "func_name": "timed_sync_pull",
     "funcKwargs": {
       "need_sync_pipline": True
     }
   }
 
   return call_service_url(url, data)
-  
+
 
 # 触发官方 字段 库同步到数据库
 def sync_field_list():
@@ -432,7 +433,7 @@ def sync_field_list():
 
   data = {
     "script_name": "timed_sync_field_cfg_template",
-    "func_name": "timed_sync_pull", 
+    "func_name": "timed_sync_pull",
     "funcKwargs": {
       "need_sync_field_cfg": True
     }

@@ -3,7 +3,7 @@ pubrepo.guance.com/dataflux/basis:multiarch_nsq_1.2.1
 pubrepo.guance.com/dataflux/basis:multiarch_nginx_1.13.7
 pubrepo.guance.com/dataflux/dataway:1.2.11
 pubrepo.guance.com/dataflux/datakit:1.5.6
-pubrepo.guance.com/dataflux/1.58.121:core-fe6a5725a-1677566915
+pubrepo.guance.com/dataflux/1.58.121:core-8d89c21f1-1677566915
 pubrepo.guance.com/dataflux/1.58.121:kodo-e81a1127-1677566915
 pubrepo.guance.com/dataflux/1.58.121:front-webclient-1e7475e59-1677566915
 pubrepo.guance.com/dataflux/1.58.121:management-webclient-45b7f8d-1677566915

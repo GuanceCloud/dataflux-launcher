@@ -6,7 +6,7 @@ apps:
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.11
     datakit: datakit:1.5.6
-    core: 1.58.121:core-fe6a5725a-1677566915
+    core: 1.58.121:core-8d89c21f1-1677566915
     kodo: 1.58.121:kodo-e81a1127-1677566915
     front-webclient: 1.58.121:front-webclient-1e7475e59-1677566915
     management-webclient: 1.58.121:management-webclient-45b7f8d-1677566915
