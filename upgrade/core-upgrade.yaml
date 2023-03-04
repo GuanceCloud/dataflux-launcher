@@ -2818,3 +2818,6 @@ upgrade:
       
       # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 初始化接口权限相关数据和缓存
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_permissions"}'
+
+      # 2.【inner api 服务器执行】执行 fix_2023_02_23_retry_deleted_rules_to_func.py , 扫描出已删除的所有规则，并到 func 侧重新再删除一边
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_02_23_retry_deleted_rules_to_func"}'

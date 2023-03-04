@@ -6,15 +6,15 @@ apps:
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.11
     datakit: datakit:1.5.6
-    core: 1.58.121:core-8d89c21f1-1677566915
-    kodo: 1.58.121:kodo-e81a1127-1677566915
-    front-webclient: 1.58.121:front-webclient-1e7475e59-1677566915
-    management-webclient: 1.58.121:management-webclient-45b7f8d-1677566915
-    dataflux-doc: 1.58.121:dataflux-doc-a49d939d-1677566915
-    message-desk: 1.58.121:message-desk-5a7df6c-1677566915
-    message-desk-worker: 1.58.121:message-desk-worker-0bd78ea-1677566915
-    dataflux-func: 1.58.121:dataflux-func-a4a2211e-1677566915
-    utils-server: 1.58.121:utils-server-48799ca-1677566915
-    jfr-parser: 1.58.121:jfr-parser-16ed409-1677566915
-    pprofparser: 1.58.121:pprofparser-f2081c3-1677566915
-  version: 1.58.121
+    core: 1.58.122:core-d964223a3-1677907360
+    kodo: 1.58.122:kodo-032b6658-1677907360
+    front-webclient: 1.58.122:front-webclient-29199ad8f-1677907360
+    management-webclient: 1.58.122:management-webclient-45b7f8d-1677907360
+    dataflux-doc: 1.58.122:dataflux-doc-fabe869a-1677907360
+    message-desk: 1.58.122:message-desk-5a7df6c-1677907360
+    message-desk-worker: 1.58.122:message-desk-worker-0bd78ea-1677907360
+    dataflux-func: 1.58.122:dataflux-func-ae050bb9-1677907360
+    utils-server: 1.58.122:utils-server-48799ca-1677907360
+    jfr-parser: 1.58.122:jfr-parser-16ed409-1677907360
+    pprofparser: 1.58.122:pprofparser-f2081c3-1677907360
+  version: 1.58.122
