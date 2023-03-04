@@ -8,7 +8,7 @@ apps:
     datakit: datakit:1.5.6
     core: 1.58.122:core-d964223a3-1677907360
     kodo: 1.58.122:kodo-032b6658-1677907360
-    front-webclient: 1.58.122:front-webclient-29199ad8f-1677907360
+    front-webclient: 1.58.122:front-webclient-62cd34ccf-1677907360
     management-webclient: 1.58.122:management-webclient-45b7f8d-1677907360
     dataflux-doc: 1.58.122:dataflux-doc-fabe869a-1677907360
     message-desk: 1.58.122:message-desk-5a7df6c-1677907360
