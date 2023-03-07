@@ -25,6 +25,8 @@ spec:
         - --data-path=/data/nsqd
         - --max-msg-size
         - "104857600"
+        - --mem-queue-size
+        - 3000
         - --msg-timeout
         - 30h
         image: {{ config.fullImagePath }}
