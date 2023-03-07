@@ -6,9 +6,9 @@ lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
 
 do_trigger_tag(){
   #lastReleaseTag=$(git fetch --tag && git tag --list | grep -E "^release_" | sort -V | tail -1)
-   local  lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
-   local lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
-   local lastDeployTag=$(git tag --list | awk  '/upload_oss_/{print $NF}' | sort -V | awk 'END {print}')
+   lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
+   lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
+   lastDeployTag=$(git tag --list | awk  '/upload_oss_/{print $NF}' | sort -V | awk 'END {print}')
 
   [[ ${#lastDeployTag} > 0 ]] && {
     v=(${lastDeployTag//_/ })
