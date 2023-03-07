@@ -2,6 +2,7 @@
 
 #set +eux
 
+lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
 lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
 
 do_trigger_tag(){
