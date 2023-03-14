@@ -4,7 +4,7 @@ import os, re, subprocess, time
 import shortuuid
 import pymysql
 import time
-
+import logging
 
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl, SERVICECONFIG
