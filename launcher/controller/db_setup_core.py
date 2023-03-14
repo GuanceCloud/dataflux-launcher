@@ -50,6 +50,7 @@ def database_create_db():
 
 
 def database_ddl():
+  logging.info("初始化 df_core 数据库 DDL 开始")
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
 
@@ -68,6 +69,7 @@ def database_ddl():
       ddl = f.read()
       db.execute(ddl, dbName = dbInfo['database'])
 
+  logging.info("初始化 df_core 数据库 DDL 完成")
   return True
 
 
