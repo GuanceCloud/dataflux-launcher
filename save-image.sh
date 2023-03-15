@@ -2,11 +2,14 @@
 
 #set +eux
 
+lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
+lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
+
 do_trigger_tag(){
   #lastReleaseTag=$(git fetch --tag && git tag --list | grep -E "^release_" | sort -V | tail -1)
-  lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
-  lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
-  lastDeployTag=$(git tag --list | awk  '/upload_oss_/{print $NF}' | sort -V | awk 'END {print}')
+   lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
+   lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
+   lastDeployTag=$(git tag --list | awk  '/upload_oss_/{print $NF}' | sort -V | awk 'END {print}')
 
   [[ ${#lastDeployTag} > 0 ]] && {
     v=(${lastDeployTag//_/ })
@@ -30,7 +33,9 @@ do_trigger_tag(){
 
 guance_package (){
 	arc_name=$1
-        lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod | sort -V |awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
+        lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod|sort -V|grep -w  $(echo "${lastReleaseTagCommitID}"|cut -c 1-7)|awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
+
+        #lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod | sort -V |awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
         v=(${lastVer//-/ })
 	temp_dest="/tmp/guance-images-release"
 	launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"

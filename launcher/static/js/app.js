@@ -755,10 +755,6 @@ var setup = (function () {
     var jqCheckbox = $('label.config-check-edit > :checkbox');
     var btnConfigmapUpdate = $('#btnConfigmapUpdate');
 
-    if(btnConfigmapUpdate.attr("disabled") == "disabled"){
-      return false;
-    }
-
     btnConfigmapUpdate.attr("disabled", true);
     jqCheckbox.each(function(idx, item){
       var me = $(item);
@@ -847,7 +843,7 @@ var setup = (function () {
     var redeploy = jqRedeploy.is(':checked');
 
     this.do_configmap_edit({"redeploy": redeploy}, function(){
-      that.go("/setting/configmap")
+      that.go("/setting/configmap");
     });
   };
 
