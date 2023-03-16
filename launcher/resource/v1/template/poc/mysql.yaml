@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: pubrepo.jiagouyun.com/googleimages/mysql:5.7
+          image: pubrepo.guance.com/googleimages/mysql:5.7
           imagePullPolicy: IfNotPresent
           ports:
           - name: server

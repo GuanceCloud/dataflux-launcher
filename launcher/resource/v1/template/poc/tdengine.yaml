@@ -129,7 +129,7 @@ spec:
     spec:
       containers:
         - name: tdengine
-          image: pubrepo.jiagouyun.com/googleimages/tdengine:2.6.0.10
+          image: pubrepo.guance.com/googleimages/tdengine:2.6.0.10
           imagePullPolicy: IfNotPresent
           ports: 
           - name: tcp0

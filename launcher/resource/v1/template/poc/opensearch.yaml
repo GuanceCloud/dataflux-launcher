@@ -180,7 +180,7 @@ spec:
       enableServiceLinks: true
       initContainers:
       - name: fsgroup-volume
-        image: pubrepo.jiagouyun.com/googleimages/busybox:1.35.0
+        image: pubrepo.guance.com/googleimages/busybox:1.35.0
         command: ['sh', '-c']
         args:
           - 'chown -R 1000:1000 /usr/share/opensearch/data'
@@ -197,7 +197,7 @@ spec:
             - ALL
           runAsNonRoot: true
           runAsUser: 1000
-        image: pubrepo.jiagouyun.com/base/opensearch:2.3.0-gcy
+        image: pubrepo.guance.com/base/opensearch:2.3.0-gcy
         imagePullPolicy: "IfNotPresent"
         readinessProbe:
           failureThreshold: 3

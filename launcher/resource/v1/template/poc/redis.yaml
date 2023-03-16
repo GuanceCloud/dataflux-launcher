@@ -51,7 +51,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: pubrepo.jiagouyun.com/googleimages/redis:5.0.7
+          image: pubrepo.guance.com/googleimages/redis:5.0.7
           imagePullPolicy: IfNotPresent
           command:
           - redis-server
