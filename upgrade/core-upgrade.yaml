@@ -2821,3 +2821,64 @@ upgrade:
 
       # 2.【inner api 服务器执行】执行 fix_2023_02_23_retry_deleted_rules_to_func.py , 扫描出已删除的所有规则，并到 func 侧重新再删除一边
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_02_23_retry_deleted_rules_to_func"}'
+
+  # 2023.03.09 迭代
+  - seq: 73
+    database: |-
+      -- 新增 本地 func 服务信息表
+      CREATE TABLE `biz_func_server` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, f-',
+        `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+        `name` varchar(128) NOT NULL DEFAULT '' COMMENT '服务名称',
+        `config` json DEFAULT NULL COMMENT '配置信息',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_func_server_id` (`funcServerId`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新增 本地 func 服务与工作空间关联表
+      CREATE TABLE `biz_func_server_workspace` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 relfw-前缀',
+        `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+        `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_func_server_id` (`funcServerId`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新增task表action字段枚举值, ModifyRp
+      ALTER TABLE `biz_tasks`
+      MODIFY COLUMN `action` enum('ApplyAdminPermissionApproval','ModifyRp','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' AFTER `accountUUID`;
+
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 keyCode新增 expensiveQuery  枚举类型
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg', 'WhileList', 'expensiveQuery') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+      -- 空间表新增空间引导页字段,
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `noviceGuide` BOOLEAN DEFAULT true COMMENT 'true 已经有过新手引导, false没有引导过' AFTER `language`;
+
+      -- 监控器表添加createdWay字段, 表示该监控器创建的方式
+      ALTER TABLE `biz_rule`
+      ADD COLUMN `createdWay` enum('import','template','manual','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'manual' AFTER `extend`;
+
+
+    curl: |-
+      
+      # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 脚本中的 reset_init_biz_api_permissions 函数, 仅初始化API接口权限表相关数据和缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_biz_api_permissions"}'

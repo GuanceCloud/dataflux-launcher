@@ -1,20 +1,20 @@
 apps:
   registry: pubrepo.guance.com
-  image_dir: dataflux/
+  image_dir: dataflux-prev/
   images:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.11
-    datakit: datakit:1.5.6
-    core: 1.58.123:core-d964223a3-1678200092
-    kodo: 1.58.123:kodo-db2b699f-1678200092
-    front-webclient: 1.58.123:front-webclient-e097c8675-1678200092
-    management-webclient: 1.58.123:management-webclient-45b7f8d-1678200092
-    dataflux-doc: 1.58.123:dataflux-doc-037b1d97-1678200092
-    message-desk: 1.58.123:message-desk-5a7df6c-1678200092
-    message-desk-worker: 1.58.123:message-desk-worker-0bd78ea-1678200092
-    dataflux-func: 1.58.123:dataflux-func-ae050bb9-1678200092
-    utils-server: 1.58.123:utils-server-48799ca-1678200092
-    jfr-parser: 1.58.123:jfr-parser-16ed409-1678200092
-    pprofparser: 1.58.123:pprofparser-3714b43-1678200092
-  version: 1.58.123
+    datakit: datakit:1.5.7
+    core: 1.59.124.1:core-8d0a00fdf
+    kodo: 1.59.124.1:kodo-ae752c25
+    front-webclient: 1.59.124.1:front-webclient-0b6653bb3
+    management-webclient: 1.59.124.1:management-webclient-ed1b0b3
+    dataflux-doc: 1.59.124.1:dataflux-doc-4ecbe915
+    message-desk: 1.59.124.1:message-desk-5a7df6c
+    message-desk-worker: 1.59.124.1:message-desk-worker-0bd78ea
+    dataflux-func: 1.59.124.1:dataflux-func-ae050bb9
+    utils-server: 1.59.124.1:utils-server-48799ca
+    jfr-parser: 1.59.124.1:jfr-parser-16ed409
+    pprofparser: 1.59.124.1:pprofparser-3714b43
+  version: 1.59.124.1

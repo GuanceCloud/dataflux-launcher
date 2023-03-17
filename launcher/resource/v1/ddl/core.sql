@@ -7,7 +7,7 @@
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-02-22 09:11:58 +0000
+# Generation Time: 2023-03-09 07:28:23 +0000
 # ************************************************************
 
 
@@ -531,6 +531,54 @@ CREATE TABLE `biz_field_management` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_func_server
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_func_server`;
+
+CREATE TABLE `biz_func_server` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, f-',
+  `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '服务名称',
+  `config` json DEFAULT NULL COMMENT '配置信息',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_func_server_id` (`funcServerId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_func_server_workspace
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_func_server_workspace`;
+
+CREATE TABLE `biz_func_server_workspace` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 relfw-前缀',
+  `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+  `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_func_server_id` (`funcServerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1173,6 +1221,7 @@ CREATE TABLE `biz_rule` (
   `tickInfo` json DEFAULT NULL COMMENT '提交后Kapa 返回的Tasks数据',
   `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `createdWay` enum('import','template','manual','') NOT NULL DEFAULT 'manual',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1462,7 +1511,7 @@ CREATE TABLE `biz_tasks` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, task_',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `accountUUID` varchar(64) NOT NULL DEFAULT '',
-  `action` enum('ApplyAdminPermissionApproval','') NOT NULL DEFAULT '',
+  `action` enum('ApplyAdminPermissionApproval','ModifyRp','') NOT NULL DEFAULT '',
   `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -2223,6 +2272,7 @@ CREATE TABLE `main_workspace` (
   `isOpenLogMultipleIndex` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启日志多索引配置',
   `makeResourceExceptionCode` varchar(256) NOT NULL DEFAULT '' COMMENT '工作空间开通资源时的异常信息Code',
   `language` varchar(48) NOT NULL DEFAULT 'zh',
+  `noviceGuide` tinyint(1) DEFAULT '1' COMMENT 'true 已经有过新手引导, false没有引导过',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
@@ -2268,7 +2318,7 @@ CREATE TABLE `main_workspace_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
-  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg','WhileList') NOT NULL DEFAULT 'StoreSchemeCfg',
+  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg','WhileList','expensiveQuery') NOT NULL DEFAULT 'StoreSchemeCfg',
   `config` json NOT NULL COMMENT '配置信息',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
