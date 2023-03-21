@@ -18,11 +18,11 @@ DefaultTimeDbEngineType: {{ influxdb[0].engine }}
 
 # Elasticsearch Server 配置
 ElasticsearchServer:
-  protocol: {{ 'https' if elasticsearch.ssl else 'http' }}
-  host: {{ elasticsearch.host }}
-  port: {{ elasticsearch.port }}
-  user: {{ elasticsearch.user }}
-  password: {{ elasticsearch.password }}
+  protocol: "{{ 'https' if elasticsearch.ssl else 'http' }}"
+  host: "{{ elasticsearch.host }}"
+  port: "{{ elasticsearch.port }}"
+  user: "{{ elasticsearch.user }}"
+  password: "{{ elasticsearch.password }}"
   timeout: 30
 
 kodo:
@@ -48,10 +48,10 @@ robot:
 # Cache
 redis:
   # 内网
-  host: {{redis.host}}
-  port: {{redis.port}}
+  host: "{{redis.host}}"
+  port: "{{redis.port}}"
   db: 1
-  password: {{redis.password}}
+  password: "{{redis.password}}"
   max_connections: 100
 
 # inner app 回调临时地址

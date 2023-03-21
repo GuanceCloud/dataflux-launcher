@@ -8,7 +8,7 @@ mysql:
   host    : {{mysql.base.host}}
   port    : {{mysql.base.port}}
   user    : {{mysql.messageDesk.user}}
-  password: {{mysql.messageDesk.password}}
+  password: "{{mysql.messageDesk.password}}"
   database: {{mysql.messageDesk.database}}
   timezone: '+0:00'
 
@@ -16,20 +16,20 @@ redis:
   host    : {{redis.host}}
   port    : {{redis.port}}
   db      : 5
-  password: {{redis.password}}
+  password: "{{redis.password}}"
 
 celery:
   broker:
     host    : {{redis.host}}
     port    : {{redis.port}}
     db      : 5
-    password: {{redis.password}}
+    password: "{{redis.password}}"
 
   resultBackend:
     host    : {{redis.host}}
     port    : {{redis.port}}
     db      : 5
-    password: {{redis.password}}
+    password: "{{redis.password}}"
 
 messageDesk:
   putTaskRequireSignIn: false

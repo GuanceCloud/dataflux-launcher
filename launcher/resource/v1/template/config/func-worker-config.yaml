@@ -24,5 +24,5 @@ mysql:
   host    : {{mysql.base.host}}
   port    : {{mysql.base.port}}
   user    : {{mysql.func.user}}
-  password: {{mysql.func.password}}
+  password: "{{mysql.func.password}}"
   database: {{mysql.func.database}}
