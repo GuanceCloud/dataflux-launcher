@@ -5,6 +5,7 @@ import shortuuid
 import pymysql
 
 
+from launcher.utils import tools
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl, SERVICECONFIG
 
@@ -29,10 +30,11 @@ def database_ddl():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
 
+  password = tools.gen_password(12)
   dbInfo = {
     "database": SERVICECONFIG['databases']['message_desk'],
     "user": SERVICECONFIG['databases']['message_desk'],
-    "password": shortuuid.ShortUUID().random(length=12)
+    "password": password
   }
 
   settingsMdl.mysql = {'messageDesk': dbInfo}
