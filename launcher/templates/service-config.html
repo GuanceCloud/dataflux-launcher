@@ -52,16 +52,6 @@
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">七层负载:</label>
-          <div class="col-sm-5">
-            <select id="sltIngressClassName" class="form-control">
-              {% for item in pageData.ingressClasses %}
-              <option value="{{ item }}" {{ "selected" if pageData.storageClassName == item }} >{{ item }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
       </div>
 
       {% for item in pageData.images %}

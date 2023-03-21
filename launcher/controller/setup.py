@@ -193,7 +193,6 @@ def service_image_config():
 
   d['images'] = services
   d['storageNames'] = k8sMdl.get_storageclass()
-  d['ingressClasses'] = k8sMdl.list_ingressclasses()
 
   return d
 
@@ -243,7 +242,6 @@ def service_create(data):
   storageClassName = data.get('storageClassName') or ''
   imagePullPolicy = data.get('imagePullPolicy') or ''
   images = data.get('images', {})
-  ingressClassName = data.get('storageClassName', '')
 
   registrySecrets = k8sMdl.registry_secret_get('launcher', 'registry-key')
 
@@ -266,8 +264,7 @@ def service_create(data):
 
   settingsMdl.other = {
     "storageClassName": storageClassName,
-    "imagePullPolicy": imagePullPolicy,
-    "ingressClassName": ingressClassName
+    "imagePullPolicy": imagePullPolicy
   }
 
   _registry_secret_create(settingsMdl.registry)

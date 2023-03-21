@@ -554,7 +554,6 @@ var setup = (function () {
     configs['storageClassName'] = $('#sltStorageClassName').val();
     configs['imagePullPolicy'] = $('#sltImagePullPolicy').val();
     configs['images'] = images;
-    configs['ingressClassName'] = $('#sltIngressClassName').val();
 
     this.post("service/create", configs).then(function(d){
       if (d.content){

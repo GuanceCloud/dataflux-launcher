@@ -195,10 +195,6 @@ def get_storageclass():
 
   return storageNames
 
-def list_ingressclasses():
-  result = subprocess.run(f"kubectl get ingressclasses -o json", shell=True, check=True, capture_output=True)
-  items = json.loads(result.stdout.decode()).get('items')
-  return [item['metadata']['name'] for item in items]
 
 def apply_namespace():
   tmpDir = SERVICECONFIG['tmpDir']
