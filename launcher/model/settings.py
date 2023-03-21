@@ -3,7 +3,6 @@
 import os, re, subprocess
 import json, yaml, logging
 
-from launcher.utils import utils
 from launcher.utils import encrypt
 
 _SETTING_ENCRYPT_KEY = "wcjGFpkXWyMDZ2Vpkmewizs5yub35Dz"
