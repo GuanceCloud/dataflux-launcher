@@ -479,9 +479,9 @@ upgradeInfo:
   # 2023-03-09 迭代的版本
   - seq: 36
     config: |-
-      **因为修改了默认镜像仓库 host 名称，如果是离线部署的用户升级到此版本，需要作以下操作：**
+      **如果是离线部署的用户升级到此版本，由于默认镜像仓库 host 名称的变更，需要执行以下步骤：**
 
       ```
-      1. 将名为 registry-key 的 secret (namespace 名为 launcher) 中的 registry domain name 修改为 pubrepo.guance.com
+      1. 将位于 launcher 命名空间中名为 registry-key 的 Secret 中的 registry domain name 修改为 pubrepo.guance.com。
       ```
 

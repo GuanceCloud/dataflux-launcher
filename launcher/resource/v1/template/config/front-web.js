@@ -20,5 +20,6 @@ window.DEPLOYCONFIG = {
     upgradeUrl: '',
     rechargeUrl: '',
     docDomain: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.docs }}.{{ domain.domain }}',
+    passPublicNetwork: 1,
     paasCustomLoginInfo: []
 };
