@@ -13,22 +13,26 @@ from launcher import settingsMdl, SERVICECONFIG
 def database_ping(params):
   params['port'] = int(params['port'])
 
-  with dbHelper(params) as db:
-    if not db.connection:
-      return {"connected": False}
+  try:
+    with dbHelper(params) as db:
+      if not db.connection:
+        return {"connected": False}
 
-    sql = "SHOW DATABASES;"
-    result = db.execute(sql)
+      sql = "SHOW DATABASES;"
+      result = db.execute(sql)
 
-    settingsMdl.mysql = {'base': params}
-    if len(result) == 0:
-      return {"connected": True}
+      settingsMdl.mysql = {'base': params}
+      if len(result) == 0:
+        return {"connected": True}
 
-    dbNames = []
-    for line in result[0]:
-      dbName = line['Database']
-      if dbName in SERVICECONFIG['databases'].values():
-        dbNames.append(dbName)
+      dbNames = []
+      for line in result[0]:
+        dbName = line['Database']
+        if dbName in SERVICECONFIG['databases'].values():
+          dbNames.append(dbName)
+  except Exception as e:
+    logging.error(e)
+    return {"connected": False}
 
   return {"connected": True, "dbNames": dbNames}
 
@@ -55,7 +59,7 @@ def database_ddl():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
 
-  password = tools.gen_password(12)
+  password = tools.gen_password(16)
 
   dbInfo = {
     "database": SERVICECONFIG['databases']['core'],

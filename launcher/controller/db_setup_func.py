@@ -28,7 +28,7 @@ def database_ddl():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
 
-  password = tools.gen_password(12)
+  password = tools.gen_password(16)
   dbInfo = {
     "database": SERVICECONFIG['databases']['func'],
     "user": SERVICECONFIG['databases']['func'],
