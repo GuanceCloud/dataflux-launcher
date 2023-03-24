@@ -17,19 +17,10 @@ redis:
   port    : {{redis.port}}
   db      : 5
   password: "{{redis.password}}"
+  useTLS  : False
 
 celery:
-  broker:
-    host    : {{redis.host}}
-    port    : {{redis.port}}
-    db      : 5
-    password: "{{redis.password}}"
-
-  resultBackend:
-    host    : {{redis.host}}
-    port    : {{redis.port}}
-    db      : 5
-    password: "{{redis.password}}"
+  queuePrefix     : MessageDesk
 
 messageDesk:
   putTaskRequireSignIn: false

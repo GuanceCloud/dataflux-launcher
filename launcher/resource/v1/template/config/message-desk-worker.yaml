@@ -1,7 +1,9 @@
 # 生产环境
 celery:
-  brokerURL       : redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/5
-  resultBackendURL: redis://:{{redis.password}}@{{redis.host}}:{{redis.port}}/5
+  queuePrefix     : MessageDesk
+  
+  # 任务执行时长限制（秒）
+  taskTimeLimit   : 5
 
 logger:
   level: WARNING
@@ -11,6 +13,7 @@ redis:
   port    : {{redis.port}}
   db      : 5
   password: "{{redis.password}}"
+  useTLS  : False
 
 mysql:
   host    : {{mysql.base.host}}
@@ -33,6 +36,7 @@ mail:
   host        : smtpdm.aliyun.com
   port        : 465
   useSSL      : True
+  useTLS      : False
   usePlainAuth: True
   sender:
     DataFlux:
