@@ -392,6 +392,7 @@ def studio_init():
         "measurements_meta",    # 内置 指标字典
         # "dataflux_integration", # 集成包
         "dataflux_template",    # 内置视图模板
+        "dataflux_template_en",    # 内置视图模板 en
         "internal_field_cfg",    # 同步官方字段说明
         "permission"            # 同步权限相关的数据
       ]
