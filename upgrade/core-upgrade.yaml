@@ -2882,3 +2882,69 @@ upgrade:
       
       # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 脚本中的 reset_init_biz_api_permissions 函数, 仅初始化API接口权限表相关数据和缓存
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_biz_api_permissions"}'
+
+
+  # 2023.03.23 迭代
+  - seq: 74
+    database: |-
+      --  新增 监控器修改历史表 biz_rule_history
+      CREATE TABLE `biz_rule_history` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ruleh-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `ruleUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监控器的uuid',
+        `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '告警策略UUID',
+        `type`  enum('trigger', 'aggs', 'cloud_correlation_switch', 'logbackup', 'slo_detect', 'slo_compute', 'bot_obs', 'self_built_trigger') NOT NULL DEFAULT 'trigger',
+        `refKey` varchar(48) NOT NULL DEFAULT '',
+        `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
+        `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
+        `extend` json DEFAULT NULL COMMENT '额外配置数据',
+        `createdWay` enum('import','template','manual','') NOT NULL DEFAULT 'manual',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+      -- 通知对象类型新增 本地Func服务通知类型      
+      ALTER TABLE `biz_notify_object` 
+      CHANGE COLUMN `type` `type` ENUM('dingTalkRobot', 'HTTPRequest', 'wechatRobot', 'mailGroup', 'feishuRobot', 'sms', 'localFuncServer') NOT NULL DEFAULT 'dingTalkRobot' ;
+      
+      -- 图表新增 笔记UUID字段
+      ALTER TABLE `biz_chart` 
+      ADD COLUMN `notesUUID` VARCHAR(65) NOT NULL DEFAULT '' COMMENT '笔记的UUID' AFTER `dashboardUUID`,
+      ADD INDEX `k_notes_uuid` (`notesUUID` ASC);
+
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 keyCode新增 logMultipleIndexCount  枚举类型, 工作空间的多索引配置数量限制
+      ALTER TABLE `main_workspace_config`
+      MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg', 'WhileList', 'expensiveQuery', 'logMultipleIndexCount') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+      -- 添加备份日志是否同步扩展字段信息
+      ALTER TABLE `biz_logging_backup_cfg`
+      ADD COLUMN `syncExtensionField` BOOLEAN DEFAULT false COMMENT 'true 为同步, false为不同步' AFTER `extend`;
+
+      -- 账号表新增字段 timezone 表示命名空间
+      ALTER TABLE `main_account`
+      ADD COLUMN `timezone` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '时区' AFTER `email`;
+
+      -- 执行sql语句, 修复biz_rule表中的updator为空的情况
+      UPDATE biz_rule SET updator = creator WHERE creator <> '' AND updator = '';
+
+    curl: |-
+      # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 脚本中的 reset_init_biz_api_permissions 函数, 仅初始化API接口权限表相关数据和缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_biz_api_permissions"}'
+
+      # 【inner api 服务器执行】执行 fix_update_log_multi_index_count.py 初始化多索引配置的允许数量信息
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_log_multi_index_count"}'
+
+      # 【inner api 服务器执行】执行 fix_2023_03_23_refresh_notes_chart_notes_uuid.py 补全笔记图表的 notesUUID 字段值
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_03_23_refresh_notes_chart_notes_uuid"}'
+
+      # 【inner api 服务器执行】执行 fix_2023_03_23_update_ws_owner_role.py 更新拥有着的角色, 空间拥有者在该空间只能有owner一个角色, 清除该空间拥有者拥有的其他角色
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_03_23_update_ws_owner_role"}'

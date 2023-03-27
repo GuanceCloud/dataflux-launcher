@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Version 5446
+# Version 4541
 #
-# https://www.sequelpro.com/
+# http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-03-09 07:28:23 +0000
+# Generation Time: 2023-03-23 08:35:22 +0000
 # ************************************************************
 
 
@@ -15,7 +15,6 @@
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-SET NAMES utf8mb4;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -228,6 +227,7 @@ CREATE TABLE `biz_chart` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `chartGroupUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '图表分组UUID',
   `dashboardUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '所属视图UUID',
+  `notesUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '笔记的UUID',
   `type` varchar(48) NOT NULL COMMENT '图表线条类型',
   `queries` json DEFAULT NULL COMMENT '查询信息',
   `extend` json NOT NULL COMMENT '额外拓展字段',
@@ -240,7 +240,8 @@ CREATE TABLE `biz_chart` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `k_ws_uuid` (`workspaceUUID`)
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_notes_uuid` (`notesUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -666,6 +667,7 @@ CREATE TABLE `biz_logging_backup_cfg` (
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '备份规则名',
   `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `syncExtensionField` tinyint(1) DEFAULT '0' COMMENT 'true 为同步, false为不同步',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -885,7 +887,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms','localFuncServer') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1232,6 +1234,36 @@ CREATE TABLE `biz_rule` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_refkey` (`refKey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_rule_history
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_rule_history`;
+
+CREATE TABLE `biz_rule_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 ruleh-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `ruleUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '监控器的uuid',
+  `monitorUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '告警策略UUID',
+  `type` enum('trigger','aggs','cloud_correlation_switch','logbackup','slo_detect','slo_compute','bot_obs','self_built_trigger') NOT NULL DEFAULT 'trigger',
+  `refKey` varchar(48) NOT NULL DEFAULT '',
+  `jsonScript` json DEFAULT NULL COMMENT 'script的JSON数据',
+  `crontabInfo` json DEFAULT NULL COMMENT 'crontab配置信息',
+  `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `createdWay` enum('import','template','manual','') NOT NULL DEFAULT 'manual',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1620,6 +1652,7 @@ CREATE TABLE `main_account` (
   `username` varchar(256) DEFAULT '',
   `password` varchar(128) NOT NULL DEFAULT '' COMMENT '帐户密码',
   `email` varchar(256) DEFAULT '',
+  `timezone` varchar(48) NOT NULL DEFAULT '' COMMENT '时区',
   `mobile` varchar(128) NOT NULL DEFAULT '' COMMENT '手机号',
   `exterId` varchar(128) NOT NULL DEFAULT '' COMMENT '外部ID',
   `extend` json DEFAULT NULL COMMENT '额外信息',
@@ -2318,7 +2351,7 @@ CREATE TABLE `main_workspace_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 wkcfg-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
-  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg','WhileList','expensiveQuery') NOT NULL DEFAULT 'StoreSchemeCfg',
+  `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg','WhileList','expensiveQuery','logMultipleIndexCount') NOT NULL DEFAULT 'StoreSchemeCfg',
   `config` json NOT NULL COMMENT '配置信息',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
