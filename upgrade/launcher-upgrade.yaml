@@ -485,3 +485,6 @@ upgradeInfo:
       1. 将位于 launcher 命名空间中名为 registry-key 的 Secret 中的 registry domain name 修改为 pubrepo.guance.com。
       ```
 
+  # 2023-3-23 迭代的版本
+  - seq: 37
+    func_exec: script_20230323
