@@ -6,15 +6,15 @@ apps:
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.11
     datakit: datakit:1.5.8
-    core: 1.60.125.1:core-04905d67b
-    kodo: 1.60.125.1:kodo-d6280316
-    front-webclient: 1.60.125.1:front-webclient-8e7a8467c
-    management-webclient: 1.60.125.1:management-webclient-3d91d9c
-    dataflux-doc: 1.60.125.1:dataflux-doc-4ecbe915
-    message-desk: 1.60.125.1:message-desk-dfb22ce
-    message-desk-worker: 1.60.125.1:message-desk-worker-295e13d
-    dataflux-func: 1.60.125.1:dataflux-func-c2082a85
-    utils-server: 1.60.125.1:utils-server-48799ca
-    jfr-parser: 1.60.125.1:jfr-parser-16ed409
-    pprofparser: 1.60.125.1:pprofparser-3714b43
-  version: 1.60.125.1
+    core: 1.60.125.2:core-04905d67b
+    kodo: 1.60.125.2:kodo-d17b8f05
+    front-webclient: 1.60.125.2:front-webclient-8e7a8467c
+    management-webclient: 1.60.125.2:management-webclient-3d91d9c
+    dataflux-doc: 1.60.125.2:dataflux-doc-4ecbe915
+    message-desk: 1.60.125.2:message-desk-dfb22ce
+    message-desk-worker: 1.60.125.2:message-desk-worker-295e13d
+    dataflux-func: 1.60.125.2:dataflux-func-c2082a85
+    utils-server: 1.60.125.2:utils-server-48799ca
+    jfr-parser: 1.60.125.2:jfr-parser-16ed409
+    pprofparser: 1.60.125.2:pprofparser-3714b43
+  version: 1.60.125.2
