@@ -1,13 +1,13 @@
 # ************************************************************
 # Sequel Pro SQL dump
-# Version 4541
+# Version 5446
 #
-# http://www.sequelpro.com/
+# https://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-03-23 08:35:22 +0000
+# Generation Time: 2023-04-06 06:53:25 +0000
 # ************************************************************
 
 
@@ -15,6 +15,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+SET NAMES utf8mb4;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -186,6 +187,34 @@ CREATE TABLE `biz_api_permission` (
 
 
 
+# Dump of table biz_attachment_relationship
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_attachment_relationship`;
+
+CREATE TABLE `biz_attachment_relationship` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 att-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `sourceType` varchar(48) NOT NULL DEFAULT '' COMMENT '附件所属资源类型',
+  `sourceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '附件所属资源UUID',
+  `name` varchar(128) NOT NULL COMMENT '文件名',
+  `config` json NOT NULL COMMENT '配置信息',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_sourceUUID` (`sourceUUID`),
+  KEY `k_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_bind_menu
 # ------------------------------------------------------------
 
@@ -211,6 +240,57 @@ CREATE TABLE `biz_bind_menu` (
   KEY `k_v_uuid` (`bindUUID`),
   KEY `k_bind_type` (`bindType`),
   KEY `k_menu_type` (`menuType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_channel
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_channel`;
+
+CREATE TABLE `biz_channel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 chan-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `name` varchar(128) NOT NULL COMMENT '频道名称',
+  `description` text NOT NULL COMMENT '备注',
+  `notifyTarget` json DEFAULT NULL COMMENT '通知对象列表',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_channel_issue
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_channel_issue`;
+
+CREATE TABLE `biz_channel_issue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 cissue-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `channelUUID` varchar(48) NOT NULL COMMENT '频道UUID',
+  `issueUUID` varchar(48) NOT NULL COMMENT '订阅者UUID',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `workspaceUUID_fk` (`workspaceUUID`),
+  KEY `channelUUID_fk` (`channelUUID`),
+  KEY `issueUUID_fk` (`issueUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -536,6 +616,36 @@ CREATE TABLE `biz_field_management` (
 
 
 
+# Dump of table biz_func_function
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_func_function`;
+
+CREATE TABLE `biz_func_function` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 relfw-前缀',
+  `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+  `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+  `funcId` varchar(256) DEFAULT '' COMMENT 'func 函数ID',
+  `name` varchar(256) DEFAULT '' COMMENT 'func 函数名',
+  `category` varchar(256) DEFAULT '' COMMENT '函数分类',
+  `config` json DEFAULT NULL COMMENT 'func 服务上报的其他信息',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_func_server_id` (`funcServerId`),
+  KEY `k_func_id` (`funcId`),
+  KEY `k_category` (`category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_func_server
 # ------------------------------------------------------------
 
@@ -570,6 +680,10 @@ CREATE TABLE `biz_func_server_workspace` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 relfw-前缀',
   `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
   `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT 'func 服务名',
+  `config` json DEFAULT NULL COMMENT 'func 服务上报的其他信息',
+  `isActive` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'func 是否为活跃状态',
+  `lastPingAt` int(11) NOT NULL DEFAULT '-1' COMMENT '本地 func 最后一次有效 ping 服务端的时间点',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -655,6 +769,67 @@ CREATE TABLE `biz_integration` (
 
 
 
+# Dump of table biz_issue
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_issue`;
+
+CREATE TABLE `biz_issue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 issue-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `name` varchar(128) NOT NULL COMMENT '标题',
+  `level` int(4) NOT NULL DEFAULT '0' COMMENT '级别',
+  `statusType` int(4) NOT NULL DEFAULT '0' COMMENT '状态类型',
+  `description` text NOT NULL COMMENT '描述信息',
+  `resourceType` varchar(48) NOT NULL DEFAULT '' COMMENT '来源资源类型',
+  `resourceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '来源资源UUID',
+  `resourceName` varchar(512) NOT NULL DEFAULT '' COMMENT '来源资源的标题或者名称',
+  `extend` json DEFAULT NULL COMMENT '额外信息',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_resourceUUID` (`resourceUUID`),
+  KEY `k_name` (`name`),
+  KEY `k_resourceName` (`resourceName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_issue_message
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_issue_message`;
+
+CREATE TABLE `biz_issue_message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 issue-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `issueUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Issue',
+  `type` enum('change','reply') NOT NULL DEFAULT 'change' COMMENT '消息类型',
+  `content` text NOT NULL COMMENT '消息内容',
+  `extend` json DEFAULT NULL COMMENT '额外信息',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_issueUUID` (`issueUUID`),
+  KEY `k_type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_logging_backup_cfg
 # ------------------------------------------------------------
 
@@ -701,7 +876,7 @@ CREATE TABLE `biz_logging_index_cfg` (
   `exterStoreName` varchar(256) NOT NULL DEFAULT '' COMMENT '与name互为映射的外部存储的名字',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
   `externalResourceAccessCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID',
-  `storeType` enum('','es','sls','opensearch') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致',
+  `storeType` enum('','es','sls','opensearch','beaver') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致',
   `region` varchar(45) NOT NULL DEFAULT '' COMMENT '目标地域',
   `isPublicNetworkAccess` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否走公网访问',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -714,6 +889,32 @@ CREATE TABLE `biz_logging_index_cfg` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_external_resource_access_cfg_uuid` (`externalResourceAccessCfgUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_logging_query_rule
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_logging_query_rule`;
+
+CREATE TABLE `biz_logging_query_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 lqrl-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `indexes` json DEFAULT NULL COMMENT '限制的索引',
+  `roleUUIDs` json DEFAULT NULL COMMENT '授权哪些角色的查询',
+  `extend` json DEFAULT NULL COMMENT '自定义数据',
+  `conditions` varchar(512) NOT NULL DEFAULT '' COMMENT '筛选搜索的conditions',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -887,7 +1088,7 @@ CREATE TABLE `biz_notify_object` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
-  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms','localFuncServer') NOT NULL DEFAULT 'dingTalkRobot',
+  `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms','selfBuildNotifyFunction') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1411,6 +1612,7 @@ CREATE TABLE `biz_snapshots` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
   `accountUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '账号Uuid',
   `name` varchar(128) NOT NULL DEFAULT '' COMMENT '快照名称',
+  `rules` json DEFAULT NULL COMMENT '数据访问权限规则',
   `type` varchar(64) NOT NULL DEFAULT 'logging' COMMENT '快照类型',
   `content` json NOT NULL COMMENT '用户自定义配置数据',
   `isPublic` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否公开展示,1代表公开,0代表仅自己可见',
@@ -1480,6 +1682,34 @@ CREATE TABLE `biz_sso_white_list` (
   KEY `idx_email` (`email`),
   KEY `idx_wpuuid` (`workspaceUUID`),
   KEY `idx_ssouuid` (`ssoUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_subscribe
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_subscribe`;
+
+CREATE TABLE `biz_subscribe` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 subsc-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+  `channelUUID` varchar(48) NOT NULL COMMENT '频道UUID',
+  `type` enum('responsible','participate','attention','cancel') NOT NULL DEFAULT 'cancel' COMMENT '订阅类型',
+  `targetUUID` varchar(48) NOT NULL COMMENT '订阅者UUID',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `workspaceUUID_fk` (`workspaceUUID`),
+  KEY `channelUUID_fk` (`channelUUID`),
+  KEY `type_fk` (`type`),
+  KEY `targetUUID_fk` (`targetUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

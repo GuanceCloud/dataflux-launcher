@@ -2948,3 +2948,228 @@ upgrade:
 
       # 【inner api 服务器执行】执行 fix_2023_03_23_update_ws_owner_role.py 更新拥有着的角色, 空间拥有者在该空间只能有owner一个角色, 清除该空间拥有者拥有的其他角色
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_03_23_update_ws_owner_role"}'
+      
+      
+
+
+  # 2023.04.06 迭代
+  - seq: 75
+    config:
+      core: |-
+        # WebSocket 定时任务相关
+        WebSocketTimedTaskSet:
+          timedPing:
+            isOpen: true
+          timedClearNoActiveFuncServer:
+            # 定时清理非活跃状态的 Func 对应的 函数列表
+            isOpen: true
+
+    database: |-
+      --  新增 日志查询规则表 biz_logging_query_rule
+      CREATE TABLE `biz_logging_query_rule` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 lqrl-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `indexes` json DEFAULT NULL COMMENT '限制的索引',
+        `roleUUIDs` json DEFAULT NULL COMMENT '授权哪些角色的查询',
+        `extend` json DEFAULT NULL COMMENT '自定义数据',
+        `conditions` varchar(512) NOT NULL DEFAULT '' COMMENT '筛选搜索的conditions',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      --  新增 频道信息表
+      CREATE TABLE `biz_channel` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 chan-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `name` varchar(128) NOT NULL COMMENT '频道名称',
+        `description` text NOT NULL COMMENT '备注',
+        `notifyTarget` json DEFAULT NULL COMMENT '通知对象列表',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 频道与ISSUE的关联关系表 
+      CREATE TABLE `biz_channel_issue` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 cissue-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `channelUUID` varchar(48) NOT NULL COMMENT '频道UUID',
+        `issueUUID` varchar(48) NOT NULL COMMENT '订阅者UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `workspaceUUID_fk` (`workspaceUUID`),
+        KEY `channelUUID_fk` (`channelUUID`),
+        KEY `issueUUID_fk` (`issueUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新增 issue 信息表
+      CREATE TABLE `biz_issue` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 issue-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `name` varchar(128) NOT NULL COMMENT '标题',
+        `level` int(4) NOT NULL DEFAULT '0' COMMENT '级别',
+        `statusType` int(4) NOT NULL DEFAULT '0' COMMENT '状态类型',
+        `description` text NOT NULL COMMENT '描述信息',
+        `resourceType` varchar(48) NOT NULL DEFAULT '' COMMENT '来源资源类型',
+        `resourceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '来源资源UUID',
+        `resourceName` varchar(512) NOT NULL DEFAULT '' COMMENT '来源资源的标题或者名称',
+        `extend` json DEFAULT NULL COMMENT '额外信息',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_resourceUUID` (`resourceUUID`),
+        KEY `k_name` (`name`),
+        KEY `k_resourceName` (`resourceName`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- issue 的回复消息表
+      CREATE TABLE `biz_issue_message` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 issue-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `issueUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '所属Issue',
+        `type` enum('change','reply') NOT NULL DEFAULT 'change' COMMENT '消息类型',
+        `content` text NOT NULL COMMENT '消息内容',
+        `extend` json DEFAULT NULL COMMENT '额外信息',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_issueUUID` (`issueUUID`),
+        KEY `k_type` (`type`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 频道订阅表
+      CREATE TABLE `biz_subscribe` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 subsc-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间唯一UUID',
+        `channelUUID` varchar(48) NOT NULL COMMENT '频道UUID',
+        `type` enum('responsible','participate','attention','cancel') NOT NULL DEFAULT 'cancel' COMMENT '订阅类型',
+        `targetUUID` varchar(48) NOT NULL COMMENT '订阅者UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `workspaceUUID_fk` (`workspaceUUID`),
+        KEY `channelUUID_fk` (`channelUUID`),
+        KEY `type_fk` (`type`),
+        KEY `targetUUID_fk` (`targetUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 附件信息表
+      CREATE TABLE `biz_attachment_relationship` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 att-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+        `sourceType` varchar(48) NOT NULL DEFAULT '' COMMENT '附件所属资源类型',
+        `sourceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '附件所属资源UUID',
+        `name` varchar(128) NOT NULL COMMENT '文件名',
+        `config` json NOT NULL COMMENT '配置信息',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_sourceUUID` (`sourceUUID`),
+        KEY `k_name` (`name`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新建 func 函数表-存储本地 Func 函数列表
+      CREATE TABLE `biz_func_function` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 relfw-前缀',
+        `funcServerId` varchar(48) NOT NULL DEFAULT '' COMMENT 'Func 服务唯一标识',
+        `workspaceUUID` varchar(64) NOT NULL COMMENT '工作空间 uuid',
+        `funcId` varchar(256) DEFAULT '' COMMENT 'func 函数ID',
+        `name` varchar(256) DEFAULT '' COMMENT 'func 函数名',
+        `category` varchar(256) DEFAULT '' COMMENT '函数分类',
+        `config` json DEFAULT NULL COMMENT 'func 服务上报的其他信息',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_func_server_id` (`funcServerId`),
+        KEY `k_func_id` (`funcId`),
+        KEY `k_category` (`category`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+
+      -- Func 服务关联表更新
+      ALTER TABLE `biz_func_server_workspace` 
+      ADD COLUMN `name` VARCHAR(256) NOT NULL DEFAULT '' COMMENT 'func 服务名' AFTER `workspaceUUID`,
+      ADD COLUMN `config` JSON NULL COMMENT 'func 服务上报的其他信息' AFTER `name`,
+      ADD COLUMN `isActive` TINYINT(1) NOT NULL DEFAULT '0' COMMENT 'func 是否为活跃状态' AFTER `config`,
+      ADD COLUMN `lastPingAt` INT(11) NOT NULL DEFAULT '-1' COMMENT '本地 func 最后一次有效 ping 服务端的时间点' AFTER `isActive`;
+      
+      -- 通知对象类型新增 本地Func服务通知类型      
+      ALTER TABLE `biz_notify_object` 
+      CHANGE COLUMN `type` `type` ENUM('dingTalkRobot', 'HTTPRequest', 'wechatRobot', 'mailGroup', 'feishuRobot', 'sms', 'selfBuildNotifyFunction') NOT NULL DEFAULT 'dingTalkRobot' ;
+      
+      -- 可绑定的索引类型配置 新增支持 日志易类型(beaver)
+      ALTER TABLE `biz_logging_index_cfg` 
+      CHANGE COLUMN `storeType` `storeType` ENUM('', 'es', 'sls', 'opensearch', 'beaver') NOT NULL DEFAULT '' COMMENT '存储类型, 空值表示与工作空间默认数据存储类型保持一致' ;
+
+      -- 更新 默认会话保持时长 30 分钟改为 3 个小时
+      UPDATE main_account
+      SET tokenHoldTime = 10800
+      WHERE tokenHoldTime = 1800 AND createAt = updateAt;
+
+      -- biz_snapshots 新增 rules字段, 用于记录创建快照时的 空间日志数据访问权限规则
+      ALTER TABLE `biz_snapshots`
+      ADD COLUMN `rules` json NULL COMMENT '数据访问权限规则' AFTER `name`;
+      
+      -- 初始化 biz_snapshots 表中新增字段 rules 的默认值
+      update biz_snapshots set rules='{}' where rules is NULL and status <> 3; 
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_2023_04_06_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 七种权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_06_update_permission"}'
+
