@@ -24,9 +24,11 @@
             <label class="checkbox-inline">
               <input type="radio" name="radioSeriesEngine{{ loop.index }}" {{ "checked" if idb.engine == "influxdb"}} value="influxdb"> InfluxDB
             </label>
+            {% if False %}
             <label class="checkbox-inline">
               <input type="radio" name="radioSeriesEngine{{ loop.index }}" {{ "checked" if idb.engine == "tdengine"}} value="tdengine"> TDengine
             </label>
+            {% endif %}
           </div>
           <div class="col-sm-5 error"></div>
         </div>
