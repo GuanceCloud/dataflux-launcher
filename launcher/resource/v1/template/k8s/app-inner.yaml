@@ -40,8 +40,8 @@ spec:
           subPath: config.yaml
         - mountPath: /config/cloudcare-forethought-backend/sysconfig
           name: ft-sysconfig
-        - mountPath: /logdata
-          name: logs
+        # - mountPath: /logdata
+        #   name: logs
         workingDir: /config/cloudcare-forethought-backend
       imagePullSecrets:
       - name: registry-key
@@ -55,9 +55,9 @@ spec:
       - name: ft-sysconfig
         persistentVolumeClaim:
           claimName: ft-sysconfig
-      - name: logs
-        persistentVolumeClaim:
-          claimName: inner-logs
+      # - name: logs
+      #   persistentVolumeClaim:
+      #     claimName: inner-logs
 
 ---
 
