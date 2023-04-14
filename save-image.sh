@@ -74,7 +74,7 @@ launcher_chart_package (){
 
 push_chart_oss (){
   if [ -e /tmp/launcher-helm-latest-test.tgz ]; then
-    tools/ossutil64 cp  /tmp/launcher-helm-latest-test.tgz  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
+    tools/ossutil64 cp  /tmp/launcher-helm-latest-test.tgz  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/launcher-helm-latest-test.tgz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
     rm -f /tmp/launcher-helm-latest-test.tgz
   fi
 }
