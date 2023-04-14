@@ -61,18 +61,10 @@ uploadOssProd:
     - /^upload_oss_\d+$/
   script:
     - sh save-image.sh -p
+    - sh save-image.sh -c
   tags:
     - cloudcare-multiarch 
 
-#push offline images to oss
-uploadOssTest:
-  stage: deploy
-  only:
-    - helm
-  script:
-    - sh save-image.sh -c
-  tags:
-    - cloudcare-multiarch
 
 buildRTM:
   stage: build
