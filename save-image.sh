@@ -88,7 +88,7 @@ push_packages_oss (){
 	  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
 }
 
-while getopts ":tp" opt
+while getopts ":tpc" opt
 do
     case $opt in
         t)
@@ -102,9 +102,10 @@ do
 	          push_packages_oss
             ;;
         c)
+            echo "do helm charts"
             launcher_chart_package
             push_chart_oss
-        ;;
+            ;;
         ?)
             echo "-t: add a tag to deploy trigger"
             exit 1
