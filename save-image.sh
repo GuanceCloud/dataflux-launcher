@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 #set +eux
 
 lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
@@ -69,13 +69,14 @@ launcher_chart_package (){
   list="$(dirname $0)/config/docker-image.txt"
 	version=$(sed -n "1p" ${list} |sed -r  "s/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/g")
   helm pull  launcher  --repo https://pubrepo.guance.com/chartrepo/launcher --version=$version
-  mv launcher-$version.tgz /tmp/launcher-helm-latest-test.tgz
+  mv launcher-$version.tgz /tmp/launcher-helm-latest.tgz
 }
 
 push_chart_oss (){
-  if [ -e /tmp/launcher-helm-latest-test.tgz ]; then
-    tools/ossutil64 cp  /tmp/launcher-helm-latest-test.tgz  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/launcher-helm-latest-test.tgz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
-    rm -f /tmp/launcher-helm-latest-test.tgz
+  if [ -e /tmp/launcher-helm-latest.tgz ]; then
+    tools/ossutil64 cp  /tmp/launcher-helm-latest.tgz  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/launcher-helm-latest.tgz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
+    echo "oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/launcher-helm-latest.tgz"
+    rm -f /tmp/launcher-helm-latest.tgz
   fi
 }
 
