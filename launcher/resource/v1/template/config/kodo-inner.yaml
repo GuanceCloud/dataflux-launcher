@@ -1,6 +1,6 @@
 database:
     db_dialect: mysql
-    connection: {{mysql.core.user}}:{{mysql.core.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.core.database}}
+    connection: "{{mysql.core.user}}:{{mysql.core.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.core.database}}"
 
 redis:
     host: "{{redis.host}}:{{redis.port}}"
@@ -63,3 +63,13 @@ es:
 
 nsq:
     lookupd: http://nsqlookupd.middleware:4161
+
+# 新增配置项，按照时序、日志分离查询worker
+dql:
+    metric_query_workers: 8 # 时序数据worker数量，默认值为8
+    log_query_workers: 8    # 日志数据worker数量，默认值为8
+    profiling_parse: false  # 是否profiling parse
+
+# 新增配置项，调用inner的host
+inner:
+    host: "http://inner.forethought-core:5000"
