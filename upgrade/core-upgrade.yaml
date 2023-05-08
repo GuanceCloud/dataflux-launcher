@@ -3173,3 +3173,186 @@ upgrade:
       # 【inner api 服务器执行】执行 fix_2023_04_06_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 七种权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_06_update_permission"}'
 
+
+
+  # 2023.04.20 迭代
+  - seq: 76
+    database: |-
+      -- 新增 部署版登录映射配置表
+      CREATE TABLE `main_login_mapping` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 lgmp- 前缀',
+        `sourceField` varchar(128) NOT NULL DEFAULT '' COMMENT '源字段名',
+        `sourceValue` varchar(256) NOT NULL DEFAULT '' COMMENT '源字段值',
+        `targetValues` json DEFAULT NULL COMMENT '目标字段值列表',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+        `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`),
+        KEY `k_source_field` (`sourceField`),
+        KEY `k_source_value` (`sourceValue`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 新增 guancedb 类型时序数据库
+      ALTER TABLE `main_influx_instance` 
+      CHANGE COLUMN `dbType` `dbType` ENUM('influxdb', 'tdengine', 'guancedb') NOT NULL DEFAULT 'influxdb' COMMENT '实例的引擎类型' ;
+      
+      -- 新增 guancedb 类型数据库
+      ALTER TABLE `main_influx_db` 
+      CHANGE COLUMN `dbType` `dbType` ENUM('influxdb', 'tdengine', 'guancedb') NULL DEFAULT 'influxdb';
+
+      -- 工作空间数据访问授权表, 新增 toWorkspaceName, workspaceName, toRegionCode, regionCode, 用于表示 跨站点空间数据的访问的站点, 和工作空间名称
+      ALTER TABLE `main_workspace_grant`
+      ADD COLUMN `toWorkspaceName` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '被授权的空间名称' AFTER `toWorkspaceUUID`,
+      ADD COLUMN `workspaceName` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '授权的空间名称' AFTER `toWorkspaceUUID`,
+      ADD COLUMN `toRegionCode` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '被授权的的站点信息' AFTER `toWorkspaceUUID`,
+      ADD COLUMN `regionCode` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '授权的的站点信息' AFTER `toWorkspaceUUID`;
+
+
+      -- 空间表新增字段 timezone 表示 空间时区
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `timezone` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '空间时区' AFTER `versionType`;
+      
+
+      -- main_es_instance 实例信息 dbType, name 字段
+      ALTER TABLE `main_es_instance` 
+      ADD COLUMN `dbType` ENUM('es','sls','beaver') NOT NULL DEFAULT 'es' COMMENT '存储类型对应的type' AFTER `host`,
+      ADD COLUMN `name` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '存储类型的名称' AFTER `dbType`;
+      
+
+      -- 更新工作空间配置表 main_workspace_config keyCode枚举类型 keyCode新增 BeaverStoreCfg枚举类型, 工作空间的多索引配置数量限制
+      ALTER TABLE `main_workspace_config` MODIFY COLUMN `keyCode` enum('StoreSchemeCfg','UsageLimit','WsMenuCfg', 'WhileList', 'expensiveQuery', 'logMultipleIndexCount', 'BeaverStoreCfg') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'StoreSchemeCfg';
+
+      -- 修改 biz_channel 表, name 字段值长度变更
+      ALTER TABLE `biz_channel` 
+      CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '频道名称' ;
+
+      -- 索引字段映射配置添加顺序字段
+      ALTER TABLE `biz_index_field_mapping` 
+      ADD COLUMN `sortNo` INT(11) NOT NULL DEFAULT '-1' COMMENT '字段顺序' AFTER `originalField`;
+      
+      -- 为常用表的常用过滤字段添加 索引
+      ALTER TABLE `biz_chart` 
+      ADD INDEX `k_dashboard_uuid` (`dashboardUUID` ASC),
+      ADD INDEX `k_cgp_uuid` (`chartGroupUUID` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_pipeline_relation` 
+      ADD INDEX `k_wksp_uuid` (`workspaceUUID` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_rule` 
+      ADD INDEX `k_monitor_uuid` (`monitorUUID` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_rule_history` 
+      ADD INDEX `k_rule_uuid` (`ruleUUID` ASC),
+      ADD INDEX `k_refkey_uuid` (`refKey` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_tag` 
+      ADD INDEX `k_name` (`name` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_tasks` 
+      ADD INDEX `k_accnt_uuid` (`accountUUID` ASC);
+      
+      -- 加索引
+      ALTER TABLE `biz_variable` 
+      ADD INDEX `k_dashboard_uuid` (`dashboardUUID` ASC);
+      
+      -- 加索引
+      ALTER TABLE `main_account` 
+      ADD INDEX `uk_exterid` (`exterId` ASC),
+      ADD INDEX `uk_namespace` (`nameSpace` ASC);
+      
+      -- 加索引
+      ALTER TABLE `main_apm_config` 
+      ADD INDEX `uk_service` (`service` ASC);
+      
+      -- 加索引
+      ALTER TABLE `main_manage_account` 
+      ADD INDEX `uk_username` (`username` ASC);
+
+
+      -- 变更字段 subIdentify 字段(标识监控器事件的唯一标识), 变更 resourceName 为 resource; 本次变更的表是无数据的，因此可以直接变更
+      ALTER TABLE `biz_issue` 
+      ADD COLUMN `subIdentify` VARCHAR(45) NOT NULL DEFAULT '' COMMENT '来源子标识' AFTER `resourceUUID`,
+      CHANGE COLUMN `name` `name` VARCHAR(256) NOT NULL COMMENT '标题' ,
+      CHANGE COLUMN `resourceName` `resource` VARCHAR(512) NOT NULL DEFAULT '' COMMENT '来源资源的标题或者名称' ,
+      DROP INDEX `k_resourceName` ,
+      ADD INDEX `k_resource` (`resource` ASC),
+      ADD INDEX `k_sub_identify` (`subIdentify` ASC);
+
+      -- 更新 API KEY 管理表 main_workspace_accesskey 表  uuid 到 ak字段, 设置 unique,    注意 sql 语句的执行顺序, 原ak字段为空字符串, 直接改 UNIQUE 会报错
+      ALTER TABLE main_workspace_accesskey MODIFY COLUMN ak varchar(128);
+      UPDATE main_workspace_accesskey SET ak=uuid;
+      ALTER TABLE main_workspace_accesskey ADD UNIQUE KEY unique_ak (ak);
+      
+      -- 为每个工作空间创建一个 默认频道
+      INSERT INTO biz_channel(`uuid`, `workspaceUUID`, `name`, `description`, `notifyTarget`, `status`, `creator`, `updator`, `createAt`, `deleteAt`, `updateAt`)
+      select 
+          REPLACE(f.uuid, "wksp_", "chan_") as uuid, uuid as workspaceUUID, 
+          'default' as name,  '' as description,  '[]' as notifyTarget, 
+          0 as status, 'SYS' as creator, '' as updator,  unix_timestamp() as createAt, 
+          -1 as deleteAt, -1 as updateAt 
+      from (
+          select w.uuid as uuid, c.name as name
+          from
+            main_workspace as w
+          left join
+            `biz_channel` as c
+          on
+            w.uuid = c.workspaceUUID
+            and w.status=0
+            and c.status=0
+            and c.name = 'default'
+          where
+            w.status=0
+      ) as f
+      where
+        f.name is NULL;
+
+    curl: |-
+
+      # 【inner api 服务器执行】执行 fix_2023_04_20_update_workspace_grant.py 操作 更新 工作空间授权表的 region,和工作空间名称
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_20_update_workspace_grant"}'
+
+      # 【inner api 服务器执行】执行 fix_2023_04_20_update_workspace_incident_menu.py 操作 更新 异常追踪的菜单栏
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_20_update_workspace_incident_menu"}'
+
+      # 【inner api 服务器执行】执行 fix_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 新的 异常追踪 permission 权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission", "scriptKwargs": {"custom_permissions":["anomaly.issueManage", "anomaly.issueRead", "anomaly.issueReplyManage", "anomaly.issueReplyRead"]}}'
+
+  # 2023.04.27 迭代
+  - seq: 77
+    database: |-
+      -- 免费额度配置参数更新
+      INSERT INTO `main_config`(`keyCode`, `description`, `value`) VALUES ('FreeLimitV2', '免费额度', '{\"ts\": 3000, \"job\": 100000, \"rum_pv\": 2000, \"logs\": 1000000, \"trace\": 8000, \"profile\": 60, \"dialing_api\": 200000, \"session_replay\": 1000}') ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
+
+      -- 账号表新增字段 statusPageSubs 表示账号订阅当前站点的 status page 的状态
+      ALTER TABLE `main_account`
+      ADD COLUMN `statusPageSubs` tinyint(1) NOT NULL DEFAULT '0' COMMENT '当前站点的 status page 订阅状态, 1已订阅, 0未订阅' AFTER `extend`;
+
+  # 2023.04.28 修复
+  - seq: 78
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_update_permission.py 修复 biz_permission 表中 标准成员 dca.dcaManage 权限问题, 注意执行完成, 清理redis缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission"}'
+
+
+  # 2023.05.06 修复
+  - seq: 79
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_2023_04_20_update_workspace_incident_menu.py 操作 更新 异常追踪的菜单栏(是 2023.04.20 迭代中相同fix脚本的补充操作)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_20_update_workspace_incident_menu"}'
+
+
+
+

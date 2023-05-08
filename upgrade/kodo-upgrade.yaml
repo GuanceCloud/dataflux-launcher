@@ -218,3 +218,30 @@ update:
           # 新增配置项，用于 profile 数据的磁盘存储
           profile:
             data_path: /data/profile
+
+    #2023/04/20
+    - seq: 13
+      config:
+        kodo: |-
+          # 新增配置项，按照时序、日志分离查询worker
+          dql:                
+              metric_query_workers: 8 # 时序数据worker数量，默认值为8
+              log_query_workers: 8 # 日志数据worker数量，默认值为8
+          # 新增配置项，调用inner的host
+          inner:
+            host: "http://inner.forethought-core:5000"
+        kodoInner: |-
+          # 新增配置项，按照时序、日志分离查询worker
+          dql:                
+              metric_query_workers: 8 # 时序数据worker数量，默认值为8
+              log_query_workers: 8    # 日志数据worker数量，默认值为8
+              profiling_parse: false  # 是否profiling parse
+          # 新增配置项，调用inner的host
+          inner:
+            host: "http://inner.forethought-core:5000"
+        kodo-x: |-
+          # 新增配置项，sls三方授权账号
+          sls:
+            ak: ""
+            sk: ""
+            uid: ""
