@@ -85,7 +85,7 @@ do
             echo "do packages"
             guance_package arm64
             guance_package amd64
-	    push_packages_oss 
+            push_packages_oss 
             ;;
         ?)
             echo "-t: add a tag to deploy trigger"
