@@ -493,3 +493,13 @@ upgradeInfo:
   # 2023-04-06 迭代的版本
   - seq: 38
     func_exec: script_20230406
+
+
+  # 2023-04-20 迭代的版本
+  - seq: 39
+    func_exec: script_20230420
+
+
+  # 2023-05-06 迭代的版本
+  - seq: 40
+    func_exec: script_20230506

@@ -60,9 +60,9 @@ CREATE TABLE `biz_main_auth_link` (
   `tagsJSON` json DEFAULT NULL COMMENT '授权链接标签JSON',
   `apiAuthId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'API认证ID',
   `expireTime` datetime DEFAULT NULL COMMENT '过期时间（NULL表示永不过期）',
-  `throttlingJSON` json DEFAULT NULL COMMENT '限流JSON（value="<From Parameter>"表示从参数获取）',
-  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源',
-  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源ID',
+  `throttlingJSON` json DEFAULT NULL COMMENT '限流JSON',
+  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源',
+  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源ID',
   `showInDoc` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在文档中显示',
   `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
@@ -99,8 +99,8 @@ CREATE TABLE `biz_main_batch` (
   `funcCallKwargsJSON` json DEFAULT NULL COMMENT '函数调用参数JSON (kwargs)',
   `tagsJSON` json DEFAULT NULL COMMENT '批处理标签JSON',
   `apiAuthId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'API认证ID',
-  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源',
-  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源ID',
+  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源',
+  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源ID',
   `showInDoc` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否在文档中显示',
   `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否禁用',
@@ -240,8 +240,8 @@ CREATE TABLE `biz_main_crontab_config` (
   `scope` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'GLOBAL' COMMENT '范围',
   `configMD5` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '配置MD5',
   `expireTime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
-  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源',
-  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源ID',
+  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源',
+  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源ID',
   `taskInfoLimit` int(11) DEFAULT NULL COMMENT '任务记录数量',
   `isDisabled` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否已禁用',
   `note` text COMMENT '备注',
@@ -604,6 +604,7 @@ CREATE TABLE `biz_main_script_market` (
   `description` text COMMENT '描述',
   `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '类型 git|aliyunOSS|httpService',
   `configJSON` json DEFAULT NULL COMMENT '配置信息JSON',
+  `extraJSON` json DEFAULT NULL COMMENT '额外信息JSON',
   `lockedByUserId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '锁定者用户ID',
   `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -695,8 +696,8 @@ CREATE TABLE `biz_main_script_set` (
   `title` varchar(256) DEFAULT NULL COMMENT '标题',
   `description` text COMMENT '描述',
   `requirements` text COMMENT '依赖包',
-  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源',
-  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '来源ID',
+  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源',
+  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '来源ID',
   `originMD5` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '来源MD5',
   `lockedByUserId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '锁定者用户ID',
   `pinTime` datetime DEFAULT NULL COMMENT '置顶时间',
@@ -714,7 +715,7 @@ CREATE TABLE `biz_main_script_set` (
 
 LOCK TABLES `biz_main_script_set` WRITE;
 /*!40000 ALTER TABLE `biz_main_script_set` DISABLE KEYS */;
-INSERT INTO `biz_main_script_set` (`seq`, `id`, `title`, `description`, `requirements`, `origin`, `originId`, `originMD5`, `lockedByUserId`, `pinTime`, `createTime`, `updateTime`) VALUES (1,'demo','示例',NULL,NULL,'UNKNOW','UNKNOW',NULL, NULL,NULL,'2020-09-19 09:36:57','2020-09-29 13:40:21');
+INSERT INTO `biz_main_script_set` (`seq`, `id`, `title`, `description`, `requirements`, `origin`, `originId`, `originMD5`, `lockedByUserId`, `pinTime`, `createTime`, `updateTime`) VALUES (1,'demo','示例',NULL,NULL,'UNKNOWN','UNKNOWN',NULL, NULL,NULL,'2020-09-19 09:36:57','2020-09-29 13:40:21');
 /*!40000 ALTER TABLE `biz_main_script_set` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -784,7 +785,8 @@ DROP TABLE IF EXISTS `biz_main_task_info`;
 CREATE TABLE `biz_main_task_info` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOW' COMMENT '任务来源ID',
+  `origin` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '任务来源',
+  `originId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'UNKNOWN' COMMENT '任务来源ID',
   `rootTaskId` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'ROOT' COMMENT '主任务ID',
   `funcId` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '函数ID',
   `execMode` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '执行模式 sync|async|crontab',
@@ -799,6 +801,7 @@ CREATE TABLE `biz_main_task_info` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`seq`),
   UNIQUE KEY `ID` (`id`),
+  KEY `ORIGIN` (`origin`),
   KEY `ORIGIN_ID` (`originId`),
   KEY `ROOT_TASK_ID` (`rootTaskId`),
   KEY `FUNC_ID` (`funcId`)

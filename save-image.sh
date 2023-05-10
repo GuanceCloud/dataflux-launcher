@@ -1,7 +1,6 @@
 #!/bin/bash
 
 #set +eux
-
 lastReleaseTag=$(git fetch --tag && git tag --list |awk '/release/{print $NF}'|sort -V|sed -n '$p')
 lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
 
@@ -32,43 +31,44 @@ do_trigger_tag(){
 
 
 guance_package (){
-	arc_name=$1
-        lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod|sort -V|grep -w  $(echo "${lastReleaseTagCommitID}"|cut -c 1-7)|awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
+  arc_name=$1
+  lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod|sort -V|grep -w  $(echo "${lastReleaseTagCommitID}"|cut -c 1-7)|awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
 
-        #lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod | sort -V |awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
-        v=(${lastVer//-/ })
-	temp_dest="/tmp/guance-images-release"
-	launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"
-	list="$(dirname $0)/config/docker-image.txt"
-	version=$(sed -n "1p" ${list} |sed -r  "s/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/g")
+  #lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod | sort -V |awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
+  v=(${lastVer//-/ })
+  temp_dest="/tmp/guance-images-release"
+  launVer="pubrepo.guance.com/dataflux/${v[0]}:launcher-${v[1]}-${v[2]}"
+  list="$(dirname $0)/config/docker-image.txt"
+  version=$(sed -n "1p" ${list} |sed -r  "s/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/g")
 
 
-	if ! grep -w ${launVer} ${list} 
-	then
-	  echo ${launVer} >>${list}
-	fi
+  if ! grep -w ${launVer} ${list} 
+  then
+    echo ${launVer} >>${list}
+  fi
 
-	if [ ! -d "${temp_dest}" ]; then
-	  mkdir -p ${temp_dest}
-	fi
+  if [ ! -d "${temp_dest}" ]; then
+    mkdir -p ${temp_dest}
+  fi
 
-	for i in $(cat ${list}|grep -Ev "^$|#"); do
-	   docker pull --platform=${arc_name} ${i}
-	done
-        
-        docker save $(cat ${list} | grep -Ev "^$|#" | tr '\n' ' ') | gzip -c >${temp_dest}/guance-${arc_name}-${version}.tar.gz
-        
-        for i in $(cat ${list} | grep -Ev "^$|#"); do
-          docker rmi  ${i}
-        done
+  for i in $(cat ${list}|grep -Ev "^$|#"); do
+      docker pull --platform=${arc_name} ${i}
+  done
+
+  docker save $(cat ${list} | grep -Ev "^$|#" | tr '\n' ' ') | gzip -c >${temp_dest}/guance-${arc_name}-${version}.tar.gz
+  
+  for i in $(cat ${list} | grep -Ev "^$|#"); do
+    docker rmi  ${i}
+  done
 
 
 }
 
 launcher_chart_package (){
-  list="$(dirname $0)/config/docker-image.txt"
-	version=$(sed -n "1p" ${list} |sed -r  "s/.*([0-9]+\.[0-9]+\.[0-9]+).*/\1/g")
-  helm pull  launcher  --repo https://pubrepo.guance.com/chartrepo/launcher --version=$version
+  lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod|sort -V|grep -w  $(echo "${lastReleaseTagCommitID}"|cut -c 1-7)|awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
+  v=(${lastVer//-/ })
+
+  helm pull  launcher  --repo https://pubrepo.guance.com/chartrepo/launcher --version=${v[0]}
   mv launcher-$version.tgz /tmp/launcher-helm-latest.tgz
 }
 
@@ -82,12 +82,12 @@ push_chart_oss (){
 
 
 push_packages_oss (){
-	  tools/ossutil64 cp  /tmp/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} 
+  tools/ossutil64 cp  /tmp/guance-images-release  oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH} -e ${GUANCE_LAUNCHER_OSS_ENDPOINT} -r -f -u --only-current-dir  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET} 
           rm -rf ${temp_dest} 
 
-	  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
+  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-amd64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
 
-	  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
+  tools/ossutil64 cp   oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-${version}.tar.gz oss://${GUANCE_LAUNCHER_OSS_BUCKET}/${GUANCE_LAUNCHER_OSS_PATH}/guance-arm64-latest.tar.gz -e ${GUANCE_LAUNCHER_OSS_ENDPOINT}  -f -u  -i ${GUANCE_LAUNCHER_OSS_AK_ID} -k ${GUANCE_LAUNCHER_OSS_AK_SECRET}
 }
 
 while getopts ":tpc" opt
@@ -101,12 +101,13 @@ do
             echo "do packages"
             guance_package arm64
             guance_package amd64
-	          push_packages_oss
+            push_packages_oss
             ;;
         c)
             echo "do helm charts"
             launcher_chart_package
             push_chart_oss
+            push_packages_oss 
             ;;
         ?)
             echo "-t: add a tag to deploy trigger"

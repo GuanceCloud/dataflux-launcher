@@ -55,3 +55,11 @@ cc:
 # 新增配置项，用于 profile 数据的磁盘存储
 profile:
   data_path: /data/profile
+
+# 新增配置项，按照时序、日志分离查询worker
+dql:
+  metric_query_workers: 8 # 时序数据worker数量，默认值为8
+  log_query_workers: 8 # 日志数据worker数量，默认值为8
+# 新增配置项，调用inner的host
+inner:
+  host: "http://inner.forethought-core:5000"
