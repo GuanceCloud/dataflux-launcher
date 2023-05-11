@@ -67,8 +67,9 @@ guance_package (){
 launcher_chart_package (){
   lastVer=$(git fetch --tag && git tag --list | grep -E "^[0-9].[0-9]+.[0-9]+" |grep prod|sort -V|grep -w  $(echo "${lastReleaseTagCommitID}"|cut -c 1-7)|awk 'END {print }' |awk -F "-" '{print $1"-"$2"-"$3}')
   v=(${lastVer//-/ })
+  version=${v[0]}
 
-  helm pull  launcher  --repo https://pubrepo.guance.com/chartrepo/launcher --version=${v[0]}
+  helm pull  launcher  --repo https://pubrepo.guance.com/chartrepo/launcher --version=$version
   mv launcher-$version.tgz /tmp/launcher-helm-latest.tgz
 }
 
@@ -107,7 +108,6 @@ do
             echo "do helm charts"
             launcher_chart_package
             push_chart_oss
-            push_packages_oss 
             ;;
         ?)
             echo "-t: add a tag to deploy trigger"
