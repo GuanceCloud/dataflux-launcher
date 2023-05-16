@@ -3353,6 +3353,12 @@ upgrade:
       # 【inner api 服务器执行】执行 fix_2023_04_20_update_workspace_incident_menu.py 操作 更新 异常追踪的菜单栏(是 2023.04.20 迭代中相同fix脚本的补充操作)
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_20_update_workspace_incident_menu"}'
 
+  # 2023.05.11 迭代
+  - seq: 80
+    database: |-
+      -- 更新 查看器绑定 异常追踪枚举类型
+      ALTER TABLE `biz_bind_menu`
+      MODIFY COLUMN `menuType` Enum('Events', 'Objectadmin', 'MetricQuery', 'LogIndi', 'Tracing', 'Rum','CloudDial', 'Security', 'GitLabCI', "ExceptionsTracking") CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 
 

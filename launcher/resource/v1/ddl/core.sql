@@ -226,7 +226,7 @@ CREATE TABLE `biz_bind_menu` (
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `bindUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '查看器UUID',
   `bindType` enum('viewer','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '菜单栏类型',
-  `menuType` enum('Events','Objectadmin','MetricQuery','LogIndi','Tracing','Rum','CloudDial','Security','GitLabCI','') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '菜单栏类型',
+  `menuType` enum('Events','Objectadmin','MetricQuery','LogIndi','Tracing','Rum','CloudDial','Security','GitLabCI','ExceptionsTracking') DEFAULT NULL,
   `extend` json NOT NULL COMMENT '额外拓展字段',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
