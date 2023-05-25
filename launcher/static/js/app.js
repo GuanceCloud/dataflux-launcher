@@ -1125,6 +1125,7 @@ var setup = (function () {
   app.prototype.do_activate = function(){
     var jqAK = $("#iptGuanceAK"), 
         jqSK = $("#iptGuanceSK"),
+        jqPrivateDialtesting = $("#chkPrivateDialtesting"),
         jqDataWayUrl = $("#iptDialDataWay"),
         jqLicense = $("#iptLicense");
 
@@ -1132,6 +1133,7 @@ var setup = (function () {
       "ak": $.trim(jqAK.val()),
       "sk": $.trim(jqSK.val()),
       "dataway_url": $.trim(jqDataWayUrl.val()),
+      "private_dial": jqPrivateDialtesting.is(":checked") ? 1: 0,
       "license": $.trim(jqLicense.val())
     }
 

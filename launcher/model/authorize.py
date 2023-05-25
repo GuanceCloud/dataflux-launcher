@@ -33,7 +33,7 @@ def get_activated_license():
   return None, resp.status_code
 
 
-def save_aksk(params):
+def save_aksk(data):
   version = DOCKERIMAGES['apps']['version']
 
   mysqlSetting = settingsMdl.mysql
@@ -48,6 +48,22 @@ def save_aksk(params):
               }
   dbName       = coreInfo.get('database')
 
+  private_dial = data.get('private_dial')
+
+  if private_dial == 1:
+    dialtesting_AK = settingsMdl.get('other', {}).get('dialtesting_AK', {})
+    params = {
+            "ak": dialtesting_AK.get('ak'),
+            "sk": dialtesting_AK.get('sk'),
+            "dataway": data.get('dataway_url')
+          }
+  else:
+    params = {
+            "ak": data.get('ak'),
+            "sk": data.get('sk'),
+            "dataway": data.get('dataway_url')
+          }
+
   insertDialSettingSql = '''
           INSERT INTO `main_config`(`keyCode`, `description`, `value`) 
           VALUES ('DialingServerSet', '拨测服务配置', %s) 
@@ -60,8 +76,7 @@ def save_aksk(params):
           VALUES ('BossServerSet', 'BOSS 系统对接的 AK/SK 配置', %s) 
           ON DUPLICATE KEY UPDATE description=VALUES(description),value=VALUES(value);
         '''
-  insertBOSSParams = (json.dumps({"ak": params.get('ak'), "sk": params.get('sk')}))
-
+  insertBOSSParams = (json.dumps({"ak": data.get('ak'), "sk": data.get('sk')}))
 
   with dbHelper(mysql) as db:
     result = db.execute(insertDialSettingSql, dbName = dbName, params = insertDialParams)

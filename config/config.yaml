@@ -604,6 +604,11 @@ services:
       image: datakit
       replicas: 1
 
+    - key: dialtesting
+      name: 拨测服务
+      image: kodo
+      replicas: 1
+
     - key: data-warehouse
       name: 数据仓库管理
       image: data-warehouse
@@ -633,6 +638,14 @@ services:
       services:
       - data-warehouse
       template: data-warehouse-config.yaml
+
+    - key: dialtestingConfig
+      mapname: dialtesting-config
+      mapkey: config.yaml
+      format: yaml
+      services:
+      - dialtesting
+      template: dialtesting-config.yaml
 
     pvcs:
     - name: internal-dataway-cache
@@ -827,5 +840,15 @@ updates:
       - key: internalDataWay
         mapName: dataway-config
         mapKey: config.yaml
+        format: yaml
+
+  - namespace: utils
+    project: dialtesting
+    noDatabase: False
+    dataKey: data
+    config:
+      - key: dialtestingConfig
+        mapname: dialtesting-config
+        mapkey: config.yaml
         format: yaml
 

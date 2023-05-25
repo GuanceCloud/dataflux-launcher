@@ -115,7 +115,12 @@
             </p>
             <p>
               <span class="form-control-static"></span>
-              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptStaticResourceDomain" name="staticResource" required value="{{ pageData.domain.subDomain.staticResource }}" placeholder="dataflux static resource">
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptStaticResourceDomain" name="staticResource" required value="{{ pageData.domain.subDomain.staticResource }}" placeholder="guance static resource">
+              <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
+            </p>
+            <p>
+              <span class="form-control-static"></span>
+              <input type="text" class="form-control" style="display: inline-block;  width: 180px;" id="iptDialtestingDomain" name="dialtesting" required value="{{ pageData.domain.subDomain.dialtesting }}" placeholder="拨测服务中心">
               <span class="form-control-static main-domain">.{{ pageData.domain.domain }}</span>
             </p>
             <p>

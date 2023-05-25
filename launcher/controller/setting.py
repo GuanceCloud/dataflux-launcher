@@ -114,6 +114,7 @@ def setting_activate(data):
     authorizeMdl.save_aksk({
         "ak": data.get('ak'),
         "sk": data.get('sk'),
+        "private_dial": data.get('private_dial'),
         "dataway": data.get('dataway_url')
       })
 

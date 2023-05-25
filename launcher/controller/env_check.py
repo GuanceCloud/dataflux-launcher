@@ -220,7 +220,7 @@ def __mysql_ping():
       "port": int(mysqlSettings['base']['port'])
   }
 
-  dbs = ['core', 'dataflux-func', 'messageDesk']
+  dbs = ['core', 'dataflux-func', 'messageDesk', 'dialtesting']
   result = {
           "dbs": [], 
           "server": {

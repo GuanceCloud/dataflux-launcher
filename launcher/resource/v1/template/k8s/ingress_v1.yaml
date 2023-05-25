@@ -221,3 +221,28 @@ spec:
 status:
   loadBalancer: {}
 
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dialtesting
+  namespace: utils
+spec:
+  rules:
+  - host: {{ config.domain.subDomain.dialtesting }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          serviceName: dialtesting
+          servicePort: 9538
+        path: /
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.dialtesting }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
+

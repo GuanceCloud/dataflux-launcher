@@ -39,7 +39,7 @@ def database_ping(params):
 def database_create_db():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
+  dbInfo = mysqlSetting.get('dialtesting')
 
   SQL = '''
         CREATE DATABASE IF NOT EXISTS {database} DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
@@ -55,65 +55,51 @@ def database_create_db():
 
 
 def database_ddl():
-  logging.info("初始化 df_core 数据库 DDL 开始")
+  logging.info("初始化 df_dialtesting 数据库 DDL 开始")
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
 
   password = tools.gen_password(16)
 
   dbInfo = {
-    "database": SERVICECONFIG['databases']['core'],
-    "user": SERVICECONFIG['databases']['core'],
+    "database": SERVICECONFIG['databases']['dialtesting'],
+    "user": SERVICECONFIG['databases']['dialtesting'],
     "password": password
   }
 
-  settingsMdl.mysql = {'core': dbInfo}
+  settingsMdl.mysql = {'dialtesting': dbInfo}
 
   database_create_db()
 
   with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("launcher/resource/v1/ddl/core.sql"), 'r') as f:
+    with open(os.path.abspath("launcher/resource/v1/ddl/dialtesting.sql"), 'r') as f:
       ddl = f.read()
       db.execute(ddl, dbName = dbInfo['database'])
 
-  logging.info("初始化 df_core 数据库 DDL 完成")
+  logging.info("初始化 df_dialtesting 数据库 DDL 完成")
   return True
 
 
 def database_init_data():
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
-
-  with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("launcher/resource/v1/data/core.sql"), 'r') as f:
-      sql = f.read()
-      db.execute(sql, dbName = dbInfo['database'])
-
-  return True
-
-
-def database_manage_account_create():
   sql = '''
-      INSERT INTO `main_manage_account` (`uuid`, `name`, `role`, `username`, `password`, `email`, `mobile`, `createAt`)
-      VALUES (%s, '管理员', 'admin', %s, %s, %s, '', UNIX_TIMESTAMP());
+      INSERT INTO `aksk` (`uuid`, `accessKey`, `secretKey`, `owner`, `parent_ak`, `external_id`, `status`, `version`, `createAt`, `updateAt`)
+      VALUES
+        (%s, %s, %s, 'system', '-1', 'wksp_system', 'OK', 0, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
     '''
 
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('core')
-  accountInfo = settingsMdl.other.get('manager', {})
+  dbInfo = mysqlSetting.get('dialtesting')
+  dialAKSK = settingsMdl.other.get('dialtesting_AK', {})
 
-  username = accountInfo.get('username')
-  email = accountInfo.get('email')
+  dialAK_id = dialAKSK.get('ak_id')
+  dialAK = dialAKSK.get('ak')
+  dialSK = dialAKSK.get('sk')
 
-  if username:
-    with dbHelper(mysqlInfo) as db:
-      password = 'pbkdf2:sha256:150000$dSCmDxZJ$76950c22b74ce70f468612afe2e313a1fb527cd05902c61bf25f0eedcefd9dfd'
+  with dbHelper(mysqlInfo) as db:
+    params = (dialAK_id, dialAK, dialSK)
 
-      params = ('mact-' + shortuuid.ShortUUID().random(length = 24), username, password, email)
-
-      db.execute(sql, dbName = dbInfo['database'], params = params)
+    db.execute(sql, dbName = dbInfo['database'], params = params)
 
   return True
 
