@@ -201,15 +201,15 @@
                 </div>
 
                 <div class="modal-high-block">
-                  <h4>费用中心会员、可用性监测 AK/SK 信息：</h4>
+                  <h4>费用中心会员、拨测 AK/SK 信息：</h4>
                   <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                       <div class="form-group">
                         <label for="iptGuanceAK" class="control-label">AK:</label>
                         <input type="text" class="form-control" id="iptGuanceAK" name="guanceAK" required placeholder="Access Key">
                       </div>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-md-8">
                       <div class="form-group">
                         <label for="iptGuanceSK" class="control-label">SK:</label>
                         <input type="text" class="form-control" id="iptGuanceSK" name="guanceSK" required placeholder="Secret Key">
@@ -217,9 +217,15 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4">
                       <div class="form-group">
-                        <label for="iptDialDataWay" class="control-label">数据网关地址(用于接收可用性监测结果，需要能从公网访问此数据网关):</label>
+                        <label for="chkPrivateDialtesting" class="control-label">使用自建的拨测服务:</label>
+                        <input type="checkbox" class="form-control" id="chkPrivateDialtesting" name="privateDialtesting" required>
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="form-group">
+                        <label for="iptDialDataWay" class="control-label">数据网关地址(需要能接受来自拨测服务的请求):</label>
                         <input type="text" class="form-control" id="iptDialDataWay" name="dialDataWay" required placeholder="示例: http(s)://dataway.dataflux.cn?token={}">
                       </div>
                     </div>
