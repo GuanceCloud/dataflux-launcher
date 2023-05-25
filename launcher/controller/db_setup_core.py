@@ -93,57 +93,6 @@ def database_init_data():
   return True
 
 
-# def database_init_data_geo():
-#   mysqlSetting = settingsMdl.mysql
-#   mysqlInfo = mysqlSetting.get('base')
-#   dbInfo = mysqlSetting.get('core')
-#
-#   params = {**mysqlInfo.copy(), **dbInfo}
-#   params['sql_path'] = '~/work/cloudcare/dataflux/cloudcare-forethought-setup/launcher/resource/v1/ddl/geo.sql'
-#
-#   cmd = "mysql -h {host} --port {port} -u{user} -p{password} -D{database} < {sql_path}".format(**params)
-#
-#   print("cmd:", cmd)
-#
-#   p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-#   output, err = p.communicate()
-#
-#   print("err:", err)
-#
-#   return True
-
-
-
-# def database_init_kapa():
-#   # kapa instance
-#   # 固定两个 kapa 实例，如调整实例个数，要相应调整这里的代码
-#   mysqlSetting = settingsMdl.mysql
-#   mysqlInfo = mysqlSetting.get('base')
-#   dbInfo = mysqlSetting.get('core')
-
-#   with dbHelper(mysqlInfo) as db:
-#     nodeInternalIP = settingsMdl.other.get('nodeInternalIP', "")
-#     ips = re.split('\s*[;,、]\s*', nodeInternalIP)
-
-#     kapacitorHost1 = "http://{}:30991".format(ips[0])
-#     kapacitorHost2 = "http://{}:30992".format(ips[0])
-
-#     params = [
-#       "kapa-" + shortuuid.ShortUUID().random(length = 24),
-#       kapacitorHost1
-#     ]
-#     sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
-#     db.execute(sql, dbName = dbInfo['database'], params = params)
-
-#     params = [
-#       "kapa-" + shortuuid.ShortUUID().random(length = 24),
-#       kapacitorHost2
-#     ]
-#     sql = "INSERT INTO `main_kapa` (`uuid`, `host`, `influxInstanceUUID`, `status`, `createAt`) VALUES (%s, %s, '', 0, UNIX_TIMESTAMP());"
-#     db.execute(sql, dbName = dbInfo['database'], params = params)
-
-#   return True
-
 def database_manage_account_create():
   sql = '''
       INSERT INTO `main_manage_account` (`uuid`, `name`, `role`, `username`, `password`, `email`, `mobile`, `createAt`)
@@ -172,8 +121,5 @@ def database_manage_account_create():
 def database_setup():
   database_ddl()
   database_init_data()
-  # database_init_data_geo()
-
-  # database_init_kapa()
 
   return True

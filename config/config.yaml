@@ -841,6 +841,12 @@ updates:
         mapName: dataway-config
         mapKey: config.yaml
         format: yaml
+
+  - namespace: utils
+    project: dialtesting
+    noDatabase: False
+    dataKey: data
+    config:
       - key: dialtestingConfig
         mapname: dialtesting-config
         mapkey: config.yaml

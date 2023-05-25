@@ -457,6 +457,7 @@ def init_setting():
       "secret": shortuuid.ShortUUID().random(length=31)
     },
     'dialtesting_AK':{
+      "ak_id":"ak_" + shortuuid.ShortUUID().random(length = 16),
       "ak": shortuuid.ShortUUID().random(length = 16),
       "sk": shortuuid.ShortUUID().random(length = 32)
     }
