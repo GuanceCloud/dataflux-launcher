@@ -47,7 +47,7 @@ spec:
       volumes:
         - configMap:
             defaultMode: 420
-            name: dialtesting
+            name: dialtesting-config
             optional: false
           name: dialtesting
 
