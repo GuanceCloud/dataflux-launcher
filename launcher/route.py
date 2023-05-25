@@ -8,6 +8,7 @@ from launcher.utils.handler import response_jsonify
 from launcher.controller import setting
 from launcher.controller import setup
 from launcher.controller import db_setup_core
+from launcher.controller import db_setup_dialtesting
 from launcher.controller import db_setup_message_desk
 from launcher.controller import db_setup_func
 from launcher.controller import redis_setup
@@ -36,6 +37,7 @@ def database_setup():
   db_setup_core.database_setup()
   db_setup_message_desk.database_setup()
   db_setup_func.database_setup()
+  db_setup_dialtesting.database_setup()
 
   return response_jsonify(True)
 

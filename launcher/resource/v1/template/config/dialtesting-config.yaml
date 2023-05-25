@@ -1,0 +1,16 @@
+database:
+    db_dialect: mysql
+    connection: "{{mysql.dialtesting.user}}:{{mysql.dialtesting.password}}@tcp({{mysql.base.host}}:{{mysql.base.port}})/{{mysql.dialtesting.database}}"
+
+log:
+    log_file: stdout
+    level: info
+    json_format: false
+    disable_long_file_name: false
+    gin_log_file: stdout
+
+global:
+    enable_inner_api: false
+    stats_on: 256
+    listen: ":9538"
+    sys_external_id: "{{ dialtesting-ak }}-wksp_system"
