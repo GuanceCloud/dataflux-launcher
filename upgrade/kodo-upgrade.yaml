@@ -239,9 +239,3 @@ update:
           # 新增配置项，调用inner的host
           inner:
             host: "http://inner.forethought-core:5000"
-        kodo-x: |-
-          # 新增配置项，sls三方授权账号
-          sls:
-            ak: ""
-            sk: ""
-            uid: ""

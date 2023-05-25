@@ -3346,7 +3346,6 @@ upgrade:
       # 【inner api 服务器执行】执行 fix_update_permission.py 修复 biz_permission 表中 标准成员 dca.dcaManage 权限问题, 注意执行完成, 清理redis缓存
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission"}'
 
-
   # 2023.05.06 修复
   - seq: 79
     curl: |-
@@ -3360,5 +3359,71 @@ upgrade:
       ALTER TABLE `biz_bind_menu`
       MODIFY COLUMN `menuType` Enum('Events', 'Objectadmin', 'MetricQuery', 'LogIndi', 'Tracing', 'Rum','CloudDial', 'Security', 'GitLabCI', "ExceptionsTracking") CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
+ # 2023.05.22
+  - seq: 81
+    core: |-
+      # 杭州站点配置, 向中心服务走内网
+      CenterServer:
+        use_https: false
+        host: center.forethought-core
+        port: 5000
 
+      # 杭州站点, 中心服务, status page 邮件异步任务开启
+      StatusPageEmailNotifySet:
+        isOpen: true
 
+    database: |-
+      -- 更新 字段管理表的 字段枚举类型
+      ALTER TABLE `biz_field_management`
+      MODIFY COLUMN `desc` varchar(1024) NOT NULL DEFAULT '' COMMENT '描述信息',
+      MODIFY COLUMN `fieldType` enum('text', 'number', 'time', 'percent', 'int', 'float', 'boolean', 'string', 'long', '') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '';
+
+      -- 新增 字段管理表 biz_field_management 来源字段 fieldSource, 单位字段 unit
+      ALTER TABLE `biz_field_management`
+      ADD COLUMN `fieldSource` enum('logging', 'object', 'custom_object', 'keyevent', 'tracing', 'rum', 'security', 'network','') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' AFTER `fieldType`,
+      ADD COLUMN `unit` VARCHAR(256) NOT NULL DEFAULT '' COMMENT '单位' AFTER `name`;
+      
+      -- 新增自定义rum应用关联内置视图 建立自定义rum配置和分析看板内置资源对应关系(内置视图)
+      CREATE TABLE `biz_custom_rum_view`
+      (
+          `id`              int(11)     NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+          `uuid`            varchar(48) NOT NULL COMMENT '全局唯一 ID，带 bcrv- 前缀',
+          `workspaceUUID`   varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+          `appId`           varchar(48) NOT NULL COMMENT '新建自定义rum的UUID, appId',
+          `dashboardUUID`   varchar(48) NOT NULL DEFAULT '' COMMENT '用户自定义UUID,用户视图',
+          `integrationUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '系统视图UUID',
+          `extend`          json        DEFAULT NULL COMMENT '额外信息',
+          `isStickOn`       tinyint(1)  NOT NULL DEFAULT '0' COMMENT '关联的视图是否要固定, 1:钉住 0:取消钉住',
+          `status`          int(11)     NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+          `creator`         varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+          `updator`         varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+          `createAt`        int(11)     NOT NULL DEFAULT '-1',
+          `deleteAt`        int(11)     NOT NULL DEFAULT '-1',
+          `updateAt`        int(11)     NOT NULL DEFAULT '-1',
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+          KEY `k_ws_uuid` (`workspaceUUID`),
+          KEY `app_id_fk` (`appId`),
+          KEY `dashboard_uuid_fk` (`dashboardUUID`),
+          KEY `integration_uuid_fk` (`integrationUUID`)
+      ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+      
+      -- 删除重复的 funcId 和工作空间关联关系记录
+      delete from biz_func_server_workspace where name="";
+      
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_2023_05_22_field_manage_repair.py 更新 字段管理的 fieldType 为空, 删除老的内置字段, 更新缓存信息, 更新新的字段管理的数据
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_05_22_field_manage_repair"}'
+      
+      # 【inner api 服务器执行】执行 fix_2023_04_27_logging_query_rules.py 修复 biz_logging_query_rule 表冗余结构
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_04_27_logging_query_rules"}'
+
+      # 1.【inner api 服务器执行】执行 sync_permission_tasks.py 脚本中的 reset_init_biz_api_permissions 函数, 仅初始化API接口权限表相关数据和缓存
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' -H 'Content-Type: application/json' --data-raw $'{"script_name": "sync_permission_tasks", "func_name": "reset_init_biz_api_permissions"}'
+
+      # 【inner api 服务器执行】 同步拉取并更新字段管理文件, 需要在 database 字段更新之后执行
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "timed_sync_field_cfg_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_field_cfg": true}}' \
+      --compressed

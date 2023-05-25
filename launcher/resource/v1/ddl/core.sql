@@ -7,7 +7,7 @@
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-04-23 05:06:21 +0000
+# Generation Time: 2023-05-22 02:43:47 +0000
 # ************************************************************
 
 
@@ -353,6 +353,36 @@ CREATE TABLE `biz_chart_group` (
 
 
 
+# Dump of table biz_custom_rum_view
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_custom_rum_view`;
+
+CREATE TABLE `biz_custom_rum_view` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 bcrv- 前缀',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `appId` varchar(48) NOT NULL COMMENT '新建自定义rum的UUID, appId',
+  `dashboardUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '用户自定义UUID,用户视图',
+  `integrationUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '系统视图UUID',
+  `extend` json DEFAULT NULL COMMENT '额外信息',
+  `isStickOn` tinyint(1) NOT NULL DEFAULT '0' COMMENT '关联的视图是否要固定, 1:钉住 0:取消钉住',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `app_id_fk` (`appId`),
+  KEY `dashboard_uuid_fk` (`dashboardUUID`),
+  KEY `integration_uuid_fk` (`integrationUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_dashboard
 # ------------------------------------------------------------
 
@@ -600,8 +630,10 @@ CREATE TABLE `biz_field_management` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 field-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '字段名',
-  `fieldType` enum('text','number','time','percent') NOT NULL DEFAULT 'text',
-  `desc` varchar(512) NOT NULL DEFAULT '' COMMENT '描述信息',
+  `unit` varchar(256) NOT NULL DEFAULT '' COMMENT '单位',
+  `fieldType` enum('text','number','time','percent','int','float','boolean','string','long','') NOT NULL DEFAULT '',
+  `fieldSource` enum('logging','object','custom_object','keyevent','tracing','rum','security','network','') NOT NULL DEFAULT '',
+  `desc` varchar(1024) NOT NULL DEFAULT '' COMMENT '描述信息',
   `descEn` varchar(1024) NOT NULL DEFAULT '',
   `sysField` int(1) NOT NULL DEFAULT '0' COMMENT '自定义字段或者 系统内置字段, 1代表系统内置字段, 0代表自定义字段',
   `status` int(11) NOT NULL DEFAULT '0',
