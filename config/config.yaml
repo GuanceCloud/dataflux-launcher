@@ -662,6 +662,7 @@ databases:
   core: df_core
   message_desk: df_message_desk
   func: df_func
+  dialtesting: df_dialtesting
 
 influxDB:
   databases:
