@@ -1,8 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `dialtesting`;
-USE `dialtesting`;
-
 DROP TABLE IF EXISTS `aksk`;
-CREATE TABLE `dialtesting`.`aksk` (
+CREATE TABLE `aksk` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 aksk_ 前缀',
   `accessKey` varchar(20) NOT NULL COMMENT '推送 commit 的 AK',
@@ -21,7 +18,7 @@ CREATE TABLE `dialtesting`.`aksk` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `region`;
-CREATE TABLE `dialtesting`.`region` (
+CREATE TABLE `region` (
   `id` int(16) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一',
   `city` varchar(48) NOT NULL DEFAULT '' COMMENT '如果是海外：国家 + 城市；如果国内：省份 + 城市',
@@ -42,7 +39,7 @@ CREATE TABLE `dialtesting`.`region` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `task`;
-CREATE TABLE `dialtesting`.`task` (
+CREATE TABLE `task` (
   `id` int(16) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 dialt_ 前缀',
   `external_id` varchar(128) NOT NULL COMMENT '外部 ID',
