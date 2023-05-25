@@ -5,16 +5,16 @@ apps:
     nsq: basis:multiarch_nsq_1.2.1
     nginx: basis:multiarch_nginx_1.13.7
     internal-dataway: dataway:1.2.11
-    datakit: datakit:1.7.0
-    core: 1.63.128.1:core-c94315cac
-    kodo: 1.63.128.1:kodo-17c1bd98
-    front-webclient: 1.63.128.1:front-webclient-81ce8a0a3
-    management-webclient: 1.63.128.1:management-webclient-060dd71
-    dataflux-doc: 1.63.128.1:dataflux-doc-4ecbe915
-    message-desk: 1.63.128.1:message-desk-dfb22ce
-    message-desk-worker: 1.63.128.1:message-desk-worker-295e13d
-    dataflux-func: 1.63.128.1:dataflux-func-4b47ab35
-    utils-server: 1.63.128.1:utils-server-48799ca
-    jfr-parser: 1.63.128.1:jfr-parser-a845cfe
-    pprofparser: 1.63.128.1:pprofparser-ef71a26
-  version: 1.63.128.1
+    datakit: datakit:1.8.0
+    core: 1.63.128.2:core-c94315cac
+    kodo: 1.63.128.2:kodo-17c1bd98
+    front-webclient: 1.63.128.2:front-webclient-3d5bd1cf6
+    management-webclient: 1.63.128.2:management-webclient-060dd71
+    dataflux-doc: 1.63.128.2:dataflux-doc-4ecbe915
+    message-desk: 1.63.128.2:message-desk-dfb22ce
+    message-desk-worker: 1.63.128.2:message-desk-worker-295e13d
+    dataflux-func: 1.63.128.2:dataflux-func-8a264950
+    utils-server: 1.63.128.2:utils-server-48799ca
+    jfr-parser: 1.63.128.2:jfr-parser-a845cfe
+    pprofparser: 1.63.128.2:pprofparser-ef71a26
+  version: 1.63.128.2
