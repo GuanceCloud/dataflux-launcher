@@ -80,17 +80,17 @@ def database_ddl():
   return True
 
 
-def database_init_data():
-  mysqlSetting = settingsMdl.mysql
-  mysqlInfo = mysqlSetting.get('base')
-  dbInfo = mysqlSetting.get('dialtesting')
+# def database_init_data():
+#   mysqlSetting = settingsMdl.mysql
+#   mysqlInfo = mysqlSetting.get('base')
+#   dbInfo = mysqlSetting.get('dialtesting')
 
-  with dbHelper(mysqlInfo) as db:
-    with open(os.path.abspath("launcher/resource/v1/data/dialtesting.sql"), 'r') as f:
-      sql = f.read()
-      db.execute(sql, dbName = dbInfo['database'])
+#   with dbHelper(mysqlInfo) as db:
+#     with open(os.path.abspath("launcher/resource/v1/data/dialtesting.sql"), 'r') as f:
+#       sql = f.read()
+#       db.execute(sql, dbName = dbInfo['database'])
 
-  return True
+#   return True
 
 
 # def database_manage_account_create():
@@ -120,9 +120,6 @@ def database_init_data():
 
 def database_setup():
   database_ddl()
-  database_init_data()
-  # database_init_data_geo()
-
-  # database_init_kapa()
+  # database_init_data()
 
   return True
