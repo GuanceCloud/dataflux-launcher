@@ -258,3 +258,32 @@ spec:
   {% endif %}
 status:
   loadBalancer: {}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dialtesting
+  namespace: func2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ config.domain.subDomain.dialtesting }}.{{ config.domain.domain }}
+    http:
+      paths:
+      - backend:
+          service: 
+            name: dialtesting
+            port: 
+              number: 9538
+        path: /
+        pathType: ImplementationSpecific
+  {% if not config.other.tls.tlsDisabled %}
+  tls:
+  - hosts:
+    - {{ config.domain.subDomain.dialtesting }}.{{ config.domain.domain }}
+    secretName: {{ config.domain.domain }}
+  {% endif %}
+status:
+  loadBalancer: {}
