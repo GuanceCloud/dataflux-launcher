@@ -21,7 +21,7 @@ spec:
             - '--cfg'
             - /kodo/config/config.yaml
           image: {{ config.fullImagePath }}
-          imagePullPolicy: { settings.imagePullPolicy }}
+          imagePullPolicy: {{ settings.imagePullPolicy }}
           name: dialtesting
           ports:
             - containerPort: 9538
