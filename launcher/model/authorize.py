@@ -51,7 +51,7 @@ def save_aksk(data):
   dialService = data.get('dialService', 'saas')
 
   if dialService == "buildin":
-    dial_service_AK = settingsMdl.get('other', {}).get('dialServiceAK', {})
+    dial_service_AK = (settingsMdl.other or {}).get('dialServiceAK', {})
     params = {
             "ak": dial_service_AK.get('ak'),
             "sk": dial_service_AK.get('sk'),

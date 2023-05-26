@@ -13,4 +13,4 @@ global:
     enable_inner_api: false
     stats_on: 256
     listen: ":9538"
-    sys_external_id: "{{ other.dialServiceAK.ak }}-wksp_system"
+    sys_external_id: "{{ other.dialServiceAK.ak_id }}-wksp_system"

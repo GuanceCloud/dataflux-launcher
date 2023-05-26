@@ -265,7 +265,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dialtesting
-  namespace: func2
+  namespace: utils
 spec:
   ingressClassName: nginx
   rules:
