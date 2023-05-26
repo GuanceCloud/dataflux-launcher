@@ -50,7 +50,8 @@ def other_config(params):
     'manager': params.get('manager'),
     'tls': params.get('tls'),
     'nodeInternalIP': params.get('nodeInternalIP'),
-    'studioHideHelp': params.get('studioHideHelp')
+    'studioHideHelp': params.get('studioHideHelp'),
+    'dialService': params.get('dialService', 'saas')
   }
 
   return True
@@ -456,7 +457,7 @@ def init_setting():
     'func': {
       "secret": shortuuid.ShortUUID().random(length=31)
     },
-    'dialtesting_AK':{
+    'dialServiceAK':{
       "ak_id":"ak_" + shortuuid.ShortUUID().random(length = 16),
       "ak": shortuuid.ShortUUID().random(length = 16),
       "sk": shortuuid.ShortUUID().random(length = 32)

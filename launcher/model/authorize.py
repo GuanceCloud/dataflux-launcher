@@ -48,13 +48,13 @@ def save_aksk(data):
               }
   dbName       = coreInfo.get('database')
 
-  private_dial = data.get('private_dial')
+  dialService = data.get('dialService', 'saas')
 
-  if private_dial == 1:
-    dialtesting_AK = settingsMdl.get('other', {}).get('dialtesting_AK', {})
+  if dialService == "buildin":
+    dial_service_AK = settingsMdl.get('other', {}).get('dialServiceAK', {})
     params = {
-            "ak": dialtesting_AK.get('ak'),
-            "sk": dialtesting_AK.get('sk'),
+            "ak": dial_service_AK.get('ak'),
+            "sk": dial_service_AK.get('sk'),
             "dataway": data.get('dataway_url')
           }
   else:

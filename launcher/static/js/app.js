@@ -352,7 +352,8 @@ var setup = (function () {
       "studioHideHelp": $("#ckbStudioHideHelp").is(":checked"),
       "domain": $("#iptDomain").val().trim(),
       "subDomain": {},
-      "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet"
+      "kodoLoadBalancerType": !$('#ckbKodoLBType').is(":checked")? "internet": "intranet",
+      "dialService": $("input:radio[name='privateDialtesting']:checked").val()
     };
 
     $('.sub-domain-group input:text').each(function(idx, item) {
@@ -1103,15 +1104,30 @@ var setup = (function () {
       $("#activateModalButtonOK").attr('disabled', !noNone);
     }
 
-    this.get('setting/get', params).done(function(d){
+    that.get('setting/get', params).done(function(d){
       $("#licenseModel").modal("show");
 
-      var vGuance = d.content.guance || {}
+      var vGuance = d.content.guance || {};
+      var vDialService = d.content.dialService || {};
+      var tlsDisabled = (d.content.tls || {}).tlsDisabled || false;
 
       jqAK.val(vGuance.ak);
       jqSK.val(vGuance.sk);
       jqDataWayUrl.val(vGuance.dataway_url);
       jqLicense.val(vGuance.license);
+
+      var domainSettingParams = {"key": "domain", "format": "json"};
+      
+      if (vDialService == 'saas'){
+        $("#dialServiceDomain").text("https://dflux-dial.guance.com");
+      }else{
+        that.get('setting/get', domainSettingParams).done(function(d){
+          var vDomain = d.content.domain || ''
+          var vSubDomain = d.content.subDomain || {}
+
+          $("#dialServiceDomain").text( (tlsDisabled? "http": "https") + "://" + vSubDomain.dialtesting + "." + vDomain);
+        });
+      }
 
       validateFunc();
     });
@@ -1125,7 +1141,6 @@ var setup = (function () {
   app.prototype.do_activate = function(){
     var jqAK = $("#iptGuanceAK"), 
         jqSK = $("#iptGuanceSK"),
-        jqPrivateDialtesting = $("#chkPrivateDialtesting"),
         jqDataWayUrl = $("#iptDialDataWay"),
         jqLicense = $("#iptLicense");
 
@@ -1133,7 +1148,6 @@ var setup = (function () {
       "ak": $.trim(jqAK.val()),
       "sk": $.trim(jqSK.val()),
       "dataway_url": $.trim(jqDataWayUrl.val()),
-      "private_dial": jqPrivateDialtesting.is(":checked") ? 1: 0,
       "license": $.trim(jqLicense.val())
     }
 

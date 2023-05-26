@@ -115,7 +115,6 @@ share_set:
 # CloudCare 系统配置
 # 部署版本暂时不使用此配置，可以不作修改
 CloudCareServer:
-  node: aliyun
   use_https: true
   port: 443
   host: boss.guance.com
@@ -126,10 +125,15 @@ CloudCareServer:
 # 云拨测服务
 DialingServer:
   # 拨测服务中心的地址配置
-  # 此处不需要修改
+  {% if other.dialService == 'buildin' %}
+  use_https: {{ "false" if other.tls.tlsDisabled else "true"}}
+  port: {{ "80" if other.tls.tlsDisabled else "443"}}
+  host: '{{ domain.subDomain.dialtesting }}.{{ domain.domain }}'
+  {% else %}
   use_https: true
   host: dflux-dial.guance.com
   port: 443
+  {% endif %}
   timeout: 10
 
 # 跨空间授权 邮件通知配置

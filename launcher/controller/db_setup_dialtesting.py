@@ -90,7 +90,7 @@ def database_init_data():
   mysqlSetting = settingsMdl.mysql
   mysqlInfo = mysqlSetting.get('base')
   dbInfo = mysqlSetting.get('dialtesting')
-  dialAKSK = settingsMdl.other.get('dialtesting_AK', {})
+  dialAKSK = settingsMdl.other.get('dialServiceAK', {})
 
   dialAK_id = dialAKSK.get('ak_id')
   dialAK = dialAKSK.get('ak')

@@ -43,6 +43,32 @@
       </div>
 
       <div class="high-block">
+        <h4>拨测服务</h4>
+        <div class="form-group">
+
+          <label for="iptHideHelp" class="col-sm-2 control-label">拨测服务中心选择:</label>
+          <div class="col-sm-7">
+            {% if pageData.other.dialService %}
+            <label class="checkbox-inline">
+              <input type="radio" name="privateDialtesting" value="buildin" checked="checked"> 内置的拨测服务中心
+            </label>
+            <label class="checkbox-inline">
+              <input type="radio" name="privateDialtesting" value="saas"> 观测云 SaaS 拨测服务中心
+            </label>
+            {% else %}
+            <label class="checkbox-inline">
+              <input type="radio" name="privateDialtesting" value="buildin"> 内置的拨测服务中心
+            </label>
+            <label class="checkbox-inline">
+              <input type="radio" name="privateDialtesting" value="saas" checked="checked"> 观测云 SaaS 拨测服务中心
+            </label>
+            {% endif %}
+          </div>
+          <div class="col-sm-3 error"></div>
+        </div>
+      </div>
+
+      <div class="high-block">
         <h4>集群节点内网 IP</h4>
         <div class="form-group">
           <label for="iptUserEmail" class="col-sm-2 control-label">IP 地址:</label>
