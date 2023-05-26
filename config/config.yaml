@@ -849,7 +849,7 @@ updates:
     dataKey: data
     config:
       - key: dialtestingConfig
-        mapname: dialtesting-config
-        mapkey: config.yaml
+        mapName: dialtesting-config
+        mapKey: config.yaml
         format: yaml
 
