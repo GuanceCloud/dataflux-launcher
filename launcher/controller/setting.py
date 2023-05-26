@@ -115,7 +115,7 @@ def setting_activate(data):
         "ak": data.get('ak'),
         "sk": data.get('sk'),
         "dialService": other.get('dialService'),
-        "dataway": data.get('dataway_url')
+        "dataway_url": data.get('dataway_url')
       })
 
     k8sMdl.patch_configmap("kodo-license", "license", license_text, "forethought-kodo")
