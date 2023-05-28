@@ -61,7 +61,7 @@ def _init_dialtesting_setting():
 
   # 如果没有配置拨测服务子域名，则默认使用 “dialtesting” 作为子域名
   subDomain = settingsMdl.domain.get("subDomain", {})
-  if not subDomain.get("subDomain"):
+  if not subDomain.get("dialtesting"):
     subDomain['dialtesting'] = "dialtesting"
     settingsMdl.domain = {"subDomain": subDomain}
 
