@@ -70,6 +70,10 @@ def configmap_create(maps):
 def new_configmap_check():
   result = []
 
+  # 新增配置阶段执行自动升级步骤
+  autoUpdateStep = AutoUpdateStep()
+  autoUpdateStep.do_after_preparation()
+
   for ns in SERVICECONFIG['services']:
     namespace  = ns['namespace']
 

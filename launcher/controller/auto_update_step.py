@@ -53,8 +53,8 @@ class AutoUpdateStep(object):
 
     self.__projectCurrentSeqs = currentSeqs
 
-
     return self.__projectCurrentSeqs
+
 
   def get_launcher_seqs(self):
     if self.__launcherSeqs is not None:
@@ -72,6 +72,11 @@ class AutoUpdateStep(object):
     pk = importlib.import_module(f"launcher.resource.update.{package_name}")
 
     return pk
+
+
+  # 升级准备完成之后开始执行的升级步骤
+  def do_after_preparation(self):
+    pass
 
 
   # 在数据库升级完毕、容器升级之前需要自动执行的升级操作。

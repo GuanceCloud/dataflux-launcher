@@ -10,6 +10,7 @@ from launcher.utils import tools
 from launcher.utils.helper.db_helper import dbHelper
 from launcher import settingsMdl, SERVICECONFIG
 
+
 def database_ping(params):
   params['port'] = int(params['port'])
 
@@ -35,6 +36,7 @@ def database_ping(params):
     return {"connected": False}
 
   return {"connected": True, "dbNames": dbNames}
+
 
 def database_create_db():
   mysqlSetting = settingsMdl.mysql
