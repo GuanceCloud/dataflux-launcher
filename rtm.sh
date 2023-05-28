@@ -56,6 +56,7 @@ function copy_upgrade(){
   #   cp upgrade.yaml ${workDir}/upgrade/trigger-upgrade.yaml
   elif [ $project = "kodo" ]; then
     cp image/upgrade.yaml ${workDir}/upgrade/kodo-upgrade.yaml
+    cp db/dialtesting_latest.sql ${workDir}/launcher/resource/v1/ddl/dialtesting.sql
   elif [ $project = "dataflux-func" ]; then
     cp upgrade-info.yaml ${workDir}/upgrade/dataflux-func-upgrade.yaml
     cp db/dataflux_func_latest.sql ${workDir}/launcher/resource/v1/ddl/dataflux-func.sql
