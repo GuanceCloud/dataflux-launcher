@@ -509,27 +509,28 @@ upgradeInfo:
   - seq: 41
     func_exec: script_20230522
     config: |-
-      > 此版本新增了私有拨测服务，在进行“下一步”之前请仔细阅读，并做如下配置
+      > 此版本新增了私有拨测服务。在点击“下一步”之前，请仔细阅读以下信息，并按照以下步骤进行配置：
 
-      * 在“下一步”之前，指定拨测服务的二级域名，默认为 `dialtesting`，可以自行选择合适的二级域名，在右上解 "设置" -> “域名” -> "subDomain" 配置在增加配置：
+      * **步骤1**：在点击“下一步”之前，您需要为拨测服务指定一个二级域名。默认的二级域名为`dialtesting`，您可以根据自身需求选择合适的二级域名。在右上角的 "设置" -> “域名” -> "subDomain" 下添加配置：
 
       ```yaml
       subDomain:
-        dialtesting: dialtesting
+        dialtesting: 您选择的二级域名
       ```
 
-      * 如果选择使用私有拨测服务，在 “下一步” 之前：
-          * 右上解 "设置" -> “其他” 配置中新增配置： `dialService: buildin`
-          * 右上解 "设置" -> “修改应用配置” 中，修改 “forethought-core” -> "core" 的配置：
+      * **步骤2**：如果您选择使用私有拨测服务，需要做以下配置：
+          * 在点击“下一步”之前，在右上角的 "设置" -> “其他” 下添加配置： `dialService: buildin`。
+          * 升级完成后，在右上角的 "设置" -> “修改应用配置” 中，修改 “forethought-core” -> "core" 的配置：
+
       ```yaml
-      # 拨测服务的配置，修改为私有拨测服务信息
+      # 拨测服务的配置，需要修改为私有拨测服务的详细信息
       # host：拨测服务的 http 域名地址
       # use_https: 是否使用 https
       # port：拨测服务的 http 访问端口
       DialingServer:
         use_https: True
-        host: dialtesting.xxx.com
+        host: 您选择的二级域名.xxx.com
         port: 443
       ```
 
-      * 升级完成后，再次执行右上解 "设置" -> “License 激活及 AK/SK 配置” 激活操作：
+      * **步骤3**：升级完成后，在右上角的 "设置" -> “License 激活及 AK/SK 配置” 下重新进行激活操作。
