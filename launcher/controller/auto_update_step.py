@@ -76,7 +76,17 @@ class AutoUpdateStep(object):
 
   # 升级准备完成之后开始执行的升级步骤
   def do_after_preparation(self):
-    pass
+    launcherSeqs = self.get_launcher_seqs()
+
+    for ls in launcherSeqs:
+      package_name = ls.get('func_exec', None)
+      if package_name is None:
+        continue
+
+      pk = self.__load_package(package_name)
+
+      if 'after_preparation' in dir(pk):
+        pk.after_preparation()
 
 
   # 在数据库升级完毕、容器升级之前需要自动执行的升级操作。

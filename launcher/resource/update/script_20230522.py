@@ -142,7 +142,7 @@ def _database_init_data():
   return True
 
 
-def do_after_preparation():
+def after_preparation():
   _init_dialtesting_setting()
 
   _database_ddl()
