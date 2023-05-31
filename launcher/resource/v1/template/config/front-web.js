@@ -6,6 +6,7 @@ window.DEPLOYCONFIG = {
     innerAppLogin: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/login',
     innerAppRegister: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/register',
     innerAppProfile: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/profile',
+    innerAppWorkspace: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/workspace',
     innerAppCreateworkspace: '{{ "http" if other.tls.tlsDisabled else "https"}}://auth.{{ domain.domain }}/redirectpage/createworkspace',
     staticFileUrl: '{{ "http" if other.tls.tlsDisabled else "https"}}://{{ domain.subDomain.staticResource }}.{{ domain.domain }}',
     staticDatakit: 'https://static.guance.com',
