@@ -76,8 +76,8 @@ spec:
               port: server
           resources:
             limits:
-              cpu: 250m
-              memory: 512Mi
+              cpu: 1500m
+              memory: 1024Mi
           env:
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
