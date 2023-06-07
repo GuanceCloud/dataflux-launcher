@@ -4,6 +4,7 @@ isInternalAuth: true
 
 protocol: {{ "http" if other.tls.tlsDisabled else "https"}}
 hostname: "{{ domain.subDomain.console }}.{{ domain.domain }}"
+managementHostname: "{{ domain.subDomain.management }}.{{ domain.domain }}"
 
 database:
     # 测试环境容器外使用地址

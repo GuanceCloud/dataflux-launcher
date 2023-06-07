@@ -438,12 +438,12 @@ services:
     - key: worker-1-6
       name: 1-6 号任务队列
       image: dataflux-func
-      replicas: 5
+      replicas: 2
 
     - key: worker-7
       name: 7 号任务队列
       image: dataflux-func
-      replicas: 2
+      replicas: 1
 
     - key: worker-8-9
       name: 8-9 号任务队列
@@ -454,12 +454,12 @@ services:
     - key: worker-8
       name: 8 号任务队列
       image: dataflux-func
-      replicas: 2
+      replicas: 5
 
     - key: worker-9
       name: 9 号任务队列
       image: dataflux-func
-      replicas: 2
+      replicas: 5
 
     configmaps:
     - key: func2Config
