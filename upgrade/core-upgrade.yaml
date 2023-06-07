@@ -3427,3 +3427,101 @@ upgrade:
       -H 'Content-Type: application/json' \
       --data-raw $'{"script_name": "timed_sync_field_cfg_template", "func_name": "timed_sync_pull", "funcKwargs": {"need_sync_field_cfg": true}}' \
       --compressed
+
+ # 2023.05.30
+  - seq: 82
+    database: |-
+      -- 新增工作空间增加业务字段
+      ALTER TABLE `main_workspace_accesskey`
+      ADD COLUMN `businessType` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '对应ak业务类型信息' AFTER `workspaceUUID`;
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 新的 异常追踪 permission 权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission", "scriptKwargs": {}}'
+
+ # 2023.06.06
+  - seq: 83
+    core: |-
+      # 管理后台站点访问地址 例如 management.cloudcare.cn
+      managementHostname: "<管理后台站点域名>"
+
+    database: |-
+      -- 新增空间高消费阈值预警配置信息表
+      CREATE TABLE `biz_high_comsume_warn` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 bhcw-',
+        `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '对应工作空间UUID',
+        `config` json DEFAULT NULL COMMENT '空间高消费阈值配置信息 key(项目)-value(金钱)',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+        KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+      -- 新增根因分析配置信息表
+      CREATE TABLE `biz_root_cause_analysis` (
+        `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+        `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rcal-',
+        `extend` json DEFAULT NULL COMMENT '指标信息',
+        `funcId` varchar(1024) NOT NULL DEFAULT '' COMMENT 'func对应脚本',
+        `status` int(11) NOT NULL DEFAULT '0',
+        `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+        `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+        `createAt` int(11) NOT NULL DEFAULT '-1',
+        `deleteAt` int(11) NOT NULL DEFAULT '-1',
+        `updateAt` int(11) NOT NULL DEFAULT '-1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 账号 main_workspace 表 新增菜单风格字段 menuStyle
+      ALTER TABLE `main_workspace`
+      ADD COLUMN `menuStyle` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '工作空间菜单风格' AFTER `timezone`;
+
+      -- 服务配置表 main_apm_config, 新增 服务颜色 color 字段
+      ALTER TABLE `main_apm_config`
+      ADD COLUMN `color` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '服务颜色配置' AFTER `config`;
+
+      -- 账号空间关联表 main_account_workspace, 新增账号在该空间的昵称字段 acntWsNickname
+      ALTER TABLE `main_account_workspace`
+      ADD COLUMN `acntWsNickname` VARCHAR(128) NOT NULL DEFAULT '' COMMENT '账号在空间的昵称' AFTER `waitAudit`;
+
+      -- 后台管理 main_manage_account, 新增用户重置密码最新时间 resetPasswordAt
+      ALTER TABLE `main_manage_account`
+      ADD COLUMN `resetPasswordAt` int(11) NOT NULL DEFAULT '-1' comment '账户成员最新重置密码时间' AFTER `mobile`;
+
+      -- 日志数据访问配置表 biz_logging_query_rule, 新增逻辑字段 logic
+      ALTER TABLE `biz_logging_query_rule`
+      ADD COLUMN `logic` VARCHAR(48) NOT NULL DEFAULT '' AFTER `extend`;
+      
+      -- 日志备份规则新增 外部资源访问配置
+      ALTER TABLE `biz_logging_backup_cfg` 
+      ADD COLUMN `externalResourceAccessCfgUUID` VARCHAR(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID' AFTER `workspaceUUID`,
+      ADD COLUMN `storeType` ENUM('', 'es', 'sls', 'opensearch', 'beaver', 's3') NOT NULL DEFAULT '' COMMENT '存储类型' AFTER `extend`,
+      ADD INDEX `k_external_resource_access_cfg_uuid` (`externalResourceAccessCfgUUID` ASC);
+      
+      -- biz_email增加对账单高预警的通知枚举
+      alter table biz_email
+      modify type enum ('almost', 'already', 'invitation', 'usageAlready', 'billHighWarn') default 'almost' not null;
+
+      -- 更新 图表组 biz_chart_group 名称大小
+      ALTER TABLE `biz_chart_group`
+      MODIFY COLUMN `name` varchar(256) NOT NULL DEFAULT '' COMMENT '图表组名';
+      
+      -- 属性main_workspace_accesskey，修正func的名称
+      update main_workspace_accesskey set name='FUNC AK' where businessType='func';
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 新的 异常追踪 permission 权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission", "scriptKwargs": {}}'
+    
+      # 【inner api 服务器执行】执行 fix_2023_06_06_monitor_alert_target.py 重新格式化通知策略的数据结构
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_06_06_monitor_alert_target", "scriptKwargs": {}}'
+
+      
+      

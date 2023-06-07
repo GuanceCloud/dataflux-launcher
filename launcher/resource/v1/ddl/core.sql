@@ -7,7 +7,7 @@
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-05-22 02:43:47 +0000
+# Generation Time: 2023-06-06 09:23:32 +0000
 # ************************************************************
 
 
@@ -336,7 +336,7 @@ DROP TABLE IF EXISTS `biz_chart_group`;
 CREATE TABLE `biz_chart_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID chtg-',
-  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '命名,用云备注',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '图表组名',
   `dashboardUUID` varchar(65) NOT NULL DEFAULT '视图UUID',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `status` int(11) NOT NULL DEFAULT '0',
@@ -559,7 +559,7 @@ CREATE TABLE `biz_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, 前缀是email_',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `type` enum('almost','already','invitation','usageAlready') NOT NULL DEFAULT 'almost',
+  `type` enum('almost','already','invitation','usageAlready','billHighWarn') NOT NULL DEFAULT 'almost',
   `temName` varchar(64) NOT NULL DEFAULT '' COMMENT '邮件模版名',
   `info` json NOT NULL COMMENT '邮件参数',
   `content` text NOT NULL COMMENT '邮件内容',
@@ -748,6 +748,29 @@ CREATE TABLE `biz_geo` (
 
 
 
+# Dump of table biz_high_comsume_warn
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_high_comsume_warn`;
+
+CREATE TABLE `biz_high_comsume_warn` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 bhcw-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '对应工作空间UUID',
+  `config` json DEFAULT NULL COMMENT '空间高消费阈值配置信息 key(项目)-value(金钱)',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_index_field_mapping
 # ------------------------------------------------------------
 
@@ -876,9 +899,11 @@ CREATE TABLE `biz_logging_backup_cfg` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, lgbp-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
+  `externalResourceAccessCfgUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '外部资源访问配置UUID',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '备份规则名',
   `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
+  `storeType` enum('','es','sls','opensearch','beaver','s3') NOT NULL DEFAULT '' COMMENT '存储类型',
   `syncExtensionField` tinyint(1) DEFAULT '0' COMMENT 'true 为同步, false为不同步',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -888,7 +913,8 @@ CREATE TABLE `biz_logging_backup_cfg` (
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
-  KEY `k_ws_uuid` (`workspaceUUID`)
+  KEY `k_ws_uuid` (`workspaceUUID`),
+  KEY `k_external_resource_access_cfg_uuid` (`externalResourceAccessCfgUUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -942,6 +968,7 @@ CREATE TABLE `biz_logging_query_rule` (
   `indexes` json DEFAULT NULL COMMENT '限制的索引',
   `roleUUIDs` json DEFAULT NULL COMMENT '授权哪些角色的查询',
   `extend` json DEFAULT NULL COMMENT '自定义数据',
+  `logic` varchar(48) NOT NULL DEFAULT '',
   `conditions` varchar(512) NOT NULL DEFAULT '' COMMENT '筛选搜索的conditions',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -1441,6 +1468,28 @@ CREATE TABLE `biz_role_permission` (
   KEY `k_role_uuid` (`roleUUID`),
   KEY `k_ws_uuid` (`workspaceUUID`),
   KEY `k_permission` (`permission`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table biz_root_cause_analysis
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_root_cause_analysis`;
+
+CREATE TABLE `biz_root_cause_analysis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 rcal-',
+  `extend` json DEFAULT NULL COMMENT '指标信息',
+  `funcId` varchar(1024) NOT NULL DEFAULT '' COMMENT 'func对应脚本',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -1996,6 +2045,7 @@ CREATE TABLE `main_account_workspace` (
   `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `waitAudit` int(1) NOT NULL DEFAULT '0' COMMENT '是否等待审核',
+  `acntWsNickname` varchar(128) NOT NULL DEFAULT '' COMMENT '账号在空间的昵称',
   `workspaceNote` text NOT NULL COMMENT '自定义工作空间备注',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -2076,6 +2126,7 @@ CREATE TABLE `main_apm_config` (
   `service` varchar(256) NOT NULL DEFAULT '' COMMENT '服务名',
   `serviceCatelog` text NOT NULL COMMENT '服务清单配置信息',
   `config` json NOT NULL COMMENT 'apm配置参数',
+  `color` varchar(128) NOT NULL DEFAULT '' COMMENT '服务颜色配置',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -2465,6 +2516,7 @@ CREATE TABLE `main_manage_account` (
   `password` varchar(128) NOT NULL DEFAULT '' COMMENT '帐户密码',
   `email` varchar(64) NOT NULL DEFAULT '' COMMENT '邮箱',
   `mobile` varchar(128) NOT NULL DEFAULT '' COMMENT '手机号',
+  `resetPasswordAt` int(11) NOT NULL DEFAULT '-1' COMMENT '账户成员最新重置密码时间',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -2605,6 +2657,7 @@ CREATE TABLE `main_workspace` (
   `esIndexSettings` json DEFAULT NULL COMMENT '索引配置信息',
   `versionType` enum('free','pay','unlimited') NOT NULL DEFAULT 'free' COMMENT 'free表示体验版，pay表示付费版',
   `timezone` varchar(48) NOT NULL DEFAULT '' COMMENT '空间时区',
+  `menuStyle` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间菜单风格',
   `billingState` enum('free','unlimited','normal','arrearage','expired') NOT NULL DEFAULT 'free' COMMENT '帐户费用状态',
   `esIndexMerged` tinyint(1) DEFAULT '0' COMMENT '空间ES索引是否合并，默认值是false，不合并',
   `loggingCutSize` int(11) NOT NULL DEFAULT '10240' COMMENT '超大日志切割基础单位,单位:字节byte, SLS 工作空间 默认为 2048byte， ES 工作空间默认为10240byte',
@@ -2638,6 +2691,7 @@ CREATE TABLE `main_workspace_accesskey` (
   `ak` varchar(128) DEFAULT NULL,
   `sk` varchar(128) NOT NULL DEFAULT '' COMMENT 'Secret Key',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
+  `businessType` varchar(64) NOT NULL DEFAULT '' COMMENT '对应ak业务类型信息',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: 正常/2: 禁用/3: 删除',
