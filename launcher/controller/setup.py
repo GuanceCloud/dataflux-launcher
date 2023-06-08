@@ -387,7 +387,7 @@ def __sync_packages(keys):
     "func_name": "distribute_data_package",
     "funcKwargs": {
       "keys": keys, 
-      "is_force": true
+      "is_force": True
     }
   }
 
