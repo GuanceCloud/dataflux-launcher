@@ -3361,17 +3361,6 @@ upgrade:
 
  # 2023.05.22
   - seq: 81
-    core: |-
-      # 杭州站点配置, 向中心服务走内网
-      CenterServer:
-        use_https: false
-        host: center.forethought-core
-        port: 5000
-
-      # 杭州站点, 中心服务, status page 邮件异步任务开启
-      StatusPageEmailNotifySet:
-        isOpen: true
-
     database: |-
       -- 更新 字段管理表的 字段枚举类型
       ALTER TABLE `biz_field_management`
@@ -3441,9 +3430,10 @@ upgrade:
 
  # 2023.06.06
   - seq: 83
-    core: |-
-      # 管理后台站点访问地址 例如 management.cloudcare.cn
-      managementHostname: "<管理后台站点域名>"
+    config:
+      core: |-
+        # 管理后台站点访问地址 例如 management.cloudcare.cn
+        managementHostname: "<管理后台站点域名>"
 
     database: |-
       -- 新增空间高消费阈值预警配置信息表
