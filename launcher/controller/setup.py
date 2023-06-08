@@ -379,69 +379,54 @@ def metering_init():
   return call_service_url(url)
 
 
-# 安装成功之后，初始化一些 studio 的相关配置
-def studio_init():
+def __sync_packages(keys):
   url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
 
   data = {
     "script_name": "data_package_task",
     "func_name": "distribute_data_package",
     "funcKwargs": {
-      "keys": [
-        "geo",                  # 拨测的地理信息
-        "internal_pipeline",    # 内置 Pipeline 库
-        "measurements_meta",    # 内置 指标字典
-        # "dataflux_integration", # 集成包
-        "dataflux_template",    # 内置视图模板
-        "dataflux_template_en",    # 内置视图模板 en
-        "internal_field_cfg",    # 同步官方字段说明
-        "permission"            # 同步权限相关的数据
-      ]
+      "keys": keys, 
+      "is_force": true
     }
   }
 
   return call_service_url(url, data)
+
+
+# 安装成功之后，初始化一些 studio 的相关配置
+def studio_init():
+  return __sync_packages([
+        "geo",                  # 拨测的地理信息
+        "internal_pipeline",    # 内置 Pipeline 库
+        "measurements_meta",    # 内置 指标字典
+        "dataflux_template",    # 内置视图模板
+        "dataflux_template_en",    # 内置视图模板 en
+        "internal_field_cfg",   # 同步官方字段说明
+        "permission"            # 同步权限相关的数据
+      ])
 
 
 # 触发同步视图模板等集成包
 def sync_integration():
-  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/fix_data"
-
-  data = {
-    "script_name": "fix_update_integration"
-  }
-
-  return call_service_url(url, data)
+  return __sync_packages([
+        "dataflux_template",    # 内置视图模板
+        "dataflux_template_en"  # 内置视图模板 en
+      ])
 
 
 # 触发官方 Pipeline 库同步到数据库
 def sync_pipeline():
-  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
-
-  data = {
-    "script_name": "timed_sync_pipeline_template",
-    "func_name": "timed_sync_pull",
-    "funcKwargs": {
-      "need_sync_pipline": True
-    }
-  }
-
-  return call_service_url(url, data)
+  return __sync_packages([
+        "internal_pipeline"     # 内置 Pipeline 库
+      ])
 
 
 # 触发官方 字段 库同步到数据库
 def sync_field_list():
-  url = "http://inner.forethought-core:5000/api/v1/inner/upgrade/tasks/execute_task_func"
-
-  data = {
-    "script_name": "timed_sync_field_cfg_template",
-    "func_name": "timed_sync_pull",
-    "funcKwargs": {
-      "need_sync_field_cfg": True
-    }
-  }
-
-  return call_service_url(url, data)
+  return __sync_packages([
+        "internal_field_cfg"    # 同步官方字段说明
+      ])
 
 
 def init_setting():
