@@ -4,7 +4,7 @@ pubrepo.guance.com/dataflux/basis:multiarch_nginx_1.13.7
 pubrepo.guance.com/dataflux/dataway:1.2.11
 pubrepo.guance.com/dataflux/datakit:1.9.0
 pubrepo.guance.com/dataflux/1.64.130:core-54a2116dc-1686575695
-pubrepo.guance.com/dataflux/1.64.130:kodo-ef413003-1686575695
+pubrepo.guance.com/dataflux/1.64.130:kodo-73bbb707-1686575695
 pubrepo.guance.com/dataflux/1.64.130:front-webclient-81289dfab-1686575695
 pubrepo.guance.com/dataflux/1.64.130:management-webclient-d286d07-1686575695
 pubrepo.guance.com/dataflux/1.64.130:dataflux-doc-752ed441-1686575695

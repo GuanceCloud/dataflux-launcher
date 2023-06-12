@@ -7,7 +7,7 @@ apps:
     internal-dataway: dataway:1.2.11
     datakit: datakit:1.9.0
     core: 1.64.130:core-54a2116dc-1686575695
-    kodo: 1.64.130:kodo-ef413003-1686575695
+    kodo: 1.64.130:kodo-73bbb707-1686575695
     front-webclient: 1.64.130:front-webclient-81289dfab-1686575695
     management-webclient: 1.64.130:management-webclient-d286d07-1686575695
     dataflux-doc: 1.64.130:dataflux-doc-752ed441-1686575695
