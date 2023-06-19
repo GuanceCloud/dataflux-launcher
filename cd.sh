@@ -41,8 +41,8 @@ function each_cluster(){
   for clusterID in $RANCHER_CLUSTER_IDS
   do
     if [[ -z "$splitSite" || "$splitSite" == "all" || "$clusterID" == "$splitSite":* ]]; then
-      splitClusterID=(${lastDeployTag//:/ })
-      echo ${splitClusterID[1]} $lastReleaseTag
+      splitClusterID=(${clusterID//:/ })
+      echo ${splitClusterID[0]} ${splitClusterID[1]} $lastReleaseTag
       deploy_cluster ${splitClusterID[1]} $lastReleaseTag
     fi
   done
