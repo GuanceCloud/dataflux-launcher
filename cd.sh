@@ -33,16 +33,23 @@ function deploy_cluster(){
 
 function each_cluster(){
   lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
-  lastTriggerTag=$(git tag --list | grep -E "^deploy_" | sort -V | tail -1)
+  lastDeployTag=$(git tag --list | grep -E "^deploy_" | sort -V | tail -1)
+
+  splitV=(${lastDeployTag//_/ })
+  splitSite=${splitV[2]}
 
   for clusterID in $RANCHER_CLUSTER_IDS
   do
-    deploy_cluster $clusterID $lastReleaseTag
+    if [[ -z "${split_v[2]}" || "${split_v[2]}" == "all" || "$clusterID" == "${split_v[2]}":* ]]; then
+      splitClusterID=(${lastDeployTag//:/ })
+      echo ${splitClusterID[1]} $lastReleaseTag
+      deploy_cluster ${splitClusterID[1]} $lastReleaseTag
+    fi
   done
 }
 
 function do_trigger_tag(){
-  triggerSite=$1
+  trigger_site=$1
 
   git fetch --tag
   lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
@@ -51,23 +58,25 @@ function do_trigger_tag(){
 
   [[ ${#lastDeployTag} > 0 ]] && {
     v=(${lastDeployTag//_/ })
-    vMain=${v[0]}
+    v_main=${v[0]}
 
     # 当前版本的 tag 已经存在，后续版本数字递增1
-    deployCount=$[10#${lastDeployTag:${#vMain} + 1:5} + 100001]
+    deployCount=$[10#${lastDeployTag:${#v_main} + 1:5} + 100001]
     deployCount=${deployCount:1:5}
 
     echo $deployCount
 
-    if [[ -z "$triggerSite" || "$triggerSite" == "all" ]]; then
-      newDeployTag=${vMain}_${deployCount}_${triggerSite}
-    else
-      newDeployTag=${vMain}_${deployCount}
+    if [[ -z "$trigger_site" || "$trigger_site" == "all" ]]; then
+      newDeployTag=${v_main}_${deployCount}
+    else 
+      newDeployTag=${v_main}_${deployCount}_${trigger_site}
     fi
 
   } || {
     newDeployTag=deploy_00001
   }
+
+  echo $newDeployTag
 
   # 在最新的 release tag 处打上 deploy tag，触发 CD 动作
   git tag -a $newDeployTag -m 'deploy trigger ${newDeployTag}' $lastReleaseTagCommitID
@@ -79,6 +88,7 @@ while getopts ":t:d" opt; do
         t)
             echo "add a tag to deploy trigger"
             param_t="$OPTARG"
+
             do_trigger_tag $param_t
             ;;
         d)
@@ -86,7 +96,7 @@ while getopts ":t:d" opt; do
             each_cluster
             ;;
         ?)
-            echo "-t: add a tag to deploy trigger"
+            echo "-t: trigger CD action, with the option to specify site deployment, or 'all' to deploy all sites"
             exit 1
             ;;
     esac
