@@ -1,8 +1,6 @@
 #!/bin/bash
 
-
 # 此脚本会统一提供最新的版本，最好不要在自己的项目中对此脚本进行修改
-
 function do_cd(){
   clusterID=$1
   imageFullName=$2
@@ -23,48 +21,19 @@ function deploy_cluster(){
   clusterID=$1
   version=$2
 
-  imageHost=pubrepo.jiagouyun.com
+  echo "do ${DEPLOY_PROJECT_NAME} upgrade, version: ${version}"
+  namespace=launcher
+  imageFullName=${DEPLOY_IMAGE_HOST}${DEPLOY_IMAGE_PATH}
 
-  if [ $DEPLOY_PROJECT_NAME = "kodo" ]; then
-    echo "do kodo upgrade, version: ${version}"
-    namespace=forethought-kodo
-    imageFullName=${imageHost}/cloudcare-forethought/kodo
-    workload="kodo kodo-inner kodo-ws kodo-x"
-  elif [ $DEPLOY_PROJECT_NAME = "core" ]; then
-    echo "do core upgrade, version: ${version}"
-    namespace=forethought-core
-    imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-backend
-    workload="core-worker core-worker-beat core-worker-correlation front-backend inner management-backend open-api openapi"
-  elif [ $DEPLOY_PROJECT_NAME = "studio_front" ]; then
-    echo "do studio front upgrade, version: ${version}"
-    namespace=forethought-webclient
-    imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-webclient
-    workload="front-webclient"
-  elif [ $DEPLOY_PROJECT_NAME = "studio_mgr" ]; then
-    echo "do studio management upgrade, version: ${version}"
-    namespace=forethought-webclient
-    imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-webmanage
-    workload="management-webclient"
-  elif [ $DEPLOY_PROJECT_NAME = "func" ]; then
-    echo "do func upgrade, version: ${version}"
-    namespace=func2
-    imageFullName=${imageHost}/dataflux-func/dataflux-func
-    workload="server server-inner worker-0 worker-1-6 worker-7 worker-8 worker-9 worker-beat"
-  elif [ $DEPLOY_PROJECT_NAME = "launcher" ]; then
-    echo "do launcher upgrade, version: ${version}"
-    namespace=launcher
-    imageFullName=${imageHost}/cloudcare-forethought/cloudcare-forethought-setup
-    workload="launcher"
-  fi
-
-  for wk in $workload
+  for wk in $DEPLOY_PROJECT_WORKLOAD
   do
-    do_cd $clusterID $imageFullName $namespace $wk $version
+    do_cd $clusterID $imageFullName $DEPLOY_NAMESPACE $wk $version
   done
 }
 
 function each_cluster(){
   lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
+  lastTriggerTag=$(git tag --list | grep -E "^deploy_" | sort -V | tail -1)
 
   for clusterID in $RANCHER_CLUSTER_IDS
   do
@@ -73,6 +42,8 @@ function each_cluster(){
 }
 
 function do_trigger_tag(){
+  triggerSite=$1
+
   git fetch --tag
   lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
   lastReleaseTagCommitID=$(git rev-list -n 1 ${lastReleaseTag})
@@ -80,15 +51,20 @@ function do_trigger_tag(){
 
   [[ ${#lastDeployTag} > 0 ]] && {
     v=(${lastDeployTag//_/ })
-    v_main=${v[0]}
+    vMain=${v[0]}
 
     # 当前版本的 tag 已经存在，后续版本数字递增1
-    deployCount=$[10#${lastDeployTag:${#v_main} + 1:5} + 100001]
+    deployCount=$[10#${lastDeployTag:${#vMain} + 1:5} + 100001]
     deployCount=${deployCount:1:5}
 
     echo $deployCount
 
-    newDeployTag=${v_main}_${deployCount}
+    if [[ -z "$triggerSite" || "$triggerSite" == "all" ]]; then
+      newDeployTag=${vMain}_${deployCount}_${triggerSite}
+    else
+      newDeployTag=${vMain}_${deployCount}
+    fi
+
   } || {
     newDeployTag=deploy_00001
   }
@@ -98,12 +74,12 @@ function do_trigger_tag(){
   git push --tags
 }
 
-while getopts ":td" opt
-do
+while getopts ":t:d:" opt; do
     case $opt in
         t)
             echo "add a tag to deploy trigger"
-            do_trigger_tag
+            param_t="$OPTARG"
+            do_trigger_tag $param_t
             ;;
         d)
             echo "do deploy"
@@ -115,19 +91,4 @@ do
             ;;
     esac
 done
-
-
-# while getopts ":p:v:" opt
-# do
-#     case $opt in
-#         v)
-#             echo "Version: $OPTARG"
-#             version=$OPTARG
-#             ;;
-#         ?)
-#             echo "Unkonw"
-#             exit 1
-#             ;;
-#     esac
-# done
 
