@@ -1,36 +1,5 @@
 #!/bin/bash
 
-# 此脚本会统一提供最新的版本，最好不要在自己的项目中对此脚本进行修改
-function do_cd(){
-  clusterID=$1
-  imageFullName=$2
-  namespace=$3
-  workload=$4
-  version=$5
-
-  url=${RANCHER_API_BASE_URL}/k8s/clusters/${clusterID}/apis/apps/v1/namespaces/${namespace}/deployments/${workload}
-  imagePath=${imageFullName}:${version}
-
-  data='[{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"'${imagePath}'"}]'
-
-  # echo curl -u "${PROD_RANCHER_TOKEN}" -X PATCH -H 'Content-Type: application/json-patch+json' $url -d "${data}"
-  curl -u "${PROD_RANCHER_TOKEN}" -X PATCH -H 'Content-Type: application/json-patch+json' $url -d "${data}"
-}
-
-function deploy_cluster(){
-  clusterID=$1
-  version=$2
-
-  echo "do ${DEPLOY_PROJECT_NAME} upgrade, version: ${version}"
-  namespace=launcher
-  imageFullName=${DEPLOY_IMAGE_HOST}${DEPLOY_IMAGE_PATH}
-
-  for wk in $DEPLOY_PROJECT_WORKLOAD
-  do
-    do_cd $clusterID $imageFullName $DEPLOY_NAMESPACE $wk $version
-  done
-}
-
 function each_cluster(){
   lastReleaseTag=$(git tag --list | grep -E "^release_" | sort -V | tail -1)
   lastDeployTag=$(git tag --list | grep -E "^deploy_" | sort -V | tail -1)
@@ -38,9 +7,12 @@ function each_cluster(){
   splitV=(${lastDeployTag//_/ })
   splitSite=${splitV[2]}
 
+  RANCHER_CLUSTER_IDS="cn1:c-ccv6c cn2:c-m-8vswwwjn us1:c-m-4qftwlmj cn3:c-m-qfznmzwg cn4:c-m-srl9jzf2 cn5:c-m-48cjwlzr"
+
   for clusterID in $RANCHER_CLUSTER_IDS
   do
-    if [[ -z "${split_v[2]}" || "${split_v[2]}" == "all" || "$clusterID" == "$splitSite":* ]]; then
+    if [[ -z "${split_v[2]}" || "${split_v[2]}" == "all" || "$clusterID" == "${split_v[2]}":* ]]; then
+
       splitClusterID=(${lastDeployTag//:/ })
       echo ${splitClusterID[1]} $lastReleaseTag
       deploy_cluster ${splitClusterID[1]} $lastReleaseTag
@@ -83,7 +55,7 @@ function do_trigger_tag(){
   git push --tags
 }
 
-while getopts ":t:d" opt; do
+while getopts ":t:d:" opt; do
     case $opt in
         t)
             echo "add a tag to deploy trigger"
@@ -96,7 +68,7 @@ while getopts ":t:d" opt; do
             each_cluster
             ;;
         ?)
-            echo "-t: trigger CD action, with the option to specify site deployment, or 'all' to deploy all sites"
+            echo "-t: add a tag to deploy trigger"
             exit 1
             ;;
     esac
