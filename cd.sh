@@ -74,7 +74,7 @@ function do_trigger_tag(){
   git push --tags
 }
 
-while getopts ":t:d:" opt; do
+while getopts ":t:d" opt; do
     case $opt in
         t)
             echo "add a tag to deploy trigger"
