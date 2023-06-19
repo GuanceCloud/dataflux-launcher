@@ -13,7 +13,7 @@ function do_cd(){
 
   data='[{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"'${imagePath}'"}]'
 
-  echo curl -u "${PROD_RANCHER_TOKEN}" -X PATCH -H 'Content-Type: application/json-patch+json' $url -d "${data}"
+  # echo curl -u "${PROD_RANCHER_TOKEN}" -X PATCH -H 'Content-Type: application/json-patch+json' $url -d "${data}"
   curl -u "${PROD_RANCHER_TOKEN}" -X PATCH -H 'Content-Type: application/json-patch+json' $url -d "${data}"
 }
 
