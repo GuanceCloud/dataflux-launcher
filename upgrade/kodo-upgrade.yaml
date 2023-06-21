@@ -239,3 +239,51 @@ update:
           # 新增配置项，调用inner的host
           inner:
             host: "http://inner.forethought-core:5000"
+            
+    #2023/06/08
+    - seq: 14
+      config:
+        kodoxBackupLog: |-
+          # 复用kodox的yaml,新增配置项
+          backup_log:
+            backup_log_file: /bucket/backup_data # 本地文件目录
+            backup_rotate: 1024               # 1GB滚动
+            backup_upload_interval_minute: 1   # 每隔一分钟检查可上传数据
+            store_type: s3
+            ak: "**"
+            sk: "**"
+            region: "cn-northwest-1"
+        kodoInner: |-
+          # 新增配置项
+          backup_log:
+            store_type: s3
+            ak: "**"
+            sk: "**"
+            region: "cn-northwest-1"
+        kodo: |-
+          # 新增配置项
+          backup_log:
+            store_type: s3
+            ak: "**"
+            sk: "**"
+            region: "cn-northwest-1"
+
+
+    #2023/06/20
+    - seq: 15
+      config:
+        kodo: |-
+          cc:
+            # new boss station SG(新加坡)
+            # sg_ak, sg_sk, sg_bill_host
+            sg_ak: ""
+            sg_sk: ""
+            sg_sync_bill_host: ""
+          dql:
+            search_terminate_after: 1000000
+        kodoInner: |-
+          dql:
+            search_terminate_after: 1000000
+          
+
+

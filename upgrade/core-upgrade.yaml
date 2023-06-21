@@ -3513,5 +3513,77 @@ upgrade:
       # 【inner api 服务器执行】执行 fix_2023_06_06_monitor_alert_target.py 重新格式化通知策略的数据结构
       curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_2023_06_06_monitor_alert_target", "scriptKwargs": {}}'
 
+
+ # 2023.06.20
+  - seq: 84
+    database: |-
+      -- 为工作空间查询搜索字段添加索引
+      ALTER TABLE `main_workspace` 
+      ADD INDEX `ik_name` (`name` ASC),
+      ADD INDEX `ik_token` (`token` ASC),
+      ADD INDEX `ik_clitoken` (`cliToken` ASC),
+      ADD INDEX `ik_dbuuid` (`dbUUID` ASC),
+      ADD INDEX `ik_esinstance_uuid` (`esInstanceUUID` ASC),
+      ADD INDEX `ik_version` (`versionType` ASC),
+      ADD INDEX `ik_exter_id` (`exterId` ASC);
       
+      -- 工作空间添加所属 boss 站点属性
+      ALTER TABLE `main_workspace` 
+      ADD COLUMN `bossStation` ENUM('CN', 'SG', '') NOT NULL DEFAULT '' COMMENT '工作空间对应的Boss站点' AFTER `noviceGuide`;
       
+      -- 账号表为搜索字段添加索引
+      ALTER TABLE `main_account` 
+      ADD INDEX `ik_name` (`name` ASC),
+      ADD INDEX `ik_email` (`email` ASC),
+      ADD INDEX `ik_mobile` (`mobile` ASC);
+
+      -- 创建针对rum的sourcemap的管理表
+      CREATE TABLE `biz_rum_sourcemap` (
+          `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+          `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 brsm-',
+          `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '对应工作空间UUID',
+          `appType` varchar(48) DEFAULT '' COMMENT '对应sourcemap的应用类型',
+          `fileName` varchar(128) DEFAULT '' COMMENT '上传sourcemap文件名称',
+          `status` int(11) NOT NULL DEFAULT '0',
+          `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+          `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+          `createAt` int(11) NOT NULL DEFAULT '-1',
+          `deleteAt` int(11) NOT NULL DEFAULT '-1',
+          `updateAt` int(11) NOT NULL DEFAULT '-1',
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+          KEY `k_ws_uuid` (`workspaceUUID`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+      
+      -- 处理文本字符长度数据库调整
+      ALTER TABLE biz_monitor MODIFY name varchar(256) default '' not null comment '规则分组名字';
+      ALTER TABLE main_account_workspace MODIFY acntWsNickname varchar(256) default '' not null comment '账号在空间的昵称';
+      ALTER TABLE biz_saml_mapping MODIFY sourceField varchar(256) default '' not null comment '源字段名';
+      ALTER TABLE biz_account_group MODIFY name varchar(256) default '' not null comment '成员组名称';
+      ALTER TABLE biz_integration MODIFY name varchar(256) default '' null comment '名称';
+      ALTER TABLE biz_notify_object MODIFY name varchar(256) default '' not null comment '通知对象名称';
+      alter table biz_chart modify name varchar(256) default '' not null comment '命名';
+      alter table biz_notes modify name varchar(256) not null comment '笔记名字';
+      alter table biz_dashboard_carousel modify name varchar(256) default '' not null comment '轮播名称';
+      alter table biz_object_class_cfg
+        MODIFY name varchar(256) default '' not null comment '对象分类名',
+        MODIFY alias varchar(256) default '' not null comment '对象分类别名';
+      alter table biz_field_management
+        MODIFY `desc` TEXT not null comment '描述信息',
+        MODIFY `descEn` TEXT not null comment '描述信息En';
+      
+      -- 备份规则添加 任务执行状态及异常相关信息
+      ALTER TABLE `biz_logging_backup_cfg` 
+      ADD COLUMN `taskStatusCode` INT(11) NOT NULL DEFAULT '-1' COMMENT 'kodo侧规则任务执行状态' AFTER `syncExtensionField`,
+      ADD COLUMN `taskErrorCode` VARCHAR(45) NOT NULL DEFAULT '' COMMENT 'Kodo侧规则任务执行异常错误码' AFTER `taskStatusCode`,
+      CHANGE COLUMN `storeType` `storeType` ENUM('', 'es', 'sls', 'opensearch', 'beaver', 's3', 'obs') NOT NULL DEFAULT '' COMMENT '存储类型' ;
+
+    curl: |-
+      # 【inner api 服务器执行】执行 fix_update_permission.py 数据权限更新(1. 基本权限信息更新； 2. 内置角色权限重置; 3. 为用户自定义角色批量添加 新的 异常追踪 permission 权限; 4.清理账号的缓存信息(含角色); 5. 清理工作空间成员的权限信息)
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/fix_data' -H 'Content-Type: application/json' --data-raw $'{"script_name": "fix_update_permission", "scriptKwargs": {}}'
+      
+      # 清空工作空间缓存信息接口
+      curl 'http://0.0.0.0:5000/api/v1/inner/upgrade/tasks/execute_task_func' \
+      -H 'Content-Type: application/json' \
+      --data-raw $'{"script_name": "sync_tasks", "func_name": "sync_clear_cache", "funcKwargs": {"action_list": [["delete", ["workspaceInfo"]]]}}' \
+      --compressed

@@ -7,7 +7,7 @@
 #
 # Host: 172.16.2.203 (MySQL 5.7.33-log)
 # Database: df_new
-# Generation Time: 2023-06-06 09:23:32 +0000
+# Generation Time: 2023-06-20 06:46:00 +0000
 # ************************************************************
 
 
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `biz_account_group`;
 CREATE TABLE `biz_account_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 group-',
-  `name` varchar(48) NOT NULL DEFAULT '' COMMENT '成员组名称',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '成员组名称',
   `workspaceUUID` varchar(64) NOT NULL DEFAULT '' COMMENT '工作空间 uuid',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -303,7 +303,7 @@ DROP TABLE IF EXISTS `biz_chart`;
 CREATE TABLE `biz_chart` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 chrt- 前缀',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '命名',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '命名',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `chartGroupUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '图表分组UUID',
   `dashboardUUID` varchar(65) NOT NULL DEFAULT '' COMMENT '所属视图UUID',
@@ -452,7 +452,7 @@ DROP TABLE IF EXISTS `biz_dashboard_carousel`;
 CREATE TABLE `biz_dashboard_carousel` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 csel-',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '轮播名称',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '轮播名称',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `accountUUID` varchar(256) NOT NULL DEFAULT '' COMMENT '账户uuid',
   `dashboardUUIDs` json NOT NULL COMMENT '仪表板轮播列表',
@@ -633,8 +633,8 @@ CREATE TABLE `biz_field_management` (
   `unit` varchar(256) NOT NULL DEFAULT '' COMMENT '单位',
   `fieldType` enum('text','number','time','percent','int','float','boolean','string','long','') NOT NULL DEFAULT '',
   `fieldSource` enum('logging','object','custom_object','keyevent','tracing','rum','security','network','') NOT NULL DEFAULT '',
-  `desc` varchar(1024) NOT NULL DEFAULT '' COMMENT '描述信息',
-  `descEn` varchar(1024) NOT NULL DEFAULT '',
+  `desc` text NOT NULL COMMENT '描述信息',
+  `descEn` text NOT NULL COMMENT '描述信息En',
   `sysField` int(1) NOT NULL DEFAULT '0' COMMENT '自定义字段或者 系统内置字段, 1代表系统内置字段, 0代表自定义字段',
   `status` int(11) NOT NULL DEFAULT '0',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -809,7 +809,7 @@ CREATE TABLE `biz_integration` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, rul-',
   `type` varchar(48) NOT NULL DEFAULT '' COMMENT '类型',
   `path` varchar(512) DEFAULT NULL,
-  `name` varchar(128) DEFAULT '' COMMENT '名称',
+  `name` varchar(256) DEFAULT '' COMMENT '名称',
   `fileName` varchar(128) DEFAULT '' COMMENT '文件名 用于排序',
   `metaHash` varchar(256) DEFAULT NULL COMMENT 'meta hash值',
   `isHidden` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否隐藏，默认隐藏',
@@ -903,8 +903,10 @@ CREATE TABLE `biz_logging_backup_cfg` (
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '备份规则名',
   `conditions` text NOT NULL COMMENT 'dql格式的过滤条件',
   `extend` json DEFAULT NULL COMMENT '额外配置数据',
-  `storeType` enum('','es','sls','opensearch','beaver','s3') NOT NULL DEFAULT '' COMMENT '存储类型',
+  `storeType` enum('','es','sls','opensearch','beaver','s3','obs') NOT NULL DEFAULT '' COMMENT '存储类型',
   `syncExtensionField` tinyint(1) DEFAULT '0' COMMENT 'true 为同步, false为不同步',
+  `taskStatusCode` int(11) NOT NULL DEFAULT '-1' COMMENT 'kodo侧规则任务执行状态',
+  `taskErrorCode` varchar(45) NOT NULL DEFAULT '' COMMENT 'Kodo侧规则任务执行异常错误码',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
@@ -1021,7 +1023,7 @@ CREATE TABLE `biz_monitor` (
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `type` varchar(48) NOT NULL DEFAULT 'custom',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '规则分组名字',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '规则分组名字',
   `config` json DEFAULT NULL COMMENT '其他设置',
   `alertOpt` json DEFAULT NULL COMMENT '触发操作设置',
   `score` int(11) NOT NULL DEFAULT '0' COMMENT '排序分数',
@@ -1124,7 +1126,7 @@ CREATE TABLE `biz_notes` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 notes-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `name` varchar(128) NOT NULL COMMENT '笔记名字',
+  `name` varchar(256) NOT NULL COMMENT '笔记名字',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `pos` json NOT NULL COMMENT 'charts 位置信息[]',
   `createdWay` enum('import','template','') NOT NULL DEFAULT '' COMMENT '笔记的创建方式',
@@ -1151,7 +1153,7 @@ CREATE TABLE `biz_notify_object` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID, monitor-',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '通知对象名称',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '通知对象名称',
   `type` enum('dingTalkRobot','HTTPRequest','wechatRobot','mailGroup','feishuRobot','sms','selfBuildNotifyFunction') NOT NULL DEFAULT 'dingTalkRobot',
   `optSet` json DEFAULT NULL COMMENT '操作设置',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
@@ -1177,8 +1179,8 @@ CREATE TABLE `biz_object_class_cfg` (
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 objc-前缀',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
   `sourceType` enum('object','custom_object') NOT NULL DEFAULT 'custom_object' COMMENT '数据源来源类型',
-  `name` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类名',
-  `alias` varchar(128) NOT NULL DEFAULT '' COMMENT '对象分类别名',
+  `name` varchar(256) NOT NULL DEFAULT '' COMMENT '对象分类名',
+  `alias` varchar(256) NOT NULL DEFAULT '' COMMENT '对象分类别名',
   `dashboardBindSet` json DEFAULT NULL COMMENT '视图绑定设置列表',
   `fields` json DEFAULT NULL COMMENT '属性配置列表',
   `extend` json DEFAULT NULL COMMENT '额外拓展字段',
@@ -1585,6 +1587,30 @@ CREATE TABLE `biz_rum_cfg` (
 
 
 
+# Dump of table biz_rum_sourcemap
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `biz_rum_sourcemap`;
+
+CREATE TABLE `biz_rum_sourcemap` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
+  `uuid` varchar(48) NOT NULL DEFAULT '' COMMENT '全局唯一 ID 前缀 brsm-',
+  `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '对应工作空间UUID',
+  `appType` varchar(48) DEFAULT '' COMMENT '对应sourcemap的应用类型',
+  `fileName` varchar(128) DEFAULT '' COMMENT '上传sourcemap文件名称',
+  `status` int(11) NOT NULL DEFAULT '0',
+  `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
+  `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
+  `createAt` int(11) NOT NULL DEFAULT '-1',
+  `deleteAt` int(11) NOT NULL DEFAULT '-1',
+  `updateAt` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `k_ws_uuid` (`workspaceUUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
 # Dump of table biz_rum_trace
 # ------------------------------------------------------------
 
@@ -1618,7 +1644,7 @@ DROP TABLE IF EXISTS `biz_saml_mapping`;
 CREATE TABLE `biz_saml_mapping` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增 ID',
   `uuid` varchar(48) NOT NULL COMMENT '全局唯一 ID，带 fdmp- 前缀',
-  `sourceField` varchar(128) NOT NULL DEFAULT '' COMMENT '源字段名',
+  `sourceField` varchar(256) NOT NULL DEFAULT '' COMMENT '源字段名',
   `sourceValue` varchar(256) NOT NULL DEFAULT '' COMMENT '源字段值',
   `targetValue` varchar(256) NOT NULL DEFAULT '' COMMENT '目标字段值',
   `workspaceUUID` varchar(48) NOT NULL DEFAULT '' COMMENT '工作空间UUID',
@@ -1999,7 +2025,10 @@ CREATE TABLE `main_account` (
   UNIQUE KEY `uk_uuid` (`uuid`) COMMENT '全局唯一',
   KEY `uk_username` (`username`) COMMENT 'DF登录用户名加索引',
   KEY `uk_exterid` (`exterId`),
-  KEY `uk_namespace` (`nameSpace`)
+  KEY `uk_namespace` (`nameSpace`),
+  KEY `ik_name` (`name`),
+  KEY `ik_email` (`email`),
+  KEY `ik_mobile` (`mobile`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -2045,7 +2074,7 @@ CREATE TABLE `main_account_workspace` (
   `allSceneVisible` int(1) NOT NULL DEFAULT '0' COMMENT '可见所有场景',
   `isAdmin` int(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `waitAudit` int(1) NOT NULL DEFAULT '0' COMMENT '是否等待审核',
-  `acntWsNickname` varchar(128) NOT NULL DEFAULT '' COMMENT '账号在空间的昵称',
+  `acntWsNickname` varchar(256) NOT NULL DEFAULT '' COMMENT '账号在空间的昵称',
   `workspaceNote` text NOT NULL COMMENT '自定义工作空间备注',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '状态 0: ok/1: 故障/2: 停用/3: 删除',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
@@ -2668,13 +2697,21 @@ CREATE TABLE `main_workspace` (
   `makeResourceExceptionCode` varchar(256) NOT NULL DEFAULT '' COMMENT '工作空间开通资源时的异常信息Code',
   `language` varchar(48) NOT NULL DEFAULT 'zh',
   `noviceGuide` tinyint(1) DEFAULT '1' COMMENT 'true 已经有过新手引导, false没有引导过',
+  `bossStation` enum('CN','SG','') NOT NULL DEFAULT '' COMMENT '工作空间对应的Boss站点',
   `creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建者 account-id',
   `updator` varchar(64) NOT NULL DEFAULT '' COMMENT '更新者 account-id',
   `createAt` int(11) NOT NULL DEFAULT '-1',
   `deleteAt` int(11) NOT NULL DEFAULT '-1',
   `updateAt` int(11) NOT NULL DEFAULT '-1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一'
+  UNIQUE KEY `uk_uuid` (`uuid`) COMMENT 'UUID 做成全局唯一',
+  KEY `ik_name` (`name`),
+  KEY `ik_token` (`token`),
+  KEY `ik_clitoken` (`cliToken`),
+  KEY `ik_dbuuid` (`dbUUID`),
+  KEY `ik_esinstance_uuid` (`esInstanceUUID`),
+  KEY `ik_version` (`versionType`),
+  KEY `ik_exter_id` (`exterId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
