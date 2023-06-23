@@ -217,6 +217,11 @@ services:
       image: kodo
       replicas: 3
 
+    - key: kodo-x-backuplog
+      name: Kodo X Backup Log
+      image: kodo
+      replicas: 3
+
     - key: kodo-nginx
       name: Kodo Nginx
       image: nginx
@@ -266,6 +271,14 @@ services:
       format: yaml
       services:
       - kodo-x
+      template: kodo-x.yaml
+
+    - key: kodoXBackuplog
+      mapname: kodo-x
+      mapkey: config.yaml
+      format: yaml
+      services:
+      - kodo-x-backuplog
       template: kodo-x.yaml
 
     - key: kodoNginx
@@ -319,6 +332,9 @@ services:
 
     - name: profiling-data
       storage: 100Gi
+
+    - name: backuplog-data
+      storage: 200Gi
 
   # - namespace: func
   #   services:
@@ -768,6 +784,11 @@ updates:
         mapKey: kodo.conf
 
       - key: kodoX
+        mapName: kodo-x
+        mapKey: config.yaml
+        format: yaml
+
+      - key: kodoXBackuplog
         mapName: kodo-x
         mapKey: config.yaml
         format: yaml
