@@ -10,6 +10,7 @@ spec:
   selector:
     matchLabels:
       app: deployment-forethought-kodo-kodo-x-backuplog
+  serviceName: kodo-x-backuplog
   template:
     metadata:
       labels:
@@ -44,7 +45,7 @@ spec:
           defaultMode: 256
           name: kodo-x
           optional: false
-        name: kodo-x
+        name: kodo-x-backuplog
       - configMap:
           defaultMode: 420
           name: kodo-license

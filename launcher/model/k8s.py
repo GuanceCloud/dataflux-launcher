@@ -9,18 +9,27 @@ from launcher.utils.template import jinjia2_render
 from launcher import settingsMdl, SERVICECONFIG, DOCKERIMAGES
 
 
+def __get_k8s_resource(resource_name, namespace):
+  cmd = 'kubectl get {} -n {} -o json'.format(resource_name, namespace)
+  p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
+  output, err = p.communicate()
+  deploys = json.loads(output)
+
+  return deploys.get('items', [])
+
+
 def deploy_status():
   namespaces = SERVICECONFIG['namespaces']
 
   tempStatus = {}
   for ns in namespaces:
-    cmd = 'kubectl get deployments -n {} -o json'.format(ns)
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    deploy_items = __get_k8s_resource("deployments", ns)
+    stateful_sets = __get_k8s_resource("statefulsets", ns)
 
-    output, err = p.communicate()
-    deploys = json.loads(output)
+    all_items = deploy_items + stateful_sets
 
-    for item in deploys['items']:
+    for item in all_items:
       key = item['metadata']['name']
       image = item['spec']['template']['spec']['containers'][0]['image']
 
