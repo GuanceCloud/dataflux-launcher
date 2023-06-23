@@ -40,7 +40,10 @@ def deploy_status():
       status['fullImagePath'] = image
       status['key'] = key
       status['replicas'] = item['status'].get('replicas', 0)
-      status['availableReplicas'] = item['status'].get('availableReplicas', 0)
+
+      # deployment 的可用数量字段是 availableReplicas，statefulset 的是 readyReplicas
+      status['availableReplicas'] = item['status'].get('availableReplicas', 0) or item['status'].get('readyReplicas', 0)
+      
       status['unavailableReplicas'] = item['status'].get('unavailableReplicas', 0)
 
       tempStatus[key] = status
