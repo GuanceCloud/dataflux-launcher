@@ -653,30 +653,26 @@ var setup = (function () {
 
         // 初始化 Studio 平台的相关配置：导入 官方 Pipeline 库、指标库、地理信息表、集成包、视图模板包
         that.post('studio/init').then(function(d){
-          if (d.content.status_code != 200){
-            alert("Studio 平台初始化失败，请刷新本页面重试。");
-          }else{
-            // 同步集成包模板到数据库
-            that.post('setting/sync_integration').done(function(d){
-              
-            }).fail(function(d){
-              alert("集成包同步失败。")
-            });
+          // 同步集成包模板到数据库
+          that.post('setting/sync_integration').done(function(d){
+            console.log("发送集成包同步任务成功！");
+          }).fail(function(d){
+            alert("发送集成包同步任务失败。")
+          });
 
-            // 同步官方 Pipeline 模板到数据库
-            that.post('setting/sync_pipeline').done(function(d){
-              
-            }).fail(function(d){
-              alert("官方 Pipeline 包同步失败。")
-            });
+          // 同步官方 Pipeline 模板到数据库
+          that.post('setting/sync_pipeline').done(function(d){
+            console.log("发送官方 Pipeline 包同步任务成功！");
+          }).fail(function(d){
+            alert("发送官方 Pipeline 包同步任务失败。")
+          });
 
-            // 同步官方 Field 列表到数据库
-            that.post('setting/sync_field_list').done(function(d){
-              
-            }).fail(function(d){
-              alert("官方 Field 库同步失败。")
-            });
-          }
+          // 同步官方 Field 列表到数据库
+          that.post('setting/sync_field_list').done(function(d){
+            console.log("发送官方 Field 库同步任务成功！");
+          }).fail(function(d){
+            alert("发送官方 Field 库同步任务失败。")
+          });
         }).fail(function(d){
             alert("Studio 平台初始化失败，请刷新本页面重试。");
         });

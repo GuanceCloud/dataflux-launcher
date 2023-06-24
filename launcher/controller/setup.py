@@ -350,7 +350,7 @@ def call_service_url(url, jsonData = None):
   if isDone:
     resp = requests.post(url, json = jsonData, headers = headers)
 
-    logging.info("request success, url: {}, data: {}".format(url, jsonData))
+    logging.info("request success, url: {}, data: {}, status_code: {}, reponse: {}".format(url, jsonData, resp.status_code, resp.json()))
     return {"status_code": resp.status_code}
   else:
     logging.error("request error, url: {}, data: {}".format(url, jsonData))
