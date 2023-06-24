@@ -271,13 +271,6 @@ services:
       format: yaml
       services:
       - kodo-x
-      template: kodo-x.yaml
-
-    - key: kodoXBackuplog
-      mapname: kodo-x
-      mapkey: config.yaml
-      format: yaml
-      services:
       - kodo-x-backuplog
       template: kodo-x.yaml
 
