@@ -18,6 +18,7 @@ kubectl delete deployments func func-inner func-worker-beat func-worker-debugger
 kubectl delete deployments trigger -n forethought-inner-app --force --grace-period=0
 kubectl delete deployments utils-server internal-dataway datakit-pl-debug data-warehouse dialtesting -n utils --force --grace-period=0
 kubectl delete deployments server server-inner worker-0 worker-1-6 worker-8-9 worker-8 worker-9 worker-7 worker-beat -n func2 --force --grace-period=0
+kubectl delete statefulset kodo-x-backuplog -n forethought-kodo --force --grace-period=0
 
 # 清理 service
 kubectl delete services front-backend inner core-worker core-worker-correlation core-worker-beat static-resource-nginx integration-scanner integration-nginx management-backend open-api websocket -n forethought-core --force --grace-period=0
@@ -37,9 +38,10 @@ kubectl delete ingress server -n func2 --force --grace-period=0
 
 # 清理 PVC
 kubectl delete PersistentVolumeClaim ft-sysconfig core-worker-logs core-worker-correlation-logs core-worker-beat-logs front-backend-logs inner-logs management-backend-logs integration-scanner-logs open-api-logs -n forethought-core --force --grace-period=0
-kubectl delete PersistentVolumeClaim kodo-logs kodo-inner-logs profiling-data -n forethought-kodo --force --grace-period=0
+kubectl delete PersistentVolumeClaim kodo-logs kodo-inner-logs profiling-data backuplog-data -n forethought-kodo --force --grace-period=0
 kubectl delete PersistentVolumeClaim  message-desk-logs message-desk-worker-logs nsqd-data-1 nsqd-data-2 nsqd-data-3 kapacitor-data-01 kapacitor-data-02 -n middleware --force --grace-period=0
 kubectl delete PersistentVolumeClaim internal-dataway-cache internal-dataway-logs data-warehouse-logs  -n utils --force --grace-period=0
+kubectl delete PersistentVolumeClaim func-resources func-packages -n func2 --force --grace-period=0
 
 
 # 清理 secret
