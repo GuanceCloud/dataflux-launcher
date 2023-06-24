@@ -781,11 +781,6 @@ updates:
         mapKey: config.yaml
         format: yaml
 
-      - key: kodoXBackuplog
-        mapName: kodo-x
-        mapKey: config.yaml
-        format: yaml
-
       - key: kodoWS
         mapName: kodo-ws
         mapKey: config.yaml
