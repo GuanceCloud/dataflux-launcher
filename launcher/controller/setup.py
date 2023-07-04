@@ -5,6 +5,8 @@ import os, re, subprocess
 import markdown, shortuuid, pymysql
 import json, time, logging
 
+from concurrent.futures import ThreadPoolExecutor
+
 from launcher.model import k8s as k8sMdl
 from launcher.model import version as versionMdl
 from launcher.utils.template import jinjia2_render
@@ -347,8 +349,11 @@ def call_service_url(url, jsonData = None):
 
   if isDone:
     resp = requests.post(url, json = jsonData, headers = headers)
+
+    logging.info("request success, url: {}, data: {}, status_code: {}, reponse: {}".format(url, jsonData, resp.status_code, resp.json()))
     return {"status_code": resp.status_code}
   else:
+    logging.error("request error, url: {}, data: {}".format(url, jsonData))
     return {"status_code": 429}
 
 
@@ -391,42 +396,55 @@ def __sync_packages(keys):
     }
   }
 
-  return call_service_url(url, data)
+  logging.info("start sync packages {}".format(keys))
+
+  executor = ThreadPoolExecutor(1)
+  executor.submit(call_service_url, url, data)
+
+  return True
 
 
 # 安装成功之后，初始化一些 studio 的相关配置
 def studio_init():
-  return __sync_packages([
+  __sync_packages([
         "geo",                  # 拨测的地理信息
         "internal_pipeline",    # 内置 Pipeline 库
         "measurements_meta",    # 内置 指标字典
         "dataflux_template",    # 内置视图模板
-        "dataflux_template_en",    # 内置视图模板 en
+        "dataflux_template_en", # 内置视图模板 en
         "internal_field_cfg",   # 同步官方字段说明
         "permission"            # 同步权限相关的数据
       ])
 
+  return "异步执行，运行结果请看容器日志。"
+
 
 # 触发同步视图模板等集成包
 def sync_integration():
-  return __sync_packages([
+  __sync_packages([
         "dataflux_template",    # 内置视图模板
         "dataflux_template_en"  # 内置视图模板 en
       ])
 
+  return "异步执行，运行结果请看容器日志。"
+
 
 # 触发官方 Pipeline 库同步到数据库
 def sync_pipeline():
-  return __sync_packages([
+  __sync_packages([
         "internal_pipeline"     # 内置 Pipeline 库
       ])
+
+  return "异步执行，运行结果请看容器日志。"
 
 
 # 触发官方 字段 库同步到数据库
 def sync_field_list():
-  return __sync_packages([
+  __sync_packages([
         "internal_field_cfg"    # 同步官方字段说明
       ])
+
+  return "异步执行，运行结果请看容器日志。"
 
 
 def init_setting():

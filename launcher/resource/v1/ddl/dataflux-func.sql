@@ -925,13 +925,13 @@ LOCK TABLES `wat_main_access_key` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wat_main_system_config`
+-- Table structure for table `wat_main_system_setting`
 --
 
-DROP TABLE IF EXISTS `wat_main_system_config`;
+DROP TABLE IF EXISTS `wat_main_system_setting`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `wat_main_system_config` (
+CREATE TABLE `wat_main_system_setting` (
   `seq` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '值',
@@ -943,12 +943,12 @@ CREATE TABLE `wat_main_system_config` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `wat_main_system_config`
+-- Dumping data for table `wat_main_system_setting`
 --
 
-LOCK TABLES `wat_main_system_config` WRITE;
-/*!40000 ALTER TABLE `wat_main_system_config` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wat_main_system_config` ENABLE KEYS */;
+LOCK TABLES `wat_main_system_setting` WRITE;
+/*!40000 ALTER TABLE `wat_main_system_setting` DISABLE KEYS */;
+/*!40000 ALTER TABLE `wat_main_system_setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

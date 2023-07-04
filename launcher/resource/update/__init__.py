@@ -18,6 +18,7 @@ from . import script_20230506
 from . import script_20230522
 from . import script_20230530
 from . import script_20230606
+from . import script_20230620
 
 
 __all__ = [
@@ -38,5 +39,5 @@ __all__ = [
         "script_20230506",
         "script_20230522",
         "script_20230530",
-        "script_20230606",
+        "script_20230620",
     ]

@@ -1,16 +1,16 @@
-# Guance Cloud Version: 1.64.130
+# Guance Cloud Version: 1.65.131
 pubrepo.guance.com/dataflux/basis:multiarch_nsq_1.2.1
 pubrepo.guance.com/dataflux/basis:multiarch_nginx_1.13.7
 pubrepo.guance.com/dataflux/dataway:1.2.11
-pubrepo.guance.com/dataflux/datakit:1.9.0
-pubrepo.guance.com/dataflux/1.64.130:core-54a2116dc-1686575695
-pubrepo.guance.com/dataflux/1.64.130:kodo-73bbb707-1686575695
-pubrepo.guance.com/dataflux/1.64.130:front-webclient-81289dfab-1686575695
-pubrepo.guance.com/dataflux/1.64.130:management-webclient-d286d07-1686575695
-pubrepo.guance.com/dataflux/1.64.130:dataflux-doc-752ed441-1686575695
-pubrepo.guance.com/dataflux/1.64.130:message-desk-dfb22ce-1686575695
-pubrepo.guance.com/dataflux/1.64.130:message-desk-worker-295e13d-1686575695
-pubrepo.guance.com/dataflux/1.64.130:dataflux-func-8a264950-1686575695
-pubrepo.guance.com/dataflux/1.64.130:utils-server-48799ca-1686575695
-pubrepo.guance.com/dataflux/1.64.130:jfr-parser-a6ad420-1686575695
-pubrepo.guance.com/dataflux/1.64.130:pprofparser-330a0b5-1686575695
+pubrepo.guance.com/dataflux/datakit:1.9.2
+pubrepo.guance.com/dataflux/1.65.131:core-47c9415a3-1687506944
+pubrepo.guance.com/dataflux/1.65.131:kodo-c0937652-1687506944
+pubrepo.guance.com/dataflux/1.65.131:front-webclient-3098e446a-1687506944
+pubrepo.guance.com/dataflux/1.65.131:management-webclient-90cff02-1687506944
+pubrepo.guance.com/dataflux/1.65.131:dataflux-doc-ace7ba29-1687506944
+pubrepo.guance.com/dataflux/1.65.131:message-desk-dfb22ce-1687506944
+pubrepo.guance.com/dataflux/1.65.131:message-desk-worker-295e13d-1687506944
+pubrepo.guance.com/dataflux/1.65.131:dataflux-func-230f82e2-1687506944
+pubrepo.guance.com/dataflux/1.65.131:utils-server-48799ca-1687506944
+pubrepo.guance.com/dataflux/1.65.131:jfr-parser-a6ad420-1687506944
+pubrepo.guance.com/dataflux/1.65.131:pprofparser-330a0b5-1687506944

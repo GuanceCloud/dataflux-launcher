@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: deployment-forethought-kodo-kodo-x-backuplog
+  name: kodo-x-backuplog
+  namespace: forethought-kodo
+spec:
+  replicas: {{ config.replicas }}
+  selector:
+    matchLabels:
+      app: deployment-forethought-kodo-kodo-x-backuplog
+  serviceName: kodo-x-backuplog
+  template:
+    metadata:
+      labels:
+        app: deployment-forethought-kodo-kodo-x-backuplog
+    spec:
+      containers:
+      - args:
+        - /kodo/kodoxbackuplog
+        - '-cfg'
+        - /kodo/config/config.yaml
+        image: {{ config.fullImagePath }} 
+        imagePullPolicy: {{ settings.imagePullPolicy }}
+        name: kodo-x-backuplog
+        ports:
+        - containerPort: 9527
+          name: 9527tcp02
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /kodo/config/config.yaml
+          name: kodo-x-backuplog
+          subPath: config.yaml
+        - mountPath: /backuplog/
+          name: backuplog-data
+        - mountPath: /kodo/config/license
+          name: kodo-license
+          subPath: license
+      imagePullSecrets:
+      - name: registry-key
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 256
+          name: kodo-x
+          optional: false
+        name: kodo-x-backuplog
+      - configMap:
+          defaultMode: 420
+          name: kodo-license
+          optional: false
+        name: kodo-license
+      - name: backuplog-data
+        persistentVolumeClaim:
+          claimName: backuplog-data
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kodo-x-backuplog
+  namespace: forethought-kodo
+spec:
+  ports:
+  - name: 9527tcp02
+    port: 9527
+    protocol: TCP
+    targetPort: 9527
+  selector:
+    app: deployment-forethought-kodo-kodo-x-backuplog
+  type: ClusterIP

@@ -48,7 +48,7 @@ buildBasis:
 deployProd:
   stage: deploy
   only:
-    - /^deploy_\d+$/
+    - /^deploy_\d+/
   script:
     - sh cd.sh -d
   tags:
